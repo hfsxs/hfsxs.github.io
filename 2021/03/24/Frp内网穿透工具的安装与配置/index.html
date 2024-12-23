@@ -7,8 +7,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
-  <link rel="icon" href="/hexo/img/fluid.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -19,7 +19,7 @@
     <meta name="description" content="Frp，是一款跨平台的开源免费的内网穿透工具，实质上就是一个反向代理服务器，将访问公网IP的请求通过端口转发到内网，再将内网服务器的响应信息通过公网IP发送给客户端，从而使处于内网或防火墙后的设备具备了对外提供服务的功能。frp支持TCP、UDP、HTTP及HTTPS等众多协议，速度只受公网IP的带宽限制，功能强大而易用  1.下载frp软件包# https:&#x2F;&#x2F;github.com&#x2F;fatedi">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Frp内网穿透工具的安装与配置">
-<meta property="og:url" content="https://css.ss-ss.top/hexo/2021/03/24/Frp%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:url" content="http://example.com/2021/03/24/Frp%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/index.html">
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="Frp，是一款跨平台的开源免费的内网穿透工具，实质上就是一个反向代理服务器，将访问公网IP的请求通过端口转发到内网，再将内网服务器的响应信息通过公网IP发送给客户端，从而使处于内网或防火墙后的设备具备了对外提供服务的功能。frp支持TCP、UDP、HTTP及HTTPS等众多协议，速度只受公网IP的带宽限制，功能强大而易用  1.下载frp软件包# https:&#x2F;&#x2F;github.com&#x2F;fatedi">
 <meta property="og:locale" content="zh_CN">
@@ -58,12 +58,12 @@
 <link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
 
 
-<link  rel="stylesheet" href="/hexo/css/main.css" />
+<link  rel="stylesheet" href="/css/main.css" />
 
 
-  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
   
-    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
 
 
@@ -72,15 +72,15 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
       Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
     }
   </script>
-  <script  src="/hexo/js/utils.js" ></script>
-  <script  src="/hexo/js/color-schema.js" ></script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
   
 
 
@@ -97,7 +97,7 @@
 <div class="header-inner" style="height: 70vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand" href="/hexo/">
+    <a class="navbar-brand" href="/">
       <strong>扬帆</strong>
     </a>
 
@@ -116,7 +116,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/">
+              <a class="nav-link" href="/">
                 <i class="iconfont icon-home-fill"></i>
                 首页
               </a>
@@ -128,7 +128,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/categories/">
+              <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
                 分类
               </a>
@@ -140,7 +140,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/tags/">
+              <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
                 标签
               </a>
@@ -152,7 +152,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/archives/">
+              <a class="nav-link" href="/archives/">
                 <i class="iconfont icon-archive-fill"></i>
                 归档
               </a>
@@ -164,7 +164,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/about/">
+              <a class="nav-link" href="/about/">
                 <i class="iconfont icon-user-fill"></i>
                 关于
               </a>
@@ -193,7 +193,7 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
@@ -395,7 +395,7 @@ sudo systemctl start frpc
     
       <span class="category-chain">
         
-  <a href="/hexo/categories/%E6%9E%81%E5%AE%A2/" class="category-chain-item">极客</a>
+  <a href="/categories/%E6%9E%81%E5%AE%A2/" class="category-chain-item">极客</a>
   
   
 
@@ -410,13 +410,13 @@ sudo systemctl start frpc
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/hexo/tags/Linux/">#Linux</a>
+        <a href="/tags/Linux/">#Linux</a>
       
-        <a href="/hexo/tags/%E6%9E%81%E5%AE%A2/">#极客</a>
+        <a href="/tags/%E6%9E%81%E5%AE%A2/">#极客</a>
       
-        <a href="/hexo/tags/Frp/">#Frp</a>
+        <a href="/tags/Frp/">#Frp</a>
       
-        <a href="/hexo/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/">#内网穿透</a>
+        <a href="/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/">#内网穿透</a>
       
     </div>
   
@@ -429,7 +429,7 @@ sudo systemctl start frpc
   <div class="license-box my-3">
     <div class="license-title">
       <div>Frp内网穿透工具的安装与配置</div>
-      <div>https://css.ss-ss.top/hexo/2021/03/24/Frp内网穿透工具的安装与配置/</div>
+      <div>http://example.com/2021/03/24/Frp内网穿透工具的安装与配置/</div>
     </div>
     <div class="license-meta">
       
@@ -471,7 +471,7 @@ sudo systemctl start frpc
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/hexo/2021/04/21/kubernetes%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" title="Kubernetes集群部署">
+                      <a href="/2021/04/21/kubernetes%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/" title="Kubernetes集群部署">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Kubernetes集群部署</span>
                         <span class="visible-mobile">上一篇</span>
@@ -481,7 +481,7 @@ sudo systemctl start frpc
                   <article class="post-next col-6">
                     
                     
-                      <a href="/hexo/2021/03/01/CentOS%E9%85%8D%E7%BD%AENginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E5%86%85%E7%BD%91Yum%E6%BA%90%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="CentOS配置Nginx反向代理内网Yum源服务器">
+                      <a href="/2021/03/01/CentOS%E9%85%8D%E7%BD%AENginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E5%86%85%E7%BD%91Yum%E6%BA%90%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="CentOS配置Nginx反向代理内网Yum源服务器">
                         <span class="hidden-mobile">CentOS配置Nginx反向代理内网Yum源服务器</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -608,15 +608,15 @@ sudo systemctl start frpc
 
 <script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
 <script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/hexo/js/events.js" ></script>
-<script  src="/hexo/js/plugins.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
 
 
 
 
 
   
-    <script  src="/hexo/js/img-lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
@@ -688,7 +688,7 @@ sudo systemctl start frpc
 
   <script>Fluid.plugins.imageCaption();</script>
 
-  <script  src="/hexo/js/local-search.js" ></script>
+  <script  src="/js/local-search.js" ></script>
 
 
 
@@ -696,7 +696,7 @@ sudo systemctl start frpc
 
 <!-- 主题的启动项，将它保持在最底部 -->
 <!-- the boot of the theme, keep it at the bottom -->
-<script  src="/hexo/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script>
 
 
   

@@ -7,8 +7,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
-  <link rel="icon" href="/hexo/img/fluid.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -19,7 +19,7 @@
     <meta name="description" content="1.部署Mysql数据库2.部署nfs3.部署StorageClass4.配置镜像仓库免密拉取4.1 创建镜像仓库认证文件sudo docker login sudo docker login registry.sword.org sudo docker login ccr.ccs.tencentyun.com sudo docker login registry.cn-hangzhou.aliy">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kubernetes实战之部署Cloudreve云存储系统">
-<meta property="og:url" content="https://css.ss-ss.top/hexo/2022/12/20/Kubernetes%E5%AE%9E%E6%88%98%E4%B9%8B%E9%83%A8%E7%BD%B2Cloudreve%E4%BA%91%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/index.html">
+<meta property="og:url" content="http://example.com/2022/12/20/Kubernetes%E5%AE%9E%E6%88%98%E4%B9%8B%E9%83%A8%E7%BD%B2Cloudreve%E4%BA%91%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/index.html">
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="1.部署Mysql数据库2.部署nfs3.部署StorageClass4.配置镜像仓库免密拉取4.1 创建镜像仓库认证文件sudo docker login sudo docker login registry.sword.org sudo docker login ccr.ccs.tencentyun.com sudo docker login registry.cn-hangzhou.aliy">
 <meta property="og:locale" content="zh_CN">
@@ -63,12 +63,12 @@
 <link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
 
 
-<link  rel="stylesheet" href="/hexo/css/main.css" />
+<link  rel="stylesheet" href="/css/main.css" />
 
 
-  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
   
-    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
 
 
@@ -77,15 +77,15 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
       Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
     }
   </script>
-  <script  src="/hexo/js/utils.js" ></script>
-  <script  src="/hexo/js/color-schema.js" ></script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
   
 
 
@@ -102,7 +102,7 @@
 <div class="header-inner" style="height: 70vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand" href="/hexo/">
+    <a class="navbar-brand" href="/">
       <strong>扬帆</strong>
     </a>
 
@@ -121,7 +121,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/">
+              <a class="nav-link" href="/">
                 <i class="iconfont icon-home-fill"></i>
                 首页
               </a>
@@ -133,7 +133,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/categories/">
+              <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
                 分类
               </a>
@@ -145,7 +145,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/tags/">
+              <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
                 标签
               </a>
@@ -157,7 +157,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/archives/">
+              <a class="nav-link" href="/archives/">
                 <i class="iconfont icon-archive-fill"></i>
                 归档
               </a>
@@ -169,7 +169,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/about/">
+              <a class="nav-link" href="/about/">
                 <i class="iconfont icon-user-fill"></i>
                 关于
               </a>
@@ -198,7 +198,7 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
@@ -657,7 +657,7 @@ kubectl get pod -o wide
     
       <span class="category-chain">
         
-  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
   
   
 
@@ -672,23 +672,23 @@ kubectl get pod -o wide
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/hexo/tags/Linux/">#Linux</a>
+        <a href="/tags/Linux/">#Linux</a>
       
-        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
       
-        <a href="/hexo/tags/%E5%AD%98%E5%82%A8/">#存储</a>
+        <a href="/tags/%E5%AD%98%E5%82%A8/">#存储</a>
       
-        <a href="/hexo/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/">#分布式存储</a>
+        <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/">#分布式存储</a>
       
-        <a href="/hexo/tags/%E4%BA%91%E5%AD%98%E5%82%A8/">#云存储</a>
+        <a href="/tags/%E4%BA%91%E5%AD%98%E5%82%A8/">#云存储</a>
       
-        <a href="/hexo/tags/Cloudreve/">#Cloudreve</a>
+        <a href="/tags/Cloudreve/">#Cloudreve</a>
       
-        <a href="/hexo/tags/Kubernetes/">#Kubernetes</a>
+        <a href="/tags/Kubernetes/">#Kubernetes</a>
       
-        <a href="/hexo/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+        <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
       
-        <a href="/hexo/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+        <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
       
     </div>
   
@@ -701,7 +701,7 @@ kubectl get pod -o wide
   <div class="license-box my-3">
     <div class="license-title">
       <div>Kubernetes实战之部署Cloudreve云存储系统</div>
-      <div>https://css.ss-ss.top/hexo/2022/12/20/Kubernetes实战之部署Cloudreve云存储系统/</div>
+      <div>http://example.com/2022/12/20/Kubernetes实战之部署Cloudreve云存储系统/</div>
     </div>
     <div class="license-meta">
       
@@ -743,7 +743,7 @@ kubectl get pod -o wide
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/hexo/2023/01/03/Jenkins%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/" title="Jenkins持续集成工具的安装与配置">
+                      <a href="/2023/01/03/Jenkins%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/" title="Jenkins持续集成工具的安装与配置">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Jenkins持续集成工具的安装与配置</span>
                         <span class="visible-mobile">上一篇</span>
@@ -753,7 +753,7 @@ kubectl get pod -o wide
                   <article class="post-next col-6">
                     
                     
-                      <a href="/hexo/2022/12/10/Kubernetes%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2EFK%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0/" title="Kubernetes集群部署EFK日志管理平台">
+                      <a href="/2022/12/10/Kubernetes%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2EFK%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0/" title="Kubernetes集群部署EFK日志管理平台">
                         <span class="hidden-mobile">Kubernetes集群部署EFK日志管理平台</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -880,15 +880,15 @@ kubectl get pod -o wide
 
 <script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
 <script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/hexo/js/events.js" ></script>
-<script  src="/hexo/js/plugins.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
 
 
 
 
 
   
-    <script  src="/hexo/js/img-lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
@@ -960,7 +960,7 @@ kubectl get pod -o wide
 
   <script>Fluid.plugins.imageCaption();</script>
 
-  <script  src="/hexo/js/local-search.js" ></script>
+  <script  src="/js/local-search.js" ></script>
 
 
 
@@ -968,7 +968,7 @@ kubectl get pod -o wide
 
 <!-- 主题的启动项，将它保持在最底部 -->
 <!-- the boot of the theme, keep it at the bottom -->
-<script  src="/hexo/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script>
 
 
   

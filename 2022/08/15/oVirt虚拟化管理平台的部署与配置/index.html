@@ -7,8 +7,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
-  <link rel="icon" href="/hexo/img/fluid.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -19,14 +19,14 @@
     <meta name="description" content="oVirt，基于kvm的企业级开源虚拟化解决方案，是RedHat商业版RHEV的开源版，整合了libvirt、gluster、patternfly、ansible等一系列优秀的开源软件，定位是替代vmware、vsphere，相比OpenStack的庞大和复杂，其简洁的部署与维护更具优势  体系架构oVirt集群架构由三个部分构成，即管理节点Engine、主机节点Node以及存储节点 1.engi">
 <meta property="og:type" content="article">
 <meta property="og:title" content="oVirt虚拟化管理平台的部署与配置">
-<meta property="og:url" content="https://css.ss-ss.top/hexo/2022/08/15/oVirt%E8%99%9A%E6%8B%9F%E5%8C%96%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%E7%9A%84%E9%83%A8%E7%BD%B2%E4%B8%8E%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:url" content="http://example.com/2022/08/15/oVirt%E8%99%9A%E6%8B%9F%E5%8C%96%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%E7%9A%84%E9%83%A8%E7%BD%B2%E4%B8%8E%E9%85%8D%E7%BD%AE/index.html">
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="oVirt，基于kvm的企业级开源虚拟化解决方案，是RedHat商业版RHEV的开源版，整合了libvirt、gluster、patternfly、ansible等一系列优秀的开源软件，定位是替代vmware、vsphere，相比OpenStack的庞大和复杂，其简洁的部署与维护更具优势  体系架构oVirt集群架构由三个部分构成，即管理节点Engine、主机节点Node以及存储节点 1.engi">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://css.ss-ss.top/hexo/img/wiki/ovirt/datacenter-local.jpg">
-<meta property="og:image" content="https://css.ss-ss.top/hexo/img/wiki/ovirt/host-add.jpg">
-<meta property="og:image" content="https://css.ss-ss.top/hexo/img/wiki/ovirt/storage-local-add.jpg">
-<meta property="og:image" content="https://css.ss-ss.top/hexo/img/wiki/ovirt/storage-iso-add.jpg">
+<meta property="og:image" content="http://example.com/hexo/img/wiki/ovirt/datacenter-local.jpg">
+<meta property="og:image" content="http://example.com/hexo/img/wiki/ovirt/host-add.jpg">
+<meta property="og:image" content="http://example.com/hexo/img/wiki/ovirt/storage-local-add.jpg">
+<meta property="og:image" content="http://example.com/hexo/img/wiki/ovirt/storage-iso-add.jpg">
 <meta property="article:published_time" content="2022-08-15T04:08:28.000Z">
 <meta property="article:modified_time" content="2023-12-31T12:59:38.628Z">
 <meta property="article:author" content="扬帆">
@@ -36,7 +36,7 @@
 <meta property="article:tag" content="虚拟化">
 <meta property="article:tag" content="oVirt">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://css.ss-ss.top/hexo/img/wiki/ovirt/datacenter-local.jpg">
+<meta name="twitter:image" content="http://example.com/hexo/img/wiki/ovirt/datacenter-local.jpg">
   
   
   
@@ -64,12 +64,12 @@
 <link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
 
 
-<link  rel="stylesheet" href="/hexo/css/main.css" />
+<link  rel="stylesheet" href="/css/main.css" />
 
 
-  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
   
-    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
 
 
@@ -78,15 +78,15 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
       Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
     }
   </script>
-  <script  src="/hexo/js/utils.js" ></script>
-  <script  src="/hexo/js/color-schema.js" ></script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
   
 
 
@@ -103,7 +103,7 @@
 <div class="header-inner" style="height: 70vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand" href="/hexo/">
+    <a class="navbar-brand" href="/">
       <strong>扬帆</strong>
     </a>
 
@@ -122,7 +122,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/">
+              <a class="nav-link" href="/">
                 <i class="iconfont icon-home-fill"></i>
                 首页
               </a>
@@ -134,7 +134,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/categories/">
+              <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
                 分类
               </a>
@@ -146,7 +146,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/tags/">
+              <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
                 标签
               </a>
@@ -158,7 +158,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/archives/">
+              <a class="nav-link" href="/archives/">
                 <i class="iconfont icon-archive-fill"></i>
                 归档
               </a>
@@ -170,7 +170,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/about/">
+              <a class="nav-link" href="/about/">
                 <i class="iconfont icon-user-fill"></i>
                 关于
               </a>
@@ -199,7 +199,7 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
@@ -325,21 +325,21 @@ SSO_CALLBACK_PREFIX_CHECK=false
 </code></pre>
 <h2 id="重启ovirt-engine服务"><a href="#重启ovirt-engine服务" class="headerlink" title="重启ovirt-engine服务"></a>重启ovirt-engine服务</h2><pre><code class="hljs">sudo systemctl restart ovirt-engine.service
 </code></pre>
-<h1 id="5-修改数据中心存储类型为本地"><a href="#5-修改数据中心存储类型为本地" class="headerlink" title="5.修改数据中心存储类型为本地"></a>5.修改数据中心存储类型为本地</h1><p><img src="/hexo/img/wiki/ovirt/datacenter-local.jpg" srcset="/hexo/img/loading.gif" lazyload alt="001"></p>
+<h1 id="5-修改数据中心存储类型为本地"><a href="#5-修改数据中心存储类型为本地" class="headerlink" title="5.修改数据中心存储类型为本地"></a>5.修改数据中心存储类型为本地</h1><p><img src="/hexo/img/wiki/ovirt/datacenter-local.jpg" srcset="/img/loading.gif" lazyload alt="001"></p>
 <hr>
-<h1 id="6-新建Node节点"><a href="#6-新建Node节点" class="headerlink" title="6.新建Node节点"></a>6.新建Node节点</h1><p><img src="/hexo/img/wiki/ovirt/host-add.jpg" srcset="/hexo/img/loading.gif" lazyload alt="002"></p>
+<h1 id="6-新建Node节点"><a href="#6-新建Node节点" class="headerlink" title="6.新建Node节点"></a>6.新建Node节点</h1><p><img src="/hexo/img/wiki/ovirt/host-add.jpg" srcset="/img/loading.gif" lazyload alt="002"></p>
 <hr>
 <h1 id="7-新建本地存储域"><a href="#7-新建本地存储域" class="headerlink" title="7.新建本地存储域"></a>7.新建本地存储域</h1><pre><code class="hljs"># 创建虚拟机镜像存储目录并授予权限
 mkdir -p /home/ovirt/images &amp;&amp; chown -R vdsm.root /home/ovirt/images
 </code></pre>
 <hr>
-<p><img src="/hexo/img/wiki/ovirt/storage-local-add.jpg" srcset="/hexo/img/loading.gif" lazyload alt="003"></p>
+<p><img src="/hexo/img/wiki/ovirt/storage-local-add.jpg" srcset="/img/loading.gif" lazyload alt="003"></p>
 <hr>
 <h1 id="8-新建本地ISO存储域"><a href="#8-新建本地ISO存储域" class="headerlink" title="8.新建本地ISO存储域"></a>8.新建本地ISO存储域</h1><pre><code class="hljs"># 创建ISO光盘存储目录并授予权限
 mkdir -p /home/ovirt/iso &amp;&amp; chown -R vdsm.root /home/ovirt/iso
 </code></pre>
 <hr>
-<p><img src="/hexo/img/wiki/ovirt/storage-iso-add.jpg" srcset="/hexo/img/loading.gif" lazyload alt="004"></p>
+<p><img src="/hexo/img/wiki/ovirt/storage-iso-add.jpg" srcset="/img/loading.gif" lazyload alt="004"></p>
 <hr>
 <h1 id="9-上传ISO光盘文件"><a href="#9-上传ISO光盘文件" class="headerlink" title="9.上传ISO光盘文件"></a>9.上传ISO光盘文件</h1><h1 id="10-安装虚拟机"><a href="#10-安装虚拟机" class="headerlink" title="10.安装虚拟机"></a>10.安装虚拟机</h1><h2 id="10-1-Windows安装"><a href="#10-1-Windows安装" class="headerlink" title="10.1 Windows安装"></a>10.1 Windows安装</h2><h2 id="10-2-创建虚拟机"><a href="#10-2-创建虚拟机" class="headerlink" title="10.2 创建虚拟机"></a>10.2 创建虚拟机</h2><h2 id="10-3-虚拟机安装guest客户端"><a href="#10-3-虚拟机安装guest客户端" class="headerlink" title="10.3 虚拟机安装guest客户端"></a>10.3 虚拟机安装guest客户端</h2><pre><code class="hljs">sudo yum -y install epel-release ovirt-guest-agent-common
 sudo apt install -y ovirt-guest-agent
@@ -374,7 +374,7 @@ engine-config -s CustomDeviceProperties=&#39;&#123;type=interface;prop=&#123;ext
     
       <span class="category-chain">
         
-  <a href="/hexo/categories/%E6%9E%81%E5%AE%A2/" class="category-chain-item">极客</a>
+  <a href="/categories/%E6%9E%81%E5%AE%A2/" class="category-chain-item">极客</a>
   
   
 
@@ -389,15 +389,15 @@ engine-config -s CustomDeviceProperties=&#39;&#123;type=interface;prop=&#123;ext
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/hexo/tags/Linux/">#Linux</a>
+        <a href="/tags/Linux/">#Linux</a>
       
-        <a href="/hexo/tags/%E6%9E%81%E5%AE%A2/">#极客</a>
+        <a href="/tags/%E6%9E%81%E5%AE%A2/">#极客</a>
       
-        <a href="/hexo/tags/KVM/">#KVM</a>
+        <a href="/tags/KVM/">#KVM</a>
       
-        <a href="/hexo/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
+        <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
       
-        <a href="/hexo/tags/oVirt/">#oVirt</a>
+        <a href="/tags/oVirt/">#oVirt</a>
       
     </div>
   
@@ -410,7 +410,7 @@ engine-config -s CustomDeviceProperties=&#39;&#123;type=interface;prop=&#123;ext
   <div class="license-box my-3">
     <div class="license-title">
       <div>oVirt虚拟化管理平台的部署与配置</div>
-      <div>https://css.ss-ss.top/hexo/2022/08/15/oVirt虚拟化管理平台的部署与配置/</div>
+      <div>http://example.com/2022/08/15/oVirt虚拟化管理平台的部署与配置/</div>
     </div>
     <div class="license-meta">
       
@@ -452,7 +452,7 @@ engine-config -s CustomDeviceProperties=&#39;&#123;type=interface;prop=&#123;ext
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/hexo/2022/09/11/ProxmoxVE%E8%99%9A%E6%8B%9F%E5%8C%96%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%E7%9A%84%E9%83%A8%E7%BD%B2%E4%B8%8E%E9%85%8D%E7%BD%AE/" title="ProxmoxVE虚拟化管理平台部署与配置">
+                      <a href="/2022/09/11/ProxmoxVE%E8%99%9A%E6%8B%9F%E5%8C%96%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%E7%9A%84%E9%83%A8%E7%BD%B2%E4%B8%8E%E9%85%8D%E7%BD%AE/" title="ProxmoxVE虚拟化管理平台部署与配置">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">ProxmoxVE虚拟化管理平台部署与配置</span>
                         <span class="visible-mobile">上一篇</span>
@@ -462,7 +462,7 @@ engine-config -s CustomDeviceProperties=&#39;&#123;type=interface;prop=&#123;ext
                   <article class="post-next col-6">
                     
                     
-                      <a href="/hexo/2022/04/26/Kubernetes%E9%9B%86%E7%BE%A4Ingress%E8%AF%A6%E8%A7%A3/" title="Kubernetes集群Ingress详解">
+                      <a href="/2022/04/26/Kubernetes%E9%9B%86%E7%BE%A4Ingress%E8%AF%A6%E8%A7%A3/" title="Kubernetes集群Ingress详解">
                         <span class="hidden-mobile">Kubernetes集群Ingress详解</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -589,15 +589,15 @@ engine-config -s CustomDeviceProperties=&#39;&#123;type=interface;prop=&#123;ext
 
 <script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
 <script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/hexo/js/events.js" ></script>
-<script  src="/hexo/js/plugins.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
 
 
 
 
 
   
-    <script  src="/hexo/js/img-lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
@@ -669,7 +669,7 @@ engine-config -s CustomDeviceProperties=&#39;&#123;type=interface;prop=&#123;ext
 
   <script>Fluid.plugins.imageCaption();</script>
 
-  <script  src="/hexo/js/local-search.js" ></script>
+  <script  src="/js/local-search.js" ></script>
 
 
 
@@ -677,7 +677,7 @@ engine-config -s CustomDeviceProperties=&#39;&#123;type=interface;prop=&#123;ext
 
 <!-- 主题的启动项，将它保持在最底部 -->
 <!-- the boot of the theme, keep it at the bottom -->
-<script  src="/hexo/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script>
 
 
   
