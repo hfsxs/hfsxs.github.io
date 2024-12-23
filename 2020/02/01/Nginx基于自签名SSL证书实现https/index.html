@@ -1,0 +1,682 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="HTTP，HyperText Transfer Protocol，即超文本传输协议，是一种用于分布式、协作式和超媒体信息系统的应用层协议。简单来说就是一种发布和接收HTML页面的方法，被用于在Web浏览器和网站服务器之间传递信息。HTTP默认工作在TCP协议80端口，通过http:&#x2F;&#x2F;打头访问的都是标准HTTP服务。HTTP协议缺陷在于以明文方式发送内容，没有提供任何方式的数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx基于自签名SSL证书实现https">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2020/02/01/Nginx%E5%9F%BA%E4%BA%8E%E8%87%AA%E7%AD%BE%E5%90%8DSSL%E8%AF%81%E4%B9%A6%E5%AE%9E%E7%8E%B0https/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="HTTP，HyperText Transfer Protocol，即超文本传输协议，是一种用于分布式、协作式和超媒体信息系统的应用层协议。简单来说就是一种发布和接收HTML页面的方法，被用于在Web浏览器和网站服务器之间传递信息。HTTP默认工作在TCP协议80端口，通过http:&#x2F;&#x2F;打头访问的都是标准HTTP服务。HTTP协议缺陷在于以明文方式发送内容，没有提供任何方式的数据">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-02-01T07:10:10.000Z">
+<meta property="article:modified_time" content="2024-08-15T01:54:15.113Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Http服务器">
+<meta property="article:tag" content="负载均衡">
+<meta property="article:tag" content="Nginx">
+<meta property="article:tag" content="SSL">
+<meta property="article:tag" content="Https">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Nginx基于自签名SSL证书实现https - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Nginx基于自签名SSL证书实现https</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-02-01 15:10" pubdate>
+          2020年2月1日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          18 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Nginx基于自签名SSL证书实现https</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>HTTP，HyperText Transfer Protocol，即超文本传输协议，是一种用于分布式、协作式和超媒体信息系统的应用层协议。简单来说就是一种发布和接收HTML页面的方法，被用于在Web浏览器和网站服务器之间传递信息。HTTP默认工作在TCP协议80端口，通过http:&#x2F;&#x2F;打头访问的都是标准HTTP服务。HTTP协议缺陷在于以明文方式发送内容，没有提供任何方式的数据加密，若攻击者截取了Web浏览器和网站服务器之间的传输报文，就可以直接截取其中的信息。所以，HTTP协议不适合传输一些敏感信息，如信用卡号、密码、支付信息等</p>
+<p>HTTPS，Hypertext Transfer Protocol Secure，即超文本传输安全协议，是HTTP的安全版，实质上就是在HTTP通信的基础上集成SSL&#x2F;TLS以加密数据包，即HTTPS&#x3D;HTTP+SSL，主要目的是提供对网站服务器的身份认证，以保护交换数据的隐私与完整性。HTTPS默认工作在TCP协议443端口，https:&#x2F;&#x2F;打头的网站都是HTTPS服务</p>
+<h1 id="SSL原理"><a href="#SSL原理" class="headerlink" title="SSL原理"></a>SSL原理</h1><p>SSL&#x2F;TLS协议采用公钥加密法（最著名的是RSA加密算法），具体流程为：客户端向服务器索要公钥，然后用公钥加密信息，服务器收到密文，用自己的私钥解密即可</p>
+<p>SSL证书，即遵守SSL协议的数字证书，因部署在服务器上也称服务器SSL证书，服务器通过证书管理公钥与私钥，一般由全球信任的证书颁发机构(CA)验证服务器身份后颁发，通过证书启动SSL安全通道以实现加密传输。向权威机构申请证书需要额外的费用，也可自己制作，即自签名证书，但不受信任，客户端访问的时候会弹出告警信息，需要客户端验证通过才能继续访问</p>
+<h1 id="HTTPS工作流程"><a href="#HTTPS工作流程" class="headerlink" title="HTTPS工作流程"></a>HTTPS工作流程</h1><h2 id="1-客户端发起HTTPS请求"><a href="#1-客户端发起HTTPS请求" class="headerlink" title="1.客户端发起HTTPS请求"></a>1.客户端发起HTTPS请求</h2><p>用户在浏览器里输入一个https网址，经过TCP三次同步握手后，与服务器的443端口建立TCP连接</p>
+<h2 id="2-服务端传送证书"><a href="#2-服务端传送证书" class="headerlink" title="2.服务端传送证书"></a>2.服务端传送证书</h2><p>服务端将证书发送给客户端，实质上就是公钥，包含证书颁发机构、过期时间等信息</p>
+<h2 id="3-客户端验证证书"><a href="#3-客户端验证证书" class="headerlink" title="3.客户端验证证书"></a>3.客户端验证证书</h2><p>客户端的TLS验证公钥是否有效，如颁发机构是否可信、是否过期等，若发现异常，则会发出证书异常的警告；若证书没有问题，将生成随机值，再用证书对其加密，形成私钥，完成双方通信的加密算法与密钥的协商</p>
+<h2 id="4-客户端传送私钥"><a href="#4-客户端传送私钥" class="headerlink" title="4.客户端传送私钥"></a>4.客户端传送私钥</h2><p>客户端将私钥发送到服务端，此后客户端和服务端双方通信就基于此进行加密与解密</p>
+<h2 id="5-服务端加密响应数据并发送给客户端"><a href="#5-服务端加密响应数据并发送给客户端" class="headerlink" title="5.服务端加密响应数据并发送给客户端"></a>5.服务端加密响应数据并发送给客户端</h2><p>服务端通过客户端发送的密钥与加密算法，将响应数据进行运算完成加密，以保障数据的安全性和隐私性，最后发送给客户端</p>
+<h2 id="6-客户端解密信息"><a href="#6-客户端解密信息" class="headerlink" title="6.客户端解密信息"></a>6.客户端解密信息</h2><p>客户端依据之前的加密算法与密钥解密响应数据，渲染成网页呈现给用户</p>
+<hr>
+<h1 id="1-编译安装http-ssl-module模块"><a href="#1-编译安装http-ssl-module模块" class="headerlink" title="1.编译安装http_ssl_module模块"></a>1.编译安装http_ssl_module模块</h1><p>–with-http_ssl_module</p>
+<h1 id="2-创建证书"><a href="#2-创建证书" class="headerlink" title="2.创建证书"></a>2.创建证书</h1><pre><code class="hljs">mkdir /etc/nginx/ssl
+cd /etc/pki/tls/certs
+</code></pre>
+<h2 id="2-1-创建RSA密钥"><a href="#2-1-创建RSA密钥" class="headerlink" title="2.1 创建RSA密钥"></a>2.1 创建RSA密钥</h2><pre><code class="hljs">openssl genrsa -des3 -out nginx.key 2048
+</code></pre>
+<h2 id="2-2-创建CSR，即证书签名请求文件"><a href="#2-2-创建CSR，即证书签名请求文件" class="headerlink" title="2.2 创建CSR，即证书签名请求文件"></a>2.2 创建CSR，即证书签名请求文件</h2><pre><code class="hljs">openssl req -new -key nginx.key \
+-subj &quot;/C=CN/ST=HeNan/L=ShangQiu/O=Sword/OU=Opt/CN=registry.sword.org&quot; \
+-out nginx.csr
+</code></pre>
+<h2 id="2-3-生成自签名证书"><a href="#2-3-生成自签名证书" class="headerlink" title="2.3 生成自签名证书"></a>2.3 生成自签名证书</h2><pre><code class="hljs">openssl x509 -req -days 3650 -in nginx.csr -signkey nginx.key -out nginx.crt
+</code></pre>
+<h2 id="2-4-退掉密码"><a href="#2-4-退掉密码" class="headerlink" title="2.4 退掉密码"></a>2.4 退掉密码</h2><pre><code class="hljs">mv nginx.key nginx.bak.key
+openssl rsa -in nginx.bak.key -out nginx.key
+</code></pre>
+<h1 id="3-配置SSL证书"><a href="#3-配置SSL证书" class="headerlink" title="3.配置SSL证书"></a>3.配置SSL证书</h1><pre><code class="hljs">vi /etc/nginx/nginx.conf
+
+
+server &#123;
+
+  listen       80;
+  server_name  localhost;
+
+  location / &#123;
+    root   html;
+    index  index.html index.htm;
+  &#125;
+
+  # 配置http自动跳转https，实现全站加密
+  # rewrite ^(.*) https://$host$1 permanent;
+&#125;
+
+server &#123;
+
+  listen       443 ssl;
+  server_name  localhost;
+  root         /web;
+
+  ssl on;
+  ssl_certificate      /etc/nginx/ssl/nginx.crt;
+  ssl_certificate_key  /etc/nginx/ssl/nginx.key;
+
+  ssl_session_cache    shared:SSL:1m;
+  ssl_session_timeout  5m;
+
+  ssl_ciphers  ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;
+  ssl_prefer_server_ciphers  on;
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+</code></pre>
+<p>}</p>
+<h1 id="4-测试https访问"><a href="#4-测试https访问" class="headerlink" title="4.测试https访问"></a>4.测试https访问</h1><p><a target="_blank" rel="noopener" href="https://ip/">https://ip</a></p>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lan1x/p/5872915.html">https://www.cnblogs.com/lan1x/p/5872915.html</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/Http%E6%9C%8D%E5%8A%A1%E5%99%A8/">#Http服务器</a>
+      
+        <a href="/hexo/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">#负载均衡</a>
+      
+        <a href="/hexo/tags/Nginx/">#Nginx</a>
+      
+        <a href="/hexo/tags/SSL/">#SSL</a>
+      
+        <a href="/hexo/tags/Https/">#Https</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Nginx基于自签名SSL证书实现https</div>
+      <div>https://css.ss-ss.top/hexo/2020/02/01/Nginx基于自签名SSL证书实现https/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年2月1日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2020/02/01/Nginx%E6%97%A5%E5%BF%97%E8%AF%A6%E8%A7%A3/" title="Nginx日志详解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Nginx日志详解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2020/02/01/Nginx%E9%85%8D%E7%BD%AE%E8%BA%AB%E4%BB%BD%E8%AE%A4%E8%AF%81/" title="Nginx配置身份认证">
+                        <span class="hidden-mobile">Nginx配置身份认证</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

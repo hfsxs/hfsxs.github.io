@@ -1,0 +1,759 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Kafka，由Scala和Java开发的开源的高可靠、高吞吐量、低延迟的流式数据平台，可用作分布式发布-订阅消息队列系统。Kafka基于ZooKeeper同步服务，将消息数据以分区的方式并行地存储于分布式集群的磁盘，并以多副本的方式构建数据冗余机制，适用于大数据实时数据流处理领域，如消费者在网站上所有动作流数据（网页浏览、点击、搜索以及其他用户行动） 体系架构 Kafka是典型的分布式消息队列系统">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka集群部署">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2024/08/01/kafka%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="Kafka，由Scala和Java开发的开源的高可靠、高吞吐量、低延迟的流式数据平台，可用作分布式发布-订阅消息队列系统。Kafka基于ZooKeeper同步服务，将消息数据以分区的方式并行地存储于分布式集群的磁盘，并以多副本的方式构建数据冗余机制，适用于大数据实时数据流处理领域，如消费者在网站上所有动作流数据（网页浏览、点击、搜索以及其他用户行动） 体系架构 Kafka是典型的分布式消息队列系统">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://css.ss-ss.top/hexo/img/wiki/kafka/001%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84.jpg">
+<meta property="og:image" content="https://css.ss-ss.top/hexo/img/wiki/kafka/002%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.jpg">
+<meta property="article:published_time" content="2024-08-01T06:15:30.000Z">
+<meta property="article:modified_time" content="2024-08-08T10:21:15.091Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Kafka">
+<meta property="article:tag" content="消息队列">
+<meta property="article:tag" content="中间件">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://css.ss-ss.top/hexo/img/wiki/kafka/001%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84.jpg">
+  
+  
+  
+  <title>Kafka集群部署 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Kafka集群部署</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-08-01 14:15" pubdate>
+          2024年8月1日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          55 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kafka集群部署</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Kafka，由Scala和Java开发的开源的高可靠、高吞吐量、低延迟的流式数据平台，可用作分布式发布-订阅消息队列系统。Kafka基于ZooKeeper同步服务，将消息数据以分区的方式并行地存储于分布式集群的磁盘，并以多副本的方式构建数据冗余机制，适用于大数据实时数据流处理领域，如消费者在网站上所有动作流数据（网页浏览、点击、搜索以及其他用户行动）</p>
+<h1 id="体系架构"><a href="#体系架构" class="headerlink" title="体系架构"></a>体系架构</h1><p><img src="/hexo/img/wiki/kafka/001%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84.jpg" srcset="/hexo/img/loading.gif" lazyload alt="集群架构"></p>
+<p>Kafka是典型的分布式消息队列系统，由消息生产者Producer、消息消费者Consumer、消息服务器Broker和分布式协调服务器ZooKeeper组成</p>
+<p>消息队列，Message Queue，简称为MQ，数据传输过程中的数据链表，是应用程序间异步数据处理机制，实质就是一个保存数据的队列的存储容器，工作流程为：消息的发布者将消息发布到MQ，消息使用者从MQ获取消息，而双方都无需关心传输的方式。基于消息队列设计的消息系统即是将数据以这种异步方式从一个应用程序传输到另外一个应用程序，数据的发送方与接收方不必考虑如何将数据共享与接收，也不必顾及数据的存储问题，只需专注于自身的业务逻辑即可。这样，应用程序之间通过消息系统以异步传输的方式进行数据传输，减少了系统组件之间的直接依赖，解耦了业务逻辑与数据传输逻辑，提高了数据传输的容错性，避免了流量高峰的冲击。消息系统有两种消息传递模式，即点对点方式和基于发布-订阅（publish-subscribe）方式</p>
+<ul>
+<li><p>点对点消息系统，将消息保留在队列中，一个或者多个消费者可以消耗队列中的消息，但是消息最多只能被一个消费者消费，且一旦有一个消费者将其消费掉，消息就从该队列中消失。注意，多个消费者可以同时工作，但最终能拿到该消息的只有其中一个，典型的例子就是订单处理系统，多个订单处理器可以同时工作，但是对于一个特定的订单，只有其中一个订单处理器可以拿到该订单进行处理</p>
+</li>
+<li><p>发布-订阅消息系统，将消息保留在主题中，不同于点对点系统，消费者可以订阅一个或多个主题并使用该主题中的所有消息，消息生产者称为发布者，消息使用者称为订阅者。典型的例子是Dish电视，只需发布不同的渠道，如运动，电影，音乐等，任何人都可通过主题订阅自己的频道集</p>
+</li>
+</ul>
+<h2 id="1-Producer"><a href="#1-Producer" class="headerlink" title="1.Producer"></a>1.Producer</h2><p>Producer，生产者，即消息的创建者，将消息发布到Kafka</p>
+<h2 id="2-Consumer"><a href="#2-Consumer" class="headerlink" title="2.Consumer"></a>2.Consumer</h2><p>Consumer，消费者，即消息的使用者，从Kafka获取消息，每个Consumer都从属于特定的ConsumerGroup（消费者组，可进行指定，若不指定则属于默认组）</p>
+<h2 id="3-Broker"><a href="#3-Broker" class="headerlink" title="3.Broker"></a>3.Broker</h2><p>Broker，Kafka服务器节点，相当于MQ节点，用于存储消息数据，多个Broker节点即构成Kafka集群</p>
+<h3 id="3-1-Topic"><a href="#3-1-Topic" class="headerlink" title="3.1 Topic"></a>3.1 Topic</h3><p>Topic，主题，Kafka所存储消息的逻辑上的类别，生产者和消费者的操作对象</p>
+<h3 id="3-2-Partition"><a href="#3-2-Partition" class="headerlink" title="3.2 Partition"></a>3.2 Partition</h3><p>Partition，分区，Kafka数据存储的基本单元，是一个有序且不可变的记录序列，新纪录从末尾进行追加，且每个Topic都被分割为一个或多个物理上的Partition，并以文件形式分散存储于Broker节点。由于Kafka基于文件进行数据存储，文件内容必然会扩展到单个磁盘的上限，因此将文件分割为一个一个的Partition，一个Partition对应一个文件。这样，就将数据分割到不同的Broker进行存储，还实现了负载均衡</p>
+<h3 id="3-3-Replication"><a href="#3-3-Replication" class="headerlink" title="3.3 Replication"></a>3.3 Replication</h3><p>Replication，副本，分区的备份，默认为1，最大值为集群Broker节点数，是Kafka的数据冗余机制。所有副本数据一致，但只有一个作为ReplicationLeader负责与生产者、消费者交互及数据同步，其余作为ReplicationFollower，只作为备份，并从replicationLeader同步数据，直到ReplicationLeader损坏或失效，再由ReplicationManager选举新的ReplicationLeader，完成副本状态切换</p>
+<h3 id="3-4-Offset"><a href="#3-4-Offset" class="headerlink" title="3.4 Offset"></a>3.4 Offset</h3><p>Offset，偏移量，long型数字，消息的唯一序号，由于Partition文件是有序的记录，所以也标识了该消息在Partition中的位置</p>
+<h3 id="3-5-LogSegment"><a href="#3-5-LogSegment" class="headerlink" title="3.5 LogSegment"></a>3.5 LogSegment</h3><p>LogSegment，日志段，Kafka日志对象分片的最小单位，每个分区被划分为多个LogSegment。LogSegment是逻辑概念，由一个日志文件（.log数据文件）和两个索引文件（.index和.timeindex，即表示偏移量索引文件和消息时间戳索引文件）组成</p>
+<h2 id="4-ZooKeeper"><a href="#4-ZooKeeper" class="headerlink" title="4.ZooKeeper"></a>4.ZooKeeper</h2><p>ZooKeeper，开源的分布式应用程序协调服务，通常用作分布式架构的配置和同步服务，为分布式应用提供一致性服务，如配置维护、域名服务、分布式同步、组服务等。Kafka集群依赖于ZooKeeper共享信息与协调管理，如集群元数据存储（如Topic、Broker注册等）、协调Broker与Producer、Consumer（如Broker状态监控及Leader选举）</p>
+<h1 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h1><p><img src="/hexo/img/wiki/kafka/002%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.jpg" srcset="/hexo/img/loading.gif" lazyload alt="工作流程"></p>
+<p>Kafka工作流程大致分为三步，生产消息，即生产者将消息发送到Kafka集群，并选择目标分区；存储消息，即Broker将消息持久化到磁盘，并通过副本机制保证数据的高可用性和容错性；消费消息，即消费者从Kafka集群拉取消息，并进行处理。同时，消费者需要定期提交消费进度，以确保消息的准确处理和故障恢复</p>
+<h2 id="1-生产消息"><a href="#1-生产消息" class="headerlink" title="1.生产消息"></a>1.生产消息</h2><h3 id="1-1-创建生产者实例"><a href="#1-1-创建生产者实例" class="headerlink" title="1.1 创建生产者实例"></a>1.1 创建生产者实例</h3><p>生产者创建KafkaProducer实例，并配置必要的参数，如Kafka Broker的地址、序列化器（Serializer）等，然后与Kafka的Producer API建立连接</p>
+<h3 id="1-2-构建消息"><a href="#1-2-构建消息" class="headerlink" title="1.2 构建消息"></a>1.2 构建消息</h3><p>生产者构建消息记录（ProducerRecord），包括目标主题、消息键（Key）和消息值（Value）</p>
+<h3 id="1-3-发送消息"><a href="#1-3-发送消息" class="headerlink" title="1.3 发送消息"></a>1.3 发送消息</h3><p>生产者调用send()方法将消息发送到Kafka集群，发送方式有两种，即同步和异步</p>
+<h3 id="1-4-选择分区"><a href="#1-4-选择分区" class="headerlink" title="1.4 选择分区"></a>1.4 选择分区</h3><p>Kafka根据消息键和分区策略（如轮询或哈希）选择目标分区，若消息键为空，则基于轮询策略将消息均匀分配到各个分区</p>
+<h3 id="1-5-消息序列化"><a href="#1-5-消息序列化" class="headerlink" title="1.5 消息序列化"></a>1.5 消息序列化</h3><p>生产者将消息键和消息值序列化为字节数组，以便在网络上传输和存储</p>
+<h3 id="1-6-消息发送"><a href="#1-6-消息发送" class="headerlink" title="1.6 消息发送"></a>1.6 消息发送</h3><p>生产者将序列化后的消息发送到目标分区的Leader Broker</p>
+<h3 id="1-7-消息确认"><a href="#1-7-消息确认" class="headerlink" title="1.7 消息确认"></a>1.7 消息确认</h3><p>Leader Broker接收到消息后，将其写入本地日志文件，并向生产者发送确认（ACK）</p>
+<h2 id="2-存储消息"><a href="#2-存储消息" class="headerlink" title="2.存储消息"></a>2.存储消息</h2><h3 id="2-1-接收消息"><a href="#2-1-接收消息" class="headerlink" title="2.1 接收消息"></a>2.1 接收消息</h3><p>kafka集群Leader Broker节点接收到生产者发送的消息后，将消息追加到对应主题的分区日志文件，属于顺序写磁盘，相比于随机写的吞吐量更高</p>
+<h3 id="2-2-副本同步"><a href="#2-2-副本同步" class="headerlink" title="2.2 副本同步"></a>2.2 副本同步</h3><p>Leader Broker将消息同步到从副本（Follower）Broker，从副本将消息写入本地日志文件向Leader发送确认</p>
+<h3 id="2-3-消息提交"><a href="#2-3-消息提交" class="headerlink" title="2.3 消息提交"></a>2.3 消息提交</h3><p>Leader Broker收到足够数量的从副本确认后，将消息标记为已提交（Committed），已提交的消息即对消费者可见</p>
+<h3 id="2-4-日志管理"><a href="#2-4-日志管理" class="headerlink" title="2.4 日志管理"></a>2.4 日志管理</h3><p>Kafka集群定期清理过期的日志段（Log Segment），以释放磁盘空间。此外，日志压缩（Log Compaction）功能也能用于清理数据，以便保留每个键的最新消息</p>
+<h2 id="3-消费消息"><a href="#3-消费消息" class="headerlink" title="3.消费消息"></a>3.消费消息</h2><h3 id="3-1-创建消费者实例"><a href="#3-1-创建消费者实例" class="headerlink" title="3.1 创建消费者实例"></a>3.1 创建消费者实例</h3><p>首先，消费者创建一个KafkaConsumer实例，并配置必要的参数，如Kafka Broker的地址、反序列化器（Deserializer）等</p>
+<h3 id="3-2-订阅主题"><a href="#3-2-订阅主题" class="headerlink" title="3.2 订阅主题"></a>3.2 订阅主题</h3><p>消费者调用subscribe()方法订阅一个或多个主题，可以单独消费消息，也可以组成消费组（Consumer Group）共同消费</p>
+<h3 id="3-3-拉取消息"><a href="#3-3-拉取消息" class="headerlink" title="3.3 拉取消息"></a>3.3 拉取消息</h3><p>消费者调用poll()方法从Kafka集群拉取消息，可根据需要设置拉取间隔和拉取数量</p>
+<h3 id="3-4-消息反序列化"><a href="#3-4-消息反序列化" class="headerlink" title="3.4 消息反序列化"></a>3.4 消息反序列化</h3><p>消费者将消息键和消息值反序列化为原始数据类型，以便进行处理</p>
+<h3 id="3-5-处理消息"><a href="#3-5-处理消息" class="headerlink" title="3.5 处理消息"></a>3.5 处理消息</h3><p>消费者处理拉取到的消息，执行业务逻辑</p>
+<h3 id="3-6-提交偏移量"><a href="#3-6-提交偏移量" class="headerlink" title="3.6 提交偏移量"></a>3.6 提交偏移量</h3><p>消费者定期提交消费进度，即消费偏移量，以确保消息的准确处理和故障恢复，可选择自动提交或手动提交</p>
+<h1 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h1><h2 id="1-消息系统"><a href="#1-消息系统" class="headerlink" title="1.消息系统"></a>1.消息系统</h2><p>消息系统通常应用与解耦生产者和消费者、缓存消息等场景</p>
+<h2 id="2-监控指标"><a href="#2-监控指标" class="headerlink" title="2.监控指标"></a>2.监控指标</h2><p>即操作监控数据，涉及聚合来自分布式应用程序的统计信息，以产生操作数据的集中反馈</p>
+<h2 id="3-日志聚合"><a href="#3-日志聚合" class="headerlink" title="3.日志聚合"></a>3.日志聚合</h2><p>用于跨组织从多个服务收集日志，并以标准格式提供给多个服务器</p>
+<h2 id="4-流处理"><a href="#4-流处理" class="headerlink" title="4.流处理"></a>4.流处理</h2><p>流处理框架（Storm和Spark Streaming）从Kafka读取数据并对其进行处理，将处理后的数据写入Kafka后供用户和应用程序使用，如在线教育的课程与习题数据的计算与消费</p>
+<hr>
+<h1 id="1-配置Java环境"><a href="#1-配置Java环境" class="headerlink" title="1.配置Java环境"></a>1.配置Java环境</h1><h1 id="2-ZooKeeper集群部署"><a href="#2-ZooKeeper集群部署" class="headerlink" title="2.ZooKeeper集群部署"></a>2.ZooKeeper集群部署</h1><p>Kafka安装包实际上内置了ZooKeeper，但为了保障整个集群的性能，建议单独部署</p>
+<h2 id="2-1-下载ZooKeeper"><a href="#2-1-下载ZooKeeper" class="headerlink" title="2.1 下载ZooKeeper"></a>2.1 下载ZooKeeper</h2><pre><code class="hljs">wget https://archive.apache.org/dist/zookeeper/zookeeper-3.6.4/apache-zookeeper-3.6.4-bin.tar.gz
+tar -xzvf apache-zookeeper-3.6.4-bin.tar.gz &amp;&amp; sudo mv apache-zookeeper-3.6.4 /usr/local/zookeeper
+sudo mkdir -p /usr/local/zookeeper/data
+</code></pre>
+<h2 id="2-2-配置ZooKeeper集群"><a href="#2-2-配置ZooKeeper集群" class="headerlink" title="2.2 配置ZooKeeper集群"></a>2.2 配置ZooKeeper集群</h2><pre><code class="hljs">sudo cp /usr/local/zookeeper/conf/zoo_sample.cfg /usr/local/zookeeper/conf/zoo.cfg
+sudo vi /usr/local/zookeeper/conf/zoo.cfg
+
+
+# 设置Zookeeper服务端口
+clientPort = 2181
+# 设置Zookeeper服务器之间或与客户端之间的心跳时长，默认为2000，单位为毫秒，直接影响事件触发、回话超时和数据同步等
+tickTime = 2000
+# 设置集群Lollower节点和Leader节点初始连接的超时时长，其值为tickTime数，即n个tickTime时间，默认为10
+initLimit = 5
+# 设置集群Lollower节点和Leader节点初始化后请求与应答的超时时长，其值为tickTime数，即n个tickTime时间，默认为2
+syncLimit = 2
+# 设置Zookeeper本地数据目录，默认为/tmp/zookeeper
+dataDir = /usr/local/zookeeper/data
+# 设置Zookeeper集群节点
+server.1 = 172.16.100.101:2888:3888
+server.2 = 172.16.100.102:2888:3888
+server.3 = 172.16.100.103:2888:3888
+</code></pre>
+<h2 id="2-3-配置节点myid文件"><a href="#2-3-配置节点myid文件" class="headerlink" title="2.3 配置节点myid文件"></a>2.3 配置节点myid文件</h2><pre><code class="hljs">echo 1 &gt; /usr/local/zookeeper/data/myid
+echo 2 &gt; /usr/local/zookeeper/data/myid
+echo 3 &gt; /usr/local/zookeeper/data/myid
+</code></pre>
+<ul>
+<li>注：myid文件是Zookeeper集群节点的唯一标识符，用于集群节点内部的互相识别、通信和协调，对应配置文件的server.x参数</li>
+</ul>
+<h2 id="2-4-创建启动脚本"><a href="#2-4-创建启动脚本" class="headerlink" title="2.4 创建启动脚本"></a>2.4 创建启动脚本</h2><pre><code class="hljs">sudo vi /lib/systemd/system/zookeeper.service
+
+
+[Unit]
+Description = Apache Zookeeper
+Documentation = http://zookeeper.apache.org
+
+[Service]
+Type = forking
+User = root
+Group = root
+ExecStart = /usr/local/zookeeper/bin/zkServer.sh --config /usr/local/zookeeper/conf start
+ExecStop = /usr/local/zookeeper/bin/zkServer.sh --config /usr/local/zookeeper/conf stop
+Restart = on-abnormal
+
+[Install]
+WantedBy = multi-user.target
+</code></pre>
+<h2 id="2-5-启动集群"><a href="#2-5-启动集群" class="headerlink" title="2.5 启动集群"></a>2.5 启动集群</h2><pre><code class="hljs">sudo systemctl daemon-reload
+sudo systemctl start zookeeper.service
+sudo systemctl enable zookeeper.service
+</code></pre>
+<h2 id="2-6-验证集群状态"><a href="#2-6-验证集群状态" class="headerlink" title="2.6 验证集群状态"></a>2.6 验证集群状态</h2><pre><code class="hljs">sudo /usr/local/zookeeper/bin/zkServer.sh status
+</code></pre>
+<h1 id="3-Kafka集群部署"><a href="#3-Kafka集群部署" class="headerlink" title="3.Kafka集群部署"></a>3.Kafka集群部署</h1><h2 id="3-1-下载安装包"><a href="#3-1-下载安装包" class="headerlink" title="3.1 下载安装包"></a>3.1 下载安装包</h2><pre><code class="hljs">wget https://downloads.apache.org/kafka/3.6.2/kafka_2.12-3.6.2.tgz
+tar -xzvf kafka_2.12-3.6.2.tgz &amp;&amp; sudo mv kafka_2.12-3.6.2 /usr/local/kafka
+</code></pre>
+<h2 id="3-2-配置Kafka集群"><a href="#3-2-配置Kafka集群" class="headerlink" title="3.2 配置Kafka集群"></a>3.2 配置Kafka集群</h2><pre><code class="hljs">sudo cp /usr/local/kafka/config/server.properties /usr/local/kafka/config/server.properties.bak
+sudo mkdir -p /usr/local/kafka/data 
+sudo cp /usr/local/kafka/config/server.properties /usr/local/kafka/config/server.properties.bak
+sudo vi /usr/local/kafka/config/server.properties
+
+
+# 设置监听端口
+port = 9092
+# 设置Broker节点全局唯一ID，不能重复，类似于Zookeeper的myid
+broker.id = 1
+# 设置数据文件存储路径，默认为/tmp
+log.dirs = /usr/local/kafka/data
+# 设置Topic默认分区数，默认为1，建议对业务压测之后根据实际情况进行设置
+num.partitions = 3
+# 设置Zookeeper集群地址
+zookeeper.connect = 172.100.100.101:2181,172.100.100.102:2181,172.100.100.103:2181
+</code></pre>
+<h2 id="3-3-创建启动脚本"><a href="#3-3-创建启动脚本" class="headerlink" title="3.3 创建启动脚本"></a>3.3 创建启动脚本</h2><pre><code class="hljs">sudo vi /lib/systemd/system/kafka.service
+
+
+Description = Apache Kafka
+Documentation = https://kafka.apache.org
+After = network.target zookeeper.service
+
+[Service]
+Type = simple
+User = root
+Group = root
+ExecStart = /usr/local/kafka/bin/kafka-server-start.sh /usr/local/kafka/config/server.properties
+ExecStop = /usr/local/kafka/bin/kafka-server-stop.sh
+Restart = on-failure
+
+[Install]
+WantedBy = multi-user.target
+</code></pre>
+<h2 id="3-4-启动Kafka集群"><a href="#3-4-启动Kafka集群" class="headerlink" title="3.4 启动Kafka集群"></a>3.4 启动Kafka集群</h2><pre><code class="hljs">sudo systemctl daemon-reload
+sudo systemctl start kafka.service
+sudo systemctl enable kafka.service
+</code></pre>
+<h2 id="3-5-验证Kafka集群"><a href="#3-5-验证Kafka集群" class="headerlink" title="3.5 验证Kafka集群"></a>3.5 验证Kafka集群</h2><hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/shenaohuoli132/article/details/137600814">https://blog.csdn.net/shenaohuoli132/article/details/137600814</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/wudidahuanggua/article/details/127086186">https://blog.csdn.net/wudidahuanggua/article/details/127086186</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Blue_Pepsi_Cola/article/details/137432969">https://blog.csdn.net/Blue_Pepsi_Cola/article/details/137432969</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/Kafka/">#Kafka</a>
+      
+        <a href="/hexo/tags/%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/">#消息队列</a>
+      
+        <a href="/hexo/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">#中间件</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kafka集群部署</div>
+      <div>https://css.ss-ss.top/hexo/2024/08/01/kafka集群部署/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年8月1日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2024/08/07/Kafka%E9%9B%86%E7%BE%A4Kraft%E6%A8%A1%E5%BC%8F%E9%83%A8%E7%BD%B2/" title="Kafka集群Kraft模式部署">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kafka集群Kraft模式部署</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2024/07/30/Kubernetes%E9%9B%86%E7%BE%A4%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7Rancher%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/" title="Kubernetes集群管理工具Rancher的安装与配置">
+                        <span class="hidden-mobile">Kubernetes集群管理工具Rancher的安装与配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

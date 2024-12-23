@@ -1,0 +1,723 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Kubernetes对象通常通过定义资源清单进行创建，资源清单描述了该对象的属性，决定了用户对其在生命内的期望状态。资源清单有许多可供选择的表示对象属性的字段，必须进行配置的字段的三个，即apiVersion，创建对象所用Kubernetes API版本；kind，创建对象所属类别；metadata，唯一标识对象的元数据，包括一个name、UID和namespace  1.属性字段apiVersi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes资源清单详解">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2021/05/27/Kubernetes%E8%B5%84%E6%BA%90%E6%B8%85%E5%8D%95%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="Kubernetes对象通常通过定义资源清单进行创建，资源清单描述了该对象的属性，决定了用户对其在生命内的期望状态。资源清单有许多可供选择的表示对象属性的字段，必须进行配置的字段的三个，即apiVersion，创建对象所用Kubernetes API版本；kind，创建对象所属类别；metadata，唯一标识对象的元数据，包括一个name、UID和namespace  1.属性字段apiVersi">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-05-27T08:32:59.000Z">
+<meta property="article:modified_time" content="2023-12-31T12:59:38.632Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="容器云">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Kubernetes资源清单详解 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Kubernetes资源清单详解</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-05-27 16:32" pubdate>
+          2021年5月27日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          22 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kubernetes资源清单详解</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Kubernetes对象通常通过定义资源清单进行创建，资源清单描述了该对象的属性，决定了用户对其在生命内的期望状态。资源清单有许多可供选择的表示对象属性的字段，必须进行配置的字段的三个，即apiVersion，创建对象所用Kubernetes API版本；kind，创建对象所属类别；metadata，唯一标识对象的元数据，包括一个name、UID和namespace</p>
+<hr>
+<h1 id="1-属性字段"><a href="#1-属性字段" class="headerlink" title="1.属性字段"></a>1.属性字段</h1><pre><code class="hljs">apiVersion，字符串型字段，Kubernetes API版本，基本为V1，查询命令为：       kubectl api-versions
+kind，定义对象的资源类型与角色，比如Pod
+metadata，对象型字段，元数据对象，唯一标识对象的元数据
+  name，字符串型字段，元数据对象的名字，如定义Pod的名字
+  namespace，字符串型字段，元数据对象的命名空间，默认为
+
+spec，对象型字段，对象的详细描述
+  containers，列表型字段，定义对象的容器列表
+  name，字符串型字段，定义容器的名字
+  image，字符串型字段，定义容器所属镜像的名称
+  imagePullPolicy，字符串型字段，定义镜像拉取策略，可选值有三个：Always，每次都尝试重新拉取镜像；Never；仅使用本地镜像；IfNotPresent，如果本地有镜像就使用本地镜像，没有则拉取镜像，默认为Always
+
+    command，列表型字段，指定容器启动命令，可指定多个，若不指定则使用镜像打包时的启动命令
+    args，列表型字段，指定容器启动命令参数，可指定多个
+    workingDir，字符串型字段，指定容器的工作目录
+    volumeMounts，列表型字段，指定容器内部的存储卷配置
+
+      name，字符串型字段，指定被容器挂载的存储卷的名称
+      mountPath，字符串型字段，指定被容器挂载的存储卷的路径
+      readOnly，布尔型字段，指定存储卷路径的读写模式，true或false，默认为读写模式
+
+    ports，列表型字段，指定容器需要用到的端口列表
+
+      name，字符串型字段，指定端口名称
+      containerPort，字符串型字段，指定容器需要监听的端口号
+      hostPort，字符串型字段，指定容器所在主机需要监听的端口号，默认同containerPort，若定义了该字段，则同台主机无法启动该容器的相同副本，会造成端口号冲突
+
+      protocol，字符串型字段，指定端口协议，支持TCP和UDP,默认值为TCP
+
+    env，列表型字段，指定容器运行前需要设置的环境变量列表
+
+      name，字符串型字段，指定环境变量名称
+      value，字符串型字段，指定环境变量值
+
+    resources，对象型字段，指定资源限制和资源请求
+
+      limits，对象型字段，指定设置容器运行时资源的运行上限
+        cpu，字符串型字段，指定cpu的限制，单位为core数，用于docker run --cpu-shares参数
+        memory，字符串型字段，指定mem内存的限制
+      requests，对象型字段，指定容器启动和调度时的限制设置
+        cpu，字符串型字段，cpu请求，单位为core数，容器启动时初始化可用数量
+        memory，字符串型字段，内存请求，容器启动的初始化可用数量
+
+  restartPolicy，字符串型字段，定义Pod的重启策略，可选值有三个：Always，Pod一旦终止运行则无论任何原因kubelet服务都将尝试重启；OnFailure，Pod以非零码（异常）终止时kubelet才会尝试重启，若是正常结束（退出码为0）则kubelet将不会重启；Never，kubelet只将退出码报告给master，不会进行重启
+
+  nodeSelector，对象型字段，定义Node的Label过滤标签，以key:value格式指定
+  imagePullSecrets，对象型字段，定义拉取镜像时使用的secret，以name:secretkey格式指定
+  hostNetwork，布尔型字段，定义是否使用主机网络模式，默认值为false，设   置true表示使用宿主机网络， 不使用docker网桥，将无法在同一台宿主机上启动第二个副本
+</code></pre>
+<h1 id="2-yaml基本语法"><a href="#2-yaml基本语法" class="headerlink" title="2.yaml基本语法"></a>2.yaml基本语法</h1><ul>
+<li>缩进时不允许使用tab，只能用空格</li>
+<li>缩进的数目不固定，可任意选择，但全局缩进数目要保持统一，即相同层级的元素左对齐</li>
+<li>注释使用 #</li>
+</ul>
+<hr>
+<h1 id="3-资源清单基本格式"><a href="#3-资源清单基本格式" class="headerlink" title="3.资源清单基本格式"></a>3.资源清单基本格式</h1><pre><code class="hljs">apiVersion: apps/v1
+# 声明一个Deployment资源对象
+kind: Deployment
+metadata:
+  name: nginx-deployment  
+spec:
+  # 通过标签选择被控制的pod
+  selector:
+    matchLabels:
+      app: nginx-servers
+  # 声明pod副本数
+  replicas: 2
+  # 定义pod
+  template:
+metadata:
+  # 给pod打上标签
+  labels:
+    app: nginx-servers
+spec:
+  containers:
+    # 声明容器名称、镜像及镜像拉取策略
+    - name: nginx
+      image: sword618/nginx
+      imagePullPolicy: IfNotPresent
+      ports:
+        - containerPort: 80
+          name: http-nginx
+          protocol: TCP
+      # 声明容器资源限制
+      resources:
+          limits:
+            cpu: 500m
+            memory: 200Mi
+          requests:
+            cpu: 200m
+            memory: 100Mi
+# 声明资源对象分割符          
+---
+apiVersion: v1
+# 声明一个Service资源对象
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  # 声明service的类型为NodePort
+  type: NodePort
+  # 声明service的会话保持机制，None为默认值，表示随机调度；ClientIP表示来自于同一个客户端的请求调度到同一pod
+  sessionAffinity: ClientIP
+  # 通过标签选择被控制的pod
+  selector:
+    app: nginx-servers
+  ports:
+  # 声明service集群内部访问端口
+  - port: 80
+    # 声明pod容器端口
+    targetPort: 80
+    # 声明绑定到node的端口，如不指定则随机分配，范围为30000-32767
+    nodePort: 32000
+</code></pre>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/Kubernetes/">#Kubernetes</a>
+      
+        <a href="/hexo/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kubernetes资源清单详解</div>
+      <div>https://css.ss-ss.top/hexo/2021/05/27/Kubernetes资源清单详解/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年5月27日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2021/06/03/Kubernetes%E9%9B%86%E7%BE%A4Pod%E8%AF%A6%E8%A7%A3/" title="Kubernetes集群Pod详解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kubernetes集群Pod详解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2021/05/18/Kubernetes%E6%A0%B8%E5%BF%83%E6%A6%82%E5%BF%B5%E8%AF%A6%E8%A7%A3/" title="Kubernetes核心概念详解">
+                        <span class="hidden-mobile">Kubernetes核心概念详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

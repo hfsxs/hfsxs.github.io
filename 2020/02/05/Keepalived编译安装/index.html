@@ -1,0 +1,750 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Keepalived，由C语言编写的基于VRRP（Vritrual Router Redundancy Protocol，虚拟路由冗余协议)的开源路由软件，用于为基于Linux的基础设施提供简单而稳定的负载均衡和高可用方案。最初是为LVS设计，用于管理与监控LVS集群各个服务节点的状态，根据其健康状况动态地、自适应地维护和管理负载均衡的服务器池，自动检测集群故障并完成转移，避免IP单点故障。Kee">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Keepalived编译安装">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2020/02/05/Keepalived%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="Keepalived，由C语言编写的基于VRRP（Vritrual Router Redundancy Protocol，虚拟路由冗余协议)的开源路由软件，用于为基于Linux的基础设施提供简单而稳定的负载均衡和高可用方案。最初是为LVS设计，用于管理与监控LVS集群各个服务节点的状态，根据其健康状况动态地、自适应地维护和管理负载均衡的服务器池，自动检测集群故障并完成转移，避免IP单点故障。Kee">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-02-05T06:30:40.000Z">
+<meta property="article:modified_time" content="2024-01-01T07:53:42.425Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="集群">
+<meta property="article:tag" content="Keepalived">
+<meta property="article:tag" content="高可用">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Keepalived编译安装 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Keepalived编译安装</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-02-05 14:30" pubdate>
+          2020年2月5日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          40 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Keepalived编译安装</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Keepalived，由C语言编写的基于VRRP（Vritrual Router Redundancy Protocol，虚拟路由冗余协议)的开源路由软件，用于为基于Linux的基础设施提供简单而稳定的负载均衡和高可用方案。最初是为LVS设计，用于管理与监控LVS集群各个服务节点的状态，根据其健康状况动态地、自适应地维护和管理负载均衡的服务器池，自动检测集群故障并完成转移，避免IP单点故障。Keepalived后来融入了可实现高可用的VRRP功能，也可作为其他服务的高可用解决方案，如Nginx、Haproxy、MySQL等</p>
+<h1 id="1-体系架构"><a href="#1-体系架构" class="headerlink" title="1.体系架构"></a>1.体系架构</h1><h2 id="1-1-core-components"><a href="#1-1-core-components" class="headerlink" title="1.1 core components"></a>1.1 core components</h2><p>keepalived的核心组件，负责主进程的启动及维护，由一系列功能模块组成</p>
+<ul>
+<li>Checkers，基于网络层（IP）、传输层（TCP）、应用层（HTTP、SSL等）对服务器池内真实服务器的健康检查模块</li>
+<li>WatchDog，监控checkers和VRRP进程的状况</li>
+<li>VRRP Stack，VRRP协议的实现，负责负载均衡器之间的切换，从而实现高可用性</li>
+<li>IPVS wrapper，负责设定规则到内核ipvs的接口，即根据配置文件生成IPVS规则并送往内核空间的IPVS使之生效</li>
+<li>Netlink Reflector，负责设定vrrp的vip地址等路由相关的功能</li>
+</ul>
+<h2 id="1-2-Control-Plane"><a href="#1-2-Control-Plane" class="headerlink" title="1.2 Control Plane"></a>1.2 Control Plane</h2><p>keepalived的控制面板，负责配置文件的编译和解析</p>
+<h2 id="1-3-Scheduler-I-x2F-O-Multiplexer"><a href="#1-3-Scheduler-I-x2F-O-Multiplexer" class="headerlink" title="1.3 Scheduler I&#x2F;O Multiplexer"></a>1.3 Scheduler I&#x2F;O Multiplexer</h2><p>I&#x2F;O复用分发调度器，负责keepalived所有内部任务请求的调度</p>
+<h2 id="1-4-Memory-Management"><a href="#1-4-Memory-Management" class="headerlink" title="1.4 Memory Management"></a>1.4 Memory Management</h2><p>内存管理机制，提供内存访问的一些通用方法</p>
+<h2 id="1-5-SMTP"><a href="#1-5-SMTP" class="headerlink" title="1.5 SMTP"></a>1.5 SMTP</h2><p>即SMTP接口，用于VRRP Stack发生地址流动或Checkers发现服务上下线并增删服务节点时，以邮件方式通知管理员</p>
+<h1 id="2-工作原理"><a href="#2-工作原理" class="headerlink" title="2.工作原理"></a>2.工作原理</h1><h2 id="2-1-VRRP工作原理"><a href="#2-1-VRRP工作原理" class="headerlink" title="2.1 VRRP工作原理"></a>2.1 VRRP工作原理</h2><p>VRRP，Virtual Router Redundancy Protocol，即虚拟路由冗余协议，是实现路由器高可用的容错协议，最初是由IETF提出的用于解决局域网静态网关单点故障的路由协议，应用于交换机、路由器等设备。VRRP基本原理是将多台提供相同功能的路由器虚拟成为一个路由设备，虚拟MAC地址为00-00-5e-00-01-xx（xx为唯一VRID，即Virtual Router Identifier），对外提供虚拟IP，内部则由竞选机制根据优先级高低来决定路由器的角色，其中一台被选举为Master的拥有外部虚拟IP的路由器负责路由任务，如ARP请求的解析与响应、转发IP数据包等，其余路由器均为Backup角色。Master角色的路由器将会以IP组播（默认组播地址为224.0.0.18）的方式发送心跳消息给组内的Backup路由器，通知自己的存活状态及优先级。Master路由器若发生故障则会停止发送心跳消息，Backup路由器组检测不到Master的心跳消息将再通过同样的竞选机制选举出优先级最高的一台作为新的Master路由器，并接管路由任务</p>
+<p>VRRP使得外部认为只有一个网关在工作，所有的网络功能都是通过Master处理，突发故障时由Backup立即接替而不影响内外数据通信，且无需手动修改网络配置，实现了路由故障的无缝切换，达到了整个过程对外部而言完全透明无感知的效果</p>
+<h2 id="2-2-Keepalived工作流程"><a href="#2-2-Keepalived工作流程" class="headerlink" title="2.2 Keepalived工作流程"></a>2.2 Keepalived工作流程</h2><p>1.Keepalived高可用节点通过VRRP报文的交互获知各自的优先级即route_id，并通过VRRP的竞选机制确定主、备节点，主节点优先级高于备节点，若优先级相同则通过IP值较大者成为主节点</p>
+<p>2.主节点接管IP资源和服务资源对外提供服务，并不断以组播方式向备节点发送心跳消息用以告知备节点自己的优先级及存活状态</p>
+<p>3.备节点接收到心跳消息，得知自己的优先级低于主节点，处于待机状态</p>
+<p>4.主节点突发故障，不能再发送心跳消息，或人为降低了优先级</p>
+<p>5.备节点接收不到主节点的心跳消息或获知了主节点优先级的变动，则将各自的优先级通告给其余备节点进行协商，即再次进行竞选，最后优先级高的备节点则为新的主节点，由其调用自身的接管程序接管之前主节点的IP资源和服务资源继续对外提供服务。从而，完成了主备切换，保障了业务的连续性</p>
+<p>6.若之前故障的主节点由人工介入完成修复，若工作于抢占模式，则会再次成为主节点，否则将加入备节点</p>
+<h1 id="3-网络场景"><a href="#3-网络场景" class="headerlink" title="3.网络场景"></a>3.网络场景</h1><h2 id="3-1-网络层场景"><a href="#3-1-网络层场景" class="headerlink" title="3.1 网络层场景"></a>3.1 网络层场景</h2><p>工作方式是通过ICMP协议向服务器集群发送ICMP数据包，类似于ping实现的功能，若某节点没有返回响应数据包，则判定为节点故障，Keepalived将报告此节点失效，并从服务器集群中剔除该节点</p>
+<h2 id="3-2-传输层场景"><a href="#3-2-传输层场景" class="headerlink" title="3.2 传输层场景"></a>3.2 传输层场景</h2><p>Keepalived在传输层利用TCP协议的端口连接和扫描技术来判断集群点是否正常。如常见的WEB服务默认的80端口、SSH服务默认的22端口等，若探测到某端口没有响应数据返回，则判定为该端口异常，然后强制将此端口对应的节点从服务器集群组中剔除</p>
+<h2 id="3-3-应用层场景"><a href="#3-3-应用层场景" class="headerlink" title="3.3 应用层场景"></a>3.3 应用层场景</h2><p>Keepalived在应用层的运行方式更加全面化和复杂化，如根据业务场景编写监测程序来判定程序或服务是否运行正常，若Keepalived的检测结果与用户设定不一致，则将对应的服务从服务器剔除</p>
+<h1 id="4-高可用架构"><a href="#4-高可用架构" class="headerlink" title="4.高可用架构"></a>4.高可用架构</h1><h2 id="4-1-主从高可用架构"><a href="#4-1-主从高可用架构" class="headerlink" title="4.1 主从高可用架构"></a>4.1 主从高可用架构</h2><p>一个Master节点和一个Backup节点，其中Master节点对外提供服务，两节点间保持心跳，直到Master节点因宕机服务不可用时，系统会切换到Backup继续提供服务，宕机的Master节点恢复后将作为Backup加入集群</p>
+<h2 id="4-2-双主高可用架构"><a href="#4-2-双主高可用架构" class="headerlink" title="4.2 双主高可用架构"></a>4.2 双主高可用架构</h2><p>两节点均为Master节点，同时对外提供服务，同时保持心跳，某一节点宕机服务不可用时，流量将会全部导向另一节点继续提供服务，宕机节点恢复后重新加入集群提供服务。两节点对外服务的虚拟IP地址不同，可根据业务特点自行衡量</p>
+<h1 id="5-脑裂现象"><a href="#5-脑裂现象" class="headerlink" title="5.脑裂现象"></a>5.脑裂现象</h1><p>高可用（HA）系统中，当联系两个节点的“心跳线”断开时，由于相互失去了联系，双方都会判定对方出现故障。两个节点上的HA软件像“裂脑人”一样争抢共享资源与应用服务，本为一个整体、动作协调的HA系统，分裂成为两个独立的个体。此时，共享资源被瓜分，两边服务都不能运行或都各自独立运行，将会造成业务中断或同时读写共享存储导致数据损坏的严重后果，即为脑裂现象</p>
+<h2 id="5-1-常见原因"><a href="#5-1-常见原因" class="headerlink" title="5.1 常见原因"></a>5.1 常见原因</h2><ul>
+<li>高可用服务器之间心跳线链路故障，导致无法正常通信，如因心跳线断开、老化或连接设备故障（网卡及交换机）等、网卡及驱动故障或心跳网卡地址等信息配置不正确导致的心跳发送失败、IP冲突</li>
+<li>采用仲裁机制的仲裁机器故障</li>
+<li>高可用服务器开启了iptables防火墙阻挡了心跳消息传输</li>
+<li>其他服务配置不当，如心跳方式不同，心跳广插冲突、软件Bug等</li>
+</ul>
+<h2 id="5-2-解决方案"><a href="#5-2-解决方案" class="headerlink" title="5.2 解决方案"></a>5.2 解决方案</h2><ul>
+<li>若开启防火墙，则一定要保障心跳消息的通过，一般以允许IP段的形式解决</li>
+<li>同时使用串行电缆和以太网电缆或同时使用两条心跳线路作为灾备冗余</li>
+<li>开发检测报警程序，通过监控软件检测脑裂</li>
+</ul>
+<hr>
+<h1 id="1-安装依赖包"><a href="#1-安装依赖包" class="headerlink" title="1.安装依赖包"></a>1.安装依赖包</h1><pre><code class="hljs">apt install -y gcc make libssl-dev libnl-3-dev
+yum install -y gcc make openssl-devel libnl-devel
+</code></pre>
+<h1 id="2-编译安装keepalived"><a href="#2-编译安装keepalived" class="headerlink" title="2.编译安装keepalived"></a>2.编译安装keepalived</h1><pre><code class="hljs">tar -xzvf keepalived-2.2.1.tar.gz &amp;&amp; cd keepalived-2.2.1
+./configure --prefix=/usr/local/keepalived --sysconfdir=/etc --with-init=systemd
+make &amp;&amp; make install
+</code></pre>
+<h1 id="3-创建keepalived配置文件"><a href="#3-创建keepalived配置文件" class="headerlink" title="3.创建keepalived配置文件"></a>3.创建keepalived配置文件</h1><pre><code class="hljs">mv /etc/keepalived/keepalived.conf /etc/keepalived/keepalived.conf.bak
+vi /etc/keepalived/keepalived.conf
+
+
+global_defs &#123;
+
+  notification_email
+
+  &#123;
+    admin@sword.com
+  &#125;
+  notification_email_from
+  smtp_server 127.0.0.1
+  smtp_connect_timeout 30
+  router_id master
+
+&#125;
+
+vrrp_script check_nginx &#123;
+
+  script &quot;/etc/keepalived/nginx_check.sh&quot;
+  interval 2
+  weight -20
+
+&#125;
+
+vrrp_instance NGINX &#123;
+
+  state MASTER
+  interface eth0
+  virtual_router_id 51
+  priority 100
+  advert_int 1
+  authentication &#123;
+    auth_type PASS
+    auth_pass 123456
+  &#125;
+  virtual_ipaddress &#123;
+    172.16.100.150/24
+  &#125;
+  track_script &#123;
+    check_nginx
+  &#125;
+
+&#125;
+</code></pre>
+<h1 id="4-配置keepalived启动参数"><a href="#4-配置keepalived启动参数" class="headerlink" title="4.配置keepalived启动参数"></a>4.配置keepalived启动参数</h1><pre><code class="hljs">vi /etc/sysconfig/keepalived
+
+
+KEEPALIVED_OPTIONS=&quot;-D -d -S 0&quot;
+</code></pre>
+<h1 id="5-创建启动脚本"><a href="#5-创建启动脚本" class="headerlink" title="5.创建启动脚本"></a>5.创建启动脚本</h1><pre><code class="hljs">vi /lib/systemd/system/keepalived.service
+
+
+[Unit]
+Description=LVS and VRRP High Availability Monitor
+After=network-online.target syslog.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+PIDFile=/run/keepalived.pid
+KillMode=control-group
+EnvironmentFile=-/etc/sysconfig/keepalived
+ExecStart=/usr/local/keepalived/sbin/keepalived $KEEPALIVED_OPTIONS
+ExecReload=/bin/kill -HUP $MAINPID
+ExecStop=/bin/kill -TERM $MAINPID
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+<h1 id="6-配置keepalived日志"><a href="#6-配置keepalived日志" class="headerlink" title="6.配置keepalived日志"></a>6.配置keepalived日志</h1><h2 id="6-1-配置系统日志服务rsyslog"><a href="#6-1-配置系统日志服务rsyslog" class="headerlink" title="6.1 配置系统日志服务rsyslog"></a>6.1 配置系统日志服务rsyslog</h2><pre><code class="hljs">vi /etc/rsyslog.conf
+
+
+# 启用UDP端口接收其他设备的日志消息          
+$ModLoad imudp
+$UDPServerRun 514
+
+# 设置local0级别设备的日志存储路径
+local0.*    var/log/keepalived.log
+</code></pre>
+<h2 id="6-2-重启rsyslog"><a href="#6-2-重启rsyslog" class="headerlink" title="6.2 重启rsyslog"></a>6.2 重启rsyslog</h2><pre><code class="hljs">systemctl restart rsyslog.service
+</code></pre>
+<h1 id="7-启动keepalived服务"><a href="#7-启动keepalived服务" class="headerlink" title="7.启动keepalived服务"></a>7.启动keepalived服务</h1><pre><code class="hljs">systemctl daemon-reload
+systemctl start keepalived.service
+systemctl enable keepalived.service
+</code></pre>
+<h1 id="8-模拟集群故障，测试VIP漂移"><a href="#8-模拟集群故障，测试VIP漂移" class="headerlink" title="8.模拟集群故障，测试VIP漂移"></a>8.模拟集群故障，测试VIP漂移</h1><hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/qiuyue/2364190">https://blog.51cto.com/qiuyue/2364190</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/fduffyyg/article/details/84195323">https://blog.csdn.net/fduffyyg/article/details/84195323</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_22648091/article/details/108519773">https://blog.csdn.net/qq_22648091/article/details/108519773</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43740223/article/details/109475495">https://blog.csdn.net/weixin_43740223/article/details/109475495</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/%E9%9B%86%E7%BE%A4/">#集群</a>
+      
+        <a href="/hexo/tags/Keepalived/">#Keepalived</a>
+      
+        <a href="/hexo/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/">#高可用</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Keepalived编译安装</div>
+      <div>https://css.ss-ss.top/hexo/2020/02/05/Keepalived编译安装/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年2月5日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2020/02/05/Keepalived%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/" title="Keepalived配置文件详解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Keepalived配置文件详解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2020/02/05/Haproxy%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/" title="Haproxy配置文件详解">
+                        <span class="hidden-mobile">Haproxy配置文件详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

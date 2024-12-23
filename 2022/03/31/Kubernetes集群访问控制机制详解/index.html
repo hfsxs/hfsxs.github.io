@@ -1,0 +1,877 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Kubernetes集群一切皆API对象，所有操作和组件之间的通信及外部用户命令都是通过调用API Server进行处理。因此，API Server对集群的访问请求进行身份认证与鉴权即可实现整个集群的权限管理，也即是Kubernetes API访问控制  访问控制流程 Authentication，即认证，客户端与API Server建立TLS后，API Server身份认证组件将判断该请求的用户">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes集群访问控制机制详解">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2022/03/31/Kubernetes%E9%9B%86%E7%BE%A4%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%9C%BA%E5%88%B6%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="Kubernetes集群一切皆API对象，所有操作和组件之间的通信及外部用户命令都是通过调用API Server进行处理。因此，API Server对集群的访问请求进行身份认证与鉴权即可实现整个集群的权限管理，也即是Kubernetes API访问控制  访问控制流程 Authentication，即认证，客户端与API Server建立TLS后，API Server身份认证组件将判断该请求的用户">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-31T14:51:26.000Z">
+<meta property="article:modified_time" content="2023-12-31T12:59:38.556Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="容器云">
+<meta property="article:tag" content="云原生">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Kubernetes集群访问控制机制详解 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Kubernetes集群访问控制机制详解</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-03-31 22:51" pubdate>
+          2022年3月31日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          70 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kubernetes集群访问控制机制详解</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Kubernetes集群一切皆API对象，所有操作和组件之间的通信及外部用户命令都是通过调用API Server进行处理。因此，API Server对集群的访问请求进行身份认证与鉴权即可实现整个集群的权限管理，也即是Kubernetes API访问控制</p>
+<hr>
+<h1 id="访问控制流程"><a href="#访问控制流程" class="headerlink" title="访问控制流程"></a>访问控制流程</h1><ul>
+<li>Authentication，即认证，客户端与API Server建立TLS后，API Server身份认证组件将判断该请求的用户是否为能够访问集群的合法用户，若为非<br>法用户，则返回401状态码，并终止该请求</li>
+<li>Authorization，即鉴权，API Server将判断该请求的用户是否有权限进行请求中的操作，若无权限，则返回403的状态码，并终止该请求</li>
+<li>AdmissionControl，即准入控制，API Server的admission控制器将判断该请求是否是一个安全合规的请求，若验证通过，则访问控制流程结束，并<br>将该请求转换为Kubernetes objects相应的变更请求，最终写入到ETCD</li>
+</ul>
+<h1 id="1-Authentication"><a href="#1-Authentication" class="headerlink" title="1.Authentication"></a>1.Authentication</h1><p>Kubernetes集群用户分为两类，即由集群管理的服务账号和普通账户，认证策略即是对这两类用户进行相关认证。普通账户对应于集群用户，由集群管理员分配私钥，私钥保存于~.kube&#x2F;config，执行kubectl命令时自动读取以供API Server认证；服务账户对应于pod，由Kubernetes API自动创建及管理，且与secret资源关联挂载到pod，作为访问API Server的凭证</p>
+<p>认证策略有8种，可以启动一种或多种认证方式，只要有一种认证方式通过即为认证通过，不再对其它方式认证</p>
+<h2 id="1-1-X509客户端证书"><a href="#1-1-X509客户端证书" class="headerlink" title="1.1 X509客户端证书"></a>1.1 X509客户端证书</h2><p>客户端向API Server传递SSL证书即启用客户端证书身份认证，若证书验证通过，则subject中的公共名称，即Common Name，就被作为请求的用户名，<br>该用户即为普通用户</p>
+<pre><code class="hljs"># 使用用户名test00生成一个证书签名请求（CSR），且该用户属于test和dev两个用户组
+openssl req -new -key test00.pem -out test00-csr.pem -subj &quot;/CN=test/O=test/O=dev&quot;
+</code></pre>
+<h2 id="1-2-Service-Account，服务账户令牌"><a href="#1-2-Service-Account，服务账户令牌" class="headerlink" title="1.2 Service Account，服务账户令牌"></a>1.2 Service Account，服务账户令牌</h2><p>通常由API Server自动创建并通过ServiceAccount准入控制器挂载到集群中运行的Pod上，允许集群内进程与API Server通信</p>
+<h2 id="1-3-Static-Token，静态令牌"><a href="#1-3-Static-Token，静态令牌" class="headerlink" title="1.3 Static Token，静态令牌"></a>1.3 Static Token，静态令牌</h2><p>token文件是至少包含3列的csv格式文件，即token, user name, user uid，group（可选）,具体格式为：token,user,uid,”group1,group2,group3”</p>
+<h2 id="1-4-Bootstrap-Tokens，引导令牌"><a href="#1-4-Bootstrap-Tokens，引导令牌" class="headerlink" title="1.4 Bootstrap Tokens，引导令牌"></a>1.4 Bootstrap Tokens，引导令牌</h2><p>主要用于新建集群或在现有集群中添加新节点，支持kubeadm，被定义为bootstrap.kubernetes.io&#x2F;token类型的Secret，存储于 kube-system命名空间中，被API Server上的启动引导认证组件（Bootstrap Authenticator）读取</p>
+<h2 id="1-5-OpenID-Connect（OIDC）令牌"><a href="#1-5-OpenID-Connect（OIDC）令牌" class="headerlink" title="1.5 OpenID Connect（OIDC）令牌"></a>1.5 OpenID Connect（OIDC）令牌</h2><p>主要用于OAuth2认证机制，如Azure Active Directory</p>
+<h2 id="1-6-Webhook令牌"><a href="#1-6-Webhook令牌" class="headerlink" title="1.6 Webhook令牌"></a>1.6 Webhook令牌</h2><p>即具有回调机制的认证策略</p>
+<h2 id="1-7-Authenticating-Proxy"><a href="#1-7-Authenticating-Proxy" class="headerlink" title="1.7 Authenticating Proxy"></a>1.7 Authenticating Proxy</h2><p>即认证代理，从请求的头部字段值如X-Remote-User辩识用户，身份认证代理负责设置请求的头部字段值</p>
+<h2 id="1-8-Basic-Authentication"><a href="#1-8-Basic-Authentication" class="headerlink" title="1.8 Basic Authentication"></a>1.8 Basic Authentication</h2><p>即基本身份认证，API Server将于请求头加入Basic BASE64ENCODED(USER:PASSWORD)</p>
+<h1 id="2-Authorization"><a href="#2-Authorization" class="headerlink" title="2.Authorization"></a>2.Authorization</h1><p>客户端请求通过认证之后，API Server将根据所有授权策略匹配该请求的属性，所有部分都必须被某些策略允许才能决定允许或拒绝。客户端请求属性包含请求者用户名、请求对象及请求操作等。授权策略由授权模块定义，若集群配置了多个鉴权模块，则将按顺序进行匹配</p>
+<h2 id="2-1-客户端请求属性"><a href="#2-1-客户端请求属性" class="headerlink" title="2.1 客户端请求属性"></a>2.1 客户端请求属性</h2><h3 id="2-1-1-请求用户及其所属组"><a href="#2-1-1-请求用户及其所属组" class="headerlink" title="2.1.1 请求用户及其所属组"></a>2.1.1 请求用户及其所属组</h3><ul>
+<li>用户，身份验证环节提供并通过的user</li>
+<li>组，通过身份验证的用户所属组列表</li>
+<li>额外信息，由身份验证环节提供的任意字符串键到字符串值的映射</li>
+</ul>
+<h3 id="2-1-2-请求对象"><a href="#2-1-2-请求对象" class="headerlink" title="2.1.2 请求对象"></a>2.1.2 请求对象</h3><p>请求对象即是该次请求所申请的集群资源对象，分为API资源和非资源端点两类</p>
+<h4 id="API资源对象"><a href="#API资源对象" class="headerlink" title="API资源对象"></a>API资源对象</h4><ul>
+<li>API，请求所对应的API资源</li>
+<li>API组，请求API资源的所属组，空字符串表示核心API组</li>
+<li>命名空间，即namespace，请求所对应的API对象所属命名空间</li>
+<li>resource，即该次请求的集群对象的ID或名称，如pod、service等，对于get、update、patch和delete的资源请求，须提供资源名称的子资源</li>
+</ul>
+<h4 id="非资源端点"><a href="#非资源端点" class="headerlink" title="非资源端点"></a>非资源端点</h4><ul>
+<li>请求路径，非资源端点的路径，如&#x2F;api或&#x2F;healthz</li>
+</ul>
+<h3 id="2-1-3-请求操作"><a href="#2-1-3-请求操作" class="headerlink" title="2.1.3 请求操作"></a>2.1.3 请求操作</h3><h4 id="API请求操作，用于API资源对象的请求，即是对所请求的集群资源对象的操作"><a href="#API请求操作，用于API资源对象的请求，即是对所请求的集群资源对象的操作" class="headerlink" title="API请求操作，用于API资源对象的请求，即是对所请求的集群资源对象的操作"></a>API请求操作，用于API资源对象的请求，即是对所请求的集群资源对象的操作</h4><ul>
+<li>POST请求，对应于API资源对象的create</li>
+<li>GET、HEAD请求，对应于单个API资源对象的get或集合资源的ist</li>
+<li>PUT请求，对应于API资源对象的update</li>
+<li>PATCH请求，对应于API资源对象的patch</li>
+<li>DELETE请求，对应于单个API资源对象的delete或集合资源的deletecollection</li>
+</ul>
+<h4 id="HTTP请求操作，用于非资源端点的请求，类似于HTTP请求的方法，如get、post、put、delete等"><a href="#HTTP请求操作，用于非资源端点的请求，类似于HTTP请求的方法，如get、post、put、delete等" class="headerlink" title="HTTP请求操作，用于非资源端点的请求，类似于HTTP请求的方法，如get、post、put、delete等"></a>HTTP请求操作，用于非资源端点的请求，类似于HTTP请求的方法，如get、post、put、delete等</h4><h2 id="2-2-RABC授权策略"><a href="#2-2-RABC授权策略" class="headerlink" title="2.2 RABC授权策略"></a>2.2 RABC授权策略</h2><p>集群的授权策略由授权模块定义，可用的授权模块有6个，其中RBAC模块为集群默认强制开启且最为完善。RBAC，即Role Based Access Control，基于角色的访问控制，由rbac.authorization.k8s.io API资源组驱动鉴权，通过API动态配置策略</p>
+<h3 id="鉴权流程"><a href="#鉴权流程" class="headerlink" title="鉴权流程"></a>鉴权流程</h3><ul>
+<li><p>定义角色资源对象，角色是集群内某些资源（apiGroups、resources）的操作（verbs）权限的集合，即为对象及对其的操作动作。角色分为Role<br>和ClusterRole两类，前者属于命名空间级别，后者属于集群级别</p>
+</li>
+<li><p>定义角色绑定资源对象，即是将角色绑定到某个主体（subject），从而继承了角色的操作权限。主体为某个用户（User）、用户组（Group）、服务账号（ServiceAccount），角色绑定对应于角色，也分为两类，即RoleBinding，将Role绑定到主体；ClusterRoleBinding，将Role和ClusterRole绑定到主体</p>
+</li>
+</ul>
+<h3 id="优势特点"><a href="#优势特点" class="headerlink" title="优势特点"></a>优势特点</h3><p>对集群中的资源和非资源权限均有完整的覆盖，能够做到精细控制整个授权流程完全由几个API对象完成，同其他API对象一样，可用kubectl或API进行操作支持在运行时进行调整，无须重新启动API Server</p>
+<h2 id="2-1-创建用户"><a href="#2-1-创建用户" class="headerlink" title="2.1 创建用户"></a>2.1 创建用户</h2><h3 id="2-1-1-创建普通用户"><a href="#2-1-1-创建普通用户" class="headerlink" title="2.1.1 创建普通用户"></a>2.1.1 创建普通用户</h3><pre><code class="hljs"># 普通用户user001创建私钥
+openssl genrsa -out user001.key 2048
+
+# 根据私钥创建csr(证书签名请求)文件
+openssl req -new -key user001.key -subj &quot;/CN=user001/O=user00&quot; -out user001.csr
+
+# 根据私钥和csr文件生成证书
+openssl x509 -req -in user001.csr -CA /opt/kubernetes/ssl/ca.pem -CAkey /opt/kubernetes/ssl/ca-key.pem -CAcreateserial -out user001.crt -days 365
+
+# 创建集群普通用户user001，将其认证信息写入kubeconfig
+kubectl config set-credentials user001 --client-certificate=./user001.crt --client-key=./user001.key --embed-certs=true
+
+# 设置上下文， 默认会保存在$HOME/.kube/config
+kubectl config set-context user001@kubernetes --cluster=kubernetes --user=user001
+
+# 查看当前上下文
+kubectl config get-contexts
+
+# 切换上下文，即切换user001为当前用户
+kubectl config use-context user001@kubernetes
+
+# 查看当前上下文
+kubectl config get-contexts
+
+# 执行测试命令
+kubectl get nodes
+</code></pre>
+<h3 id="2-1-2-创建服务账户"><a href="#2-1-2-创建服务账户" class="headerlink" title="2.1.2 创建服务账户"></a>2.1.2 创建服务账户</h3><pre><code class="hljs">kubectl create serviceaccount sa001
+# serviceaccount新增secret
+kubectl patch serviceaccount sa001 -p &#39;&#123;&quot;imagePullSecrets&quot;: [&#123;&quot;name&quot;: &quot;myregistrykey&quot;&#125;]&#125;&#39;
+# 创建绑定sa的pod，使其认证私有仓库
+vi nginx-sa001.yaml
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-sa001
+spec:
+  containers:
+  - name: nginx
+    image: sword618/nginx
+    imagePullPolicy: IfNotPresent
+serviceAccountName: sa001
+</code></pre>
+<h2 id="2-2-创建角色"><a href="#2-2-创建角色" class="headerlink" title="2.2 创建角色"></a>2.2 创建角色</h2><h3 id="2-2-1-角色配置参数"><a href="#2-2-1-角色配置参数" class="headerlink" title="2.2.1 角色配置参数"></a>2.2.1 角色配置参数</h3><ul>
+<li><p>APIGroup，即角色所作用的API资源组，可选项：“”,“apps”, “autoscaling”, “batch”</p>
+</li>
+<li><p>Resource，即角色所作用的资源对象，可选项：“services”, “endpoints”, “pods”,“secrets”,“configmaps”,“crontabs”,“deployments”,“jobs”,“nodes”,“rolebindings”,“clusterroles”,“daemonsets”,“replicasets”,“statefulsets”,“horizontalpodautoscalers”,“replicationcontrollers”,“cronjobs”</p>
+</li>
+<li><p>Verbs，即角色的动作权限，可选项：“get”, “list”, “watch”, “create”, “update”, “patch”, “delete”, “exec”</p>
+</li>
+</ul>
+<h3 id="2-2-2-创建Role"><a href="#2-2-2-创建Role" class="headerlink" title="2.2.2 创建Role"></a>2.2.2 创建Role</h3><pre><code class="hljs">vi role.yaml
+
+
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: test
+  name: role-default-all
+rules:
+  - apiGroups:
+    - &quot;*&quot;
+    resources:
+    - pods
+    - deployments
+    - services
+    verbs:
+    - get
+    - watch
+    - list
+    - create
+    - delete
+    - update
+    - patch
+    - exec
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: role-default-log
+rules:
+- apiGroups: [&quot;&quot;]
+  # 设置角色所作用集群对象为子资源
+  resources: [&quot;pods&quot;, &quot;pods/log&quot;,&quot;pods/status&quot;]
+  verbs: [&quot;get&quot;, &quot;list&quot;]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  namespace: default
+  name: role-default-redis-conf-update
+rules:
+- apiGroups: [&quot;&quot;]
+  # 设置角色所作用集群对象为某个指定的对象实例
+  resources: [&quot;configmaps&quot;]
+  resourceNames: [&quot;redis-conf&quot;]
+  verbs: [&quot;update&quot;, &quot;get&quot;]
+</code></pre>
+<h3 id="2-2-3-创建ClusterRole"><a href="#2-2-3-创建ClusterRole" class="headerlink" title="2.2.3 创建ClusterRole"></a>2.2.3 创建ClusterRole</h3><pre><code class="hljs">vi clusterrole.yaml
+
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: clusterrole-read
+rules:
+  - apiGroups: [&quot;&quot;]
+    # 设置角色所作用集群对象为集群所有资源
+    resources: [&quot;*&quot;]
+    verbs: [&quot;get&quot;, &quot;watch&quot;, &quot;list&quot;]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: clusterrole-nodes-read
+rules:
+  - apiGroups: [&quot;&quot;]
+  # 设置角色所作用集群对象为node
+  resources: [&quot;nodes&quot;]
+  verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: clusterrole-nonresource
+rules:
+  # 设置角色所作用集群对象为非资源端点，支持通配符
+  - nonResourceURLs: [&quot;/healthz&quot;, &quot;/healthz/*&quot;]
+    verbs: [&quot;get&quot;, &quot;post&quot;]
+</code></pre>
+<h2 id="2-3-创建角色绑定"><a href="#2-3-创建角色绑定" class="headerlink" title="2.3 创建角色绑定"></a>2.3 创建角色绑定</h2><h3 id="2-3-1-创建RoleBinding"><a href="#2-3-1-创建RoleBinding" class="headerlink" title="2.3.1 创建RoleBinding"></a>2.3.1 创建RoleBinding</h3><pre><code class="hljs">vi user-role.yaml
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: user001-role
+  namespace: default
+# 设置角色绑定的主体，可指定多个
+subjects:
+- kind: User
+  # 设置角色绑定所作用的用户
+  name: user001
+  apiGroup: rbac.authorization.k8s.io
+- kind: ServiceAccount
+  name: kube-system-sa-default
+  # 设置角色绑定所作用的服务账户，即kube-system命名空间的默认服务账户
+  namespace: kube-system
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  # 设置绑定的角色为Role，引用Role名称
+  name: role-default-all
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: user002-role
+subjects:
+- kind: Group
+  name: user002
+  apiGroup: rbac.authorization.k8s.io
+- kind: Group
+  # 设置角色绑定所作用的服务账户，即所有命名空间的服务账户
+  name: system:serviceaccounts
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  # 设置绑定的角色为ClusterRole，用于跨命名空间的整个集群的授权
+  kind: ClusterRole
+  name: clusterrole-read
+  apiGroup: rbac.authorization.k8s.io
+</code></pre>
+<h3 id="2-3-2-创建ClusterRoleBinding"><a href="#2-3-2-创建ClusterRoleBinding" class="headerlink" title="2.3.2 创建ClusterRoleBinding"></a>2.3.2 创建ClusterRoleBinding</h3><pre><code class="hljs">apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: user003-role
+subjects:
+- kind: Group
+  # 设置角色绑定所作用的用户，即所有已通过认证的用户
+  name: system:authenticated
+  apiGroup: rbac.authorization.k8s.io
+- kind: Group
+  # 设置角色绑定所作用的服务账户，即default命名空间中属于dev组的所有服务账户
+  name: system:serviceaccounts:dev
+  apiGroup: rbac.authorization.k8s.io
+  namespace: default
+roleRef:
+   kind: ClusterRole
+  name: clusterrole-nonresource
+  apiGroup: rbac.authorization.k8s.io
+</code></pre>
+<h1 id="3-AdmissionControl"><a href="#3-AdmissionControl" class="headerlink" title="3.AdmissionControl"></a>3.AdmissionControl</h1><p>客户端请求通过认证和鉴权之后，就将进入准入控制流程，作用是拦截掉某些不合规的请求。拦截规则由准入控制器决定，准入控制器由一系列插件<br>构成，由集群管理员配置，若请求被任一控制器拒绝，则整个请求将立即被拒绝，并向客户端返回错误码。此外，准入控制器还能够修改请求参数以完<br>成一些自动化的任务，比如Service Account这个控制器<br>准入控制器插件通过apiserver组件配置，具体配置项是admission_control，其值为一串逗号连接的插件名称，集群默认启用的准入控制器插件查询命令为：kube-apiserver -h | grep enable-admission-plugins</p>
+<h2 id="常用准入控制器"><a href="#常用准入控制器" class="headerlink" title="常用准入控制器"></a>常用准入控制器</h2><ul>
+<li>AlwaysPullImages，修改新创建pod的镜像拉取策略为Always，用于多租户集群，表明私有镜像只能被有凭证的人使用，否则任何用户的pod都可通过已拉取到节点上的镜像</li>
+<li>DefaultStorageClass，用于设定默认存储类</li>
+<li>DefaultIngressClass，用于设定默认Ingress类</li>
+<li>EventRateLimit，用于设定事件速率限制，缓解API Server的压力，即根据命名空间、用户等条件设置相应的API Server的QPS等</li>
+<li>NamespaceAutoProvision，用于自动创建命名空间的集群，即请求的命名空间不存在时自动创建</li>
+<li>NamespaceExists，用于剔除访问集群不存在的命名空间的请求</li>
+<li>NamespaceLifecycle，用于确保处于Termination状态的命令空间不再接收新对象创建请求，并拒绝请求不存在的命名空间，还可以防止删除系统保留的命名空间，如default、kube-system、kube-public等，建议开启</li>
+<li>NodeRestriction，用于设定kubelet修改node与pod的限制条件，即只可修改绑定到node本身的Pod</li>
+<li>PersistentVolumeClaimResize，用于额外验证PVC容量调整的请求，与ExpandPersistentVolumes配合使用</li>
+<li>ServiceAccount，用于实现ServiceAccount的自动化，使用服务账户的集群建议开启</li>
+<li>TaintNodesByCondition，用于给新建节点添加NotReady和NoSchedule污点，防止静态条件的发生，避免Pod在更新节点污点以准确反映其所报告状况之前就被调度到新节点上</li>
+</ul>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.orchome.com/1308">https://www.orchome.com/1308</a></li>
+<li><a target="_blank" rel="noopener" href="http://docs.kubernetes.org.cn/51.html">http://docs.kubernetes.org.cn/51.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35745940/article/details/120693490">https://blog.csdn.net/qq_35745940/article/details/120693490</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43936969/article/details/106318259">https://blog.csdn.net/weixin_43936969/article/details/106318259</a></li>
+<li><a target="_blank" rel="noopener" href="https://kubernetes.io/zh/docs/concepts/security/controlling-access">https://kubernetes.io/zh/docs/concepts/security/controlling-access</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/Kubernetes/">#Kubernetes</a>
+      
+        <a href="/hexo/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kubernetes集群访问控制机制详解</div>
+      <div>https://css.ss-ss.top/hexo/2022/03/31/Kubernetes集群访问控制机制详解/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年3月31日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2022/04/26/Kubernetes%E9%9B%86%E7%BE%A4Ingress%E8%AF%A6%E8%A7%A3/" title="Kubernetes集群Ingress详解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kubernetes集群Ingress详解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2022/03/16/KVM%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" title="KVM磁盘管理">
+                        <span class="hidden-mobile">KVM磁盘管理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

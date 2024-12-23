@@ -1,0 +1,657 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Apache HTTP Server，是最流行的开源免费的HTTP服务器软件之一，功能强大，配置简单，速度快，应用广泛，性能稳定可靠，曾是世界使用排名第一的Web服务器软件，广泛应用于世界著名网站，如Amazon、Yahoo!、W3 Consortium、Financial Times等 Apache服务器的发轫颇具戏剧性。其最初发源于NCSA（伊利诺伊大学香槟分校的国家超级电脑应用中心）的htt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apache编译安装">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2020/02/01/Apache%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="Apache HTTP Server，是最流行的开源免费的HTTP服务器软件之一，功能强大，配置简单，速度快，应用广泛，性能稳定可靠，曾是世界使用排名第一的Web服务器软件，广泛应用于世界著名网站，如Amazon、Yahoo!、W3 Consortium、Financial Times等 Apache服务器的发轫颇具戏剧性。其最初发源于NCSA（伊利诺伊大学香槟分校的国家超级电脑应用中心）的htt">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-02-01T01:20:02.000Z">
+<meta property="article:modified_time" content="2023-12-31T12:59:38.564Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Apache">
+<meta property="article:tag" content="Http服务器">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Apache编译安装 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Apache编译安装</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-02-01 09:20" pubdate>
+          2020年2月1日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          25 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Apache编译安装</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Apache HTTP Server，是最流行的开源免费的HTTP服务器软件之一，功能强大，配置简单，速度快，应用广泛，性能稳定可靠，曾是世界使用排名第一的Web服务器软件，广泛应用于世界著名网站，如Amazon、Yahoo!、W3 Consortium、Financial Times等</p>
+<p>Apache服务器的发轫颇具戏剧性。其最初发源于NCSA（伊利诺伊大学香槟分校的国家超级电脑应用中心）的httpd服务器，当时只用于小型或试验Internet性网络。该项目停顿之后，鉴于其强大的功能，一些爱好者与用户开始自发维护并不断改善其功能。为了更好进行沟通，Brian Behlendorf 自己建立了一个邮件列表，将其作为这个群体（或者社区）交流技术、维护软件的一个媒介，把代码重写与维护的工作有效组织起来。这些开发者们群体自称为“Apache 组织”，将这个经过不断修正并改善的服务器软件命名为 Apache 服务器（Apache Server）。该组织就是现今赫赫有名的Apache软件基金会的雏形</p>
+<h1 id="体系架构"><a href="#体系架构" class="headerlink" title="体系架构"></a>体系架构</h1><p>Apache服务器基于模块化设计，大部分功能可被分割成相互独立的模块，通过增加和删除模块就可以扩展和修改功能。依据其功能模块，可将其架构划分为五层</p>
+<h2 id="1-操作系统平台功能层"><a href="#1-操作系统平台功能层" class="headerlink" title="1. 操作系统平台功能层"></a>1. 操作系统平台功能层</h2><p>Apache服务器操作系统本身提供的底层功能，比如进程和线程、进程和线程的通信，网络套接字通信和文件操作等</p>
+<h2 id="2-可移植运行库"><a href="#2-可移植运行库" class="headerlink" title="2.可移植运行库"></a>2.可移植运行库</h2><p>apr，即Apache portable runtime，操作系统适配层，实现了Apache服务器跨平台的功能。由于不同的操作系统提供的底层API不同，即实现同一个操作所用的函数方法不同，位于Apache和操作系统之间的APR根据不同的操作系统分别实现这一功能，直接用APR的统一API接口即可实现跨操作系统操作</p>
+<h2 id="3-核心功能层"><a href="#3-核心功能层" class="headerlink" title="3.核心功能层"></a>3.核心功能层</h2><p>由核心程序和核心模块组成，用于实现基本功能和核心功能</p>
+<ul>
+<li><p>核心程序由核心组件构成，即配置文件组件(http_config)、进程并发组件(MPM)、连接处理组件(http_connection)、HTTP协议处理组件(http_protocol)、HTTP请求处理组件(http_request)、HTTP核心组件(http_core)、核心模块组件(mod_core) 、日志处理组件、虚拟主机处理组件、过滤模块组件，各个组件之间可相互调用，用于实现基本的功能，如启动和终止apache、处理配置文件(config.c)、接受和处理HTTP连接、读取和响应HTTP请求，处理HTTP协议。此外，还提供其余模块可调用的API，用于实现非核心模块的功能</p>
+</li>
+<li><p>核心模块有两个，即mod_core和mod_so，其中mod_core负责处理配置文件中的大部分配置指令，并根据这些指令运行apache；mod_so模块负责在需要的时候动态加载其余模块</p>
+</li>
+</ul>
+<h2 id="4-可选功能层"><a href="#4-可选功能层" class="headerlink" title="4.可选功能层"></a>4.可选功能层</h2><p>即其余非核心的模块</p>
+<h2 id="5-第三方支持库"><a href="#5-第三方支持库" class="headerlink" title="5.第三方支持库"></a>5.第三方支持库</h2><p>用于实现第三方的附加功能，如mod_perl、mod_ssl等</p>
+<h1 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h1><h2 id="1-启动流程"><a href="#1-启动流程" class="headerlink" title="1.启动流程"></a>1.启动流程</h2><p>apache服务器的启动分为两个阶段，即高权限启动阶段和低权限运行阶段，通常称之为两阶段启动方式</p>
+<p>apache服务器启动时首先初始化内存池资源，然后读取和解析apache的配置文件(httpd.conf) ，在启动的最后阶段将将控制权交给MPM，只有当MPM执行失败或结束后才把控制权交还给主程序，MPM在处理HTTP连接时使用普通用户权限，以避免root权限的攻击</p>
+<h2 id="2-链接处理流程"><a href="#2-链接处理流程" class="headerlink" title="2.链接处理流程"></a>2.链接处理流程</h2><p>收到client端的HTTP请求并建立socket连接后，apache将读取请求信息，并调用HTTP_PROTOCOL模块将开始对该报文进行解析</p>
+<h2 id="3-请求处理流程"><a href="#3-请求处理流程" class="headerlink" title="3.请求处理流程"></a>3.请求处理流程</h2><p>处理HTTP请求报文，分为三个阶段，即请求解析阶段、安全处理阶段、请求准备阶段</p>
+<ul>
+<li>请求解析阶段，主要是包含URL的一些处理，如字符转义、名称转换、重定向等</li>
+<li>安全处理，即访问控制、身份认证、用户授权</li>
+<li>请求准备阶段，确定客户端请求资源类型(html txt gif ）及补丁修复，如优化操作等</li>
+</ul>
+<h2 id="4-响应生成流程"><a href="#4-响应生成流程" class="headerlink" title="4.响应生成流程"></a>4.响应生成流程</h2><p>对于静态的HTML文件直接读取文件返回给客户端，对于动态文件，如脚本CGI、js、数据库文件等，将调用对应的处理器生成请求的内容，生成内容再进入过滤器进行内容过滤，通过最后一个过滤器(网络过滤器)后，将响应内容发送到网络，最后传输到客户端并在浏览器中显示</p>
+<hr>
+<h1 id="1-安装依赖包"><a href="#1-安装依赖包" class="headerlink" title="1.安装依赖包"></a>1.安装依赖包</h1><pre><code class="hljs">yum install -y gcc make openssl-devel pcre-devel zlib-devel perl-devel expat-devel
+</code></pre>
+<h1 id="2-编译安装apr"><a href="#2-编译安装apr" class="headerlink" title="2.编译安装apr"></a>2.编译安装apr</h1><pre><code class="hljs">tar -zxvf apr-1.5.2.tar.gz &amp;&amp; cd apr-1.5.2
+./configure --prefix=/usr/local/apr
+make &amp;&amp;  make install 
+</code></pre>
+<h1 id="3-编译安装apr-util"><a href="#3-编译安装apr-util" class="headerlink" title="3.编译安装apr-util"></a>3.编译安装apr-util</h1><pre><code class="hljs">tar -zxvf apr-util-1.5.4.tar.gz &amp;&amp; cd apr-util-1.5.4
+./configure --prefix=/usr/local/apr-util --with-apr=/usr/local/apr
+make &amp;&amp;  make install
+</code></pre>
+<h1 id="4-编译安装apache"><a href="#4-编译安装apache" class="headerlink" title="4.编译安装apache"></a>4.编译安装apache</h1><pre><code class="hljs">tar -zxvf httpd-2.4.25.tar.gz &amp;&amp; cd httpd-2.4.25
+./configure --prefix=/usr/local/httpd --sysconfdir=/etc/httpd/conf \
+--enable-cache --enable-disk-cache --enable-mem-cache --enable-file-cache \
+--enable-proxy --enable-proxy-http --enable-proxy-balancer --enable-proxy-ftp --enable-proxy-connect --enable-proxy-ajp \
+--enable-deflate=static --enable-headers=static --enable-rewrite=static --enable-expires=static --enable-ssl=static --enable-cgid=static \
+--with-zlib --with-pcre --enable-mods-shared=all --enable-mpms-shared=all --with-mpm=worker --with-apr=/usr/local/apr --with-apr-util=/usr/local/apr-util
+make &amp;&amp;  make install
+</code></pre>
+<h1 id="5-修改配置文件"><a href="#5-修改配置文件" class="headerlink" title="5.修改配置文件"></a>5.修改配置文件</h1><pre><code class="hljs">sed -i &#39;s@#ServerName www.example.com:80@ServerName localhost:80@g&#39; /etc/httpd/conf/httpd.conf
+</code></pre>
+<h1 id="6-配置Apache启动脚本"><a href="#6-配置Apache启动脚本" class="headerlink" title="6.配置Apache启动脚本"></a>6.配置Apache启动脚本</h1><pre><code class="hljs">cp /usr/local/httpd/bin/apachectl /etc/init.d/httpd
+</code></pre>
+<h1 id="7-启动Apache服务器"><a href="#7-启动Apache服务器" class="headerlink" title="7.启动Apache服务器"></a>7.启动Apache服务器</h1><pre><code class="hljs">/etc/init.d/httpd start
+</code></pre>
+<h1 id="8-访问Apache服务器"><a href="#8-访问Apache服务器" class="headerlink" title="8.访问Apache服务器"></a>8.访问Apache服务器</h1><p><a target="_blank" rel="noopener" href="http://ip/">http://ip</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/Apache/">#Apache</a>
+      
+        <a href="/hexo/tags/Http%E6%9C%8D%E5%8A%A1%E5%99%A8/">#Http服务器</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Apache编译安装</div>
+      <div>https://css.ss-ss.top/hexo/2020/02/01/Apache编译安装/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年2月1日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2020/02/01/Apache%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/" title="Apache配置文件详解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Apache配置文件详解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2020/02/01/Linux%E7%B3%BB%E7%BB%9F%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA%E4%B8%8E%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" title="Linux系统磁盘分区与文件系统">
+                        <span class="hidden-mobile">Linux系统磁盘分区与文件系统</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

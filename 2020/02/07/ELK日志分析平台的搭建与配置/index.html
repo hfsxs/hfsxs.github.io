@@ -1,0 +1,784 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="ELK，即由Elasticsearch、Logstash、Kibana这三个开源软件作为核心组件构建的分布式实时日志分析平台，用于实时分析系统日志、应用程序日志和安全日志，以便于掌握服务器负荷、性能及安全性，从而及时采取措施纠正错误   Elasticsearch，开源分布式搜索引擎，提供搜集、分析、存储数据三大功能，且所有节点数据都是均等的 Logstash，用于日志的收集与过滤，支持大量的数据">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ELK日志分析平台的搭建与配置">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2020/02/07/ELK%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90%E5%B9%B3%E5%8F%B0%E7%9A%84%E6%90%AD%E5%BB%BA%E4%B8%8E%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="ELK，即由Elasticsearch、Logstash、Kibana这三个开源软件作为核心组件构建的分布式实时日志分析平台，用于实时分析系统日志、应用程序日志和安全日志，以便于掌握服务器负荷、性能及安全性，从而及时采取措施纠正错误   Elasticsearch，开源分布式搜索引擎，提供搜集、分析、存储数据三大功能，且所有节点数据都是均等的 Logstash，用于日志的收集与过滤，支持大量的数据">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-02-07T02:00:17.000Z">
+<meta property="article:modified_time" content="2023-12-31T12:59:38.610Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="ELK">
+<meta property="article:tag" content="日志分析">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="Elasticsearch">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>ELK日志分析平台的搭建与配置 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">ELK日志分析平台的搭建与配置</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-02-07 10:00" pubdate>
+          2020年2月7日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          31 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">ELK日志分析平台的搭建与配置</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>ELK，即由Elasticsearch、Logstash、Kibana这三个开源软件作为核心组件构建的分布式实时日志分析平台，用于实时分析系统日志、应用程序日志和安全日志，以便于掌握服务器负荷、性能及安全性，从而及时采取措施纠正错误</p>
+<hr>
+<ul>
+<li>Elasticsearch，开源分布式搜索引擎，提供搜集、分析、存储数据三大功能，且所有节点数据都是均等的</li>
+<li>Logstash，用于日志的收集与过滤，支持大量的数据获取方式，负责从每台服务器抓取日志数据，对数据进行格式转换和处理后，输出到Elasticsearch中存储</li>
+<li>Kibana，为Logstash和ElasticSearch提供日志分析的web界面，用于汇总、分析和搜索重要日志数据</li>
+</ul>
+<hr>
+<h1 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h1><p>1.logstash分布于各个应用服务器节点，用于收集日志及数据，经过过滤与处理后发送es到集群</p>
+<p>2.elasticsearch集群为日志数据创建索引，并将之以分片的形式进行分布式压缩存储</p>
+<p>3.kibana从ES集群中查询数据生成图表，提供直观的web呈现方式，实现数据的可视化</p>
+<hr>
+<h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul>
+<li>172.16.100.100 node01 kibana</li>
+<li>172.16.100.120 node02 es logstash</li>
+<li>172.16.100.200 master es</li>
+</ul>
+<hr>
+<h1 id="1-部署ES集群"><a href="#1-部署ES集群" class="headerlink" title="1.部署ES集群"></a>1.部署ES集群</h1><h2 id="1-1-创建elasticsearch用户"><a href="#1-1-创建elasticsearch用户" class="headerlink" title="1.1 创建elasticsearch用户"></a>1.1 创建elasticsearch用户</h2><pre><code class="hljs">sudo useradd elasticsearch
+</code></pre>
+<h2 id="1-2-安装JDK，配置JAVA环境"><a href="#1-2-安装JDK，配置JAVA环境" class="headerlink" title="1.2 安装JDK，配置JAVA环境"></a>1.2 安装JDK，配置JAVA环境</h2><pre><code class="hljs">sudo yum install -y java-1.8.0-openjdk java-1.8.0-openjdk-devel
+sudo apt install -y default-jdk
+</code></pre>
+<h2 id="1-3-安装ES"><a href="#1-3-安装ES" class="headerlink" title="1.3 安装ES"></a>1.3 安装ES</h2><pre><code class="hljs">tar -xzvf elasticsearch-6.6.2.tar.gz
+sudo mv elasticsearch-6.6.2 /usr/local/elasticsearch
+</code></pre>
+<h2 id="1-4-创建ES集群配置文件"><a href="#1-4-创建ES集群配置文件" class="headerlink" title="1.4 创建ES集群配置文件"></a>1.4 创建ES集群配置文件</h2><pre><code class="hljs">sudo vi /usr/local/elasticsearch/config/elasticsearch.yml
+
+
+# 设置ES集群名称
+cluster.name: sword
+# 设置节点名称
+node.name: node-master
+# 设置elasticsearch数据存储路径        
+path.data: /usr/local/elasticsearch/data
+# 设置elasticsearch日志存储路径     
+path.logs: /usr/local/elasticsearch/logs
+# 设置elasticsearch监听地址，默认为localhost 
+network.host: 172.16.100.200
+# 设置elasticsearch监听端口
+http.port:9200
+# 设置集ES集群主机组，自动发现节点及选定主节点
+discovery.zen.ping.unicast.hosts: [&quot;172.16.100.120&quot;, &quot;172.16.100.200&quot;]
+
+# centos6需要配置
+bootstrap.memory_lock: false
+bootstrap.system_call_filter: false
+</code></pre>
+<hr>
+<ul>
+<li>注：其余ES节点只需改动节点名称即可</li>
+</ul>
+<h2 id="1-5-配置elasticsearch用户系统资源限制"><a href="#1-5-配置elasticsearch用户系统资源限制" class="headerlink" title="1.5 配置elasticsearch用户系统资源限制"></a>1.5 配置elasticsearch用户系统资源限制</h2><h3 id="1-5-1-配置打开文件最大数"><a href="#1-5-1-配置打开文件最大数" class="headerlink" title="1.5.1 配置打开文件最大数"></a>1.5.1 配置打开文件最大数</h3><pre><code class="hljs">sudo vi /etc/security/limits.conf
+
+
+# elasticsearch    soft    nproc           16384
+# elasticsearch    hard    nproc           16384
+# soft表示告警值，hard表示阀值
+elasticsearch    soft    nofile          65536
+elasticsearch    hard    nofile          65536
+</code></pre>
+<h3 id="1-5-2-配置进程最大数，默认为4096，会覆盖掉limits-conf配置"><a href="#1-5-2-配置进程最大数，默认为4096，会覆盖掉limits-conf配置" class="headerlink" title="1.5.2 配置进程最大数，默认为4096，会覆盖掉limits.conf配置"></a>1.5.2 配置进程最大数，默认为4096，会覆盖掉limits.conf配置</h3><pre><code class="hljs">sudo vi /etc/security/limits.d/20-nproc.conf
+
+
+elasticsearch    soft    nproc    4096
+elasticsearch    hard    nproc    4096
+</code></pre>
+<h2 id="1-6-配置内核参数"><a href="#1-6-配置内核参数" class="headerlink" title="1.6 配置内核参数"></a>1.6 配置内核参数</h2><h3 id="1-6-1-设置进程占用VMA-虚拟内存区域-的数量"><a href="#1-6-1-设置进程占用VMA-虚拟内存区域-的数量" class="headerlink" title="1.6.1 设置进程占用VMA(虚拟内存区域)的数量"></a>1.6.1 设置进程占用VMA(虚拟内存区域)的数量</h3><pre><code class="hljs">sudo vi /etc/sysctl.conf
+
+
+# 默认为65536
+vm.max_map_count=262144
+</code></pre>
+<h3 id="1-6-2-加载内核参数配置"><a href="#1-6-2-加载内核参数配置" class="headerlink" title="1.6.2 加载内核参数配置"></a>1.6.2 加载内核参数配置</h3><pre><code class="hljs">sudo sysctl -p
+</code></pre>
+<h2 id="1-7-启动ES集群"><a href="#1-7-启动ES集群" class="headerlink" title="1.7 启动ES集群"></a>1.7 启动ES集群</h2><pre><code class="hljs">mkdir /usr/local/elasticsearch/data
+chown -R elasticsearch.elasticsearch /usr/local/elasticsearch
+
+su - elasticsearch
+cd /usr/local/elasticsearch/bin
+nohup ./elasticsearch &amp;
+</code></pre>
+<h2 id="1-8-查询ES集群状态"><a href="#1-8-查询ES集群状态" class="headerlink" title="1.8 查询ES集群状态"></a>1.8 查询ES集群状态</h2><pre><code class="hljs">curl -XGET &#39;http://172.16.100.200:9200/_cat/nodes?v&#39;
+</code></pre>
+<h1 id="2-部署kibana"><a href="#2-部署kibana" class="headerlink" title="2.部署kibana"></a>2.部署kibana</h1><pre><code class="hljs">tar -xzvf kibana-6.6.2-linux-x86_64.tar.gz
+sudo mv kibana-6.6.2-linux-x86_64 /usr/local/kibana
+</code></pre>
+<h2 id="2-1-创建kibana配置文件"><a href="#2-1-创建kibana配置文件" class="headerlink" title="2.1 创建kibana配置文件"></a>2.1 创建kibana配置文件</h2><pre><code class="hljs">sudo vi /usr/local/kibana/config/kibana.yml
+
+
+# 设置kibana监听端口
+server.port: 5601
+# 设置kibana监听地址
+server.host: &quot;172.16.100.150&quot;
+# 设置elasticsearch地址
+elasticsearch.hosts: [&quot;http://172.16.100.200:9200&quot;]
+</code></pre>
+<h2 id="2-2-启动kibana"><a href="#2-2-启动kibana" class="headerlink" title="2.2.启动kibana"></a>2.2.启动kibana</h2><pre><code class="hljs">cd /usr/local/kibana/bin
+nohup ./kibana &amp;
+</code></pre>
+<h1 id="3-部署logstash"><a href="#3-部署logstash" class="headerlink" title="3.部署logstash"></a>3.部署logstash</h1><pre><code class="hljs">tar -xzvf logstash-6.6.2.tar.gz
+sudo mv logstash-6.6.2 /usr/local/logstash
+</code></pre>
+<h2 id="3-1-创建logstash解析配置文件"><a href="#3-1-创建logstash解析配置文件" class="headerlink" title="3.1 创建logstash解析配置文件"></a>3.1 创建logstash解析配置文件</h2><pre><code class="hljs">vi /usr/local/logstash/config/syslog.yml
+
+
+# 定义日志源
+input &#123;
+
+  file &#123;
+    # 设置源日志文件路径
+    path =&gt; [&quot;/var/log/messages&quot;]
+    # 设置日志类型，相当于关系数据库中的table
+    type =&gt; &quot;system&quot;
+    # 设置从哪里开始收集日志
+    start_position =&gt; &quot;beginning&quot;
+    # 定义监听端口
+    # port =&gt; 10514
+  &#125;
+
+  file &#123;
+    path =&gt; [&quot;/var/log/secure&quot;]
+    type =&gt; &quot;secure&quot;
+    start_position =&gt; &quot;beginning&quot;
+    &#125;
+  &#125;
+
+  # 定义日志过滤规则
+  # filter &#123;
+  #	&#125;
+
+  # 定义日志输出
+  output &#123;
+
+    if [type] == &quot;system&quot; &#123;
+
+      # 输出到es
+      elasticsearch &#123;
+      # 设置es地址与端口，多个用逗号隔开
+      hosts =&gt; [&quot;172.16.100.200:9200&quot;]
+      # 设置日志的索引名称，相当于关系型数据库中的database
+      index =&gt; &quot;system-%&#123;+YYYY.MM.dd&#125;&quot;
+      &#125;
+    &#125;
+
+    if [type] == &quot;secure&quot; &#123;
+
+      elasticsearch &#123;
+        hosts =&gt; [&quot;172.16.100.200:9200&quot;]
+        index =&gt; &quot;secure-%&#123;+YYYY.MM.dd&#125;&quot;
+      &#125;
+    &#125;
+
+  # 输出到当前终端
+  stdout &#123; codec =&gt; rubydebug &#125;
+&#125;
+</code></pre>
+<h2 id="3-2-启动logstash"><a href="#3-2-启动logstash" class="headerlink" title="3.2 启动logstash"></a>3.2 启动logstash</h2><pre><code class="hljs">cd /usr/local/logstash/bin
+
+# 检测配置文件的语法
+./logstash -f /etc/logstash/conf.d/syslog.conf -t
+
+# 后台启动logstash
+nohup ./logstash -f /usr/local/logstash/config/syslog.conf &gt; nohup.log &amp;
+</code></pre>
+<h1 id="4-登陆kibana查看日志分析效果"><a href="#4-登陆kibana查看日志分析效果" class="headerlink" title="4.登陆kibana查看日志分析效果"></a>4.登陆kibana查看日志分析效果</h1><p><a target="_blank" rel="noopener" href="http://172.16.100.200:5601/">http://172.16.100.200:5601</a></p>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/yuhuLin/p/7018858.html">http://www.cnblogs.com/yuhuLin/p/7018858.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/xiaorenwutest/2135897">https://blog.51cto.com/xiaorenwutest/2135897</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/ELK/">#ELK</a>
+      
+        <a href="/hexo/tags/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/">#日志分析</a>
+      
+        <a href="/hexo/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/">#大数据</a>
+      
+        <a href="/hexo/tags/Elasticsearch/">#Elasticsearch</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>ELK日志分析平台的搭建与配置</div>
+      <div>https://css.ss-ss.top/hexo/2020/02/07/ELK日志分析平台的搭建与配置/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年2月7日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2020/02/10/ELK%E9%85%8D%E7%BD%AEFilebeat%E6%94%B6%E9%9B%86%E6%97%A5%E5%BF%97/" title="ELK配置Filebeat收集日志">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">ELK配置Filebeat收集日志</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2020/02/07/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/" title="Ansible自动化运维工具的安装与配置">
+                        <span class="hidden-mobile">Ansible自动化运维工具的安装与配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

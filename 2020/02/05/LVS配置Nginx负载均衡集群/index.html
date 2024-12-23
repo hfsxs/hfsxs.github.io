@@ -1,0 +1,727 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="LVS，即Linux Virtual Server，Linux虚拟服务器，是由章文嵩博士发起的实现负载均衡集群的开源项目，目前已是Linux内核标准的一部分。LVS架构从逻辑上可分为调度层、Server集群层和共享存储层，LVS工作在TCP&#x2F;IP的第四层，即网络层，适用于1000-2000万PV或并发请求1万以上的Nginx不堪负载的大型网站 LVS架构 ipvs，即ip virtual">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LVS配置Nginx负载均衡集群">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2020/02/05/LVS%E9%85%8D%E7%BD%AENginx%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%9B%86%E7%BE%A4/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="LVS，即Linux Virtual Server，Linux虚拟服务器，是由章文嵩博士发起的实现负载均衡集群的开源项目，目前已是Linux内核标准的一部分。LVS架构从逻辑上可分为调度层、Server集群层和共享存储层，LVS工作在TCP&#x2F;IP的第四层，即网络层，适用于1000-2000万PV或并发请求1万以上的Nginx不堪负载的大型网站 LVS架构 ipvs，即ip virtual">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-02-05T01:09:44.000Z">
+<meta property="article:modified_time" content="2023-12-31T12:59:38.612Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="负载均衡">
+<meta property="article:tag" content="Nginx">
+<meta property="article:tag" content="集群">
+<meta property="article:tag" content="LVS">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>LVS配置Nginx负载均衡集群 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">LVS配置Nginx负载均衡集群</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-02-05 09:09" pubdate>
+          2020年2月5日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          33 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">LVS配置Nginx负载均衡集群</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>LVS，即Linux Virtual Server，Linux虚拟服务器，是由章文嵩博士发起的实现负载均衡集群的开源项目，目前已是Linux内核标准的一部分。LVS架构从逻辑上可分为调度层、Server集群层和共享存储层，LVS工作在TCP&#x2F;IP的第四层，即网络层，适用于1000-2000万PV或并发请求1万以上的Nginx不堪负载的大型网站</p>
+<h1 id="LVS架构"><a href="#LVS架构" class="headerlink" title="LVS架构"></a>LVS架构</h1><ul>
+<li>ipvs，即ip virtual server，工作在内核空间的代码，用于调度的实现</li>
+<li>ipvsadm，工作在用户空间，负责为ipvs内核框架编写规则、定义集群服务的组员及后端真实的服务器(Real Server)的组员</li>
+</ul>
+<h1 id="LVS工作流程"><a href="#LVS工作流程" class="headerlink" title="LVS工作流程"></a>LVS工作流程</h1><ul>
+<li>1.客户端（Client）向负载均衡调度器（Director Server）发起请求，调度器将请求发往至内核空间</li>
+<li>2.调度器的PREROUTING链接收到客户端请求，判断目标IP确定是本机IP，将数据包发往INPUT链</li>
+<li>3.IPVS工作在INPUT链上，当客户端请求到达INPUT时，IPVS会将客户端请求和已经定义好的集群服务进行比对，若客户端请求的就是定义的集群服务，IPVS修改数据包的目标IP地址及端口，并将新数据包发往POSTROUTING链</li>
+<li>4.POSTROUTING链接收数据包，将目标IP地址和已经定义好的后端服务器地址进行比对，通过选路后将数据包最终发送给后端的服务器</li>
+</ul>
+<h1 id="LVS相关术语"><a href="#LVS相关术语" class="headerlink" title="LVS相关术语"></a>LVS相关术语</h1><ul>
+<li>DS，Director Server，调度服务器，即前端负载均衡器节点</li>
+<li>RS，Real Server，即后端真实的工作服务器</li>
+<li>VIP，虚拟IP，即供外部用户请求IP地址</li>
+<li>DIP，Director Server IP，用于和内部主机通讯的IP地址</li>
+<li>RIP，Real Server IP，即后端服务器IP地址</li>
+<li>CIP，Client IP，即客户端IP地址</li>
+</ul>
+<h1 id="LVS工作模式"><a href="#LVS工作模式" class="headerlink" title="LVS工作模式"></a>LVS工作模式</h1><h2 id="1-NAT模式"><a href="#1-NAT模式" class="headerlink" title="1.NAT模式"></a>1.NAT模式</h2><p>即网络地址转换，支持端口映射，LVS通过转换请求报文和响应报文的目标IP实现负载均衡功能。由于其请求和响应的数据报文都需要通过DR进行IP转换，所以当集群规模达到一定程度时DR将成为整个集群的瓶颈</p>
+<h2 id="2-DR模式"><a href="#2-DR模式" class="headerlink" title="2.DR模式"></a>2.DR模式</h2><p>即直接路由，通过为请求报文重新封装一个MAC首部进行转发以实现负载均衡功能。其只有请求报文经由LVS进行转发，而响应报文是由RS直接返回给客户端，所以LVS不会产生流量，只负责分发请求，故整个集群的吞吐量得以大大提高，应用最为广泛。但负载均衡器的网卡必须与物理网卡在一个物理段上，即不能跨地域物理网络调度，也不支持端口映射</p>
+<h2 id="3-TUN模式"><a href="#3-TUN模式" class="headerlink" title="3.TUN模式"></a>3.TUN模式</h2><p>即隧道模式，通过调度算法对请求报文封装一个新IP报头，这个新报头指定了后端服务器的IP，从而实现了负载均衡的功能。此模式负载均衡器只负责将请求包分发给后端服务器，而响应报文直接由后端服务器发送给客户端，故其能处理的请求量极为巨大，单台负载均衡能为超过100台的物理服务器服务。且由于DIP、VIP、 RIP都为公网地址，就具备了跨地域物理网络的调度功能。但需要后端服务器支持IP Tunneling，即IP Encapsulation协议，且通过隧道进行信息传输，增加了部分负载，也不支持端口映射，适用于跨地域或跨机房的场景</p>
+<h1 id="LVS调度算法"><a href="#LVS调度算法" class="headerlink" title="LVS调度算法"></a>LVS调度算法</h1><h1 id="1-RR"><a href="#1-RR" class="headerlink" title="1.RR"></a>1.RR</h1><p>轮询，调度器将外部请求按顺序轮流分配到集群中的真实服务器上，集群中的任意一台服务器都是均等的，不考虑服务器实际连接数和负载</p>
+<h2 id="2-WRR"><a href="#2-WRR" class="headerlink" title="2.WRR"></a>2.WRR</h2><p>加权轮询，调度器根据真实服务器的不同处理能力来调度访问请求，以保证处理能力强的服务器处理更多的访问流量，自动问询负载情况，并动态地调整其权值</p>
+<h2 id="3-DH"><a href="#3-DH" class="headerlink" title="3.DH"></a>3.DH</h2><p>目标地址hash，根据请求的目标IP地址，通过一个散列（Hash）函数将一个目标IP地址映射到某一台服务器，是一种静态映射算法</p>
+<h2 id="4-SH"><a href="#4-SH" class="headerlink" title="4.SH"></a>4.SH</h2><p>源地址hash，根据请求的源IP地址，作为散列键（Hash Key）从静态分配的散列表找出对应的服务器，若该服务器是可用的且未超载，将请求发送到该服务器，否则返回空。实际应用中SH和DH结合使用在防火墙集群，可以保证整个系统的唯一出<br>入口</p>
+<h2 id="5-LC"><a href="#5-LC" class="headerlink" title="5.LC"></a>5.LC</h2><p>最少连接，调度器动态地将网络请求调度到已建立的链接数最少的服务器上，适用于真实服务器具有相近的性能的集群环境</p>
+<h1 id="6-WLC"><a href="#6-WLC" class="headerlink" title="6.WLC"></a>6.WLC</h1><p>加权最少连接，调度器可以自动问询真实服务器的负载情况，并动态地调整其权值，适用于真实服务器性能差异较大的情况，具有较高权值的服务器将承受较大比例的活动连接负载</p>
+<h2 id="7-SED"><a href="#7-SED" class="headerlink" title="7.SED"></a>7.SED</h2><p>最少期望延迟，基于wlc算法，调度器根据权重和当前连接数进行运算决定负载机器</p>
+<h2 id="8-NQ"><a href="#8-NQ" class="headerlink" title="8.NQ"></a>8.NQ</h2><p>从不排队，无需列队，如果有台realserver的连接数&#x3D;0就直接分配过去，不再进行运算</p>
+<h2 id="9-LBLC"><a href="#9-LBLC" class="headerlink" title="9.LBLC"></a>9.LBLC</h2><p>基于本地的最少连接，适用于Cache集群系统。该算法根据请求的目标IP地址找出该目标IP地址最近使用的服务器，若该服务器可用且未超载，将请求发送到该服务器；若不存在或已超载，且有服务器处于一半的工作负载，则用最少链接的原则选出一个可用的服务器，将请求发送到该服务器</p>
+<h2 id="10-LBLCR"><a href="#10-LBLCR" class="headerlink" title="10.LBLCR"></a>10.LBLCR</h2><p>带复制的基于本地的最少连接，适用于Cache集群系统。该算法根据请求的目标IP地址找出该目标IP地址对应的服务器组，按最小连接原则从服务器组中选出一台服务器，若未超载，将请求发送到该服务器；若服务器超载，则按最小连接原则从这个集群中选出一台服务器，将该服务器加入到服务器组中，将请求发送到该服务器。同时，当该服务器组有一段时间没有被修改， 将最忙的服务器从服务器组中删除，以降低复制的程度</p>
+<h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><p>LVS可实现负载均衡，但不能进行健康检查，若某个rs出现故障，LVS仍然会进行请求转发，这样就会导致请求的无效。所以经常会配合keepalived工作，实现后端服务器的健康检查及LVS的高可用功能<br>实际的生产环境中，lvs通常会和nginx配合使用。虽然nginx单独也可实现负载均衡的功能，但请求和响应流量都会经过nginx，当后端的服务器规模庞大时，网络带宽就成为了整个集群的瓶颈。所以，lvs和nginx配合使用，既保障了lvs四层工作的高效性，又避免了nginx流量集中以及lvs映射出错的弊端，且nginx还可以处理静态资源，以及承载业务切换、分流、前置缓存的任务，这样就会大大减轻后端服务器的压力，从而提高整个集群的性能</p>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/8a61de3f8be9">https://www.jianshu.com/p/8a61de3f8be9</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/191226139/2089891">https://blog.51cto.com/191226139/2089891</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lixigang/p/5371815.html">https://www.cnblogs.com/lixigang/p/5371815.html</a></li>
+</ul>
+<hr>
+<h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul>
+<li>172.16.100.100 ds</li>
+<li>172.16.100.150 rs1</li>
+<li>172.16.100.200 rs2</li>
+<li>172.16.100.120 vip</li>
+</ul>
+<hr>
+<h1 id="1-DR模式"><a href="#1-DR模式" class="headerlink" title="1.DR模式"></a>1.DR模式</h1><h2 id="1-1-安装LVS"><a href="#1-1-安装LVS" class="headerlink" title="1.1 安装LVS"></a>1.1 安装LVS</h2><pre><code class="hljs">yum install -y ipvsadm
+</code></pre>
+<h2 id="1-2-调度服务器配置LVS脚本"><a href="#1-2-调度服务器配置LVS脚本" class="headerlink" title="1.2 调度服务器配置LVS脚本"></a>1.2 调度服务器配置LVS脚本</h2><pre><code class="hljs">vi /usr/local/sbin/lvs_dr.sh
+
+
+#! /bin/bash
+
+
+ipv=/sbin/ipvsadm
+
+vip=172.16.100.120
+rs1=172.16.100.150
+rs2=172.16.100.200
+
+# 配置子网卡
+ifconfig ens33:0 down
+# 配置虚拟IP
+ifconfig ens33:0 $vip broadcast $vip netmask 255.255.255.255 up
+# 配置子网卡路由
+route add -host $vip dev ens33:0
+
+# 开启调度服务器路由转发功能
+echo 1 &gt; /proc/sys/net/ipv4/ip_forward
+
+# 清除当前所有的lvs虚拟服务
+$ipv -C
+
+# 添加tcp协议虚拟服务集群，指定负载均衡算法
+$ipv -A -t $vip:8080 -s wrr
+# 配置lvs虚拟服务的后端服务器组
+# g，设置工作模式为dr；w，设置rs权重
+$ipv -a -t $vip:80 -r $rs1:80 -g -w 3
+$ipv -a -t $vip:80 -r $rs2:80 -g -w 1
+</code></pre>
+<h2 id="1-3-创建LVS规则"><a href="#1-3-创建LVS规则" class="headerlink" title="1.3 创建LVS规则"></a>1.3 创建LVS规则</h2><pre><code class="hljs">chmod +x /usr/local/sbin/lvs_dr.sh
+sh /usr/local/sbin/lvs_dr.sh
+</code></pre>
+<h2 id="1-4-创建后端服务器配置脚本"><a href="#1-4-创建后端服务器配置脚本" class="headerlink" title="1.4 创建后端服务器配置脚本"></a>1.4 创建后端服务器配置脚本</h2><pre><code class="hljs"> vi /usr/local/sbin/lvs_dr_rs.sh
+
+
+#! /bin/bash
+
+
+vip=172.16.100.120
+
+# RS绑定vip到回环网卡
+ifconfig lo:0 $vip broadcast $vip netmask 255.255.255.255 up
+
+# RS添加路由
+route add -host $vip lo:0
+
+# 配置ARP抑制，也可配置到/etc/sysctl.conf
+echo &quot;1&quot; &gt;/proc/sys/net/ipv4/conf/lo/arp_ignore
+echo &quot;2&quot; &gt;/proc/sys/net/ipv4/conf/lo/arp_announce
+echo &quot;1&quot; &gt;/proc/sys/net/ipv4/conf/all/arp_ignore
+echo &quot;2&quot; &gt;/proc/sys/net/ipv4/conf/all/arp_announce
+</code></pre>
+<h2 id="1-5-创建LVS规则"><a href="#1-5-创建LVS规则" class="headerlink" title="1.5 创建LVS规则"></a>1.5 创建LVS规则</h2><pre><code class="hljs">chmod +x /usr/local/sbin/lvs_dr_rs.sh
+sh /usr/local/sbin/lvs_dr_rs.sh
+</code></pre>
+<h2 id="1-6-查看调度规则，验证集群功能"><a href="#1-6-查看调度规则，验证集群功能" class="headerlink" title="1.6 查看调度规则，验证集群功能"></a>1.6 查看调度规则，验证集群功能</h2><pre><code class="hljs">ipvsadm -ln
+</code></pre>
+<h1 id="2-NAT模式"><a href="#2-NAT模式" class="headerlink" title="2.NAT模式"></a>2.NAT模式</h1><h1 id="3-TUN模式-1"><a href="#3-TUN模式-1" class="headerlink" title="3.TUN模式"></a>3.TUN模式</h1><hr>
+<h1 id="参考文档-1"><a href="#参考文档-1" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/MacoLee/p/5856858.html">https://www.cnblogs.com/MacoLee/p/5856858.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Ki8Qzvka6Gz4n450m/article/details/79119665">https://blog.csdn.net/Ki8Qzvka6Gz4n450m/article/details/79119665</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">#负载均衡</a>
+      
+        <a href="/hexo/tags/Nginx/">#Nginx</a>
+      
+        <a href="/hexo/tags/%E9%9B%86%E7%BE%A4/">#集群</a>
+      
+        <a href="/hexo/tags/LVS/">#LVS</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>LVS配置Nginx负载均衡集群</div>
+      <div>https://css.ss-ss.top/hexo/2020/02/05/LVS配置Nginx负载均衡集群/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年2月5日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2020/02/05/LVS%E5%91%BD%E4%BB%A4%E8%AF%A6%E8%A7%A3/" title="LVS命令详解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">LVS命令详解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2020/02/04/Tomcat%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE%E5%9F%BA%E4%BA%8ERedis%E7%9A%84%E4%BC%9A%E8%AF%9D%E4%BF%9D%E6%8C%81/" title="Tomcat集群配置基于Redis的会话保持">
+                        <span class="hidden-mobile">Tomcat集群配置基于Redis的会话保持</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

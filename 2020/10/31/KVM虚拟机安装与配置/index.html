@@ -1,0 +1,720 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="KVM，Kernel-based Virtual Machine，即基于内核的虚拟机，开源的操作系统虚拟化模块，目前已集成到Linux的各个发行版，用于Linux实现Hypervisor，是基于虚拟化扩展（Intel VT或AMD-V）的X86硬件的原生全虚拟化解决方案 KVM最初由Qumranet公司的Avi Kivity开发，作为VDI产品的后台虚拟化解决方案。为了简化开发，Avi Kivit">
+<meta property="og:type" content="article">
+<meta property="og:title" content="KVM虚拟机安装与配置">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2020/10/31/KVM%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="KVM，Kernel-based Virtual Machine，即基于内核的虚拟机，开源的操作系统虚拟化模块，目前已集成到Linux的各个发行版，用于Linux实现Hypervisor，是基于虚拟化扩展（Intel VT或AMD-V）的X86硬件的原生全虚拟化解决方案 KVM最初由Qumranet公司的Avi Kivity开发，作为VDI产品的后台虚拟化解决方案。为了简化开发，Avi Kivit">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-31T02:06:33.000Z">
+<meta property="article:modified_time" content="2023-12-31T12:59:38.605Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="KVM">
+<meta property="article:tag" content="虚拟化">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>KVM虚拟机安装与配置 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">KVM虚拟机安装与配置</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-10-31 10:06" pubdate>
+          2020年10月31日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          55 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">KVM虚拟机安装与配置</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>KVM，Kernel-based Virtual Machine，即基于内核的虚拟机，开源的操作系统虚拟化模块，目前已集成到Linux的各个发行版，用于Linux实现Hypervisor，是基于虚拟化扩展（Intel VT或AMD-V）的X86硬件的原生全虚拟化解决方案</p>
+<p>KVM最初由Qumranet公司的Avi Kivity开发，作为VDI产品的后台虚拟化解决方案。为了简化开发，Avi Kivity并没有选择从底层开始新写一个Hypervisor，通过加载模块的方式使Linux变成一个Hypervisor，硬件管理等还是通过Linux kernel来完成。2006年10月，在先后完成了基本功能、动态迁移以及主要的性能优化之后，Qumranet正式对外宣布了KVM的诞生。同月，KVM模块的源代码被正式纳入Linux kernel，成为内核源代码的一部分。KVM支持多种处理器平台，如最常见的以Intel和AMD为代表的x86和x86_64平台，其余如PowerPC、S&#x2F;390、ARM等非x86架构的平台</p>
+<h1 id="虚拟化"><a href="#虚拟化" class="headerlink" title="虚拟化"></a>虚拟化</h1><p>虚拟化，计算机领域资源管理技术，通过将计算机的各种实体资源(CPU、内 存、存储、网络等)予以抽象和转化，并进行分割、组合，最终实现最大化利用物理资源的解决方案。实现原理是通过引入Virtual Machine Monitor(VMM，虚拟机监控器，也称为Hypervisor) ，将物理主机抽象、分割成多个虚拟的逻辑意义上的主机，向下掌控实际的物理资源，向上支撑多个操作系统及其之上的运行环境和应用程序</p>
+<h2 id="软件虚拟化和硬件虚拟化"><a href="#软件虚拟化和硬件虚拟化" class="headerlink" title="软件虚拟化和硬件虚拟化"></a>软件虚拟化和硬件虚拟化</h2><h3 id="1-软件虚拟化技术"><a href="#1-软件虚拟化技术" class="headerlink" title="1.软件虚拟化技术"></a>1.软件虚拟化技术</h3><p>软件虚拟化，通过纯软件的环境来模拟执行虚拟机操作系统的指令，如QEMU，原理是通过软件的二进制翻译仿真出目标平台呈现给虚拟机，虚拟机的每一条目标平台指令都会被QEMU截取并翻译成宿主机平台的指令，然后交给实际的物理平台执行。显然，由于新增了模拟翻译工作量，其性能是比较差的，软件复杂度也大大增加。但优点是可以呈现各种平台给虚拟机，只需其二进制翻译支持</p>
+<h3 id="2-硬件虚拟化技术"><a href="#2-硬件虚拟化技术" class="headerlink" title="2.硬件虚拟化技术"></a>2.硬件虚拟化技术</h3><p>硬件虚拟化，计算机硬件本身提供了让客户机指令独立执行的能力，不再完全依赖于VMM。以x86架构为例，其提供一个略微受限制的硬件运行环境供客户机运行（non-root mode），绝大多数情况下客户机在此受限环境中运行与原生系统在非虚拟化环境中运行没有什么区别，不需要像软件虚拟化那样每条指令都先翻译再执行。而VMM运行在root mode，拥有完整的硬件访问控制权限。只在少数必要时，某些客户机指令的运行才需要被VMM截获并做相应处理，之后客户机返回并继续运行于non-root mode。其性能接近于原生系统，且极大地简化了VMM的软件设计架构</p>
+<h2 id="半虚拟化和全虚拟化"><a href="#半虚拟化和全虚拟化" class="headerlink" title="半虚拟化和全虚拟化"></a>半虚拟化和全虚拟化</h2><h3 id="1-半虚拟化"><a href="#1-半虚拟化" class="headerlink" title="1.半虚拟化"></a>1.半虚拟化</h3><p>Para-Virtualization，即半虚拟化，是基于软件虚拟化的配合VMM，并通过修改虚拟机操作系统代码，将原来在物理机上执行的一些特权指令修改成可以和VMM直接交互的方式，从而实现操作系统的定制化。这样，就不会再有捕获异常、翻译和模拟的过程，性能损耗较少</p>
+<h3 id="2-全虚拟化"><a href="#2-全虚拟化" class="headerlink" title="2.全虚拟化"></a>2.全虚拟化</h3><p>Full Virtualization，即全虚拟化，客户机的操作系统完全不需改动，所有软件都能在虚拟机中运行。由于全虚拟化需要模拟出完整的、和 物理平台一模一样的平台给客户机，将会增加虚拟化层的复杂度</p>
+<hr>
+<p>2005年硬件虚拟化兴起之前，软件实现的全虚拟化完败于VMM和客户机操作系统协同运作的半虚拟化。2006年之后以Intel VT-x、VT-d为代表的硬件虚拟化技术的兴起，让由硬件虚拟化辅助的全虚拟化全面超过了半虚拟化。但是，以virtio为代表的半虚拟化技术也一直在演进发展，性能上只是略逊于全虚拟化，加之其较少的平台依赖性，依然受到广泛的欢迎</p>
+<h1 id="1-体系架构"><a href="#1-体系架构" class="headerlink" title="1.体系架构"></a>1.体系架构</h1><p>KVM虚拟化的核心主要由两个模块构成，即KVM内核模块和QEMU</p>
+<h2 id="1-1-KVM内核模块"><a href="#1-1-KVM内核模块" class="headerlink" title="1.1 KVM内核模块"></a>1.1 KVM内核模块</h2><p>KVM模块是KVM虚拟化技术的核心部分，目前已集成于Linux内核，是标准的Linux字符集设备（&#x2F;dev&#x2F;kvm），负责宿主机物理CPU和内存的虚拟化，如初始化CPU硬件并打开虚拟化模式、创建虚拟机的内核数据结构、CPU执行模式的切换、vCPU的执行、管理虚拟机的虚拟内存、地址与宿主机物理内存、地址之间的的映射关系等。KVM模块将Linux主机变成为一个虚拟机监视器（VMM），并在原有的Linux两种执行模式基础上新增用于虚拟机运行的客户模式，该客户模式拥有自己独立的内核模式和用户模式</p>
+<h2 id="1-2-QEMU"><a href="#1-2-QEMU" class="headerlink" title="1.2 QEMU"></a>1.2 QEMU</h2><p>QEMU，即Quick Emulator，由法布里斯·贝拉(Fabrice Bellard)以C语言编写的开源的处理器模拟软件，纯软件的实现虚拟化技术，可独立运行，但性能较低。QEMU有两种工作模式：系统模式，可模拟整个计算机系统；用户模式，可运行不同于当前硬件平台的其他平台上的程序，如x86平台运行ARM平台的程序。开源的VirtualBox、Xen虚拟化产品，其核心底层的虚拟化部分就有集成和使用QEMU</p>
+<hr>
+<p>KVM为适配QEMU，将其代码进行部分修改，即为QEMU-KVM，再与KVM组合即成为KVM虚拟化平台，二者相互配合完成虚拟化工作</p>
+<h1 id="2-工作原理"><a href="#2-工作原理" class="headerlink" title="2.工作原理"></a>2.工作原理</h1><h2 id="2-1-KVM内核"><a href="#2-1-KVM内核" class="headerlink" title="2.1 KVM内核"></a>2.1 KVM内核</h2><p>KVM内核运行于内核模式，负责硬件的虚拟化、客户模式的切换及处理因I&#x2F;O或者其他指令引起的客户模式退出，即异常处理。由于计算机用户无法直接跟内核模块交互，因此借助运行于用户模式的QEMU模拟的设备来实现和内核模式的KVM的交互。KVM模块提供&#x2F;dev&#x2F;kvm接口，需要用户空间程序通过借口设置一个客户机虚拟服务器的地址空间，向他提供模拟的I&#x2F;O，并将它的视频显示映射回宿主的显示屏</p>
+<h2 id="2-2-QEMU-KVM"><a href="#2-2-QEMU-KVM" class="headerlink" title="2.2 QEMU-KVM"></a>2.2 QEMU-KVM</h2><p>QEMU-KVM运行于用户模式，将虚拟机以常规Linux进程的方式创建并运行，并模拟虚拟机的硬件设备，如磁盘，网卡，显卡等。QEMU-KVM通过KVM模块提供的系统接口调用进入内核空间，由KVM模块将虚拟机置于CPU的内核模式运行，IO操作则由KVM模块进行模式切换，将会从上次系统调用的接口返回给QEMU-KVM，最后再由QEMU-KVM负责解析和处理。QEMU-KVM依赖于KVM内核的配合，达到了硬件虚拟化的速度，大大弥补了软件虚拟化性能不足的弱点。此外，由于QEMU模拟IO设备效率不高，目前通常采用半虚拟化的virtio方式虚拟IO设备</p>
+<h2 id="2-3-KVM虚拟机"><a href="#2-3-KVM虚拟机" class="headerlink" title="2.3 KVM虚拟机"></a>2.3 KVM虚拟机</h2><p>KVM虚拟机运行于客户模式，是一个标准的Linux进程，其虚拟CPU对应QEMU进程中的一个执行线程，内存空间被映射到QEMU的进程地址空间，在启动时分配</p>
+<h1 id="3-工作流程"><a href="#3-工作流程" class="headerlink" title="3.工作流程"></a>3.工作流程</h1><h2 id="3-1-创建虚拟机"><a href="#3-1-创建虚拟机" class="headerlink" title="3.1 创建虚拟机"></a>3.1 创建虚拟机</h2><p>运行于用户模式的Qemu-kvm通过ioctl系统调用操作&#x2F;dev&#x2F;kvm字符设备，即kvm模块，创建VM和VCPU</p>
+<h2 id="3-2-数据结构初始化"><a href="#3-2-数据结构初始化" class="headerlink" title="3.2 数据结构初始化"></a>3.2 数据结构初始化</h2><p>KVM内核模块负责数据结构的创建即初始化，然后进行CPU模式切换，返回到用户模式</p>
+<h2 id="3-3-虚拟机调度"><a href="#3-3-虚拟机调度" class="headerlink" title="3.3 虚拟机调度"></a>3.3 虚拟机调度</h2><p>Qemu-kvm通过ioctl调用运行VCPU，即调度相应的虚拟机运行</p>
+<h2 id="3-4-运行虚拟机"><a href="#3-4-运行虚拟机" class="headerlink" title="3.4 运行虚拟机"></a>3.4 运行虚拟机</h2><p>Linux内核进行相关处理后，执行VMLAUNCH指令，通过VM-Entry进入虚拟机并运行于非根模式下</p>
+<h2 id="3-5-虚拟机执行指令"><a href="#3-5-虚拟机执行指令" class="headerlink" title="3.5 虚拟机执行指令"></a>3.5 虚拟机执行指令</h2><p>虚拟机执行非特权指令可直接在宿主机物理CPU上运行，特权指令、外部中断、或虚拟机内部异常时将产生VM-Exit，并将相关信息记录到VMCS（virtual-machine control data structures，虚拟机控制数据结构）</p>
+<h1 id="4-管理工具"><a href="#4-管理工具" class="headerlink" title="4.管理工具"></a>4.管理工具</h1><p>虚拟化解决方案离不开良好的管理和运维工具，部署、运维、管理的复杂度与灵活性是企业实施虚拟化时重点考虑的问题。KVM目前已经有从libvirt API、virsh命令行到OpenStack云管理平台等一整套管理工具，尽管与老牌虚拟化巨头VMware提供的商业化虚拟化管理工具相比在功能和易用性上有所差距，但KVM这一整套管理工具都是API化的、开源的，在使用的灵活性以及对其做二次开发的定制化方面仍有一定优势</p>
+<h2 id="4-1-libvirt"><a href="#4-1-libvirt" class="headerlink" title="4.1 libvirt"></a>4.1 libvirt</h2><p>libvirt，最广为流行的对KVM虚拟化进行管理的工具和应用程序接口，已经是事实上的虚拟化接口标准。作为通用的虚拟化API，不但能管理KVM，还能管理VMware、Hyper-V、Xen、VirtualBox等其他虚拟化方案</p>
+<h2 id="4-2-virsh"><a href="#4-2-virsh" class="headerlink" title="4.2 virsh"></a>4.2 virsh</h2><p>virsh，由C语言编写的使用libvirt API的虚拟化管理工具，源代码也在libvirt这个开源项目中，常用的管理KVM虚拟化的命令行工具，对于系统管理员在单个宿主机上进行运维操作可能是最佳选择</p>
+<h2 id="4-3-virt-manager"><a href="#4-3-virt-manager" class="headerlink" title="4.3 virt-manager"></a>4.3 virt-manager</h2><p>virt-manager，虚拟机图形化管理软件，底层与虚拟化交互的部分仍然是调用libvirt API来操作。virt-manager除了提供虚拟机生命周期（包括：创建、启动、停 止、打快照、动态迁移等）管理的基本功能，还提供性能和资源使用率的监控，同时内置了VNC和SPICE客户端，方便图形化连接到虚拟客户机中。virt-manager在RHEL、 CentOS、Fedora等操作系统上是非常流行的虚拟化管理软件，在管理的机器数量规模较小时，virt-manager是很好的选择。因其图形化操作的易用性，成为新手入门学习虚拟化操作的首选管理软件</p>
+<h2 id="4-4-OpenStack"><a href="#4-4-OpenStack" class="headerlink" title="4.4 OpenStack"></a>4.4 OpenStack</h2><p>OpenStack，开源的基础架构即服务（IaaS）云计算管理平台，可用于构建共有云和私有云服务的基础设施，是目前业界使用最广泛功能最强大的云管理平台，不仅提供了管理虚拟机的丰富功能，还有非常多其他重要管理功能，如对象存储、块存储、网络、镜像、身份验证、编排服务、控制面板等，同样是基于libvirt API来完成对底层虚拟化的管理</p>
+<hr>
+<h1 id="1-查看宿主机是否开启虚拟化功能"><a href="#1-查看宿主机是否开启虚拟化功能" class="headerlink" title="1.查看宿主机是否开启虚拟化功能"></a>1.查看宿主机是否开启虚拟化功能</h1><pre><code class="hljs"># 若为0表示未开启，重启进入BIOS开启
+egrep &#39;(vmx|svm)&#39; /proc/cpuinfo|wc -l
+</code></pre>
+<h1 id="2-安装kvm"><a href="#2-安装kvm" class="headerlink" title="2.安装kvm"></a>2.安装kvm</h1><pre><code class="hljs">sudo yum -y install qemu-kvm libvirt virt-install
+sudo apt -y install qemu qemu-kvm libvirt-bin virtinst libosinfo-bin
+sudo apt -y install qemu qemu-kvm libvirt-daemon-system libvirt-clients virtinst libosinfo-bin
+</code></pre>
+<h1 id="3-将当前用户添加到libvirt组用于管理虚拟机"><a href="#3-将当前用户添加到libvirt组用于管理虚拟机" class="headerlink" title="3.将当前用户添加到libvirt组用于管理虚拟机"></a>3.将当前用户添加到libvirt组用于管理虚拟机</h1><pre><code class="hljs">sudo usermod -a -G libvirt $USER
+</code></pre>
+<h1 id="4-启动kvm管理工具进程"><a href="#4-启动kvm管理工具进程" class="headerlink" title="4.启动kvm管理工具进程"></a>4.启动kvm管理工具进程</h1><pre><code class="hljs">sudo systemctl start libvirtd
+sudo systemctl enable libvirtd
+</code></pre>
+<h1 id="5-安装虚拟机"><a href="#5-安装虚拟机" class="headerlink" title="5.安装虚拟机"></a>5.安装虚拟机</h1><h2 id="5-1-查看可用操作系统类型"><a href="#5-1-查看可用操作系统类型" class="headerlink" title="5.1 查看可用操作系统类型"></a>5.1 查看可用操作系统类型</h2><pre><code class="hljs">osinfo-query os
+</code></pre>
+<h2 id="5-2-安装centos7虚拟机"><a href="#5-2-安装centos7虚拟机" class="headerlink" title="5.2 安装centos7虚拟机"></a>5.2 安装centos7虚拟机</h2><pre><code class="hljs">sudo virt-install \
+--name=centos7 --memory=1024,maxmemory=2048 --vcpus=1,maxvcpus=2 --os-variant=centos7.0 \
+--location=/home/kvm/images/CentOS-7-x86_64-Minimal-2009.iso --disk /home/kvm/templates/centos7.qcow2,size=30 --network network=default \
+--graphics=none --console=pty,target_type=serial --extra-args=&#39;console=ttyS0&#39;
+</code></pre>
+<h2 id="5-3-安装debian10虚拟机"><a href="#5-3-安装debian10虚拟机" class="headerlink" title="5.3 安装debian10虚拟机"></a>5.3 安装debian10虚拟机</h2><pre><code class="hljs">sudo virt-install \
+--name=debian10 --memory=1024,maxmemory=2048 --vcpus=1,maxvcpus=2 --os-variant=debian10 \
+--location=/home/kvm/images/debian-10.9.0-amd64-netinst.iso --disk /home/kvm/templates/debian10.qcow2,size=30 --network network=default \
+--graphics=none --console=pty,target_type=serial --extra-args=&#39;console=ttyS0&#39;
+</code></pre>
+<h2 id="5-4-安装ubuntu18虚拟机"><a href="#5-4-安装ubuntu18虚拟机" class="headerlink" title="5.4 安装ubuntu18虚拟机"></a>5.4 安装ubuntu18虚拟机</h2><pre><code class="hljs">sudo virt-install \
+--name=ubuntu18 --memory=1024,maxmemory=2048 --vcpus=1,maxvcpus=2 --os-variant=ubuntu18.04 \
+--location=/home/kvm/images/ubuntu-18.04.5-server-amd64.iso --disk /home/kvm/templates/ubuntu18.qcow2,size=30 --network network=default \
+--graphics=none --console=pty,target_type=serial --extra-args=&#39;console=ttyS0&#39;
+</code></pre>
+<h1 id="6-常用虚拟机管理命令"><a href="#6-常用虚拟机管理命令" class="headerlink" title="6.常用虚拟机管理命令"></a>6.常用虚拟机管理命令</h1><pre><code class="hljs"># 查看所有虚拟机状态
+sudo virsh list –all
+# 启动虚拟机centos7
+sudo virsh start centos7
+# 设置虚拟机开机启动
+sudo virsh autostart centos7
+# 解除虚拟机自动启动
+sudo virsh autostart --disable centos7
+# 进入虚拟机
+sudo virsh console centos7
+# 挂起虚拟机
+sudo virsh suspend centos7
+# 恢复挂起的虚拟机
+sudo virsh resume centos7
+# 关闭虚拟机
+sudo virsh shutdown centos7
+# 强制关闭虚拟机
+sudo virsh destroy centos7
+# 删除虚拟机，只删除配置文件，保留虚拟机磁盘
+sudo virsh undefine centos7
+</code></pre>
+<h1 id="7-克隆虚拟机"><a href="#7-克隆虚拟机" class="headerlink" title="7.克隆虚拟机"></a>7.克隆虚拟机</h1><pre><code class="hljs"># 克隆之前先关闭虚拟机
+sudo virsh shutdown centos7
+sudo virt-clone -o centos7 -n master -f /home/kvm/servers/master.qcow2
+</code></pre>
+<h1 id="8-kvm开启虚拟机嵌套虚拟化"><a href="#8-kvm开启虚拟机嵌套虚拟化" class="headerlink" title="8.kvm开启虚拟机嵌套虚拟化"></a>8.kvm开启虚拟机嵌套虚拟化</h1><h2 id="8-1-查看宿主机是否已开启嵌套虚拟化功能"><a href="#8-1-查看宿主机是否已开启嵌套虚拟化功能" class="headerlink" title="8.1 查看宿主机是否已开启嵌套虚拟化功能"></a>8.1 查看宿主机是否已开启嵌套虚拟化功能</h2><pre><code class="hljs">cat /sys/module/kvm_intel/parameters/nested
+</code></pre>
+<h2 id="8-2-创建配置文件"><a href="#8-2-创建配置文件" class="headerlink" title="8.2 创建配置文件"></a>8.2 创建配置文件</h2><pre><code class="hljs">vi /etc/modprobe.d/kvm-nested.conf
+
+
+options kvm-intel nested=1
+options kvm-intel enable_shadow_vmcs=1
+options kvm-intel enable_apicv=1
+options kvm-intel ept=1
+</code></pre>
+<h2 id="8-3-关闭所有虚拟机，重新启用kvm-intel模块"><a href="#8-3-关闭所有虚拟机，重新启用kvm-intel模块" class="headerlink" title="8.3 关闭所有虚拟机，重新启用kvm_intel模块"></a>8.3 关闭所有虚拟机，重新启用kvm_intel模块</h2><pre><code class="hljs">modprobe -r kvm_intel
+modprobe -a kvm_intel
+</code></pre>
+<h2 id="8-4-验证嵌套虚拟化功能"><a href="#8-4-验证嵌套虚拟化功能" class="headerlink" title="8.4 验证嵌套虚拟化功能"></a>8.4 验证嵌套虚拟化功能</h2><pre><code class="hljs">cat /sys/module/kvm_intel/parameters/nested
+</code></pre>
+<h2 id="8-5-设置虚拟机配置文件支持嵌套虚拟化"><a href="#8-5-设置虚拟机配置文件支持嵌套虚拟化" class="headerlink" title="8.5 设置虚拟机配置文件支持嵌套虚拟化"></a>8.5 设置虚拟机配置文件支持嵌套虚拟化</h2><pre><code class="hljs">virsh edit node01
+
+
+&lt;cpu mode=&#39;custom&#39; match=&#39;exact&#39;&gt;
+
+  # 开启虚拟机嵌套功能
+  &lt;feature policy=&#39;require&#39; name=&#39;vmx&#39;/&gt;
+
+&lt;/cpu&gt;
+</code></pre>
+<h2 id="8-6-开启虚拟机，验证嵌套虚拟化功能"><a href="#8-6-开启虚拟机，验证嵌套虚拟化功能" class="headerlink" title="8.6 开启虚拟机，验证嵌套虚拟化功能"></a>8.6 开启虚拟机，验证嵌套虚拟化功能</h2><hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1079148">https://cloud.tencent.com/developer/article/1079148</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/yulsh/article/details/91790804">https://blog.csdn.net/yulsh/article/details/91790804</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_30875157/article/details/97096593">https://blog.csdn.net/weixin_30875157/article/details/97096593</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/KVM/">#KVM</a>
+      
+        <a href="/hexo/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>KVM虚拟机安装与配置</div>
+      <div>https://css.ss-ss.top/hexo/2020/10/31/KVM虚拟机安装与配置/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年10月31日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2020/12/09/Ubuntu%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81IP/" title="Ubuntu配置静态IP">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Ubuntu配置静态IP</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2020/09/30/Debian%E9%85%8D%E7%BD%AE%E5%9B%BD%E5%86%85Apt%E6%BA%90/" title="Debian配置国内Apt源">
+                        <span class="hidden-mobile">Debian配置国内Apt源</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

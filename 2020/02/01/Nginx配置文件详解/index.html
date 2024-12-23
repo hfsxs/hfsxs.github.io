@@ -1,0 +1,899 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="### 核心模块的设置 # 设置worker进程运行用户及用户组，默认为nobody         user  sword sword;  # 设置worker进程数，默认为cpu数量      worker_processes  1;         # 设置错误日志路径及级别，debug|info|notice|warn|error|crit，默认为error，debug日志最为详细，cri">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx配置文件详解">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2020/02/01/Nginx%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="### 核心模块的设置 # 设置worker进程运行用户及用户组，默认为nobody         user  sword sword;  # 设置worker进程数，默认为cpu数量      worker_processes  1;         # 设置错误日志路径及级别，debug|info|notice|warn|error|crit，默认为error，debug日志最为详细，cri">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-02-01T06:15:05.000Z">
+<meta property="article:modified_time" content="2023-12-31T12:59:38.561Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Http服务器">
+<meta property="article:tag" content="负载均衡">
+<meta property="article:tag" content="Nginx">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Nginx配置文件详解 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Nginx配置文件详解</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-02-01 14:15" pubdate>
+          2020年2月1日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          68 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Nginx配置文件详解</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <pre><code class="hljs">### 核心模块的设置
+# 设置worker进程运行用户及用户组，默认为nobody        
+user  sword sword;
+
+# 设置worker进程数，默认为cpu数量     
+worker_processes  1;       
+
+# 设置错误日志路径及级别，debug|info|notice|warn|error|crit，默认为error，debug日志最为详细，crit日志数量最少
+error_log  /var/log/nginx/error.log error;
+
+# 设置pid文件路径
+pid  /var/log/nginx/nginx.pid;
+
+# 设置worker进程打开文件最大数，用于增大限制文件数
+worker_rlimit_nofile 51200;
+
+### 设置事件模块
+events &#123;
+
+# 设置nginx连接请求的处理方式，即事件驱动模型，select|poll|kqueue|epoll|resig|/dev/poll|eventport，默认使用最高效的方式，kqueue适用于freebsd；epoll适用于linux 2.6以上内核
+use epoll;
+
+# 设置单个worker进程最大并发连接数，默认为512
+worker_connections  512; 
+&#125;
+
+### http模块的设置
+http 
+&#123;
+  # 设置隐藏nginx版本号
+  server_tokens off; 
+
+  # 设置扩展名与文件类型映射表
+  include       mime.types;
+  # 设置响应的默认MIME类型，默认为text/plain;
+  default_type  application/octet-stream;
+
+  # 设置http客户端发起的连接在服务端保持的超时时长，默认为75s，设为0则关闭长连接方式
+  keepalive_timeout  60s;
+
+  # 设置是否开启tcp_nodelay功能，开启时将尽量发送小数据块，前提需开启keep-alive，与tcp_nopush互斥，默认开启，适用于及时性高的通信场景
+  tcp_nodelay    on;
+
+  # 设置是否开启sendfile功能，即不通过CPU进行数据传输，而是通过DMA的方式，提高传输效率，默认关闭
+  # sendfile       on;
+  # 设置是否开启tcp_nopush功能，前提需开启sendfile功能，数据包不会马上传送出去，而是等到数据包最大时一次性的传输，适用于高延时、数据量大、磁盘IO负载大的通信场景，能平衡磁盘与网络I/O处理速度，降低系统负载，有效解决网络堵塞问题，默认关闭
+  # tcp_nopush     on;
+
+  # 设置gzip压缩功能，用于压缩响应数据，降低传输流量通常可达一半以上，默认关闭
+  gzip  on;
+  # 设置用于压缩响应数据的缓冲区大小和数量，默认大小为一页内存，4k或8k取，决于平台，即32 4k或16 8k
+  # gzip_buffers    32 4k;
+  # 设置压缩等级，默认为1，取值范围1-9，其值与处理速度成反比
+  # gzip_comp_level  2;
+  # 设置压缩响应最小长度，默认为20，0表示都压缩，其值决定了响应头Content-Length
+  # gzip_min_length    1k;
+  # 设置压缩功能的最小http版本，取值为1.0或1.1，低于该值的版本号将出现乱码
+  # gzip_http_version  1.1;
+  # 设置不压缩的请求，以正则表达式来匹配User-Agent（浏览器标识）
+  # gzip_disable &quot;msie6&quot;;
+  # 设置是否添加头域“Vary: Accept-Encoding”到响应头的功能，默认关闭
+  # gzip_vary on;
+  # 设置需要压缩的数据格式，默认为text/html，即这两类数据格式的响应被压缩
+  gzip_types text/plain text/css application/json application/x-javascript text/xml application/xml application/xml+rss text/javascript;
+
+  # 客户端请求缓冲区的设置，用于处理POST提交的数据，如文件上传等
+
+  # 设置请求行/请求头缓冲值，先处理请求行，再处理请求头，两者缓冲策略相同client_header_buffer_size默认为1K，先根据此值分配一个内存buffer，若
+  # 其无法容纳line/header，则再根据large_client_header_buffers值再分配
+  # 磁盘buffer，即临时文件，即产生了磁盘IO。若还不能容纳，就会报400错误。
+  # line/header都很大的情况设置client_header_buffer_size参数即可，只有
+  # 少量大line/header，则设置large_client_header_buffers，避免资源浪费
+  ##############################################################
+
+# client_header_buffer_size   2K;
+# large_client_header_buffers  4 2K;
+# 设置http客户端请求头的超时时间，若在此时间内没有完成header传输，则返回
+# 408状态码，默认值为60s
+# client_header_timeout 60s;
+
+
+# 设置请求体缓冲值，默认8K(32b)/16k(64b)，若请求体大于此值，则整个请求或请求的一部分会
+# 被写入磁盘的临时文件，即产生了磁盘IO。而当磁盘空间不足时，则会断开此链接
+client_body_buffer_size 128K;
+# 设置请求的临时文件目录，默认为/tmp，最多支持三级目录
+# client_body_temp_path /tmp/nginx;
+
+# 设置请求体最大值，超出值返回413错误码。由于浏览器不会正确的显示这个错误
+# 建议将其设为0，以禁止检查请求体的大小
+client_max_body_size 0;
+
+# 设置proxy服务响应数据缓冲区，处理后端服务器的响应数据，如文件下载等，实现后
+# 端服务器的响应数据和http客户端的传输
+# nginx作为代理服务器时，接收http请求，然后从后端服务器取得响应数据。若proxy
+# 缓冲关闭，则Nginx会按将响应数据立刻同步到客户端；若proxy缓冲开启，则响应数据
+# 先存于由proxy_buffer_size和proxy_buffers指令设置的内存缓冲区。若缓冲区无法
+# 容纳整个响应，则部分数据会被写入磁盘的临时文件，即产生了磁盘IO
+
+# 设置是否开启代理缓冲，默认开启
+# proxy_buffering   on;
+
+# 设置代理缓冲值，默认一页内存，4k或8K
+# proxy_buffer_size 4K;
+# 设置代理缓冲区的数量与大小，数量默认为8个
+# proxy_buffers 8 4K;
+# 设置busy状态缓冲区的值，只有处于该状态buffer中的响应数据才会被发送给客户端，其余
+# buffer处于等待状态，默认值为8K或16K
+# proxy_busy_buffers_size 8K;
+
+# 设置proxy服务器响应数据临时文件目录
+# proxy_temp_path   /tmp/nginx
+# 设置proxy服务器响应数据临时文件目录最大值，默认为1024M,设为0则关闭临时文件缓存功
+# 能，若磁盘溢出，则会返回502错误码
+# proxy_max_temp_file_size    1024M;
+# 设置同时写入临时文件数据量的总大小，默认为8K或16K
+# proxy_temp_file_write_size 8K; 
+
+
+
+# 设置proxy服务器响应数据硬盘缓存功能，具体是将http客户端请求数据的URL按照定义的规则与其他信息组合作为Key，
+# 再对其进行md5编码哈希计算后，于内存中生成索引，同时生成硬盘缓存目录。然后proxy服务器将该转发后端服务器，返回
+# 的响应数据存储于缓存目录。后续客户端发起的请求先与内存中的数据进行匹配，若能匹配到，即缓存命中且未过期，直接将
+# 缓存目录中的数据发给客户端，不用经过后端服务器。若不能匹配，即缓存未命中，则将请求转发到后端服务器，后端服务器
+# 发来的响应数据再由proxy服务器转发给客户端，同时形成新的缓存。这种缓存机制能大大提高静态资源的响应速度，当然缓
+# 存过程也需要消耗计算资源
+
+# 设置用于存放缓存索引数据的共享内存区域名称，即开启负责定时检查过期数据、检索等的缓存管理进程，默认为关闭
+# 缓存管理进程会检查proxy服务器响应数据HTTP头中的“Cache-Control”头域、“Expires”头域，若“Cache-Control”
+# 头域中的值为“no-cache”、“no-store”、“private”或者“max-age”赋值为0或者无意义，或者“Expires”头域包含
+# 一个过期的时间时，该响应数据不被Nginx服务器缓存，以避免私有数据被其他客户端获取
+# proxy_cache cache_one;
+# 设置缓存索引的关键字，默认为$scheme$proxy_host$request_uri
+# proxy_cache_key  &quot;$scheme$host$request_uri$cookie_user&quot;;
+
+# 设置缓存数据的硬盘路径及索引参数，缓存数据先写入临时文件，再以key值做md5计算后重命名，最后再存放到缓存目录
+# 若缓存目录忽略或设为on，则临时文件目录将被使用，由proxy_temp_path参数设置，这样临时文件和缓存文件就处在了
+# 同一文件系统，避免了不必要的复制操作，提高了效率。levels，缓存数据在相对path路径的第几级hash目录；keys_zone，
+# 缓存名称和内存大小，保存活动的key及其元数据，可以快速判断一个request是否命中或者未命中缓存，1M大约可存储
+# 8000个键字；inactive，超出此时间内缓存数据没有被访问将被删除，默认为10分钟max_size，最大硬盘缓存空间，由
+# cache manager进程监控，超出此值则覆盖掉缓存时间最长的数据
+
+proxy_cache_path  /tmp/nginx levels=1:2 keys_zone=cache_one:100m inactive=3d max_size=50g;
+
+# 设置请求方法的缓存，默认值为GET HEAD，即GET和HEAD方式的请求响应数据总是会被缓存
+proxy_cache_methods GET HEAD;
+# 设置响应不从缓存中读取的场景，如至少有一个字符串指令不为空或者不等于0
+# proxy_cache_bypass $cookie_nocache $arg_nocache $arg_comment $http_pragma $http_authorization
+# 设置响应缓存的最低访问次数，即超出此值才会进行缓存，默认为1
+# proxy_cache_min_uses 1;
+
+# 设置缓存并发锁，当同时有多个相同请求key时，只响应一个生成缓存，其余请求尝试从缓存获取数据，或等待超时，默认关闭
+# proxy_cache_lock on;
+# 设置并发锁生命周期，若一个缓存未在此时间内完成，则其余请求将被发送给proxy服务器，默认5s
+# proxy_cache_lock_age 10s;
+# 设置并发锁超时时长，超时后由proxy服务器将请求转发给后端服务器，默认为5s
+# proxy_cache_lock_timeout 10s;
+# 设置后端服务器返回哪些错误码时直接调用旧的缓存，默认关闭
+proxy_cache_use_stale error timeout updating http_502 http_504;
+
+# 设置状态码为200 302过期时间为10分钟
+# proxy_cache_valid  200 302  10m;
+# 设置状态码404的过期时间为1分钟
+# proxy_cache_valid  404      1m;
+# 设置所有状态码的过期时间为1分钟
+# proxy_cache_valid  any      1m;
+
+
+# 设置proxy服务器连接后端服务器的的超时时长，默认为60s，但不能超过75s
+proxy_connect_timeout 65;
+# 设置proxy服务器发送请求的超时时长，即将请转发给后端服务器的超时时长，若两次send操作期间超过该时长后端服务器还
+# 没收到新数据，则nginx将关闭连接，默认为60s，但不能超过75s
+proxy_send_timeout 65;
+# 设置proxy服务器接收响应的超时时长，即接收来自后端服务器响应的超时时长，若两次read操作期间超过该时长后端服务器
+# 还没有传输新数据，则nginx将关闭连接，默认为60s，但不能超过75s
+proxy_read_timeout 65;
+
+# 设置由proxy服务器所转发的请求头数据的处理方式，即对http客户端的请求头数据进行更改
+# 或添加操作，然后再转发给后端服务器，可以获取客户端IP、端口及代理服务器IP、端口，用于
+# IP反查、端口范围确认等业务
+
+# 设置获取http请求数据主机名、端口字段，一般为客户端直接访问的那台服务器的信息
+proxy_set_header Host $host:$server_port;
+# 设置后端服务器获取http客户端IP
+proxy_set_header X-Real-IP $remote_addr;
+# 设置添加X-Forwarded-For变量，用于后端服务器获取经过proxy服务器或负载均衡器的http客
+# 户端IP，否则获取的将是代理服务器或负载均衡器的IP，该变量不在默认配置中
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+# 设置过滤掉空请求头的数据，即空请求头数据不予转发
+proxy_set_header Accept-Encoding &quot;&quot;;
+# 设置不做处理的后端服务器返回的响应头
+proxy_ignore_headers X-Accel-Expires Expires Cache-Control Set-Cookie;
+# 设置不返回给客户端的响应头，Date、Server、X-Pad和X-Accel-…一般不会返回
+proxy_hide_header X-Powered-By;
+# 设置后端服务器获取http客户端的传输协议，即http或https
+proxy_set_header X-Forwarded-Proto $scheme;
+
+# 设置由proxy服务器所转发的响应头数据的处理方式,即对转发给http客户端数据响应头的Location
+# 和Refresh字段进行更改，用于后端服务器IP与端口的屏蔽，默认为default，响应头的Location
+# 即为proxy_pass定义的值，但当proxy_pass为变量时不能设为default
+# proxy_redirect http:// https://;
+
+# 设置后端服务器故障转移，即剔除掉返回502、504、执行超时等错误的后端服务器
+proxy_next_upstream http_502 http_504 error timeout invalid_header;
+
+# 设置nginx日志格式
+log_format  main  &#39;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#39;
+              &#39;$status $bytes_sent $body_bytes_sent &quot;$http_referer&quot; &#39;
+              &#39;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot; &#39;
+              &#39;&quot;$request_time&quot; &quot;$upstream_response_time&quot; &quot;$upstream_status&quot; &quot;$upstream_addr&quot; $http_host&#39;;
+
+# 设置负载均衡集群，支持多组
+upstream app-slb-tomcat&#123;
+
+    # 设置负载均衡算法
+    # 1.轮询（默认），每个请求按时间顺序逐一分配到不同的后端服务器，若后端服务器down掉，则自动剔除。weight指定权重，即轮
+    # 询几率，和访问比率成正比，用于后端服务器性能不均的情况
+    # 2.ip_hash，每个请求按访问ip的hash结果分配，即每个访问固定访问一个后端服务器，解决了session问题
+    # 3.fair（第三方），按后端服务器的响应时间来分配请求，响应时间短的优先分配
+    # 4.url_hash（第三方），按访问url的hash结果来分配请求，使每个url定向到同一个后端服务器，后端服务器为缓存时比较有效 
+
+    server 192.168.0.188:8080 weight=2 max_fails=2 fail_timeout=30s;
+    server 192.168.0.189:8080 weight=1 max_fails=2 fail_timeout=30s;
+    # 设置不参与负载的服务器组
+    # server 192.168.0.200:8080 down;
+    # 设置备用服务器组，所有非备用服务down或者忙时，再响应请求
+    # server 192.168.0.100:8080 backup;
+    &#125;
+
+# 设置静态资源负载均衡服务器组
+upstream static &#123;
+    server 127.0.0.1:8080 weight=2 max_fails=2 fail_timeout=30s;
+    server 127.0.0.1:8088 weight=2 max_fails=2 fail_timeout=30s;
+    &#125;
+
+### 虚拟主机模块
+server &#123;
+    listen       80;
+    server_name  localhost;
+
+    access_log  /var/log/nginx/access.log main;
+    error_log  /var/log/nginx/error.log;
+
+    location / &#123;
+        root   html;
+        index  index.html index.htm;
+        &#125;
+
+    # 设置错误页面的跳转
+    # error_page  404              /404.html;
+
+    # error_page   500 502 503 504  /50x.html;
+    # location = /50x.html &#123;
+        # root   html;
+    # &#125;
+
+    # 设置jsp动态页面反向代理
+    location ~ \.(jsp|jspx|do)$ &#123;
+    proxy_pass http://app-slb-tomcat;
+    &#125;
+
+    # 设置静态页面反向代理
+    location ~ .*\.(js|css|ico|png|eot|svg|ttf|woff|htm|html|gif|jpg|jpeg|bmp|swf|ioc|rar|zip|txt|flv|mid|doc|ppt|pdf|xls|mp3|wma) 
+
+    &#123;
+
+    root /web/static;
+    proxy_pass http://static;
+    # 所有静态文件直接读取硬盘,缓存30天
+    expires 30d; 
+    &#125;
+
+    # 设置nginx状态监控，需http_stub_status_module模块支持
+    location = /nginx-status &#123;
+    stub_status on;
+    access_log  off;
+    allow 127.0.0.1;
+    # allow 192.168.0.180;
+    deny all;
+    &#125;
+
+    # 设置proxy服务器缓存的清理，需安装ngx_cache_purge，且只支持静态编译
+    # location ~ /purge(/.*) &#123;
+
+    # allow 127.0.0.1;
+    # deny all;
+    # 设置缓存清理
+    # proxy_cache_purge cache_one $scheme$host$request_uri$cookie_user;
+    # &#125;
+</code></pre>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/Http%E6%9C%8D%E5%8A%A1%E5%99%A8/">#Http服务器</a>
+      
+        <a href="/hexo/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">#负载均衡</a>
+      
+        <a href="/hexo/tags/Nginx/">#Nginx</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Nginx配置文件详解</div>
+      <div>https://css.ss-ss.top/hexo/2020/02/01/Nginx配置文件详解/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年2月1日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2020/02/01/Nginx%E9%85%8D%E7%BD%AETomcat%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%9B%86%E7%BE%A4/" title="Nginx配置Tomcat动静分离负载均衡集群">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Nginx配置Tomcat动静分离负载均衡集群</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2020/02/01/Nginx%E7%BC%96%E8%AF%91%E5%AE%89%E8%A3%85/" title="Nginx编译安装">
+                        <span class="hidden-mobile">Nginx编译安装</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

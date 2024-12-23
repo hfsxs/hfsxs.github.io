@@ -1,0 +1,1465 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="EFK是Kubernetes官方推荐的的日志管理系统解决方案，通过Fluentd&#x2F;Fluent Bit或Filebeat之类的节点级代理程序进行日志采集，实时推送给Elasticsearch集群进行存储和分析，而后再经由Kibana进行数据可视化，这样的组合即简称为EFK。Kubernetes二进制包即包含EFK部署所需资源，可作为参考  1.部署nfs2.部署StorageClass3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes集群部署EFK日志管理平台">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2022/12/10/Kubernetes%E9%9B%86%E7%BE%A4%E9%83%A8%E7%BD%B2EFK%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="EFK是Kubernetes官方推荐的的日志管理系统解决方案，通过Fluentd&#x2F;Fluent Bit或Filebeat之类的节点级代理程序进行日志采集，实时推送给Elasticsearch集群进行存储和分析，而后再经由Kibana进行数据可视化，这样的组合即简称为EFK。Kubernetes二进制包即包含EFK部署所需资源，可作为参考  1.部署nfs2.部署StorageClass3">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-12-10T02:06:21.000Z">
+<meta property="article:modified_time" content="2024-02-21T06:52:12.438Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="ELK">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="容器云">
+<meta property="article:tag" content="云原生">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Kubernetes集群部署EFK日志管理平台 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Kubernetes集群部署EFK日志管理平台</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-12-10 10:06" pubdate>
+          2022年12月10日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          17k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          142 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kubernetes集群部署EFK日志管理平台</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>EFK是Kubernetes官方推荐的的日志管理系统解决方案，通过Fluentd&#x2F;Fluent Bit或Filebeat之类的节点级代理程序进行日志采集，实时推送给Elasticsearch集群进行存储和分析，而后再经由Kibana进行数据可视化，这样的组合即简称为EFK。Kubernetes二进制包即包含EFK部署所需资源，可作为参考</p>
+<hr>
+<h1 id="1-部署nfs"><a href="#1-部署nfs" class="headerlink" title="1.部署nfs"></a>1.部署nfs</h1><h1 id="2-部署StorageClass"><a href="#2-部署StorageClass" class="headerlink" title="2.部署StorageClass"></a>2.部署StorageClass</h1><h1 id="3-创建命名空间"><a href="#3-创建命名空间" class="headerlink" title="3.创建命名空间"></a>3.创建命名空间</h1><pre><code class="hljs">kubectl create namespace logging
+</code></pre>
+<h1 id="4-部署elasticsearch"><a href="#4-部署elasticsearch" class="headerlink" title="4.部署elasticsearch"></a>4.部署elasticsearch</h1><h2 id="4-1-创建elasticsearch应用资源部署文件"><a href="#4-1-创建elasticsearch应用资源部署文件" class="headerlink" title="4.1 创建elasticsearch应用资源部署文件"></a>4.1 创建elasticsearch应用资源部署文件</h2><pre><code class="hljs">vi es-statefulset.yaml
+
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: es-cluster
+  namespace: logging
+spec:
+  serviceName: elasticsearch
+  replicas: 3
+  selector:
+    matchLabels:
+      app: elasticsearch
+  template:
+    metadata:
+      labels:
+        app: elasticsearch
+    spec:
+      containers:
+      - name: elasticsearch
+        image: elasticsearch:7.12.1
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 100m
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 1Gi
+        ports:
+        - containerPort: 9200
+          name: rest
+          protocol: TCP
+        - containerPort: 9300
+          name: inter-node
+          protocol: TCP
+        volumeMounts:
+        - name: data
+          mountPath: /usr/share/elasticsearch/data
+        env:
+          - name: cluster.name
+            value: k8s-logs
+          - name: node.name
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: discovery.seed_hosts
+            value: &quot;elasticsearch&quot;
+          - name: cluster.initial_master_nodes
+            value: &quot;es-cluster-0,es-cluster-1,es-cluster-2&quot;
+          - name: ES_JAVA_OPTS
+            value: &quot;-Xms2g -Xmx2g&quot;
+      initContainers:
+      - name: fix-permissions
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        command: [&quot;sh&quot;, &quot;-c&quot;, &quot;chown -R 1000:1000 /usr/share/elasticsearch/data&quot;]
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: data
+          mountPath: /usr/share/elasticsearch/data
+      - name: increase-vm-max-map
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        command: [&quot;sysctl&quot;, &quot;-w&quot;, &quot;vm.max_map_count=262144&quot;]
+        securityContext:
+          privileged: true
+      - name: increase-fd-ulimit
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        command: [&quot;sh&quot;, &quot;-c&quot;, &quot;ulimit -n 65536&quot;]
+        securityContext:
+          privileged: true
+      affinity:
+        # 设置反亲和性，防止有POD被调度到同一节点
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - elasticsearch
+            topologyKey: &quot;kubernetes.io/hostname&quot;
+  # 设置持久化数据存储
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      annotations:
+        volume.beta.kubernetes.io/storage-class: sc-nfs
+    spec:
+      accessModes: [ &quot;ReadWriteOnce&quot; ]
+      resources:
+        requests:
+          storage: 10Gi
+</code></pre>
+<h2 id="4-2-创建elasticsearch-service资源部署文件"><a href="#4-2-创建elasticsearch-service资源部署文件" class="headerlink" title="4.2 创建elasticsearch service资源部署文件"></a>4.2 创建elasticsearch service资源部署文件</h2><pre><code class="hljs">vi es-service.yaml
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: elasticsearch
+  namespace: logging
+  labels:
+    app: elasticsearch
+spec:
+  selector:
+    app: elasticsearch
+  clusterIP: None
+  ports:
+    - port: 9200
+      name: rest
+    - port: 9300
+      name: inter-node
+</code></pre>
+<h2 id="4-3-部署elasticsearch"><a href="#4-3-部署elasticsearch" class="headerlink" title="4.3 部署elasticsearch"></a>4.3 部署elasticsearch</h2><pre><code class="hljs">kubectl apply -f es-service.yaml
+kubectl apply -f es-statefulset.yaml   
+</code></pre>
+<h1 id="5-部署kibana"><a href="#5-部署kibana" class="headerlink" title="5.部署kibana"></a>5.部署kibana</h1><h2 id="5-1-创建配置文件"><a href="#5-1-创建配置文件" class="headerlink" title="5.1 创建配置文件"></a>5.1 创建配置文件</h2><pre><code class="hljs">vi kibana.yml
+
+
+server.name: kibana
+server.host: &quot;0&quot;
+i18n.locale: &quot;zh-CN&quot;
+elasticsearch.hosts: [ &quot;http://elasticsearch:9200&quot; ]
+monitoring.ui.container.elasticsearch.enabled: true
+</code></pre>
+<h2 id="5-2-部署配置文件"><a href="#5-2-部署配置文件" class="headerlink" title="5.2 部署配置文件"></a>5.2 部署配置文件</h2><pre><code class="hljs">kubectl -n logging create configmap kibana-yml --from-file=kibana.yml
+</code></pre>
+<h2 id="5-3-创建kibana应用资源部署文件"><a href="#5-3-创建kibana应用资源部署文件" class="headerlink" title="5.3 创建kibana应用资源部署文件"></a>5.3 创建kibana应用资源部署文件</h2><pre><code class="hljs">vi kibana.yaml
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kibana
+  namespace: logging
+  labels:
+    app: kibana
+spec:
+  ports:
+  - port: 5601
+    nodePort: 35601
+  selector:
+    app: kibana
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana
+  namespace: logging
+  labels:
+    app: kibana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+      - name: kibana
+        image:  kibana:7.12.1
+        imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1Gi
+          requests:
+            cpu: 500m
+            memory: 512Mi
+        env:
+          - name: ELASTICSEARCH_URL
+            value: http://elasticsearch:9200
+        ports:
+        - containerPort: 5601
+        volumeMounts:
+        - name: kibana-yml
+          mountPath: /usr/share/kibana/config/kibana.yml
+          subPath: kibana.yml
+      volumes:
+      - name: kibana-yml
+        configMap:
+          name: kibana-yml
+</code></pre>
+<h2 id="5-2-部署kibana"><a href="#5-2-部署kibana" class="headerlink" title="5.2 部署kibana"></a>5.2 部署kibana</h2><pre><code class="hljs">kubectl apply -f kibana.yaml
+</code></pre>
+<h1 id="6-部署logstash"><a href="#6-部署logstash" class="headerlink" title="6.部署logstash"></a>6.部署logstash</h1><h2 id="6-1-创建配置文件"><a href="#6-1-创建配置文件" class="headerlink" title="6.1 创建配置文件"></a>6.1 创建配置文件</h2><pre><code class="hljs">vi logstash.yml
+
+
+http.host: &quot;0.0.0.0&quot;
+xpack.monitoring.elasticsearch.hosts: [ &quot;http://elasticsearch:9200&quot; ]
+</code></pre>
+<h1 id="6-2-创建日志解析配置文件"><a href="#6-2-创建日志解析配置文件" class="headerlink" title="6.2 创建日志解析配置文件"></a>6.2 创建日志解析配置文件</h1><pre><code class="hljs">vi logstash-conf.yaml
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-conf
+  namespace: logging
+data:
+  logstash.conf: |-
+
+    input &#123;
+
+      kafka &#123;
+        bootstrap_servers =&gt; [&quot;kafka-0.kafka:9092,kafka-1.kafka:9092,kafka-2.kafka:9092&quot;]
+        client_id =&gt; &quot;kubernetes&quot;
+        group_id =&gt; &quot;kubernetes&quot;
+        auto_offset_reset =&gt; &quot;latest&quot;
+        consumer_threads =&gt; 3
+        decorate_events =&gt; false
+        topics =&gt; [&quot;sshd&quot;,&quot;nginx-access&quot;,&quot;nginx-error&quot;,&quot;container&quot;]
+        codec =&gt; &quot;json&quot;
+        &#125;
+      &#125;
+
+    filter &#123;
+
+      if &quot;nginx-access&quot; in [tags] &#123;
+
+        grok &#123;
+
+          match =&gt; &#123; &quot;message&quot; =&gt; &quot;%&#123;IPORHOST:remote_addr&#125; - %&#123;DATA:remote_user&#125; \[%&#123;HTTPDATE:access_time&#125;\] \&quot;%&#123;WORD:http_method&#125; %&#123;DATA:url&#125; HTTP/%&#123;NUMBER:http_version&#125;\&quot; %&#123;NUMBER:response_code&#125; %&#123;NUMBER:bytes_sent&#125; %&#123;NUMBER:body_bytes_sent&#125; \&quot;%&#123;DATA:http_referer&#125;\&quot; \&quot;%&#123;DATA:http_user_agent&#125;\&quot; \&quot;%&#123;DATA:http_x_forwarded_for&#125;\&quot; \&quot;%&#123;DATA:request_time&#125;\&quot; \&quot;%&#123;DATA:upstream_response_time&#125;\&quot; \&quot;%&#123;DATA:upstream_status&#125;\&quot; \&quot;%&#123;HOSTPORT:upstream_addr&#125;\&quot;&quot;&#125;
+
+        &#125;
+
+        date &#123;
+          match =&gt; [&quot;access_time&quot;, &quot;dd/MMM/yyyy:HH:mm:ss Z&quot;]
+          remove_field =&gt; [&quot;timestamp&quot;]
+          &#125;
+
+        if [http_user_agent] != &quot;-&quot; &#123;
+          useragent &#123;
+          target =&gt; &quot;http_user&quot;
+          source =&gt; &quot;http_user_agent&quot;
+          &#125;
+        &#125;
+
+        urldecode&#123;
+          all_fields=&gt;true
+        &#125;
+
+        mutate &#123;
+          convert =&gt; [&quot;request_time&quot;, &quot;float&quot;]
+          convert =&gt; [&quot;upstream_response_time&quot;, &quot;float&quot;]
+          convert =&gt; [&quot;body_bytes_sent&quot;, &quot;integer&quot;]
+
+          # 剔除掉多余字段
+          remove_field =&gt; [&quot;_id&quot;,&quot;_score&quot;,&quot;_type&quot;,&quot;message&quot;,&quot;http_user_agent&quot;,&quot;url_tmp&quot;]
+        &#125;
+      &#125;
+
+      if &quot;nginx-error&quot; in [tags] &#123;
+
+        grok &#123;
+          match =&gt; [ &quot;message&quot; , &quot;(?&lt;timestamp&gt;%&#123;YEAR&#125;[./-]%&#123;MONTHNUM&#125;[./-]%&#123;MONTHDAY&#125;[- ]%&#123;TIME&#125;) \[%&#123;LOGLEVEL:severity&#125;\] %&#123;POSINT:pid&#125;#%&#123;NUMBER&#125;: %&#123;GREEDYDATA:errormessage&#125;(?:, client: (?&lt;clientip&gt;%&#123;IP&#125;|%&#123;HOSTNAME&#125;))(?:, server: %&#123;IPORHOST:server&#125;?)(?:, request: %&#123;QS:request&#125;)?(?:, upstream: (?&lt;upstream&gt;\&quot;%&#123;URI&#125;\&quot;|%&#123;QS&#125;))?(?:, host: %&#123;QS:request_host&#125;)?(?:, referrer: \&quot;%&#123;URI:referrer&#125;\&quot;)?&quot;]
+        &#125;
+
+        mutate &#123;
+          convert =&gt; [ &quot;[geoip][coordinates]&quot;, &quot;float&quot;]
+          remove_field =&gt; [&quot;timestamp&quot;,&quot;message&quot;,&quot;_id&quot;,&quot;_score&quot;,&quot;_type&quot;]
+        &#125;
+      &#125;
+
+      if &quot;sshd&quot; in [tags] &#123;
+
+        grok &#123;
+          match =&gt; &#123;&quot;message&quot; =&gt; &quot;.*sshd\[\d+\]: %&#123;WORD:status&#125; .* %&#123;USER:username&#125; from.*%&#123;IP:clientip&#125;.*&quot;&#125;
+        &#125;
+
+        if [message] !~ &quot;Accepted | Invalid | Failed&quot; &#123;
+
+          drop &#123;&#125;
+        &#125;
+
+        mutate &#123;
+
+          convert =&gt; [ &quot;[geoip][coordinates]&quot;, &quot;float&quot;]
+          remove_field =&gt; [&quot;timestamp&quot;,&quot;message&quot;,&quot;_id&quot;,&quot;_score&quot;,&quot;_type&quot;]
+        &#125;
+
+      &#125;
+
+      if &quot;container&quot; in [tags] &#123;
+
+        mutate &#123;
+          remove_field =&gt; [&quot;log&quot;,&quot;agent&quot;,&quot;ecs&quot;,&quot;containers&quot;,&quot;host&quot;,&quot;container&quot;]
+        &#125;
+      &#125;
+
+      if &quot;_geoip_lookup_failure&quot; in [tags] &#123; drop &#123; &#125; &#125;
+
+    &#125;
+
+    output&#123;
+
+      if &quot;nginx-access&quot; in [tags] &#123;
+        elasticsearch&#123;
+          hosts =&gt; [&quot;elasticsearch:9200&quot;]
+          index =&gt; &quot;logstash-nginx-access-%&#123;+YYYY.MM.dd&#125;&quot;
+        &#125;
+      &#125;
+
+      if &quot;nginx-error&quot; in [tags] &#123;
+        elasticsearch&#123;
+          hosts =&gt; [&quot;elasticsearch:9200&quot;]
+          index =&gt; &quot;logstash-nginx-error-%&#123;+YYYY.MM.dd&#125;&quot;
+        &#125;
+      &#125;
+
+      if &quot;sshd&quot; in [tags] &#123;
+        elasticsearch&#123;
+          hosts =&gt; [&quot;elasticsearch:9200&quot;]
+          index =&gt; &quot;logstash-sshd-%&#123;+YYYY.MM.dd&#125;&quot;
+        &#125;
+      &#125;
+
+      if &quot;container&quot; in [tags] &#123;
+        elasticsearch&#123;
+          hosts =&gt; [&quot;elasticsearch:9200&quot;]
+          index =&gt; &quot;logstash-container-%&#123;+YYYY.MM.dd&#125;&quot;
+        &#125;
+      &#125;
+
+    # stdout &#123; codec =&gt; rubydebug &#125;
+
+    &#125;
+</code></pre>
+<h2 id="6-3-创建logstash应用资源部署文件"><a href="#6-3-创建logstash应用资源部署文件" class="headerlink" title="6.3 创建logstash应用资源部署文件"></a>6.3 创建logstash应用资源部署文件</h2><pre><code class="hljs">vi logstash.yaml
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash-deployment
+  namespace: logging
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      containers:
+      - name: logstash
+        image: registry.cn-hangzhou.aliyuncs.com/swords/logstash:v7.12.1
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: ES_JAVA_OPTS
+          value: &quot;-Xms512m -Xmx512m&quot;
+        - name: TZ
+          value: Asia/Shanghai
+        ports:
+        - name: logport
+          containerPort: 5044
+          protocol: TCP
+        command: [&quot;logstash&quot;,&quot;-f&quot;,&quot;/usr/share/logstash/config/logstash.conf&quot;]
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 8192Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        volumeMounts:
+        - name: logstash-conf
+          mountPath: /usr/share/logstash/config/logstash.conf
+          subPath: logstash.conf
+        - name: timezone
+          mountPath: /etc/localtime
+        - name: logstash-yml
+          mountPath: /usr/share/logstash/config/logstash.yml
+          subPath: logstash.yml
+      volumes:
+      - name: logstash-conf
+        configMap:
+          name: logstash-conf
+      - name: timezone
+        hostPath:
+          path: /etc/localtime
+      - name: logstash-yml
+        configMap:
+          name: logstash-yml
+</code></pre>
+<h1 id="6-4-部署logstash"><a href="#6-4-部署logstash" class="headerlink" title="6.4 部署logstash"></a>6.4 部署logstash</h1><pre><code class="hljs">kubectl apply -f logstash-conf.yaml
+kubectl -n logging create configmap logstash-yml --from-file=logstash.yml
+kubectl apply -f logstash.yaml
+</code></pre>
+<h1 id="7-部署kafka集群"><a href="#7-部署kafka集群" class="headerlink" title="7.部署kafka集群"></a>7.部署kafka集群</h1><h1 id="8-部署日志采集程序"><a href="#8-部署日志采集程序" class="headerlink" title="8.部署日志采集程序"></a>8.部署日志采集程序</h1><h2 id="8-1-部署fluentd"><a href="#8-1-部署fluentd" class="headerlink" title="8.1 部署fluentd"></a>8.1 部署fluentd</h2><h3 id="8-1-1-创建配置文件"><a href="#8-1-1-创建配置文件" class="headerlink" title="8.1.1 创建配置文件"></a>8.1.1 创建配置文件</h3><pre><code class="hljs">vi fluentd-es-configmap.yaml
+
+
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: fluentd-config
+  namespace: logging
+data:
+  system.conf: |-
+    &lt;system&gt;
+      root_dir /tmp/fluentd-buffers/
+    &lt;/system&gt;
+  containers.input.conf: |-
+    &lt;source&gt;
+      @id fluentd-containers.log
+      @type tail                              # Fluentd 内置的输入方式，其原理是不停地从源文件中获取新的日志。
+      path /var/log/containers/*.log          # 挂载的服务器Docker容器日志地址
+      pos_file /var/log/es-containers.log.pos
+      tag raw.kubernetes.*                    # 设置日志标签
+      read_from_head true
+      &lt;parse&gt;                                 # 多行格式化成JSON
+        @type multi_format                    # 使用 multi-format-parser 解析器插件
+        &lt;pattern&gt;
+          format json                         # JSON解析器
+          time_key time                       # 指定事件时间的时间字段
+          time_format %Y-%m-%dT%H:%M:%S.%NZ   # 时间格式
+        &lt;/pattern&gt;
+        &lt;pattern&gt;
+          format /^(?&lt;time&gt;.+) (?&lt;stream&gt;stdout|stderr) [^ ]* (?&lt;log&gt;.*)$/
+          time_format %Y-%m-%dT%H:%M:%S.%N%:z
+        &lt;/pattern&gt;
+      &lt;/parse&gt;
+    &lt;/source&gt;
+
+
+    &lt;match raw.kubernetes.**&gt;           # 匹配tag为raw.kubernetes.**日志信息
+      @id raw.kubernetes
+      @type detect_exceptions           # 使用detect-exceptions插件处理异常栈信息
+      remove_tag_prefix raw             # 移除 raw 前缀
+      message log
+      stream stream
+      multiline_flush_interval 5
+      max_bytes 500000
+      max_lines 1000
+    &lt;/match&gt;
+
+    &lt;filter **&gt;  # 拼接日志
+      @id filter_concat
+      @type concat                # Fluentd Filter 插件，用于连接多个事件中分隔的多行日志。
+      key message
+      multiline_end_regexp /\n$/  # 以换行符“\n”拼接
+      separator &quot;&quot;
+    &lt;/filter&gt;
+
+
+    &lt;filter kubernetes.**&gt;
+      @id filter_kubernetes_metadata
+      @type kubernetes_metadata
+    &lt;/filter&gt;
+
+
+    &lt;filter kubernetes.**&gt;
+      @id filter_parser
+      @type parser                # multi-format-parser多格式解析器插件
+      key_name log                # 在要解析的记录中指定字段名称。
+      reserve_data true           # 在解析结果中保留原始键值对。
+      remove_key_name_field true  # key_name 解析成功后删除字段。
+      &lt;parse&gt;
+        @type multi_format
+        &lt;pattern&gt;
+          format json
+        &lt;/pattern&gt;
+        &lt;pattern&gt;
+          format none
+        &lt;/pattern&gt;
+      &lt;/parse&gt;
+    &lt;/filter&gt;
+
+    &lt;filter kubernetes.**&gt;
+      @type record_transformer
+      remove_keys $.docker.container_id,$.kubernetes.container_image_id,$.kubernetes.pod_id,$.kubernetes.namespace_id,$.kubernetes.master_url,$.kubernetes.labels.pod-template-hash
+    &lt;/filter&gt;
+
+
+  #  &lt;filter kubernetes.**&gt;
+  #    @id filter_log
+  #    @type grep
+  #    &lt;regexp&gt;
+  #      key $.kubernetes.labels.logging
+  #      pattern ^true$
+  #    &lt;/regexp&gt;
+  #  &lt;/filter&gt;
+
+  forward.input.conf: |-
+    &lt;source&gt;
+      @id forward
+      @type forward
+    &lt;/source&gt;
+
+  output.conf: |-
+    &lt;match **&gt;
+      @id elasticsearch
+      @type elasticsearch
+      @log_level info
+      include_tag_key true
+      host 192.168.100.158
+      port 9200
+      logstash_format true
+      logstash_prefix logstash-kubernetes  # 设置 index 前缀为 k8s
+      request_timeout    30s
+      &lt;buffer&gt;
+        @type file
+        path /var/log/fluentd-buffers/kubernetes.system.buffer
+        flush_mode interval
+        retry_type exponential_backoff
+        flush_thread_count 2
+        flush_interval 5s
+        retry_forever
+        retry_max_interval 30
+        chunk_limit_size 2M
+        queue_limit_length 8
+        overflow_action block
+      &lt;/buffer&gt;
+    &lt;/match&gt;
+</code></pre>
+<h3 id="8-1-2-创建fluentd应用资源部署文件"><a href="#8-1-2-创建fluentd应用资源部署文件" class="headerlink" title="8.1.2 创建fluentd应用资源部署文件"></a>8.1.2 创建fluentd应用资源部署文件</h3><pre><code class="hljs">vi fluentd.yaml
+
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: fluentd-es
+  namespace: logging
+  labels:
+    k8s-app: fluentd-es
+    kubernetes.io/cluster-service: &quot;true&quot;
+    addonmanager.kubernetes.io/mode: Reconcile
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: fluentd-es
+  labels:
+    k8s-app: fluentd-es
+    kubernetes.io/cluster-service: &quot;true&quot;
+    addonmanager.kubernetes.io/mode: Reconcile
+rules:
+- apiGroups:
+  - &quot;&quot;
+  resources:
+  - &quot;namespaces&quot;
+  - &quot;pods&quot;
+  verbs:
+  - &quot;get&quot;
+  - &quot;watch&quot;
+  - &quot;list&quot;
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: fluentd-es
+  labels:
+    k8s-app: fluentd-es
+    kubernetes.io/cluster-service: &quot;true&quot;
+    addonmanager.kubernetes.io/mode: Reconcile
+subjects:
+- kind: ServiceAccount
+  name: fluentd-es
+  namespace: logging
+  apiGroup: &quot;&quot;
+roleRef:
+  kind: ClusterRole
+  name: fluentd-es
+  apiGroup: &quot;&quot;
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentd-es
+  namespace: logging
+  labels:
+    k8s-app: fluentd-es
+    kubernetes.io/cluster-service: &quot;true&quot;
+    addonmanager.kubernetes.io/mode: Reconcile
+spec:
+  selector:
+    matchLabels:
+      k8s-app: fluentd-es
+  template:
+    metadata:
+      labels:
+        k8s-app: fluentd-es
+        kubernetes.io/cluster-service: &quot;true&quot;
+      annotations:
+        scheduler.alpha.kubernetes.io/critical-pod: &#39;&#39;
+    spec:
+      serviceAccountName: fluentd-es
+      containers:
+      - name: fluentd-es
+        image: quay.io/fluentd_elasticsearch/fluentd:v3.1.0
+        env:
+        - name: FLUENTD_ARGS
+          value: --no-supervisor -q
+        resources:
+          limits:
+            memory: 500Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+        - name: varlibdockercontainers
+          mountPath: /var/lib/docker/containers
+          readOnly: true
+        - name: config-volume
+          mountPath: /etc/fluent/config.d
+      # nodeSelector:
+      # beta.kubernetes.io/fluentd-ds-ready: &quot;true&quot;
+      tolerations:
+      - operator: Exists
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
+      - name: varlibdockercontainers
+        hostPath:
+          path: /var/lib/docker/containers
+      - name: config-volume
+        configMap:
+          name: fluentd-config
+</code></pre>
+<h3 id="8-1-3-部署fluentd"><a href="#8-1-3-部署fluentd" class="headerlink" title="8.1.3 部署fluentd"></a>8.1.3 部署fluentd</h3><pre><code class="hljs">kubectl apply -f fluentd-es-configmap.yaml 
+kubectl apply -f fluentd.yaml
+</code></pre>
+<h2 id="8-2-部署filebeat"><a href="#8-2-部署filebeat" class="headerlink" title="8.2 部署filebeat"></a>8.2 部署filebeat</h2><h3 id="8-2-1-创建配置文件"><a href="#8-2-1-创建配置文件" class="headerlink" title="8.2.1 创建配置文件"></a>8.2.1 创建配置文件</h3><pre><code class="hljs">vi filebeat-configmap.yaml
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: filebeat-conf
+  namespace: logging
+data:
+  filebeat.yml: |-
+    filebeat.inputs:
+
+      - type: log
+        enabled: true
+        paths:
+          - /var/log/nginx/*access.log
+        tags: [&quot;nginx-access&quot;]
+        fields_under_root: true
+        fields:
+          log_topic: nginx-access
+
+      - type: log
+        enabled: true
+        paths:
+          - /var/log/nginx/*error.log
+        tags: [&quot;nginx-error&quot;]
+        fields_under_root: true
+        fields:
+          log_topic: nginx-error
+
+      - type: log
+        enabled: true
+        paths:
+          - /var/log/auth.log
+        tags: [&quot;sshd&quot;]
+        fields_under_root: true
+        fields:
+          log_topic: sshd
+
+      - type: log
+        enabled: true
+        paths:
+          - /var/log/containers/*.log
+        tags: [&quot;container&quot;]
+        symlinks: true
+        fields_under_root: true
+        fields:
+          log_topic: container
+
+    output.kafka: 
+      hosts: [&quot;kafka-0.kafka:9092&quot;,&quot;kafka-1.kafka:9092&quot;,&quot;kafka-2.kafka:9092&quot;]
+      topic: &#39;%&#123;[log_topic]&#125;&#39;
+      partition.round_robin:
+        reachable_only: false
+      required_acks: 1
+      compression: gzip
+      max_message_bytes: 1000000
+</code></pre>
+<h3 id="8-2-2-创建filebeat部署文件"><a href="#8-2-2-创建filebeat部署文件" class="headerlink" title="8.2.2 创建filebeat部署文件"></a>8.2.2 创建filebeat部署文件</h3><pre><code class="hljs">vi filebeat.yaml
+
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: filebeat
+  namespace: logging
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: filebeat
+  labels:
+    app: filebeat-clsterrole
+rules:
+- apiGroups:
+  - &quot;&quot;
+  resources:
+  - nodes
+  - events
+  - namespaces
+  - pods
+  verbs:
+  - get
+  - watch
+  - list
+- apiGroups:
+  - &quot;&quot;
+  resourceNames:
+  - filebeat-prospectors
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - update
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: filebeat
+  labels:
+    app: filebeat-clusterrolebinding
+roleRef:
+  apiGroup: &quot;&quot;
+  kind: ClusterRole
+  name: filebeat
+subjects:
+- apiGroup: &quot;&quot;
+  kind: ServiceAccount
+  name: filebeat
+  namespace: logging
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: filebeat
+  namespace: logging
+  labels:
+    k8s-app: filebeat
+spec:
+  selector:
+    matchLabels:
+      k8s-app: filebeat
+  template:
+    metadata:
+      labels:
+        k8s-app: filebeat
+    spec:
+      serviceAccountName: filebeat
+      terminationGracePeriodSeconds: 30
+      containers:
+      - name: filebeat
+        image: registry.cn-hangzhou.aliyuncs.com/swords/filebeat:7.12.1
+        imagePullPolicy: IfNotPresent
+        args: [
+          &quot;-c&quot;, &quot;/etc/filebeat.yml&quot;,
+          &quot;-e&quot;,
+        ]
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        securityContext:
+          runAsUser: 0
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 1000Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        volumeMounts:
+        - name: config
+          mountPath: /etc/filebeat.yml
+          readOnly: true
+          subPath: filebeat.yml
+        - name: data
+          mountPath: /usr/share/filebeat/data
+        - name: dockerlog
+          mountPath: /home/docker/docker/containers
+        - name: varlog
+          mountPath: /var/log/
+          readOnly: true
+        - name: timezone
+          mountPath: /etc/localtime
+        - name: varlibdockercontainers
+          mountPath: /var/lib/docker/containers
+      tolerations:
+      - operator: Exists
+      volumes:
+      - name: config
+        configMap:
+          defaultMode: 0644
+          name: filebeat-conf
+      - name: dockerlog
+        hostPath:
+          path: /var/log/containers/
+      - name: varlog
+        hostPath:
+          path: /var/log/
+      - name: data
+        hostPath:
+          path: /var/log/filebeat
+          type: DirectoryOrCreate
+      - name: timezone
+        hostPath:
+          path: /etc/localtime
+      - name: varlibdockercontainers
+        hostPath:
+          path: /var/lib/docker/containers
+</code></pre>
+<h3 id="8-2-3-部署filebeat"><a href="#8-2-3-部署filebeat" class="headerlink" title="8.2.3 部署filebeat"></a>8.2.3 部署filebeat</h3><pre><code class="hljs">kubectl apply -f filebeat-configmap.yaml
+kubectl apply -f filebeat.yaml
+</code></pre>
+<h1 id="9-验证EFK资源"><a href="#9-验证EFK资源" class="headerlink" title="9.验证EFK资源"></a>9.验证EFK资源</h1><hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><p><a target="_blank" rel="noopener" href="https://i4t.com/4951.html">https://i4t.com/4951.html</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/99jianshao/p/15024955.html">https://www.cnblogs.com/99jianshao/p/15024955.html</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/heian_99/article/details/123405383">https://blog.csdn.net/heian_99/article/details/123405383</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/filtercomp/article/details/127125138">https://blog.csdn.net/filtercomp/article/details/127125138</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_45887180/article/details/122431406">https://blog.csdn.net/qq_45887180/article/details/122431406</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubernetes/tree/release-1.20/cluster/addons/fluentd-elasticsearch">https://github.com/kubernetes/kubernetes/tree/release-1.20/cluster/addons/fluentd-elasticsearch</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/08-5.EFK%E6%8F%92%E4%BB%B6.md">https://github.com/opsnull/follow-me-install-kubernetes-cluster/blob/master/08-5.EFK%E6%8F%92%E4%BB%B6.md</a></p>
+</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/ELK/">#ELK</a>
+      
+        <a href="/hexo/tags/Kubernetes/">#Kubernetes</a>
+      
+        <a href="/hexo/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kubernetes集群部署EFK日志管理平台</div>
+      <div>https://css.ss-ss.top/hexo/2022/12/10/Kubernetes集群部署EFK日志管理平台/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年12月10日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2022/12/20/Kubernetes%E5%AE%9E%E6%88%98%E4%B9%8B%E9%83%A8%E7%BD%B2Cloudreve%E4%BA%91%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/" title="Kubernetes实战之部署Cloudreve云存储系统">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kubernetes实战之部署Cloudreve云存储系统</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2022/12/01/Kubernetes%E9%9B%86%E7%BE%A4%E6%B0%B4%E5%B9%B3%E8%87%AA%E5%8A%A8%E4%BC%B8%E7%BC%A9HPA%E8%AF%A6%E8%A7%A3/" title="Kubernetes集群水平自动伸缩HPA详解">
+                        <span class="hidden-mobile">Kubernetes集群水平自动伸缩HPA详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

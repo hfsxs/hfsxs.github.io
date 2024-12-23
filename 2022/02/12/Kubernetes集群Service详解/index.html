@@ -1,0 +1,696 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Service，即服务，Kubernetes集群最核心的概念之一，定义了逻辑上一组Pod的访问策略，即通过标签选择器选择一组Pod，并为其分配一个访问入口地址，从而实现这个由Pod副本所组成的集群的访问。Service使Kubernetes集群具备了微服务平台的功能，即通过分析、识别并建模业务系统中所有服务为Service，将业务系统转换为由多个提供不同业务能力而又彼此独立的微服务单元，微服务之间">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes集群Service详解">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2022/02/12/Kubernetes%E9%9B%86%E7%BE%A4Service%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="Service，即服务，Kubernetes集群最核心的概念之一，定义了逻辑上一组Pod的访问策略，即通过标签选择器选择一组Pod，并为其分配一个访问入口地址，从而实现这个由Pod副本所组成的集群的访问。Service使Kubernetes集群具备了微服务平台的功能，即通过分析、识别并建模业务系统中所有服务为Service，将业务系统转换为由多个提供不同业务能力而又彼此独立的微服务单元，微服务之间">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-12T15:00:19.000Z">
+<meta property="article:modified_time" content="2024-02-21T07:12:56.091Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="容器云">
+<meta property="article:tag" content="云原生">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Kubernetes集群Service详解 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Kubernetes集群Service详解</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-02-12 23:00" pubdate>
+          2022年2月12日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          37 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kubernetes集群Service详解</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Service，即服务，Kubernetes集群最核心的概念之一，定义了逻辑上一组Pod的访问策略，即通过标签选择器选择一组Pod，并为其分配一个访问入口地址，从而实现这个由Pod副本所组成的集群的访问。Service使Kubernetes集群具备了微服务平台的功能，即通过分析、识别并建模业务系统中所有服务为Service，将业务系统转换为由多个提供不同业务能力而又彼此独立的微服务单元，微服务之间通过TCP&#x2F;IP进行通信，从而拥有了强大的分布式能力、弹性扩展能力和容错能力</p>
+<hr>
+<h1 id="1-概念引入"><a href="#1-概念引入" class="headerlink" title="1.概念引入"></a>1.概念引入</h1><p>Kubernetes集群中Pod是应用程序的载体，可以通过Pod的IP来访问应用程序，但Pod会随着集群规模、节点状态、用户缩放等因素动态变化，Pod的名称、运行节点、IP地址也会随之而变化。这样，就给业务系统的内部调用带来很大的不便。故此，引入Service这一概念</p>
+<h1 id="2-工作流程"><a href="#2-工作流程" class="headerlink" title="2.工作流程"></a>2.工作流程</h1><h2 id="2-1-分配虚拟IP"><a href="#2-1-分配虚拟IP" class="headerlink" title="2.1 分配虚拟IP"></a>2.1 分配虚拟IP</h2><p>集群用户向API Server提交Service创建请求，运行在集群所有Node节点的Kube-Proxy组件通过API Serve监测到新增的Service之后为其分配集群虚拟IP，即ClusterIP，若定义时明确指定虚拟IP，则分配指定IP，如未指定则自动分配</p>
+<h2 id="2-2-选择pod副本组"><a href="#2-2-选择pod副本组" class="headerlink" title="2.2 选择pod副本组"></a>2.2 选择pod副本组</h2><p>根据标签选择器选取符合条件的Pod，Controller Manager组件的Endpoints Controller创建Endpoint，即包含这组Pod IP及访问端口的逻辑组合，并将Endpoint信息写入Etcd数据库</p>
+<h2 id="2-3-生成流量转发规则"><a href="#2-3-生成流量转发规则" class="headerlink" title="2.3 生成流量转发规则"></a>2.3 生成流量转发规则</h2><p>Kube-Proxy组件监测到Service、Endpoint的变更，根据监测到的信息设置流量转发规则，即将一个集群虚拟IP及端口号与一个或多个Pod的IP、端口做映射，以作为后端Pod组的访问代理</p>
+<h2 id="2-4-配置服务发现"><a href="#2-4-配置服务发现" class="headerlink" title="2.4 配置服务发现"></a>2.4 配置服务发现</h2><p>集群DNS服务器，如CoreDNS，监测到增的Service，根据Service名称、分配的集群虚拟IP、端口号创建DNS条目</p>
+<h2 id="2-5-Service访问及流量转发"><a href="#2-5-Service访问及流量转发" class="headerlink" title="2.5 Service访问及流量转发"></a>2.5 Service访问及流量转发</h2><p>通过服务名称访问Service时，首先由DNS将服务名称转换成集群虚拟IP与端口号，Kube-Proxy组件根据转发规则对Service的流量计算负载均衡，最后转发到位于后端的Pod</p>
+<h1 id="3-代理模式"><a href="#3-代理模式" class="headerlink" title="3.代理模式"></a>3.代理模式</h1><p>Kube-Proxy组件负责将Service的请求转发到后端的某个Pod实例上，并配置内部实现服务的负载均衡与会话保持规则，实质上就是一个智能的软件负载均衡器。不同于常见的拥有一个独立IP负载均衡器，而是为每个Service分配了一个全局唯一的虚拟IP地址，即Cluster IP，实际上就是用于生成Iptables或IPVS转发规则时使用的IP地址，仅用于实现Kubernetes集群网络的内部通讯，仅能够将规则中定义的转发服务的请求作为目标地址予以响应，且在Service的整个生命周期内都不会改变</p>
+<p>Kube-Proxy将请求代理至相关端点的方式有三种，即userspace、iptables和ipvs</p>
+<h2 id="3-1-userspace"><a href="#3-1-userspace" class="headerlink" title="3.1 userspace"></a>3.1 userspace</h2><p>userspace，即用户空间，指的是Linux操作系统的用户空间。此模式下，Kube-Proxy负责跟踪API Server上的Service和Endpoint对象的变动（创建或删除），并根据此调整Service资源的定义</p>
+<p>此模式下，请求流量到达内核空间后经由套接字送往用户空间Kube-Proxy，而后再由它送回内核空间，并调度至后端Pod。由于请求在内核空间和用户空间来回转发必然会导致效率不高，Kubernetes1.1版本之后即被废弃</p>
+<h2 id="3-2-iptables"><a href="#3-2-iptables" class="headerlink" title="3.2 iptables"></a>3.2 iptables</h2><p>类似于userspace代理模式，iptables代理模式中，Kube-Proxy负责跟踪API Server上Service和Endpoint对象的变动（创建或删除），并据此做出Service资源定义的变动。同时，对于每个Service，都将会创建iptables规则直接捕获到达ClusterIP和Port的流量，并将其重定向至当前Service后端。对于每个Endpoint对象，Service资源会为其创建iptables规则并关联至挑选的后端Pod资源，默认算法是随即调度（random）。此模式自1.2版本开始成为默认的类型</p>
+<p>在创建Service资源时，集群中每个节点上的Kube-Proxy都会收到通知并将其定义为当前节点上的iptables规则，用于转发工作接口接收到的与此Service资源的ClusterIP和端口的相关流量。客户端发来的请求被相关的iptables规则进行调度和目标地址转换（DNAT）后再转发至集群内的Pod对象上</p>
+<p>相对于userspace模式，iptables模式无须将流量在用户空间和内核空间来回切换，因而更加高效和可靠。其缺点是iptables代理模型不会在被挑中的后端Pod资源无响应时自动进行重定向，而userspace模型则可以</p>
+<h2 id="3-3-ipvs"><a href="#3-3-ipvs" class="headerlink" title="3.3 ipvs"></a>3.3 ipvs</h2><p>此模式下，Kube-Proxy跟踪API Server上Service和Endpoint对象的变动，据此来调用netlink接口创建ipvs规则，并确保与API Server中的变动保持同步。与iptables规则的不同之处仅在于其请求流量的调度功能由ipvs实现，其余功能仍由iptables完成。Kubernetes自1.9-alpha版本引入了ipvs代理模型，且自1.11版本起成为默认设置</p>
+<p>类似于iptables模式，ipvs构建于netfilter的钩子函数之上，但使用hash作为底层数据结构并工作于内核空间，因此具有流量转发速度快、规则同步性能好的特性。此外，ipvs还支持众多的调度算法，例如rr、lc、dh、sh、sed和nq等</p>
+<h1 id="4-Service类型"><a href="#4-Service类型" class="headerlink" title="4.Service类型"></a>4.Service类型</h1><h2 id="4-1-ClusterIP"><a href="#4-1-ClusterIP" class="headerlink" title="4.1 ClusterIP"></a>4.1 ClusterIP</h2><p>默认的Service类型，通过集群自动分配的内部IP地址暴露服务，该地址仅在集群内部可达，无法被集群外部的客户端访问</p>
+<pre><code class="hljs">apiVersion: v1
+kind: Service
+metadata:
+  # 设置service名字
+  name: redis-server
+  namespace: default
+spec:
+  selector: 
+    # 设置标签选择器，关联指定的pod
+    app: redis-servers
+  # 设置service类型，默认为ClusterIP
+  type: ClusterIP
+  # 设置clusterIP，若不指定则自动分配
+  clusterIP: 172.16.66.66
+  ports:
+  # 设置service访问端口
+  - port: 6379
+    # 设置pod端口
+    targetPort: 6379
+</code></pre>
+<h2 id="4-2-NodePort"><a href="#4-2-NodePort" class="headerlink" title="4.2 NodePort"></a>4.2 NodePort</h2><p>基于ClusterIP而设计，依然会为Service分配集群IP地址，并将此作为NodePort的路由目标，工作原理就是将Service的端口映射到每个Node节点的同一个端口，用于将集群外部的用户请求转发至目标Service的ClusterIP和Port</p>
+<ul>
+<li>集群内部Pod访问流量走向为：服务名 — &gt;&gt; 集群虚拟IP:端口号 — &gt;&gt; kube-proxy转发到pod</li>
+<li>集群外部Pod访问流量走向为：节点IP:NodePort — &gt;&gt; 集群虚拟IP:端口号 — &gt;&gt; kube-Proxy转发到Pod</li>
+</ul>
+<hr>
+<pre><code class="hljs">apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-server
+  namespace: default
+spec:
+  type: NodePort
+  selector:
+    app: nginx-servers
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+    # 设置绑定到node节点的端口，若不指定则默认分配，取值范围为30000-32767
+    nodePort: 30080
+</code></pre>
+<h2 id="4-3-LoadBalancer"><a href="#4-3-LoadBalancer" class="headerlink" title="4.3 LoadBalancer"></a>4.3 LoadBalancer</h2><p>基于NodePort而设计，通过公有云服务商提供的负载均衡器将服务暴露到集群外部，也具有NodePort和ClusterIP。一个LoadBalancer类型的Service会指向关联Kubernetes集群外部的、切实存在的某个负载均衡设备，该设备通过工作节点之上的NodePort向集群内部发送请求流量。优势在于能够把来自集群外部客户端的请求调度至所有节点（或部分节点）的NodePort之上，而非依赖于客户端自行决定连接至哪个节点，从而避免了因客户端指定的节点故障而导致的服务不可用</p>
+<p>目前已不再推荐使用，建议使用Ingress Controller</p>
+<h2 id="4-4-ExternalName"><a href="#4-4-ExternalName" class="headerlink" title="4.4 ExternalName"></a>4.4 ExternalName</h2><p>通过将Service映射至由externalName字段的内容所指定的主机名来暴露服务，此主机名需被DNS服务解析至CNAME类型的记录。实际之，该类型的Service并不是Kubernetes集群定义，而是把集群外部的某服务以DNS CNAME记录的方式映射到集群内，从而让集群内的Pod资源能够访问外部的Service。因此，该类型的Service没有ClusterIP和NodePort，也没有标签选择器用于选择Pod资源，也不会有Enpoints存在</p>
+<h2 id="4-5-HeadLess"><a href="#4-5-HeadLess" class="headerlink" title="4.5 HeadLess"></a>4.5 HeadLess</h2><p>基于ClusterIP而设计，但通过指定clusterIP属性为None而定义Service，即不为服务分配集群虚拟IP，自然也就不能在DNS插件中添加服务相关条目，Kube-Proxy组件不会为其添加转发规则，也就无法利用Kube-Proxy的转发、负载均衡功能</p>
+<p>HeadLess Service依然会根据标签选择器创建Endpoint，并根据Endpoint向DNS插件中添加条目，DNS会将Headless Service的后端直接解析为Pod组的IP列表。这类Service主要供StatefulSet使用，因为StatefulSet能保证其管理的Pod有序，名称地址等特征保持不变</p>
+<pre><code class="hljs">apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-server
+spec:
+  selector:
+    app: kafka-servers
+  # 设置cluserIP为空
+  clusterIP: None
+  ports:
+  - port: 9092
+    targetPort: 9092
+</code></pre>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://k.i4t.com/kubernetes_service.html">https://k.i4t.com/kubernetes_service.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1981390">https://cloud.tencent.com/developer/article/1981390</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.modb.pro/db/388641">https://www.modb.pro/db/388641</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/dkfajsldfsdfsd/article/details/81200411">https://blog.csdn.net/dkfajsldfsdfsd/article/details/81200411</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/bbj1030/article/details/124582208">https://blog.csdn.net/bbj1030/article/details/124582208</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/Kubernetes/">#Kubernetes</a>
+      
+        <a href="/hexo/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kubernetes集群Service详解</div>
+      <div>https://css.ss-ss.top/hexo/2022/02/12/Kubernetes集群Service详解/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年2月12日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2022/02/15/Docsify%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BAWiki%E7%9F%A5%E8%AF%86%E5%BA%93/" title="Docsify搭建个人Wiki知识库">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Docsify搭建个人Wiki知识库</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2021/12/27/Git%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/" title="Git服务器的安装与配置">
+                        <span class="hidden-mobile">Git服务器的安装与配置</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

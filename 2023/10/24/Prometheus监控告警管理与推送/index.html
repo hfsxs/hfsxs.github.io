@@ -1,0 +1,907 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的去重、分组、抑制与静默，最后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等 告警分组分组，即是将具有相同性质的告警合并后作为单个通知进行发送，如两台主机的CPU&#x2F;内存&#x2F;磁盘使用率同时告警，则这些告警就可合并为一个告警通知，从而避免大量同类错误产生的告警风暴所导致关键">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Prometheus监控告警管理与推送">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2023/10/24/Prometheus%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6%E7%AE%A1%E7%90%86%E4%B8%8E%E6%8E%A8%E9%80%81/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的去重、分组、抑制与静默，最后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等 告警分组分组，即是将具有相同性质的告警合并后作为单个通知进行发送，如两台主机的CPU&#x2F;内存&#x2F;磁盘使用率同时告警，则这些告警就可合并为一个告警通知，从而避免大量同类错误产生的告警风暴所导致关键">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://css.ss-ss.top/hexo/img/wiki/prometheus/prometheus-010.jpg">
+<meta property="article:published_time" content="2023-10-24T07:51:46.000Z">
+<meta property="article:modified_time" content="2023-12-31T12:59:38.634Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Prometheus">
+<meta property="article:tag" content="监控告警">
+<meta property="article:tag" content="Alertmanager">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://css.ss-ss.top/hexo/img/wiki/prometheus/prometheus-010.jpg">
+  
+  
+  
+  <title>Prometheus监控告警管理与推送 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Prometheus监控告警管理与推送</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-10-24 15:51" pubdate>
+          2023年10月24日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          77 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Prometheus监控告警管理与推送</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的去重、分组、抑制与静默，最后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等</p>
+<h1 id="告警分组"><a href="#告警分组" class="headerlink" title="告警分组"></a>告警分组</h1><p>分组，即是将具有相同性质的告警合并后作为单个通知进行发送，如两台主机的CPU&#x2F;内存&#x2F;磁盘使用率同时告警，则这些告警就可合并为一个告警通知，从而避免大量同类错误产生的告警风暴所导致关键告警信息的淹没。分组规则由group_by配置项按照告警标签指定，匹配到的告警合并为一个组</p>
+<h1 id="告警抑制"><a href="#告警抑制" class="headerlink" title="告警抑制"></a>告警抑制</h1><p>抑制，即是禁止触发相互依赖的级联告警，从而可以集中于真正的故障所在，如主机宕机的告警即可抑制该主机上所有运行的服务，Docker、MySQL等等</p>
+<h1 id="告警静默"><a href="#告警静默" class="headerlink" title="告警静默"></a>告警静默</h1><p>静默，即某些预期内的告警不再进行发送，若从Prometheus推送过来的告警事件被静默规则匹配到，Alertmanager则将之设为静默状态，不再进行发送。告警静默通常用于系统维护升级，或上游服务器故障所导致的下游服务器告警，这些某个时间段内不希望触发告警通知的场景。直到维护结束，手动解除静默，恢复对应服务的告警通知功能。告警静默功能由Alertmanager UI通过定义标签的匹配规则(字符串或者正则表达式)启用</p>
+<h1 id="告警路由"><a href="#告警路由" class="headerlink" title="告警路由"></a>告警路由</h1><p>路由，即基于告警匹配规则将告警事件推送给不同的接受者，以便于进行进一步的处理。告警路由分为两部分，即顶级根路由和子路由，其本质上就是一个基于标签匹配规则的树状结构，所有告警信息从顶级路由开始，根据标签匹配规则进入到不同的子路由，并且根据子路由设置的接收器发送告警，匹配不到子路由的告警则由默认接收者接收。子路由的告警匹配方式有两种，基于字符串验证，通过设置match规则判断告警是否存在标签label.name，且其值等于label.value；基于正则表达式，通过设置match_re验证告警标签的值是否满足正则表达式</p>
+<h1 id="1-配置解析"><a href="#1-配置解析" class="headerlink" title="1.配置解析"></a>1.配置解析</h1><pre><code class="hljs"># 设置全局参数，即作为默认值供子设置继承的公共设置，子参数中也可覆盖其设置
+global:
+  # 设置处理超时时间，即为告警的解决的时间，直接影响到警报恢复的通知时间，默认为5分钟，建议依据实际生产场景进行设置
+  resolve_timeout: 1m
+
+  # 设置邮箱smtp服务器
+  smtp_smarthost: &#39;smtp.qq.com:465&#39;
+  # 设置发件邮箱
+  smtp_from: &#39;xxxxxxxxx@qq.com&#39;
+  # 设置发件账号
+  smtp_auth_username: &#39;xxxxxxxxx@qq.com&#39;
+  # 设置发件人邮箱授权码，注意不是登录密码
+  smtp_auth_password: &#39;xxxxxxxxx&#39; 
+  # 设置关闭邮箱的tls验证
+  smtp_require_tls: false
+
+# 设置告警通知的模版
+templates:
+- &#39;/etc/alertmanager/template/*.tmpl&#39;
+
+# 设置告警根路由，即分发策略
+route:
+  # 设置告警分组，即将具有相同标签的告警通知合并为告警组，作为单个通知发送
+  group_by: [&#39;alertname&#39;]
+  # 设置组内告警发送的等待时间，即组内收到第一个告警后的发送等待时间，目标是等待组内新增的告警以便同时合并发送，默认为30s
+  group_wait: 10s
+  # 设置组内不同批次告警发送的时间间隔，默认为5m
+  group_interval: 10s
+  # 设置告警未解决时重复发送的时间间隔，且此期间组内无新增告警，默认4h，建议根据告警严重程度进行设置
+  repeat_interval: 1h 
+  # 设置默认告警接收者，即未被子路由的receivers.name选项匹配到的告警接收者
+  receiver: &#39;webhook&#39;
+
+  # 设置告警信息子路由
+  routes:
+  # 设置告警接收器，即指定发送人以及发送渠道，支持多种类型，如邮箱、钉钉、企业微信等
+  - receiver: &#39;email&#39;
+    group_wait: 10s
+    match:
+      team: node
+
+# 设置告警接收者
+receivers:
+ - name: &#39;webhook&#39;
+   webhook_configs:
+   - url: http://localhost:8060/dingtalk/ops_dingding/send
+     # 设置当前收件人需要接收告警恢复通知
+     send_resolved: true
+ - name: &#39;email&#39;
+   email_configs:
+   - to: &#39;xxxxxxxxxxxx@163.com&#39;
+   - to: &#39;xxxxxxxxxxxx@qq.com&#39;
+     send_resolved: true
+
+# 设置告警抑制规则，以减少垃圾告警的产生
+inhibit_rules:
+  # 设置抑制规则源告警的匹配标签、名称或注释，可为标签列表或正则表达式，可选参数
+  - source_match:
+      severity: &#39;critical&#39;
+    # 设置抑制规则目标告警的匹配标签、名称或注释，可为标签列表或正则表达式，可选参数
+    target_match:
+      severity: &#39;warning&#39;
+    # 设置源告警与目标告警相同的标签值，可选参数，意为同instance、alertname的warning告警将被critical告警抑制
+    equal: [&#39;alertname&#39;, &#39;instance&#39;]
+</code></pre>
+<h1 id="2-配置邮件通知"><a href="#2-配置邮件通知" class="headerlink" title="2.配置邮件通知"></a>2.配置邮件通知</h1><p>邮箱是目前企业最常用的告警通知方式，Alertmanager内置了对SMTP协议的支持，只需定义好SMTP相关的配置，并且在receiver中定义接收方的邮件地址即可</p>
+<h2 id="2-1-发送邮箱开启SMTP服务，获取登录授权码"><a href="#2-1-发送邮箱开启SMTP服务，获取登录授权码" class="headerlink" title="2.1 发送邮箱开启SMTP服务，获取登录授权码"></a>2.1 发送邮箱开启SMTP服务，获取登录授权码</h2><p><img src="/hexo/img/wiki/prometheus/prometheus-010.jpg" srcset="/hexo/img/loading.gif" lazyload alt="prometheus-010"></p>
+<ul>
+<li>注：不是邮箱登录密码，而是发送邮箱开启SMTP服务后登录第三方邮件客户端的授权码</li>
+</ul>
+<h2 id="2-2-修改AlertManager配置文件"><a href="#2-2-修改AlertManager配置文件" class="headerlink" title="2.2 修改AlertManager配置文件"></a>2.2 修改AlertManager配置文件</h2><pre><code class="hljs">sudo vi /usr/local/prometheus/alertmanager.yml
+
+
+global:
+  resolve_timeout: 1m
+
+  # 设置邮箱smtp服务器
+  smtp_smarthost: &#39;smtp.139.com:465&#39;
+  # 设置发件邮箱
+  smtp_from: &#39;sxs0618@139.com&#39;
+  # 设置发件账号
+  smtp_auth_username: &#39;sxs0618@q139.com&#39;
+  # 设置发件人邮箱授权码，注意不是登录密码
+  smtp_auth_password: &#39;xxxxxxxxx&#39; 
+  # 设置关闭邮箱的tls验证
+  smtp_require_tls: false
+
+# 设置告警通知的模版
+templates:
+- &#39;/usr/local/prometheus/template/*.tmpl&#39;
+
+route:
+  # 设置告警分组，即将具有相同标签的告警通知合并为告警组，作为单个通知发送
+  group_by: [&#39;alertname&#39;]
+  # 设置组内告警发送的等待时间，即组内收到第一个告警后的发送等待时间，目标是等待组内新增的告警以便同时合并发送，默认为30s
+  group_wait: 10s
+  # 设置组内不同批次告警发送的时间间隔，默认为5m
+  group_interval: 10s
+  # 设置告警未解决时重复发送的时间间隔，且此期间组内无新增告警，默认4h，建议根据告警严重程度进行设置
+  repeat_interval: 1h 
+  # 设置默认告警接收者，即未被子路由的receivers.name选项匹配到的告警接收者
+  receiver: &#39;email&#39;
+
+receivers:
+ - name: &#39;email&#39;
+   email_configs:
+   - to: &#39;523343553@qq.com&#39;
+     send_resolved: true
+
+inhibit_rules:
+  # 设置抑制规则源告警的匹配标签、名称或注释，可为标签列表或正则表达式，可选参数
+  - source_match:
+      severity: &#39;critical&#39;
+    # 设置抑制规则目标告警的匹配标签、名称或注释，可为标签列表或正则表达式，可选参数
+    target_match:
+      severity: &#39;warning&#39;
+    # 设置源告警与目标告警相同的标签值，可选参数，意为同instance、alertname的warning告警将被critical告警抑制
+    equal: [&#39;alertname&#39;, &#39;instance&#39;]
+</code></pre>
+<h1 id="2-3-创建告警通知模版"><a href="#2-3-创建告警通知模版" class="headerlink" title="2.3 创建告警通知模版"></a>2.3 创建告警通知模版</h1><pre><code class="hljs">sudo mkdir -p /usr/local/prometheus/template
+vi /usr/local/prometheus/template/email.tmpl
+
+
+&#123;&#123; define "email.html" &#125;&#125; 
+&#123;&#123; range .Alerts &#125;&#125; 
+=========start==========&lt;br&gt; 
+告警程序: prometheus_alert &lt;br&gt; 
+告警级别: &#123;&#123; .Labels.severity &#125;&#125; 级 &lt;br&gt;
+告警类型: &#123;&#123; .Labels.alertname &#125;&#125; &lt;br&gt; 
+故障主机: &#123;&#123; .Labels.instance &#125;&#125; &lt;br&gt; 
+告警主题: &#123;&#123; .Annotations.summary &#125;&#125; &lt;br&gt;
+告警详情: &#123;&#123; .Annotations.description &#125;&#125; &lt;br&gt;
+触发时间: &#123;&#123; .StartsAt &#125;&#125; &lt;br&gt;
+=========end==========&lt;br&gt; 
+&#123;&#123; end &#125;&#125; 
+&#123;&#123; end &#125;&#125;
+</code></pre>
+<h1 id="2-4-关闭服务器，验证告警推送信息"><a href="#2-4-关闭服务器，验证告警推送信息" class="headerlink" title="2.4 关闭服务器，验证告警推送信息"></a>2.4 关闭服务器，验证告警推送信息</h1><h1 id="3-配置钉钉通知"><a href="#3-配置钉钉通知" class="headerlink" title="3.配置钉钉通知"></a>3.配置钉钉通知</h1><h2 id="3-1-钉钉群创建机器人"><a href="#3-1-钉钉群创建机器人" class="headerlink" title="3.1 钉钉群创建机器人"></a>3.1 钉钉群创建机器人</h2><h2 id="3-2-部署钉钉告警插件"><a href="#3-2-部署钉钉告警插件" class="headerlink" title="3.2 部署钉钉告警插件"></a>3.2 部署钉钉告警插件</h2><h3 id="3-2-1-安装Webhook-dingtalk"><a href="#3-2-1-安装Webhook-dingtalk" class="headerlink" title="3.2.1 安装Webhook-dingtalk"></a>3.2.1 安装Webhook-dingtalk</h3><pre><code class="hljs">sudo mkdir -p /usr/local/prometheus/dingtalk
+wget https://github.com/timonwong/prometheus-webhook-dingtalk/releases/download/v2.1.0/prometheus-webhook-dingtalk-2.1.0.linux-amd64.tar.gz
+tar -xzvf prometheus-webhook-dingtalk-2.1.0.linux-amd64.tar.gz 
+sudo mv prometheus-webhook-dingtalk-2.1.0.linux-amd64 /usr/local/prometheus/dingtalk/webhook-dingtalk
+sudo mv config.example.yml /usr/local/prometheus/dingtalk/config.yml
+</code></pre>
+<h3 id="3-2-2-创建配置文件"><a href="#3-2-2-创建配置文件" class="headerlink" title="3.2.2 创建配置文件"></a>3.2.2 创建配置文件</h3><pre><code class="hljs">sudo vi /usr/local/prometheus/dingtalk/config.yml
+
+
+templates:
+  - /usr/local/prometheus/template/dingtalk.tmpl
+targets:
+  webhook:
+    url: https://oapi.dingtalk.com/robot/send?access_token=xxxxxxxxx
+    secret: xxxxxxxxx
+    message:
+      text: &#39;&#123;&#123; template "dingtalk.to.message" . &#125;&#125;&#39;
+    mention:
+      all: true
+</code></pre>
+<h3 id="3-2-3-创建告警通知模版"><a href="#3-2-3-创建告警通知模版" class="headerlink" title="3.2.3 创建告警通知模版"></a>3.2.3 创建告警通知模版</h3><pre><code class="hljs">sudo mkdir -p /usr/local/prometheus/template
+vi /usr/local/prometheus/template/dingtalk.tmpl
+
+
+&#123;&#123; define "dingtalk.to.message" &#125;&#125;
+
+&#123;&#123;- if gt (len .Alerts.Firing) 0 -&#125;&#125;
+&#123;&#123;- range $index, $alert := .Alerts -&#125;&#125;
+
+=========  **监控告警** ========= &lt;/br&gt;
+
+**告警集群:**    &#123;&#123; $alert.Labels.clusters &#125;&#125; &lt;/br&gt; 
+**告警类型:**    &#123;&#123; $alert.Labels.alertname &#125;&#125; &lt;/br&gt;
+**告警级别:**    &#123;&#123; $alert.Labels.severity &#125;&#125;  
+**告警状态:**    &#123;&#123; .Status &#125;&#125;   
+**故障主机:**    &#123;&#123; $alert.Labels.hostname &#125;&#125; &#123;&#123; $alert.Labels.device &#125;&#125;   
+**告警主题:**    &#123;&#123; .Annotations.summary &#125;&#125;   
+**告警详情:**    &#123;&#123; $alert.Annotations.message &#125;&#125;&#123;&#123; $alert.Annotations.description&#125;&#125;   
+**主机标签:**    &#123;&#123; range .Labels.SortedPairs  &#125;&#125;  &lt;/br&gt; [&#123;&#123; .Name &#125;&#125;: &#123;&#123; .Value | markdown | html &#125;&#125; ] 
+&#123;&#123;- end &#125;&#125; &lt;/br&gt;
+
+**故障时间:**    &#123;&#123; ($alert.StartsAt.Add 28800e9).Format "2006-01-02 15:04:05" &#125;&#125;  
+========= = **end** =  =========  &lt;/br&gt;
+&#123;&#123;- end &#125;&#125;
+&#123;&#123;- end &#125;&#125;
+
+&#123;&#123;- if gt (len .Alerts.Resolved) 0 -&#125;&#125;
+&#123;&#123;- range $index, $alert := .Alerts -&#125;&#125;
+
+========= **故障恢复** ========= &lt;/br&gt; 
+**告警集群:**    &#123;&#123; $alert.Labels.clusters &#125;&#125; &lt;/br&gt;
+**告警主题:**    &#123;&#123; $alert.Annotations.summary &#125;&#125;  
+**告警主机:**    &#123;&#123; .Labels.hostname &#125;&#125;   
+**告警类型:**    &#123;&#123; .Labels.alertname &#125;&#125;  
+**告警级别:**    &#123;&#123; $alert.Labels.severity &#125;&#125;    
+**告警状态:**    &#123;&#123; .Status &#125;&#125;  
+**告警详情:**    &#123;&#123; $alert.Annotations.message &#125;&#125;&#123;&#123; $alert.Annotations.description&#125;&#125;  
+**故障时间:**    &#123;&#123; ($alert.StartsAt.Add 28800e9).Format "2006-01-02 15:04:05" &#125;&#125;  
+**恢复时间:**    &#123;&#123; ($alert.EndsAt.Add 28800e9).Format "2006-01-02 15:04:05" &#125;&#125;  
+&#123;&#123;- end &#125;&#125;
+&#123;&#123;- end &#125;&#125;
+&#123;&#123;- end &#125;&#125;
+</code></pre>
+<h3 id="3-2-4-创建启动脚本"><a href="#3-2-4-创建启动脚本" class="headerlink" title="3.2.4 创建启动脚本"></a>3.2.4 创建启动脚本</h3><pre><code class="hljs">sudo vi /lib/systemd/system/dingtalk-webhook.service
+
+
+[Unit]
+Description=Prometheus Webhook Dingtalk
+Documentation=https://github.com/timonwong/prometheus-webhook-dingtalk
+After=network.target
+
+[Service]
+ExecStart=/usr/local/prometheus/dingtalk/prometheus-webhook-dingtalk --config.file=/usr/local/prometheus/dingtalk/config.yml
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+<h3 id="3-2-5-启动Webhook-dingtalk插件"><a href="#3-2-5-启动Webhook-dingtalk插件" class="headerlink" title="3.2.5 启动Webhook-dingtalk插件"></a>3.2.5 启动Webhook-dingtalk插件</h3><pre><code class="hljs">sudo systemctl daemon-reload
+sudo systemctl start dingtalk-webhook.service 
+sudo systemctl enable dingtalk-webhook.service 
+</code></pre>
+<h2 id="3-3-修改Alertmanager配置文件"><a href="#3-3-修改Alertmanager配置文件" class="headerlink" title="3.3 修改Alertmanager配置文件"></a>3.3 修改Alertmanager配置文件</h2><pre><code class="hljs"># 设置全局参数，即作为默认值供子设置继承的公共设置，子参数中也可覆盖其设置
+global:
+  # 设置处理超时时间，即为告警的解决的时间，直接影响到警报恢复的通知时间，默认为5分钟，建议依据实际生产场景进行设置
+  resolve_timeout: 1m
+
+  # 设置邮箱smtp服务器
+  smtp_smarthost: &#39;smtp.139.com:465&#39;
+  # 设置发件邮箱
+  smtp_from: &#39;sxs0618@139.com&#39;
+  # 设置发件账号
+  smtp_auth_username: &#39;sxs0618@qq.com&#39;
+  # 设置发件人邮箱授权码，注意不是登录密码
+  smtp_auth_password: &#39;xxxxxxxxx&#39; 
+  # 设置关闭邮箱的tls验证
+  smtp_require_tls: false
+
+# 设置告警通知的模版
+templates:
+- &#39;/etc/alertmanager/template/*.tmpl&#39;
+
+# 设置告警根路由，即分发策略
+route:
+  # 设置告警分组，即将具有相同标签的告警通知合并为告警组，作为单个通知发送
+  group_by: [&#39;alertname&#39;]
+  # 设置组内告警发送的等待时间，即组内收到第一个告警后的发送等待时间，目标是等待组内新增的告警以便同时合并发送，默认为30s
+  group_wait: 10s
+  # 设置组内不同批次告警发送的时间间隔，默认为5m
+  group_interval: 10s
+  # 设置告警未解决时重复发送的时间间隔，且此期间组内无新增告警，默认4h，建议根据告警严重程度进行设置
+  repeat_interval: 1h 
+  # 设置默认告警接收者，即未被子路由的receivers.name选项匹配到的告警接收者
+  receiver: &#39;webhook&#39;
+
+  # 设置告警信息子路由
+  routes:
+  # 设置告警接收器，即指定发送人以及发送渠道，支持多种类型，如邮箱、钉钉、企业微信等
+  - receiver: &#39;email&#39;
+    group_wait: 10s
+    match:
+      team: node
+
+# 设置告警接收者
+receivers:
+ - name: &#39;webhook&#39;
+   webhook_configs:
+   - url: http://localhost:8060/dingtalk/ops_dingding/send
+     # 设置当前收件人需要接收告警恢复通知
+     send_resolved: true
+ - name: &#39;email&#39;
+   email_configs:
+   - to: &#39;xxxxxxxxxxxx@163.com&#39;
+   - to: &#39;xxxxxxxxxxxx@qq.com&#39;
+     send_resolved: true
+
+# 设置告警抑制规则，以减少垃圾告警的产生
+inhibit_rules:
+  # 设置抑制规则源告警的匹配标签、名称或注释，可为标签列表或正则表达式，可选参数
+  - source_match:
+      severity: &#39;critical&#39;
+    # 设置抑制规则目标告警的匹配标签、名称或注释，可为标签列表或正则表达式，可选参数
+    target_match:
+      severity: &#39;warning&#39;
+    # 设置源告警与目标告警相同的标签值，可选参数，意为同instance、alertname的warning告警将被critical告警抑制
+    equal: [&#39;alertname&#39;, &#39;instance&#39;]
+</code></pre>
+<h2 id="3-4-重启Alertmanager，验证告警推送信息"><a href="#3-4-重启Alertmanager，验证告警推送信息" class="headerlink" title="3.4 重启Alertmanager，验证告警推送信息"></a>3.4 重启Alertmanager，验证告警推送信息</h2><hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://andyoung.blog.csdn.net/article/details/126243110">https://andyoung.blog.csdn.net/article/details/126243110</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43164571/article/details/113104877">https://blog.csdn.net/qq_43164571/article/details/113104877</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45310323/article/details/134103279">https://blog.csdn.net/weixin_45310323/article/details/134103279</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43883625/article/details/129759758">https://blog.csdn.net/weixin_43883625/article/details/129759758</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/Prometheus/">#Prometheus</a>
+      
+        <a href="/hexo/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
+      
+        <a href="/hexo/tags/Alertmanager/">#Alertmanager</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Prometheus监控告警管理与推送</div>
+      <div>https://css.ss-ss.top/hexo/2023/10/24/Prometheus监控告警管理与推送/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年10月24日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2023/10/31/Kubernetes%E9%9B%86%E7%BE%A4%E5%9F%BA%E4%BA%8EKube-Prometheus%E9%85%8D%E7%BD%AE%E8%87%AA%E5%AE%9A%E4%B9%89%E7%9B%91%E6%8E%A7/" title="Kubernetes集群基于Kube-Prometheus配置自定义监控">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kubernetes集群基于Kube-Prometheus配置自定义监控</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2023/10/20/Prometheus%E7%9B%91%E6%8E%A7%E6%9C%8D%E5%8A%A1%E8%87%AA%E5%8A%A8%E5%8F%91%E7%8E%B0%E6%9C%BA%E5%88%B6%E8%AF%A6%E8%A7%A3/" title="Prometheus监控服务自动发现机制详解">
+                        <span class="hidden-mobile">Prometheus监控服务自动发现机制详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

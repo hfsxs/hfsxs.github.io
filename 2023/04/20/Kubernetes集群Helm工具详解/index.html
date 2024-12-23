@@ -1,0 +1,677 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Helm，意为舵轮，是Kubernetes集群的包管理器，用于yaml文件的统一管理及高效复用，实现了应用级别的版本管理，即是将部署应用的yaml文件像Linux的包管理器一样进行封装，从仓库里快速查找、下载和安装，快速的发布中间件、数据库、公共组件等应用，类似于RedHat的yum、Python的pip。helm大大简化了Kubernetes应用的部署方式，将yaml文件存入chart包一键执行">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes集群Helm工具详解">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2023/04/20/Kubernetes%E9%9B%86%E7%BE%A4Helm%E5%B7%A5%E5%85%B7%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="Helm，意为舵轮，是Kubernetes集群的包管理器，用于yaml文件的统一管理及高效复用，实现了应用级别的版本管理，即是将部署应用的yaml文件像Linux的包管理器一样进行封装，从仓库里快速查找、下载和安装，快速的发布中间件、数据库、公共组件等应用，类似于RedHat的yum、Python的pip。helm大大简化了Kubernetes应用的部署方式，将yaml文件存入chart包一键执行">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-04-20T11:15:50.000Z">
+<meta property="article:modified_time" content="2024-07-22T12:34:34.053Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="容器云">
+<meta property="article:tag" content="云原生">
+<meta property="article:tag" content="Helm">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Kubernetes集群Helm工具详解 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Kubernetes集群Helm工具详解</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-20 19:15" pubdate>
+          2023年4月20日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          15 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kubernetes集群Helm工具详解</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Helm，意为舵轮，是Kubernetes集群的包管理器，用于yaml文件的统一管理及高效复用，实现了应用级别的版本管理，即是将部署应用的yaml文件像Linux的包管理器一样进行封装，从仓库里快速查找、下载和安装，快速的发布中间件、数据库、公共组件等应用，类似于RedHat的yum、Python的pip。helm大大简化了Kubernetes应用的部署方式，将yaml文件存入chart包一键执行即可，不再需要kubectl一个个地执行，是查找、共享、打包、升级、回滚和使用Kubernetes构建软件的最佳方式</p>
+<hr>
+<h1 id="相关概念"><a href="#相关概念" class="headerlink" title="相关概念"></a>相关概念</h1><h2 id="1-Chart"><a href="#1-Chart" class="headerlink" title="1.Chart"></a>1.Chart</h2><p>chart，应用描述，即一系列用于描述Kubernetes资源文件的集合，包含镜像、服务、依赖以及资源定义等，类似于apt的dpkg包或yum的rpm包</p>
+<h2 id="2-Release"><a href="#2-Release" class="headerlink" title="2.Release"></a>2.Release</h2><p>release，基于Chart的部署实体，执行后将会在Kubernetes集群创建真实运行的资源对象，如Tomcat Chart</p>
+<h2 id="3-Repository"><a href="#3-Repository" class="headerlink" title="3.Repository"></a>3.Repository</h2><p>Repository，用于发布和存储Chart的存储库</p>
+<h2 id="4-helm"><a href="#4-helm" class="headerlink" title="4.helm"></a>4.helm</h2><p>helm，命令行客户端工具，用于Kubernetes集群应用chart的创建、打包、发布和管理</p>
+<hr>
+<h1 id="1-helm的安装与配置"><a href="#1-helm的安装与配置" class="headerlink" title="1.helm的安装与配置"></a>1.helm的安装与配置</h1><h2 id="1-1-下载helm"><a href="#1-1-下载helm" class="headerlink" title="1.1 下载helm"></a>1.1 下载helm</h2><pre><code class="hljs">wget -O helm.tar.gz https://get.helm.sh/helm-v3.6.3-linux-amd64.tar.gz
+</code></pre>
+<h2 id="1-2-安装helm"><a href="#1-2-安装helm" class="headerlink" title="1.2 安装helm"></a>1.2 安装helm</h2><pre><code class="hljs">tar -xzvf helm.tar.gz
+cd linux-amd64
+sudo mv helm /usr/local/bin
+</code></pre>
+<h2 id="1-3-配置helm仓库"><a href="#1-3-配置helm仓库" class="headerlink" title="1.3 配置helm仓库"></a>1.3 配置helm仓库</h2><h3 id="1-3-1-查看仓库"><a href="#1-3-1-查看仓库" class="headerlink" title="1.3.1 查看仓库"></a>1.3.1 查看仓库</h3><pre><code class="hljs">helm repo list
+</code></pre>
+<h3 id="1-3-2-添加仓库"><a href="#1-3-2-添加仓库" class="headerlink" title="1.3.2 添加仓库"></a>1.3.2 添加仓库</h3><pre><code class="hljs">helm repo add stable http://mirror.azure.cn/kubernetes/charts
+</code></pre>
+<h3 id="1-3-3-更新仓库"><a href="#1-3-3-更新仓库" class="headerlink" title="1.3.3 更新仓库"></a>1.3.3 更新仓库</h3><pre><code class="hljs">helm repo update
+</code></pre>
+<h3 id="1-3-4-删除仓库"><a href="#1-3-4-删除仓库" class="headerlink" title="1.3.4 删除仓库"></a>1.3.4 删除仓库</h3><pre><code class="hljs">helm repo remove stable
+</code></pre>
+<h2 id="1-4-安装chart"><a href="#1-4-安装chart" class="headerlink" title="1.4 安装chart"></a>1.4 安装chart</h2><h3 id="1-4-1-下载"><a href="#1-4-1-下载" class="headerlink" title="1.4.1 下载"></a>1.4.1 下载</h3><h1 id="2-搭建私有仓库"><a href="#2-搭建私有仓库" class="headerlink" title="2.搭建私有仓库"></a>2.搭建私有仓库</h1><h2 id="2-1-安装nginx"><a href="#2-1-安装nginx" class="headerlink" title="2.1 安装nginx"></a>2.1 安装nginx</h2><pre><code class="hljs">sudo mkdir -p /web/helm/charts
+sudo vi /etc/nginx/conf.d/helm.conf
+
+
+server &#123;
+
+  listen       80;
+  server_name  localhost;
+
+  location /charts &#123;
+
+    root  /web/helm;
+    autoindex on;
+    charset utf-8;
+    autoindex_exact_size off;
+    autoindex_localtime on;
+
+    access_log  /var/log/nginx/helm_access.log  main;
+    error_log  /var/log/nginx/helm_error.log;
+
+  &#125;
+&#125;
+</code></pre>
+<h2 id="2-2-创建helm应用并打包"><a href="#2-2-创建helm应用并打包" class="headerlink" title="2.2 创建helm应用并打包"></a>2.2 创建helm应用并打包</h2><pre><code class="hljs">helm create nginx
+helm package nginx
+</code></pre>
+<h2 id="2-3-生成charts库index文件"><a href="#2-3-生成charts库index文件" class="headerlink" title="2.3 生成charts库index文件"></a>2.3 生成charts库index文件</h2><pre><code class="hljs">mkdir swordhub
+mv nginx-0.1.0.tgz swordhub/
+helm repo index swordhub/ --url http://engine.sword.org/charts
+</code></pre>
+<h2 id="2-4-charts库文件上传"><a href="#2-4-charts库文件上传" class="headerlink" title="2.4 charts库文件上传"></a>2.4 charts库文件上传</h2><pre><code class="hljs">sudo cp swordhub/* /web/helm/charts
+</code></pre>
+<h2 id="2-5-helm添加私有仓库swordhub"><a href="#2-5-helm添加私有仓库swordhub" class="headerlink" title="2.5 helm添加私有仓库swordhub"></a>2.5 helm添加私有仓库swordhub</h2><pre><code class="hljs">helm repo add swordhub http://engine.sword.org/charts
+</code></pre>
+<h2 id="2-6-验证私有库中swordhub"><a href="#2-6-验证私有库中swordhub" class="headerlink" title="2.6 验证私有库中swordhub"></a>2.6 验证私有库中swordhub</h2><pre><code class="hljs">helm install test swordhub/nginx --namespace test
+</code></pre>
+<h1 id="3-chart应用编排"><a href="#3-chart应用编排" class="headerlink" title="3.chart应用编排"></a>3.chart应用编排</h1><hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/u_13760351/2898442">https://blog.51cto.com/u_13760351/2898442</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lvzhenjiang/p/14878279.html">https://www.cnblogs.com/lvzhenjiang/p/14878279.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u011127242/article/details/118197361">https://blog.csdn.net/u011127242/article/details/118197361</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35745940/article/details/120693245">https://blog.csdn.net/qq_35745940/article/details/120693245</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/Kubernetes/">#Kubernetes</a>
+      
+        <a href="/hexo/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+      
+        <a href="/hexo/tags/Helm/">#Helm</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kubernetes集群Helm工具详解</div>
+      <div>https://css.ss-ss.top/hexo/2023/04/20/Kubernetes集群Helm工具详解/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月20日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2023/05/18/Jenkins%E5%9F%BA%E4%BA%8EKubernetes%E6%90%AD%E5%BB%BAHexo%E5%8D%9A%E5%AE%A2CICD%E5%B9%B3%E5%8F%B0/" title="Jenkins基于Kubernetes搭建Hexo博客CICD平台">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Jenkins基于Kubernetes搭建Hexo博客CICD平台</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2023/04/18/Jenkins%E5%9F%BA%E4%BA%8EKubernetes%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE%E5%8A%A8%E6%80%81agent%E8%8A%82%E7%82%B9/" title="Jenkins基于Kubernetes集群配置动态agent节点">
+                        <span class="hidden-mobile">Jenkins基于Kubernetes集群配置动态agent节点</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

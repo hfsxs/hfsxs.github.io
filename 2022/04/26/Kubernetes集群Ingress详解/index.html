@@ -1,0 +1,793 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Ingress，即路由，是Kubernetes集群管理外部访问流量的路由规则，作为集群内部service对外暴露的访问接入点，几乎承载着集群内服务访问的所有流量。ingress为集群提供七层负载均衡、SSL安全连接和基于虚拟主机的反向代理功能，弥补了service的不足。通过配置不同的转发规则，将不同URL的外部访问请求转发到集群内部不同的Service，从而实现了HTTP层的业务路由机制，流量路">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes集群Ingress详解">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2022/04/26/Kubernetes%E9%9B%86%E7%BE%A4Ingress%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="Ingress，即路由，是Kubernetes集群管理外部访问流量的路由规则，作为集群内部service对外暴露的访问接入点，几乎承载着集群内服务访问的所有流量。ingress为集群提供七层负载均衡、SSL安全连接和基于虚拟主机的反向代理功能，弥补了service的不足。通过配置不同的转发规则，将不同URL的外部访问请求转发到集群内部不同的Service，从而实现了HTTP层的业务路由机制，流量路">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-26T10:03:33.000Z">
+<meta property="article:modified_time" content="2023-12-31T12:59:38.602Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="容器云">
+<meta property="article:tag" content="云原生">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Kubernetes集群Ingress详解 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Kubernetes集群Ingress详解</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-04-26 18:03" pubdate>
+          2022年4月26日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          40 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kubernetes集群Ingress详解</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Ingress，即路由，是Kubernetes集群管理外部访问流量的路由规则，作为集群内部service对外暴露的访问接入点，几乎承载着集群内服务访问的所有流量。ingress为集群提供七层负载均衡、SSL安全连接和基于虚拟主机的反向代理功能，弥补了service的不足。通过配置不同的转发规则，将不同URL的外部访问请求转发到集群内部不同的Service，从而实现了HTTP层的业务路由机制，流量路由由Ingress资源上定义的规则控制</p>
+<hr>
+<h1 id="功能组件"><a href="#功能组件" class="headerlink" title="功能组件"></a>功能组件</h1><ul>
+<li><p>Ingress Controller，即Ingress控制器，部署于集群内具体实现反向代理（即负载均衡）的程序，实现七层转发的Edge Router，通过调用apiserver组件动态感知集群中pod的变化而动态更新配置文件并重载。通常以DaemonSets或Deployments的形式部署，DaemonSets部署方式一般是以hostNetwork或者hostPort的形式暴露，Deployments部署形式以NodePort的方式暴露，控制器的多个节点则借助外部负载均衡ExternalLB以实现统一接入。常用的控制器有Nginx、HAProxy、Istio、Traefik ，当前Kubernetes官方维护的是Nginx Ingress Controller</p>
+</li>
+<li><p>Ingress资源对象，即创建具体的转发到service的配置规则</p>
+</li>
+</ul>
+<hr>
+<h1 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h1><h2 id="1-创建ingress对象"><a href="#1-创建ingress对象" class="headerlink" title="1.创建ingress对象"></a>1.创建ingress对象</h2><p>集群用户向API Server提交ingress创建请求，定义域名与service的对应关系</p>
+<h2 id="2-解析负载均衡规则"><a href="#2-解析负载均衡规则" class="headerlink" title="2.解析负载均衡规则"></a>2.解析负载均衡规则</h2><p>ingress-controller通过和kubernetes APIServer交互，监测到到集群中ingress规则的变更，按照用户提交的规则生成负载均衡配置</p>
+<h2 id="3-加载负载均衡配置"><a href="#3-加载负载均衡配置" class="headerlink" title="3.加载负载均衡配置"></a>3.加载负载均衡配置</h2><p>ingress-controller运行的负载均衡器（nginx、haproxy）加载负载均衡配置到配置文件，并动态更新</p>
+<h2 id="4-转发请求流量"><a href="#4-转发请求流量" class="headerlink" title="4. 转发请求流量"></a>4. 转发请求流量</h2><p>外部流量访问域名，ingress-controller将请求直接转发到Service对应的后端Endpoint，不经过kube-proxy的转发， 此时控制器相当于是边缘路由器的功能</p>
+<h1 id="工作模式"><a href="#工作模式" class="headerlink" title="工作模式"></a>工作模式</h1><h2 id="1-LoadBalancer模式"><a href="#1-LoadBalancer模式" class="headerlink" title="1.LoadBalancer模式"></a>1.LoadBalancer模式</h2><p>用于公有云环境，Deployment部署ingress-controller，service type设为LoadBalancer，再为service自动创建绑定了公网IP的负载均衡器，只需将域名解析到负载均衡器的公网IP即可实现集群服务的对外暴露</p>
+<h2 id="2-NodePort模式"><a href="#2-NodePort模式" class="headerlink" title="2.NodePort模式"></a>2.NodePort模式</h2><p>Deployment部署ingres-controller，service type设为NodePort，由于nodeport暴露的端口是随机分配，一般再搭建一套负载均衡器用于流量转发。此模式需为NodePort新增一层NAT，请求量级很大时性能会有一定影响</p>
+<h2 id="3-HostNetwork模式"><a href="#3-HostNetwork模式" class="headerlink" title="3.HostNetwork模式"></a>3.HostNetwork模式</h2><p>DaemonSet部署ingress-controller，pod网络模式设为HostNetwork，与node节点的网络打通，直接使用宿主机的80&#x2F;433端口访问，ingress-controller所在node节点类似于传统架构的边缘节点，如机房入口的nginx服务器。此模式整个请求链路最为简单，性能相对更好，适用于大并发量环境。由于直接绑定node节点的端口，故此每个node只能部署一个ingress-controller pod</p>
+<hr>
+<h1 id="1-下载Nginx-Ingress-Controller资源配置文件"><a href="#1-下载Nginx-Ingress-Controller资源配置文件" class="headerlink" title="1.下载Nginx Ingress Controller资源配置文件"></a>1.下载Nginx Ingress Controller资源配置文件</h1><pre><code class="hljs">wget -O ingress-nginx-deploy.yaml https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.2.1/deploy/static/provider/cloud/deploy.yaml
+</code></pre>
+<h1 id="2-部署Nginx-Ingress-Controller"><a href="#2-部署Nginx-Ingress-Controller" class="headerlink" title="2.部署Nginx Ingress Controller"></a>2.部署Nginx Ingress Controller</h1><h2 id="2-1-NodePort模式"><a href="#2-1-NodePort模式" class="headerlink" title="2.1 NodePort模式"></a>2.1 NodePort模式</h2><h3 id="2-1-1-配置service"><a href="#2-1-1-配置service" class="headerlink" title="2.1.1 配置service"></a>2.1.1 配置service</h3><pre><code class="hljs">vi ingress-nginx-deploy.yaml
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+    app.kubernetes.io/part-of: ingress-nginx
+    app.kubernetes.io/version: 1.2.1
+  name: ingress-nginx-controller
+  namespace: ingress-nginx
+spec:
+  externalTrafficPolicy: Local
+  ports:
+  - appProtocol: http
+    name: http
+    port: 80
+    # 设置绑定到节点的端口号
+    # nodePort: 32080
+    protocol: TCP
+    targetPort: http
+  - appProtocol: https
+    name: https
+    port: 443
+    # 设置绑定到节点的端口号
+    # nodePort: 32443
+    protocol: TCP
+    targetPort: https
+  selector:
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: ingress-nginx
+    app.kubernetes.io/name: ingress-nginx
+  # 修改为NodePort类型
+  type: NodePort
+</code></pre>
+<h3 id="2-1-2-部署ingress-controller"><a href="#2-1-2-部署ingress-controller" class="headerlink" title="2.1.2 部署ingress-controller"></a>2.1.2 部署ingress-controller</h3><pre><code class="hljs">kubectl apply -f ingress-nginx-deploy.yaml
+</code></pre>
+<h3 id="2-1-3-验证ingress-controller"><a href="#2-1-3-验证ingress-controller" class="headerlink" title="2.1.3 验证ingress-controller"></a>2.1.3 验证ingress-controller</h3><pre><code class="hljs">kubectl -n ingress-nginx get pod -o wide
+kubectl -n ingress-nginx get service
+kubectl -n ingress-nginx get ingressclasses
+</code></pre>
+<h3 id="2-1-4-创建ingress"><a href="#2-1-4-创建ingress" class="headerlink" title="2.1.4 创建ingress"></a>2.1.4 创建ingress</h3><pre><code class="hljs">vi nginx-ingress.yaml
+
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  namespace: default
+spec:
+  # 设置Ingress控制器名称
+  ingressClassName: nginx
+  # 设置ingress主机规则列表，若未指定或无规则匹配，则所有流量都将发送到默认后端
+  rules:
+  # 设置虚拟主机域名
+  - host: worker01
+    # 设置网络协议http/https
+    http:
+      # 设置转发路径集合
+      paths:
+      - path: /
+        # 设置路径匹配规则，Prefix表示基于URL路径前缀按/分割匹配且区分大小写，并按路径元素，即路径中由/分隔符分割的标签列表，逐个匹配；Exact表示精确匹配且区分大小写         
+        pathType: Prefix
+        # 设置流量转发的后端endpoint
+        backend:
+          service:
+            # 设置后端关联的service
+            name: nginx-service
+            # 设置service的端口
+            port: 
+              number: 80
+      - path: /test
+        # 设置路径匹配规则，Prefix表示基于URL路径前缀按/分割匹配且区分大小写，并按路径元素，即路径中由/分隔符分割的标签列表，逐个匹配；Exact表示精确匹配且区分大小写         
+        pathType: Prefix
+        # 设置流量转发的后端endpoint
+        backend:
+          service:
+            # 设置后端关联的service
+            name: nginx-service
+            # 设置service的端口
+            port: 
+              number: 80
+</code></pre>
+<h3 id="2-1-5-部署ingress，访问ingress验证转发规则"><a href="#2-1-5-部署ingress，访问ingress验证转发规则" class="headerlink" title="2.1.5 部署ingress，访问ingress验证转发规则"></a>2.1.5 部署ingress，访问ingress验证转发规则</h3><pre><code class="hljs">kubectl apply -f nginx-ingress.yaml
+</code></pre>
+<h2 id="2-2-HostNetwork模式"><a href="#2-2-HostNetwork模式" class="headerlink" title="2.2 HostNetwork模式"></a>2.2 HostNetwork模式</h2><h3 id="2-2-1-配置网络模式"><a href="#2-2-1-配置网络模式" class="headerlink" title="2.2.1 配置网络模式"></a>2.2.1 配置网络模式</h3><pre><code class="hljs">vi ingress-nginx-deploy.yaml
+
+# 设置ingress-controller的service type为ClusterIP
+type: ClusterIP
+---
+apiVersion: apps/v1
+# 设置ngress-controller部署为DaemonSet
+kind: DaemonSet
+  # 设置ingress-controller dnsPolicy 
+  dnsPolicy: ClusterFirstWithHostNet
+  # 设置ngress-controller网络模式
+  hostNetwork: true
+</code></pre>
+<h3 id="2-2-2-部署ingress-controller"><a href="#2-2-2-部署ingress-controller" class="headerlink" title="2.2.2 部署ingress-controller"></a>2.2.2 部署ingress-controller</h3><pre><code class="hljs">kubectl apply -f ingress-nginx-deploy.yaml
+</code></pre>
+<h3 id="2-2-3-验证ingress-controller"><a href="#2-2-3-验证ingress-controller" class="headerlink" title="2.2.3 验证ingress-controller"></a>2.2.3 验证ingress-controller</h3><pre><code class="hljs">kubectl -n ingress-nginx get pod -o wide
+kubectl -n ingress-nginx get service
+kubectl -n ingress-nginx get ingressclasses
+</code></pre>
+<h3 id="2-2-4-创建ingress"><a href="#2-2-4-创建ingress" class="headerlink" title="2.2.4 创建ingress"></a>2.2.4 创建ingress</h3><pre><code class="hljs">vi nginx-ingress.yaml
+
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  namespace: default
+spec:
+  # 设置Ingress控制器名称
+  ingressClassName: nginx
+  # 设置ingress主机规则列表，若未指定或无规则匹配，则所有流量都将发送到默认后端
+  rules:
+  # 设置虚拟主机域名
+  - host: worker01
+    # 设置网络协议http/https
+    http:
+      # 设置转发路径集合
+      paths:
+      - path: /
+        # 设置路径匹配规则，Prefix表示基于URL路径前缀按/分割匹配且区分大小写，并按路径元素，即路径中由/分隔符分割的标签列表，逐个匹配；Exact表示精确匹配且区分大小写         
+        pathType: Prefix
+        # 设置流量转发的后端endpoint
+        backend:
+          service:
+            # 设置后端关联的service
+            name: nginx-service
+            # 设置service的端口
+            port: 
+              number: 80   
+  # 设置虚拟主机域名
+  - host: worker02
+    # 设置网络协议http/https
+    http:
+      # 设置转发路径集合
+      paths:
+      - path: /
+        # 设置路径匹配规则，Prefix表示基于URL路径前缀按/分割匹配且区分大小写，并按路径元素，即路径中由/分隔符分割的标签列表，逐个匹配；Exact表示精确匹配且区分大小写         
+        pathType: Prefix
+        # 设置流量转发的后端endpoint
+        backend:
+          service:
+            # 设置后端关联的service
+            name: nginx-service
+            # 设置service的端口
+            port: 
+              number: 80
+</code></pre>
+<h3 id="2-2-5-部署ingress，访问ingress验证转发规则"><a href="#2-2-5-部署ingress，访问ingress验证转发规则" class="headerlink" title="2.2.5 部署ingress，访问ingress验证转发规则"></a>2.2.5 部署ingress，访问ingress验证转发规则</h3><pre><code class="hljs">kubectl apply -f nginx-ingress.yaml
+</code></pre>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/MssGuo/article/details/123414161">https://blog.csdn.net/MssGuo/article/details/123414161</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/supahero/article/details/121476304">https://blog.csdn.net/supahero/article/details/121476304</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41582883/article/details/114003552">https://blog.csdn.net/qq_41582883/article/details/114003552</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Yusheng9527/article/details/124140541">https://blog.csdn.net/Yusheng9527/article/details/124140541</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/Kubernetes/">#Kubernetes</a>
+      
+        <a href="/hexo/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kubernetes集群Ingress详解</div>
+      <div>https://css.ss-ss.top/hexo/2022/04/26/Kubernetes集群Ingress详解/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年4月26日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2022/08/15/oVirt%E8%99%9A%E6%8B%9F%E5%8C%96%E7%AE%A1%E7%90%86%E5%B9%B3%E5%8F%B0%E7%9A%84%E9%83%A8%E7%BD%B2%E4%B8%8E%E9%85%8D%E7%BD%AE/" title="oVirt虚拟化管理平台的部署与配置">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">oVirt虚拟化管理平台的部署与配置</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2022/03/31/Kubernetes%E9%9B%86%E7%BE%A4%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6%E6%9C%BA%E5%88%B6%E8%AF%A6%E8%A7%A3/" title="Kubernetes集群访问控制机制详解">
+                        <span class="hidden-mobile">Kubernetes集群访问控制机制详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,703 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="kubernetes集群默认配置已足够满足常见的中小规模的业务场景，但仍然建议将生产环境集群各组件的参数及系统内核参数进行适当的调整与优化，以应对高并发高负载的场景，提高集群运行的稳定性和故障切换能力，保障业务的连续性与稳定性 1.系统参数配置sudo vi &#x2F;etc&#x2F;sysctl.conf   # 设置系统级别文件句柄打开的最大数量，用于解决Too many open files和Socket&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes集群性能优化策略">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2024/02/20/Kubernetes%E9%9B%86%E7%BE%A4%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E7%AD%96%E7%95%A5/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="kubernetes集群默认配置已足够满足常见的中小规模的业务场景，但仍然建议将生产环境集群各组件的参数及系统内核参数进行适当的调整与优化，以应对高并发高负载的场景，提高集群运行的稳定性和故障切换能力，保障业务的连续性与稳定性 1.系统参数配置sudo vi &#x2F;etc&#x2F;sysctl.conf   # 设置系统级别文件句柄打开的最大数量，用于解决Too many open files和Socket&#x2F;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-02-20T09:05:51.000Z">
+<meta property="article:modified_time" content="2024-03-22T07:23:20.671Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="容器云">
+<meta property="article:tag" content="云原生">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Kubernetes集群性能优化策略 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Kubernetes集群性能优化策略</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-02-20 17:05" pubdate>
+          2024年2月20日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          27 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kubernetes集群性能优化策略</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>kubernetes集群默认配置已足够满足常见的中小规模的业务场景，但仍然建议将生产环境集群各组件的参数及系统内核参数进行适当的调整与优化，以应对高并发高负载的场景，提高集群运行的稳定性和故障切换能力，保障业务的连续性与稳定性</p>
+<h1 id="1-系统参数配置"><a href="#1-系统参数配置" class="headerlink" title="1.系统参数配置"></a>1.系统参数配置</h1><pre><code class="hljs">sudo vi /etc/sysctl.conf
+
+
+# 设置系统级别文件句柄打开的最大数量，用于解决Too many open files和Socket/File: Can’t open so many files报错
+fs.file-max = 1000000
+# 设置单个用户ID可创建的inotify instatnces最大量，默认为128
+fs.inotify.max_user_instances = 524288
+# 设置每个inotify instance相关联的watches，默认为8192
+fs.inotify.max_user_watches = 524288
+
+# 设置内核允许的最大跟踪连接条目，即netfilter同时处理的任务数
+net.netfilter.nf_conntrack_max = 10485760
+# 设置内核netfilter处理tcp会话的超时时间，默认为432000，即5天
+net.netfilter.nf_conntrack_tcp_timeout_established = 300
+# 设置内核netfilter哈希表的大小，64位CPU8G内存默认为65536，以此类推
+net.netfilter.nf_conntrack_buckets = 655360
+# 设置每个网卡缓存报文的最大量，默认为1000，适用于网卡负载高于内核处理速度的场景，防止网络丢包
+net.core.netdev_max_backlog = 10000
+
+# 设置ARP高速缓存垃圾收集器的运行阈值，即层数超过该值则运行，默认为128，适用于内核维护的arp表过于庞大的场景
+# net.ipv4.neigh.default.gc_thresh1 = 1024
+# 设置ARP高速缓存垃圾收集器的软限制，即超过此阈值等待5秒开始运行垃圾收集器，默认为512，适用于内核维护的arp表过于庞大的场景
+# net.ipv4.neigh.default.gc_thresh2 = 4096
+# 设置ARP高速缓存垃圾收集器的硬限制，即超过此阈值立即开始运行垃圾收集器，默认为1024，适用于内核维护的arp表过于庞大的场景
+# net.ipv4.neigh.default.gc_thresh3 = 8192
+</code></pre>
+<h1 id="2-Etcd参数配置"><a href="#2-Etcd参数配置" class="headerlink" title="2.Etcd参数配置"></a>2.Etcd参数配置</h1><h2 id="2-1-存储配额"><a href="#2-1-存储配额" class="headerlink" title="2.1 存储配额"></a>2.1 存储配额</h2><p>Etcd数据库默认磁盘空间配额大小为2G，超过将不会再写入数据，–quota-backend-bytes配置项用于设置配额，最大支持8G</p>
+<pre><code class="hljs">--quota-backend-bytes 8589934592 
+</code></pre>
+<h2 id="2-2-进程优先级"><a href="#2-2-进程优先级" class="headerlink" title="2.2 进程优先级"></a>2.2 进程优先级</h2><p>Etcd数据库写入数据时，为规避其他进程磁盘IO的影响，防止请求超时和临时Leader的丢失，建议设置etcd进程的IO调度优先级，以保集群的障稳定性</p>
+<pre><code class="hljs">sudo ionice -c2 -n0 -p $(pgrep etcd) 
+</code></pre>
+<h2 id="2-3-请求数据"><a href="#2-3-请求数据" class="headerlink" title="2.3 请求数据"></a>2.3 请求数据</h2><p>Etcd数据库被设计用于元数据的小键值对的处理，数据量较大的请求可能会引发请求延迟，请求的数据量默认被限制为1.5MiB，可通过配置项–max-request-bytesetcd进行设置</p>
+<h2 id="2-4-历史记录压缩"><a href="#2-4-历史记录压缩" class="headerlink" title="2.4 历史记录压缩"></a>2.4 历史记录压缩</h2><p>ETCD数据库中存储有多个版本数据，随着写入的主键增加，历史版本将会越来越多，且不会自动清理，可通过压缩与清理历史数据进行优化</p>
+<pre><code class="hljs">--auto-compaction-mode
+--auto-compaction-retention
+</code></pre>
+<h2 id="2-5-operator-etcd集群"><a href="#2-5-operator-etcd集群" class="headerlink" title="2.5 operator etcd集群"></a>2.5 operator etcd集群</h2><p>operator是CoreOS推出的旨在简化复杂有状态应用管理的框架，动态地感知应用状态的控制器，可以更加自动化智能化地管理与维护Etcd集群</p>
+<h1 id="3-kubelet组件配置"><a href="#3-kubelet组件配置" class="headerlink" title="3.kubelet组件配置"></a>3.kubelet组件配置</h1><h2 id="3-1-设置并发度"><a href="#3-1-设置并发度" class="headerlink" title="3.1 设置并发度"></a>3.1 设置并发度</h2><p>kubelet默认情况下以串行方式拉取镜像，可将配置项–serialize-image-pulls设为false，改成并行方式，以提高镜像镜像速度，适用于docker daemon版本高于1.9，且未配置aufs存储的场景</p>
+<pre><code class="hljs">--serialize-image-pulls=false
+</code></pre>
+<h2 id="3-2-限制镜像拉取时长"><a href="#3-2-限制镜像拉取时长" class="headerlink" title="3.2 限制镜像拉取时长"></a>3.2 限制镜像拉取时长</h2><p>image-pull-progress-deadline配置项用于设置镜像拉取的超时时长，默认为1分钟，可进行调整以优化镜像拉取速度</p>
+<pre><code class="hljs">--image-pull-progress-deadline=30
+</code></pre>
+<h2 id="3-3-限制单节点运行的Pod量"><a href="#3-3-限制单节点运行的Pod量" class="headerlink" title="3.3 限制单节点运行的Pod量"></a>3.3 限制单节点运行的Pod量</h2><p>kubelet单节点允许运行的最大Pod数默认为110，可根据实际需要进行调整</p>
+<pre><code class="hljs">--max-pods=110
+</code></pre>
+<h1 id="4-ApiServer组件配置"><a href="#4-ApiServer组件配置" class="headerlink" title="4.ApiServer组件配置"></a>4.ApiServer组件配置</h1><h2 id="4-1-参数配置"><a href="#4-1-参数配置" class="headerlink" title="4.1 参数配置"></a>4.1 参数配置</h2><pre><code class="hljs"># 设置单位时间内最大非修改型请求数，即读操作数，默认为400
+--max-requests-inflight
+# 设置单位时间内最大修改型请求数，即写操作数，默认为200
+--max-mutating-requests-inflight
+# 设置集群资源的watch缓存，默认为100，资源数量较多时可相应增加
+--watch-cache-sizes
+</code></pre>
+<ul>
+<li>注：读&#x2F;写最大请求量的设置建议按照集群Node节点的数量进行配置，节点数大于3000，则配置为3000&#x2F;1000；节点数大于1000小于3000，则配置为1500&#x2F;500</li>
+</ul>
+<h2 id="4-2-内存配额"><a href="#4-2-内存配额" class="headerlink" title="4.2 内存配额"></a>4.2 内存配额</h2><pre><code class="hljs"># 设置ApiServer程序所占内存，建议按照公式进行配置
+--target-ram-mb=node_nums * 60
+</code></pre>
+<h1 id="5-ControllerManager组件配置"><a href="#5-ControllerManager组件配置" class="headerlink" title="5.ControllerManager组件配置"></a>5.ControllerManager组件配置</h1><h2 id="5-1-参数配置"><a href="#5-1-参数配置" class="headerlink" title="5.1 参数配置"></a>5.1 参数配置</h2><pre><code class="hljs"># 设置Node节点健康检查时间间隔，默认为5s
+--node-monitor-period
+# 设置Node节点健康检查超时时长，超过即将进入ConditionUnknown状态，默认为40s
+--node-monitor-grace-period
+# 设置Node节点处于NotReady状态后开始驱逐Pod的超时时长，默认为5m
+--pod-eviction-timeout
+# 设置集群规模判断依据，默认为50，即50个节点以上的集群为大集群
+--large-cluster-size-threshold 
+# 设置集群故障节点数超限率，默认为55%
+--unhealthy-zone-threshold
+# 设置Node节点Pod驱逐操作的频率，默认0.1个/s，即每10s最多驱逐某一个节点的Pod，以减缓Master节点故障导致大批量的Node节点异常驱逐
+--node-eviction-rate
+# 设置集群节点故障率超限后的Pod驱逐操作的频率，大集群超限后将会降为0.001，小集群则直接停止驱逐
+--secondary-node-eviction-rate
+</code></pre>
+<h2 id="5-2-ApiServer通信限制"><a href="#5-2-ApiServer通信限制" class="headerlink" title="5.2 ApiServer通信限制"></a>5.2 ApiServer通信限制</h2><pre><code class="hljs"># 设置ApiServer组件会话QPS，默认为20
+--kube-api-qps=100
+# 设置ApiServer组件会话并发数，默认为30
+--kube-api-burst=150
+</code></pre>
+<h1 id="6-Scheduler组件配置"><a href="#6-Scheduler组件配置" class="headerlink" title="6.Scheduler组件配置"></a>6.Scheduler组件配置</h1><h2 id="6-1-设置调度策略文件"><a href="#6-1-设置调度策略文件" class="headerlink" title="6.1 设置调度策略文件"></a>6.1 设置调度策略文件</h2><pre><code class="hljs"># 设置调度策略json文件，不指定则表示默认的调度策略
+--policy-config-file 
+</code></pre>
+<h2 id="6-2-ApiServer通信限制"><a href="#6-2-ApiServer通信限制" class="headerlink" title="6.2 ApiServer通信限制"></a>6.2 ApiServer通信限制</h2><pre><code class="hljs">--kube-api-qps=100
+--kube-api-burst=150
+</code></pre>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ywq935/article/details/103124541">https://blog.csdn.net/ywq935/article/details/103124541</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/tgzh123/article/details/134857593">https://blog.csdn.net/tgzh123/article/details/134857593</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ver_mouth__/article/details/126120802">https://blog.csdn.net/ver_mouth__/article/details/126120802</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/Kubernetes/">#Kubernetes</a>
+      
+        <a href="/hexo/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kubernetes集群性能优化策略</div>
+      <div>https://css.ss-ss.top/hexo/2024/02/20/Kubernetes集群性能优化策略/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年2月20日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2024/02/29/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" title="MySQL数据库性能调优">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">MySQL数据库性能调优</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2024/02/18/Ansible%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4%E5%B7%A5%E5%85%B7%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/" title="Ansible自动化运维工具性能调优">
+                        <span class="hidden-mobile">Ansible自动化运维工具性能调优</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,776 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="docker Repository，即镜像仓库，用于镜像的集中存放与管理。一般的，仓库和仓库注册服务器（Registry）不做区分。实际上，仓库注册服务器是管理仓库的具体服务器，其中往往存放着多个仓库，每个仓库中又包含了多个镜像，每个镜像有不同的标签（tag）仓库可以被认为是一个具体的项目或目录，如仓库地址hub.docker&#x2F;nginx，hub.docker是注册服务器地址，nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker镜像仓库管理">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2020/04/03/Docker%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93%E7%AE%A1%E7%90%86/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="docker Repository，即镜像仓库，用于镜像的集中存放与管理。一般的，仓库和仓库注册服务器（Registry）不做区分。实际上，仓库注册服务器是管理仓库的具体服务器，其中往往存放着多个仓库，每个仓库中又包含了多个镜像，每个镜像有不同的标签（tag）仓库可以被认为是一个具体的项目或目录，如仓库地址hub.docker&#x2F;nginx，hub.docker是注册服务器地址，nginx">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-04-03T15:15:31.000Z">
+<meta property="article:modified_time" content="2023-12-31T12:59:38.527Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="容器">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Docker镜像仓库管理 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Docker镜像仓库管理</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-04-03 23:15" pubdate>
+          2020年4月3日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          36 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Docker镜像仓库管理</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>docker Repository，即镜像仓库，用于镜像的集中存放与管理。一般的，仓库和仓库注册服务器（Registry）不做区分。实际上，仓库注册服务器是管理仓库的具体服务器，其中往往存放着多个仓库，每个仓库中又包含了多个镜像，每个镜像有不同的标签（tag）仓库可以被认为是一个具体的项目或目录，如仓库地址hub.docker&#x2F;nginx，hub.docker是注册服务器地址，nginx是仓库名</p>
+<hr>
+<h1 id="仓库分类"><a href="#仓库分类" class="headerlink" title="仓库分类"></a>仓库分类</h1><ul>
+<li><p>公共仓库，即Public Registry，最大的公共仓库是Docker Hub，由docker官方维护，存放了数量庞大的镜像供用户下载，通过docker login命令，输入用户名、密码和邮箱来完成注册和登录，本地用户目录的.dockercfg中将保存用户的认证信息</p>
+</li>
+<li><p>私有仓库，即Private Registry，是本地服务器所建的镜像仓库。私有仓库的创建有两种方式，即docker-registry和harbor，前者是官方提供的工具，安装了docker之后直接pull即可；后者是开源工具，Github可下载</p>
+</li>
+</ul>
+<h1 id="registry搭建私有仓库"><a href="#registry搭建私有仓库" class="headerlink" title="registry搭建私有仓库"></a>registry搭建私有仓库</h1><h2 id="1-拉取官方镜像"><a href="#1-拉取官方镜像" class="headerlink" title="1.拉取官方镜像"></a>1.拉取官方镜像</h2><pre><code class="hljs">docker pull registry
+</code></pre>
+<h2 id="2-创建并启动registry容器"><a href="#2-创建并启动registry容器" class="headerlink" title="2.创建并启动registry容器"></a>2.创建并启动registry容器</h2><pre><code class="hljs">docker run -p 5000:5000 -d --restart=always \
+-v /var/lib/docker/images:/var/lib/registry \
+--name sword-registry registry
+</code></pre>
+<h2 id="3-http方式测试镜像仓库"><a href="#3-http方式测试镜像仓库" class="headerlink" title="3.http方式测试镜像仓库"></a>3.http方式测试镜像仓库</h2><h3 id="3-1-配置docker镜像仓库拉取策略"><a href="#3-1-配置docker镜像仓库拉取策略" class="headerlink" title="3.1 配置docker镜像仓库拉取策略"></a>3.1 配置docker镜像仓库拉取策略</h3><pre><code class="hljs">sudo vi /etc/docker/daemon.json
+
+
+&#123;
+ &quot;insecure-registries&quot;:[&quot;172.16.100.100:5000&quot;]
+&#125;
+
+# 重启docker程序
+systemctl restart docker
+</code></pre>
+<h3 id="3-2-镜像推送私有仓库"><a href="#3-2-镜像推送私有仓库" class="headerlink" title="3.2 镜像推送私有仓库"></a>3.2 镜像推送私有仓库</h3><pre><code class="hljs"># 更改nginx镜像标签
+docker tag nginx:latest 172.16.100.100:5000/nginx:v1.0.0
+# 推送到私有仓库
+docker push 172.16.100.100:5000/nginx:v1.0.0
+</code></pre>
+<h3 id="3-3-查看私有仓库存放的镜像"><a href="#3-3-查看私有仓库存放的镜像" class="headerlink" title="3.3 查看私有仓库存放的镜像"></a>3.3 查看私有仓库存放的镜像</h3><pre><code class="hljs"># 显示所有镜像
+curl http://172.16.100.100:5000/v2/_catalog
+# 显示nginx镜像的标签
+curl http://172.16.100.100:5000/v2/nginx/tags/list
+</code></pre>
+<h3 id="3-4-从私有仓库拉取镜像"><a href="#3-4-从私有仓库拉取镜像" class="headerlink" title="3.4 从私有仓库拉取镜像"></a>3.4 从私有仓库拉取镜像</h3><pre><code class="hljs"># 删除本地nginx镜像
+docker rmi 172.16.100.100:5000/nginx:v1.0.0
+# 从私有仓库拉取nginx镜像
+docker pull 172.16.100.100:5000/nginx
+</code></pre>
+<hr>
+<ul>
+<li>注：docker连接仓库默认通过安全的https协议连接，http连接用于测试场景</li>
+</ul>
+<h2 id="4-创建SSL自签名证书"><a href="#4-创建SSL自签名证书" class="headerlink" title="4.创建SSL自签名证书"></a>4.创建SSL自签名证书</h2><h3 id="4-1-创建RSA密钥"><a href="#4-1-创建RSA密钥" class="headerlink" title="4.1 创建RSA密钥"></a>4.1 创建RSA密钥</h3><pre><code class="hljs">openssl genrsa -des3 -out registry.key 2048
+</code></pre>
+<h3 id="4-2-创建CSR，即证书签名请求文件"><a href="#4-2-创建CSR，即证书签名请求文件" class="headerlink" title="4.2 创建CSR，即证书签名请求文件"></a>4.2 创建CSR，即证书签名请求文件</h3><pre><code class="hljs">openssl req -new -key registry.key \
+-subj &quot;/C=CN/ST=HeNan/L=ShangQiu/O=Sword/OU=Opt/CN=registry.sword.org&quot; \
+-out registry.csr
+</code></pre>
+<h3 id="4-3-生成自签名证书"><a href="#4-3-生成自签名证书" class="headerlink" title="4.3 生成自签名证书"></a>4.3 生成自签名证书</h3><pre><code class="hljs">openssl x509 -req -days 3650 -in registry.csr -signkey registry.key -out registry.crt
+
+# 退掉密码
+mv registry.key registry.bak.key
+openssl rsa -in registry.bak.key -out registry.key
+</code></pre>
+<h2 id="5-配置nginx反向代理"><a href="#5-配置nginx反向代理" class="headerlink" title="5.配置nginx反向代理"></a>5.配置nginx反向代理</h2><pre><code class="hljs">sudo vi /etc/nginx/conf.d/registry.conf
+
+
+server &#123;
+
+    listen       443 ssl;
+    server_name  localhost;
+
+    charset utf-8;
+
+    ssl_certificate      /etc/nginx/ssl/registry.crt;
+    ssl_certificate_key  /etc/nginx/ssl/registry.key;
+
+    ssl_session_cache    shared:SSL:1m;
+    ssl_session_timeout  5m;
+
+    ssl_ciphers  ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;
+    ssl_prefer_server_ciphers  on;
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+
+    location / &#123;
+
+        # auth_basic &quot;Nginx Server Auth&quot;;
+        # auth_basic_user_file /etc/nginx/conf.d/.auth_list;
+        # limit_rate   1024k;
+
+        access_log  /var/log/nginx/registry_access.log  main;
+        error_log  /var/log/nginx/registry_error.log;
+
+        proxy_pass http://127.0.0.1:5000;
+
+        &#125;
+&#125;
+</code></pre>
+<h2 id="6-操作系统信任SSL证书"><a href="#6-操作系统信任SSL证书" class="headerlink" title="6.操作系统信任SSL证书"></a>6.操作系统信任SSL证书</h2><pre><code class="hljs"># Debian/Ubuntu
+sudo cp /etc/nginx/ssl/registry.crt /etc/ssl/certs
+# CentOS
+sudo cp /etc/nginx/ssl/registry.crt /etc/pki/tls/certs
+</code></pre>
+<h2 id="7-启动nginx，重启docker"><a href="#7-启动nginx，重启docker" class="headerlink" title="7.启动nginx，重启docker"></a>7.启动nginx，重启docker</h2><h2 id="8-验证镜像仓库"><a href="#8-验证镜像仓库" class="headerlink" title="8.验证镜像仓库"></a>8.验证镜像仓库</h2><pre><code class="hljs">sudo docker tag nginx registry.sword.org/nginx
+sudo docker push registry.sword.org/nginx
+</code></pre>
+<h2 id="9-nginx配置auth-basic，实现镜像仓库访问认证"><a href="#9-nginx配置auth-basic，实现镜像仓库访问认证" class="headerlink" title="9.nginx配置auth_basic，实现镜像仓库访问认证"></a>9.nginx配置auth_basic，实现镜像仓库访问认证</h2><hr>
+<h1 id="harbor搭建私有仓库"><a href="#harbor搭建私有仓库" class="headerlink" title="harbor搭建私有仓库"></a>harbor搭建私有仓库</h1><h2 id="1-配置仓库域名解析"><a href="#1-配置仓库域名解析" class="headerlink" title="1.配置仓库域名解析"></a>1.配置仓库域名解析</h2><pre><code class="hljs">vi /etc/hosts
+
+
+172.16.100.100	hub.sword.com
+</code></pre>
+<h2 id="2-部署docker-compose"><a href="#2-部署docker-compose" class="headerlink" title="2.部署docker-compose"></a>2.部署docker-compose</h2><pre><code class="hljs"># 下载docker-compose
+curl -L https://github.com/docker/compose/releases/download/1.25.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+
+chmod +x /usr/local/bin/docker-compose
+ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+</code></pre>
+<h2 id="3-创建https证书"><a href="#3-创建https证书" class="headerlink" title="3.创建https证书"></a>3.创建https证书</h2><pre><code class="hljs">mkdir -p /var/lib/docker/images/certs
+cd /var/lib/docker/images/certs
+</code></pre>
+<h3 id="3-1-生成私钥，需设置密码"><a href="#3-1-生成私钥，需设置密码" class="headerlink" title="3.1 生成私钥，需设置密码"></a>3.1 生成私钥，需设置密码</h3><pre><code class="hljs">openssl genrsa -des3 -out harbor.key 4096
+</code></pre>
+<h3 id="3-2-生成CA证书，需输入密码"><a href="#3-2-生成CA证书，需输入密码" class="headerlink" title="3.2 生成CA证书，需输入密码"></a>3.2 生成CA证书，需输入密码</h3><pre><code class="hljs">openssl req -sha512 -new \
+-subj &quot;/C=CN/ST=HeNan/L=ShangQiu/O=sword/OU=opt/CN=hub.sword.com&quot; \
+-key harbor.key \
+-out harbor.csr
+</code></pre>
+<h3 id="3-3-备份证书"><a href="#3-3-备份证书" class="headerlink" title="3.3 备份证书"></a>3.3 备份证书</h3><pre><code class="hljs">cp harbor.key harbor.key.org
+</code></pre>
+<h3 id="3-4-退掉私钥密码以便docker访问，也可参考官方的双向认证"><a href="#3-4-退掉私钥密码以便docker访问，也可参考官方的双向认证" class="headerlink" title="3.4 退掉私钥密码以便docker访问，也可参考官方的双向认证"></a>3.4 退掉私钥密码以便docker访问，也可参考官方的双向认证</h3><pre><code class="hljs">openssl rsa -in harbor.key.org -out harbor.key
+</code></pre>
+<h3 id="3-5-使用证书进行签名"><a href="#3-5-使用证书进行签名" class="headerlink" title="3.5 使用证书进行签名"></a>3.5 使用证书进行签名</h3><pre><code class="hljs">openssl x509 -req -days 365 -in harbor.csr -signkey harbor.key -out harbor.crt
+</code></pre>
+<h2 id="4-将https证书发送给连接仓库的docker"><a href="#4-将https证书发送给连接仓库的docker" class="headerlink" title="4.将https证书发送给连接仓库的docker"></a>4.将https证书发送给连接仓库的docker</h2><pre><code class="hljs">mkdir -p /etc/docker/certs.d/hub.sword.com
+cp /var/lib/docker/images/certs/harbor.crt /etc/docker/certs.d/hub.sword.com
+</code></pre>
+<h2 id="5-安装harbor"><a href="#5-安装harbor" class="headerlink" title="5.安装harbor"></a>5.安装harbor</h2><pre><code class="hljs">tar -xzvf harbor-offline-installer-v2.0.0.tgz
+cd harbor &amp;&amp; cp harbor.yml.tmpl harbor.yml
+</code></pre>
+<h3 id="5-1-创建配置文件"><a href="#5-1-创建配置文件" class="headerlink" title="5.1 创建配置文件"></a>5.1 创建配置文件</h3><pre><code class="hljs">vi harbor.yml
+
+
+
+# 设置仓库域名，与证书域名一致
+hostname: hub.sword.com
+# 设置证书路径
+certificate: /var/lib/docker/images/certs/harbor.crt
+private_key: /var/lib/docker/images/certs/harbor.key
+# 设置仓库登录密码，用户名默认为admin
+harbor_admin_password: Harbor12345
+# 设置镜像挂载目录
+data_volume: /var/lib/docker/images
+# 设置harbor仓库日志目录
+location: /var/log/harbor
+</code></pre>
+<h3 id="5-2-安装harbor"><a href="#5-2-安装harbor" class="headerlink" title="5.2 安装harbor"></a>5.2 安装harbor</h3><pre><code class="hljs">./install.sh
+</code></pre>
+<h2 id="6-镜像的推送与拉取"><a href="#6-镜像的推送与拉取" class="headerlink" title="6.镜像的推送与拉取"></a>6.镜像的推送与拉取</h2><pre><code class="hljs"># 登录仓库
+docker login hub.sword.com
+# 设置镜像标签，带上项目名称
+docker tag nginx hub.sword.com/library/nginx
+docker push hub.sword.com/library/nginx
+docker pull hub.sword.com/library/nginx
+</code></pre>
+<h2 id="7-harbor的启动与停止"><a href="#7-harbor的启动与停止" class="headerlink" title="7.harbor的启动与停止"></a>7.harbor的启动与停止</h2><pre><code class="hljs"># 启动harbor
+docker-compose up -d
+
+# 停止harbor
+docker-compose down
+</code></pre>
+<h2 id="8-访问镜像仓库"><a href="#8-访问镜像仓库" class="headerlink" title="8.访问镜像仓库"></a>8.访问镜像仓库</h2><p><a target="_blank" rel="noopener" href="https://hub.sword.com/">https://hub.sword.com</a></p>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhuzi91/p/12364200.html">https://www.cnblogs.com/zhuzi91/p/12364200.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/zfw_666666/article/details/128918101">https://blog.csdn.net/zfw_666666/article/details/128918101</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u013276277/article/details/102994771">https://blog.csdn.net/u013276277/article/details/102994771</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/Docker/">#Docker</a>
+      
+        <a href="/hexo/tags/%E5%AE%B9%E5%99%A8/">#容器</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Docker镜像仓库管理</div>
+      <div>https://css.ss-ss.top/hexo/2020/04/03/Docker镜像仓库管理/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年4月3日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2020/04/06/Linux%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AECron%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/" title="Linux系统配置Cron定时任务">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux系统配置Cron定时任务</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2020/03/30/Docker%E9%95%9C%E5%83%8F%E7%AE%A1%E7%90%86/" title="Docker镜像管理">
+                        <span class="hidden-mobile">Docker镜像管理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

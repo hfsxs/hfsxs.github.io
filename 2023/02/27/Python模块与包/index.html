@@ -1,0 +1,813 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Python为提高代码的维护性与复用性，引入了模块与包的概念，即通过模块将相关的代码拆分到不同的代码文件以提高代码的可维护性与逻辑性，通过包目录化的组织模块以提高代码的可维护性与层次感，通过互相调用以提高代码的复用性。Python这种内置电池的哲学思维，使得代码的编写不必要从零开始，直接导入模块或包即可完成调用，大大编程的繁复性，降低了学习门槛，促成了Python的广泛应用 模块模块，Module">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python模块与包">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2023/02/27/Python%E6%A8%A1%E5%9D%97%E4%B8%8E%E5%8C%85/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="Python为提高代码的维护性与复用性，引入了模块与包的概念，即通过模块将相关的代码拆分到不同的代码文件以提高代码的可维护性与逻辑性，通过包目录化的组织模块以提高代码的可维护性与层次感，通过互相调用以提高代码的复用性。Python这种内置电池的哲学思维，使得代码的编写不必要从零开始，直接导入模块或包即可完成调用，大大编程的繁复性，降低了学习门槛，促成了Python的广泛应用 模块模块，Module">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-02-27T04:50:23.000Z">
+<meta property="article:modified_time" content="2024-02-05T07:16:56.884Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="编程语言">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Python模块与包 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Python模块与包</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-27 12:50" pubdate>
+          2023年2月27日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          41 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python模块与包</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Python为提高代码的维护性与复用性，引入了模块与包的概念，即通过模块将相关的代码拆分到不同的代码文件以提高代码的可维护性与逻辑性，通过包目录化的组织模块以提高代码的可维护性与层次感，通过互相调用以提高代码的复用性。Python这种内置电池的哲学思维，使得代码的编写不必要从零开始，直接导入模块或包即可完成调用，大大编程的繁复性，降低了学习门槛，促成了Python的广泛应用</p>
+<h1 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h1><p>模块，Module，是一组包含Python定义和语句的文件，后缀名为.py，可被相互调用以实现其功能。模块分为内置模块、自定义模块和第三方模块：自定义模块即为自己编写的模块，可以通过申请成为Python内置的标准模块，发布到网络供他人使用即为第三方模块。</p>
+<h1 id="包"><a href="#包" class="headerlink" title="包"></a>包</h1><p>包，Package，模块的集合，是Python用于按目录分层次组织模块的方法，定义了由模块及子包，以及子包下的子包所组成的Python应用环境，是比模块又高一级的封装，采用“包名.子包名…..模块名”的调用形式，解决了模块重名的问题。包类似于文件系统的文件目录，其文件夹下必须存在__init__.py文件, 用于标识当前文件夹是一个Python包，内容可为空</p>
+<hr>
+<h1 id="1-创建模块"><a href="#1-创建模块" class="headerlink" title="1.创建模块"></a>1.创建模块</h1><p>创建模块，即为编写自定义模块，实际上就是编写一个后缀名为.py的Pyhton脚本，模块名应符合标识符命名规范</p>
+<pre><code class="hljs">vi power.py
+
+
+#!/usr/bin/python3
+
+# -*- coding: utf-8 -*-
+
+def pow(a,b):
+    return a ** b
+</code></pre>
+<h1 id="2-导入模块"><a href="#2-导入模块" class="headerlink" title="2.导入模块"></a>2.导入模块</h1><p>导入模块，即是将模块代码加载到内存以供调用，使用import关键，调用模块所定义函数的方式为：模块名.函数名</p>
+<h2 id="2-1-导入自定义模块"><a href="#2-1-导入自定义模块" class="headerlink" title="2.1 导入自定义模块"></a>2.1 导入自定义模块</h2><pre><code class="hljs">&gt;&gt;&gt; import power
+&gt;&gt;&gt; power.pow(2,3)
+8
+</code></pre>
+<h2 id="2-2-导入内置模块"><a href="#2-2-导入内置模块" class="headerlink" title="2.2 导入内置模块"></a>2.2 导入内置模块</h2><pre><code class="hljs">&gt;&gt;&gt; import math
+&gt;&gt;&gt; math.pow(2,3)
+8.0
+</code></pre>
+<h2 id="2-3-导入第三方模块"><a href="#2-3-导入第三方模块" class="headerlink" title="2.3 导入第三方模块"></a>2.3 导入第三方模块</h2><p>Python第三方模块存储于网络上，所以要使用第三方模块首先要将其下载到本地，然后才能进行导入、调用</p>
+<h3 id="2-3-1-导入国内python镜像源"><a href="#2-3-1-导入国内python镜像源" class="headerlink" title="2.3.1 导入国内python镜像源"></a>2.3.1 导入国内python镜像源</h3><pre><code class="hljs">vi ~/.pip/pip.conf
+
+
+[global]
+index-url = http://mirrors.aliyun.com/pypi/simple/
+[install]
+trusted-host=mirrors.aliyun.com
+</code></pre>
+<h3 id="2-3-2-安装第三方模块"><a href="#2-3-2-安装第三方模块" class="headerlink" title="2.3.2 安装第三方模块"></a>2.3.2 安装第三方模块</h3><pre><code class="hljs">sudo pip install requests
+</code></pre>
+<h2 id="2-4-导入部分模块"><a href="#2-4-导入部分模块" class="headerlink" title="2.4 导入部分模块"></a>2.4 导入部分模块</h2><p>Python语言from关键字用于从某个对象导入指定的部分到当前命名空间，而不会将整个对象导入，但需注意名字冲突</p>
+<pre><code class="hljs"># 导入datetime库的date与datetime类
+&gt;&gt;&gt; from datetime import date,datetime
+# 导入datetime库的date类，并重命名为cdate，注意名字冲突
+&gt;&gt;&gt; from datetime import date as cdate
+
+&gt;&gt;&gt; date.today()
+datetime.date(2024, 1, 25)
+&gt;&gt;&gt; now = date.today()
+&gt;&gt;&gt; print(now)
+2024-01-25
+
+&gt;&gt;&gt; from datetime import date as cdate
+&gt;&gt;&gt; now = cdate.today()
+&gt;&gt;&gt; print(now)
+2024-01-25
+</code></pre>
+<h1 id="3-搜索路径"><a href="#3-搜索路径" class="headerlink" title="3.搜索路径"></a>3.搜索路径</h1><p>Python语言import关键字用于导入的模块，一个模块只会被导入一次，不会重复导入，以节省资源。Python解释器根据内置函数sys.path的设置Python环境变量PYTHONPATH按顺序搜索模块文件，若找不到模块文件则会报错，默认的搜索顺一般为：当前执行脚本目录（自定义） —&gt;&gt; Python安装目录（内置） —&gt;&gt; Python安装目录site-packages目录（第三方）。也可自定义Python环境变量：</p>
+<pre><code class="hljs">set PYTHONPATH=/usr/local/lib/python
+</code></pre>
+<h1 id="4-模块内置函数"><a href="#4-模块内置函数" class="headerlink" title="4.模块内置函数"></a>4.模块内置函数</h1><h2 id="4-1-dir"><a href="#4-1-dir" class="headerlink" title="4.1 dir()"></a>4.1 dir()</h2><p>dir() 函数，返回值为排好序的字符串列表，其内容是模块里定义过的名字，包括模块、变量和函数</p>
+<pre><code class="hljs">&gt;&gt;&gt; import a
+&gt;&gt;&gt; import math
+&gt;&gt;&gt; dir(a)
+&gt;&gt;&gt; dir()
+</code></pre>
+<h2 id="4-2-reload"><a href="#4-2-reload" class="headerlink" title="4.2 reload()"></a>4.2 reload()</h2><p>reload() 函数，用于重新执行模块顶层部分的代码，也即重新导入之前导入过的模块，语法为：reload(module_name)</p>
+<pre><code class="hljs">&gt;&gt;&gt; reload(a)
+</code></pre>
+<h1 id="5-包"><a href="#5-包" class="headerlink" title="5.包"></a>5.包</h1><p>包，package，由若干Python模块或子包构成的层级目录结构，功能完备的包或模块的集合也称为库。包实质上是Python语言管理与组织模块和库的手段，是Python库的组织形式与表现形式，以便增强模块调用的层次感与逻辑性。事实上，Python语言并没有库这个概念，是种通俗的说法，通常所说的库即可以是模块也可以是包</p>
+<h2 id="5-1-创建包"><a href="#5-1-创建包" class="headerlink" title="5.1 创建包"></a>5.1 创建包</h2><pre><code class="hljs"># 创建包目录
+mkdir -p package_test &amp;&amp; cd package_test
+</code></pre>
+<h3 id="5-1-1-创建模块"><a href="#5-1-1-创建模块" class="headerlink" title="5.1.1 创建模块"></a>5.1.1 创建模块</h3><pre><code class="hljs"># 创建模块m1
+vi m1.py
+
+
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+print(&quot;Hello&quot;)
+</code></pre>
+<hr>
+<pre><code class="hljs"># 创建模块m2
+vi m2.py
+
+
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+print(&quot;World&quot;)
+</code></pre>
+<h3 id="5-1-2-创建初始化模块"><a href="#5-1-2-创建初始化模块" class="headerlink" title="5.1.2 创建初始化模块"></a>5.1.2 创建初始化模块</h3><pre><code class="hljs">vi __init__.py
+
+
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+if __name__ == &#39;__main__&#39;:
+    print(&quot;作为主程序运行&quot;)
+else:
+    print(&quot;package_test包初始化&quot;)
+</code></pre>
+<h3 id="5-1-3-创建调用包的脚本"><a href="#5-1-3-创建调用包的脚本" class="headerlink" title="5.1.3 创建调用包的脚本"></a>5.1.3 创建调用包的脚本</h3><pre><code class="hljs">cd ..
+vi test.py
+
+
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+
+# 导入包
+import package_test
+
+# 调用包的模块
+package_test.m1()
+package_test.m2()
+</code></pre>
+<h3 id="5-1-3-调用包"><a href="#5-1-3-调用包" class="headerlink" title="5.1.3 调用包"></a>5.1.3 调用包</h3><pre><code class="hljs">./test
+package_test包初始化
+Hello
+World
+</code></pre>
+<h1 id="6-内置库"><a href="#6-内置库" class="headerlink" title="6.内置库"></a>6.内置库</h1><p>Python能大行其道的原因之一就是数量庞大且功能丰富的内置库，无需额外安装与配置，直接调用即可，是Python学习的必修课</p>
+<h2 id="6-1-datetime"><a href="#6-1-datetime" class="headerlink" title="6.1 datetime"></a>6.1 datetime</h2><p>datetime，Python语言日期和时间处理的标准库</p>
+<h3 id="6-1-1-当前日期与时间"><a href="#6-1-1-当前日期与时间" class="headerlink" title="6.1.1 当前日期与时间"></a>6.1.1 当前日期与时间</h3><pre><code class="hljs">&gt;&gt;&gt; import datetime
+&gt;&gt;&gt; now = datetime.datetime.now()
+&gt;&gt;&gt; print(now)
+2024-01-24 14:25:41.623668
+</code></pre>
+<ul>
+<li>注：datetime.datetime.now()表示调用datetime库的datetime模块的now()方法，该方法（函数），返回值类行为datetime，用于获取当前日期与时间</li>
+</ul>
+<h3 id="6-1-2-格式化日期与时间"><a href="#6-1-2-格式化日期与时间" class="headerlink" title="6.1.2 格式化日期与时间"></a>6.1.2 格式化日期与时间</h3><p>strftime()方法用于将datetime类型转换为字符串类型，已实现日期时间的格式化操作</p>
+<pre><code class="hljs">&gt;&gt;&gt; now = datetime.datetime.now()
+&gt;&gt;&gt; date = now.strftime(&quot;%Y-%m-%d&quot;)
+&gt;&gt;&gt; print(date)
+2024-01-24
+&gt;&gt;&gt; time = now.strftime(&quot;%H:%M:%S&quot;)
+&gt;&gt;&gt; print(time)
+14:30:32
+</code></pre>
+<ul>
+<li>注：strftime()方法%Y表示4位数的年份，%m表示两位数的月份，%d表示两位数的日期，%H表示24小时制的小时，%M表示分钟，%S表示秒</li>
+</ul>
+<h3 id="6-1-3-字符串转换为日期时间"><a href="#6-1-3-字符串转换为日期时间" class="headerlink" title="6.1.3 字符串转换为日期时间"></a>6.1.3 字符串转换为日期时间</h3><p>strftime()方法用于将字符串类型的数据转换为日期时间类型</p>
+<pre><code class="hljs">&gt;&gt;&gt; datetime = datetime.datetime.strptime(date,&quot;%Y-%m-%d&quot;)
+&gt;&gt;&gt; print(datetime)
+2024-01-24 00:00:00
+</code></pre>
+<h3 id="6-1-4-日期时间运算"><a href="#6-1-4-日期时间运算" class="headerlink" title="6.1.4 日期时间运算"></a>6.1.4 日期时间运算</h3><h2 id="6-2-os模块"><a href="#6-2-os模块" class="headerlink" title="6.2 os模块"></a>6.2 os模块</h2><p>os模块，跨平台的操作系统接口模块，具备大量的操作系统相关功能的函数，主要包括系统相关、目录及文件操作、路径操作、命令执行和进程管理等</p>
+<h3 id="6-2-1-系统相关"><a href="#6-2-1-系统相关" class="headerlink" title="6.2.1 系统相关"></a>6.2.1 系统相关</h3><p>os模块系统相关的功能主要体现在获取操作系统环境变量</p>
+<pre><code class="hljs">import os
+
+# 获取当前操作系统名称，Windows平台返回&quot;nt&quot;，Linux返回&quot;posix&quot;
+print(os.name)
+# 获取当前操作系统路径的分隔符，Windows平台为&quot;\&quot;，Linux为&quot;/&quot;
+print(os.sep)
+# 获取当前操作系统环境变量的分隔符，Windows平台为&quot;;&quot;，Linux为&quot;:&quot;
+print(os.pathsep)
+# 获取登陆系统的用户名
+print(os.getlogin)
+</code></pre>
+<h3 id="6-2-2-文件及目录操作"><a href="#6-2-2-文件及目录操作" class="headerlink" title="6.2.2 文件及目录操作"></a>6.2.2 文件及目录操作</h3><h2 id="6-3-tarfile模块"><a href="#6-3-tarfile模块" class="headerlink" title="6.3 tarfile模块"></a>6.3 tarfile模块</h2><p>tarfile模块，Python内置模块之一，用于tar归档文件的压缩、解压处理，类似于文件操作。Linux系统常见压缩文件格式如下：</p>
+<ul>
+<li>tar，Linux系统打包归档工具，没有压缩功能，打包为tar包之后才可以其他压缩程序进行压缩，最常用的压缩方式为gzip，压缩率最高的方式为bzip2</li>
+<li>gz，即gzip压缩方式，通常只能压缩一个文件</li>
+<li>tgz，即tar.gz，先以tar打包，再用gz压缩得到的文件</li>
+<li>zip，不同于gzip，可分别打包压缩多个文件，压缩率低于tar</li>
+<li>rar，打包压缩文件，最初用于DOS，基于window操作系统。压缩率比zip高，但速度慢，随机访问的速度也慢</li>
+</ul>
+<h3 id="6-3-1-语法格式"><a href="#6-3-1-语法格式" class="headerlink" title="6.3.1 语法格式"></a>6.3.1 语法格式</h3><h4 id="6-3-1-1-打开-x2F-创建压缩包"><a href="#6-3-1-1-打开-x2F-创建压缩包" class="headerlink" title="6.3.1.1 打开&#x2F;创建压缩包"></a>6.3.1.1 打开&#x2F;创建压缩包</h4><pre><code class="hljs">tarfile.open(name=None, mode=&#39;r&#39;, fileobj=None, bufsize=10240, **kwargs)
+</code></pre>
+<p>参数详解：</p>
+<p>1.name，打开的文件名或路径<br>2.bufsize：用于指定数据块的大小，默认为20*512字节<br>3.mode，文件打开方式，默认为’r’，具体如下：</p>
+<ul>
+<li><p>‘r’或’r:*’，自动解压并打开文件</p>
+</li>
+<li><p>‘r:’，只打开文件不解压</p>
+</li>
+<li><p>‘r:gz’，gzip格式解压并打开文件</p>
+</li>
+<li><p>‘r:bz2’，bz2格式解压并打开文件</p>
+</li>
+<li><p>‘r:xz’，lzma格式解压并打开文件</p>
+</li>
+<li><p>‘x’or ‘x:’，仅创建打包文件，不压缩</p>
+</li>
+<li><p>‘x:gz’，gzip方式压缩并打包文件</p>
+</li>
+<li><p>‘x:bz2’，bzip2方式压缩并打包文件</p>
+</li>
+<li><p>‘x:xz’，lzma方式压缩并打包文件</p>
+</li>
+<li><p>‘a’ or ‘a:’，打开文件，并以不压缩的方式追加内容。如果文件不存在，则新建</p>
+</li>
+<li><p>‘w’ or ‘w:’，以不压缩的方式写入，即只归档不压缩</p>
+</li>
+<li><p>‘w:gz’，gzip的方式压缩并写入</p>
+</li>
+<li><p>‘w:bz2’，以bzip2的方式压缩并写入</p>
+</li>
+<li><p>‘w:xz’，lzma的方式压缩并写入</p>
+</li>
+</ul>
+<h4 id="6-3-1-2-压缩包添加文件"><a href="#6-3-1-2-压缩包添加文件" class="headerlink" title="6.3.1.2 压缩包添加文件"></a>6.3.1.2 压缩包添加文件</h4><p>压缩文件的方式主要是将模式改变，在rwx的基础上加上各个压缩的方式，如r:gz、w:bz2、x:xz等样式</p>
+<p>add(name, arcname)</p>
+<p>参数详解：</p>
+<ul>
+<li>1.name，压缩文件的文件名或文件路径</li>
+<li>2.arcname，压缩文件文件名的别名，非必要参数，压缩别名一定不要以路径分隔符为结尾，否则只会创建一个文件夹</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/Python/">#Python</a>
+      
+        <a href="/hexo/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">#编程语言</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python模块与包</div>
+      <div>https://css.ss-ss.top/hexo/2023/02/27/Python模块与包/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年2月27日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2023/03/14/Kubernetes%E9%9B%86%E7%BE%A4%E8%B0%83%E5%BA%A6%E7%AD%96%E7%95%A5%E8%AF%A6%E8%A7%A3/" title="Kubernetes集群调度策略详解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kubernetes集群调度策略详解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2023/02/16/Hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/" title="Hexo搭建博客">
+                        <span class="hidden-mobile">Hexo搭建博客</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,701 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Bond，网络绑定或链路聚合，即将多个网络接口绑定为一个逻辑网卡对外提供服务，从而实现网络流量的负载均衡，以及网卡级的冗余与扩容，提高网络总体可用性。Linux系统网卡绑定分为7种工作模式，其中mode0&#x2F;1&#x2F;6这三种模式最为常用 1.mode&#x3D;0balance-rr，Round-Robin Policy，即平衡轮训策略，工作机制是将网络数据包按照轮询方式依次地平均分">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux系统配置网卡bond">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2024/05/16/Linux%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE%E7%BD%91%E5%8D%A1bond/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="Bond，网络绑定或链路聚合，即将多个网络接口绑定为一个逻辑网卡对外提供服务，从而实现网络流量的负载均衡，以及网卡级的冗余与扩容，提高网络总体可用性。Linux系统网卡绑定分为7种工作模式，其中mode0&#x2F;1&#x2F;6这三种模式最为常用 1.mode&#x3D;0balance-rr，Round-Robin Policy，即平衡轮训策略，工作机制是将网络数据包按照轮询方式依次地平均分">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-05-16T13:56:46.000Z">
+<meta property="article:modified_time" content="2024-07-01T08:17:26.456Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="网络">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Linux系统配置网卡bond - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Linux系统配置网卡bond</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-05-16 21:56" pubdate>
+          2024年5月16日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          24 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux系统配置网卡bond</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Bond，网络绑定或链路聚合，即将多个网络接口绑定为一个逻辑网卡对外提供服务，从而实现网络流量的负载均衡，以及网卡级的冗余与扩容，提高网络总体可用性。Linux系统网卡绑定分为7种工作模式，其中mode0&#x2F;1&#x2F;6这三种模式最为常用</p>
+<h1 id="1-mode-x3D-0"><a href="#1-mode-x3D-0" class="headerlink" title="1.mode&#x3D;0"></a>1.mode&#x3D;0</h1><p>balance-rr，Round-Robin Policy，即平衡轮训策略，工作机制是将网络数据包按照轮询方式依次地平均分配到所有被绑定的网络接口，链路故障自动切换。优点是具备负载均衡和容错能力，增加网络吞吐量，较为常用。但需要交换机配置端口静态聚合，且网络接口轮训的链路可能出现数据包无序到达而需要重新发送，从而影响网络吞吐量</p>
+<h2 id="1-1-虚拟机新增网卡"><a href="#1-1-虚拟机新增网卡" class="headerlink" title="1.1 虚拟机新增网卡"></a>1.1 虚拟机新增网卡</h2><h2 id="1-2-配置网卡"><a href="#1-2-配置网卡" class="headerlink" title="1.2 配置网卡"></a>1.2 配置网卡</h2><h3 id="1-2-1-配置网卡ens2"><a href="#1-2-1-配置网卡ens2" class="headerlink" title="1.2.1 配置网卡ens2"></a>1.2.1 配置网卡ens2</h3><pre><code class="hljs">sudo cp /etc/sysconfig/network-scripts/ifcfg-ens2 /etc/sysconfig/network-scripts/ifcfg-ens2.bak
+sudo vi /etc/sysconfig/network-scripts/ifcfg-ens2 
+
+
+TYPE=Ethernet
+PROXY_METHOD=none
+BROWSER_ONLY=no
+DEFROUTE=yes
+NAME=ens2
+UUID=2a8c33e3-34e6-4c1b-aaef-258efba38bf6
+DEVICE=ens2
+ONBOOT=yes
+
+BOOTPROTO=none
+MASTER=bond0
+SLAVE=yes
+USERCTL=no
+</code></pre>
+<h3 id="1-2-2-配置网卡ens6"><a href="#1-2-2-配置网卡ens6" class="headerlink" title="1.2.2 配置网卡ens6"></a>1.2.2 配置网卡ens6</h3><pre><code class="hljs">sudo vi /etc/sysconfig/network-scripts/ifcfg-ens6
+
+
+TYPE=Ethernet
+PROXY_METHOD=none
+BROWSER_ONLY=no
+DEFROUTE=yes
+NAME=ens6
+UUID=2a8c33e3-34e6-4c1b-aaef-258efba38bf9
+DEVICE=ens6
+ONBOOT=yes
+
+BOOTPROTO=none
+MASTER=bond0
+SLAVE=yes
+USERCTL=no
+</code></pre>
+<h2 id="1-3-配置网卡Bond"><a href="#1-3-配置网卡Bond" class="headerlink" title="1.3 配置网卡Bond"></a>1.3 配置网卡Bond</h2><pre><code class="hljs">sudo vi /etc/sysconfig/network-scripts/ifcfg-bond0
+
+
+TYPE=Ethernet
+DEVICE=bond0
+ONBOOT=yes
+BOOTPROTO=static
+
+IPADDR=192.168.100.120
+NETMASK=255.255.255.0
+GATEWAY=192.168.100.1
+DNS1=192.168.100.1
+DNS2=8.8.8.8
+BONDING_OPTS=&quot;miimon=100 mode=0 fail_over_mac=1&quot;
+</code></pre>
+<h2 id="1-4-重启网卡以生效配置"><a href="#1-4-重启网卡以生效配置" class="headerlink" title="1.4 重启网卡以生效配置"></a>1.4 重启网卡以生效配置</h2><h1 id="2-mode-x3D-1"><a href="#2-mode-x3D-1" class="headerlink" title="2.mode&#x3D;1"></a>2.mode&#x3D;1</h1><p>active-backup，Active-Backup Policy，即主备策略，也就是主设备处于活动状态，备用设备只有在主设备故障才转换为主设备接管服务。优点是具备容错和冗余功能，保障了网络稳定性，较为常用。但资源利用率低，因为只有一个设备处于工作状态</p>
+<h2 id="2-1-虚拟机新增网卡"><a href="#2-1-虚拟机新增网卡" class="headerlink" title="2.1 虚拟机新增网卡"></a>2.1 虚拟机新增网卡</h2><h2 id="2-2-配置网卡"><a href="#2-2-配置网卡" class="headerlink" title="2.2 配置网卡"></a>2.2 配置网卡</h2><pre><code class="hljs">sudo cp /etc/netplan/01-netcfg.yaml /etc/netplan/01-netcfg.yaml.bak
+sudo vi /etc/netplan/01-netcfg.yaml
+
+
+# This file describes the network interfaces available on your system
+# For more information, see netplan(5).
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    eth0:
+      dhcp4: no
+      dhcp6: no
+    eth1:
+      dhcp4: no
+      dhcp6: no
+
+  bonds:
+    bond1:
+      interfaces:
+        - eth0
+        - eth1
+      addresses: [192.168.100.120/24]
+      gateway4: 192.168.100.1
+      nameservers:
+        addresses: [192.168.100.1,8.8.8.8]
+      parameters:
+        mode: active-backup
+        mii-monitor-interval: 100
+</code></pre>
+<h2 id="2-3-应用网卡配置"><a href="#2-3-应用网卡配置" class="headerlink" title="2.3 应用网卡配置"></a>2.3 应用网卡配置</h2><pre><code class="hljs">sudo netplan apply
+</code></pre>
+<h1 id="3-mode-x3D-2"><a href="#3-mode-x3D-2" class="headerlink" title="3.mode&#x3D;2"></a>3.mode&#x3D;2</h1><p>balance-xor，XOR Policy，即平衡哈希策略，工作机制是将网络数据包基于HASH运算的方式平均分配到所有被绑定的网络接口，默认算法为：(源MAC地址 XOR 目标MAC地址) % slave数量。优点是具备负载均衡和容错能力，但需要交换机配置端口静态聚合，且交换机需要支持哈希分配，不常用</p>
+<h1 id="4-mode-x3D-3"><a href="#4-mode-x3D-3" class="headerlink" title="4.mode&#x3D;3"></a>4.mode&#x3D;3</h1><p>broadcast，广播策略，即是将所有数据包发送到所有接口以实现广播传输，不提供负载均衡，只有冗余功能，资源浪费，且需要交换机配置端口静态聚合，不常用。但适用于高可靠性环境，如金融行业</p>
+<h1 id="5-mode-x3D-4"><a href="#5-mode-x3D-4" class="headerlink" title="5.mode&#x3D;4"></a>5.mode&#x3D;4</h1><p>Dynamic Link aggregation Policy，即动态链接聚合策略，工作机制是基于IEEE 802.3ad规范创建共享速率和双工设定的网卡聚合组，外出网络流量的链路基于传输hash进行选举。优点是具备容错和冗余功能，但需要交换机支持动态链接聚合，且需配置LACP（Link Aggregation Control Protocol），不常用</p>
+<h1 id="6-mode-x3D-5"><a href="#6-mode-x3D-5" class="headerlink" title="6.mode&#x3D;5"></a>6.mode&#x3D;5</h1><p>balance-tlb，Adaptive Transmit Load Balancing，即适配器传输负载均衡策略，工作机制是基于TLB算法分配外出网络流量，入口流量只有一个。优点是具备容错和冗余功能，但需要网络设备支持获取每个slave的速率，不常用</p>
+<h1 id="7-mode-x3D-6"><a href="#7-mode-x3D-6" class="headerlink" title="7.mode&#x3D;6"></a>7.mode&#x3D;6</h1><p>balance-alb，Adaptive load balancing，即适配器适应性负载均衡策略，工作机制是基于ALB算法在传输端和接收端都进行负载均衡，也就是mode5方式的升级版，接收端负载均衡通过ARP协商实现，并使得不同的对端使用不同的硬件地址进行通信。该模式不需要特殊的交换机支持，网卡自动聚合。但不同于mode0的所有接口流量均衡，而是先占满第一个接口，再依次分配，所以会出现第一个接口流量非常高而其余接口只有小部分流量的情况，不均衡</p>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/wangzongyu/article/details/127097986">https://blog.csdn.net/wangzongyu/article/details/127097986</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44265455/article/details/139479821">https://blog.csdn.net/weixin_44265455/article/details/139479821</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45548465/article/details/122625777">https://blog.csdn.net/weixin_45548465/article/details/122625777</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/hezuijiudexiaobai/article/details/131216840">https://blog.csdn.net/hezuijiudexiaobai/article/details/131216840</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/%E7%BD%91%E7%BB%9C/">#网络</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Linux系统配置网卡bond</div>
+      <div>https://css.ss-ss.top/hexo/2024/05/16/Linux系统配置网卡bond/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年5月16日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2024/06/14/Linux%E7%B3%BB%E7%BB%9F%E7%A3%81%E7%9B%98%E6%89%A9%E5%AE%B9%E6%96%B9%E6%A1%88/" title="Linux系统磁盘扩容方案">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux系统磁盘扩容方案</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2024/05/10/Prometheus%E7%9B%91%E6%8E%A7Kubernetes%E9%9B%86%E7%BE%A4/" title="Prometheus监控Kubernetes集群">
+                        <span class="hidden-mobile">Prometheus监控Kubernetes集群</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,730 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Etcd，由CoreOS团队于2013年用Go言编写的分布式、高可用的开源一致性key-value存储系统，现由Cloud Native Computing Foundation负责管理，用于提供可靠的分布式键值存储、配置共享和服务发现、一致性保障等功能，如数据库选主、分布式锁等。Etcd提供的数据TTL失效、数据改变监视、多值、目录监听、分布式锁原子操作等功能可以方便的跟踪并管理集群节点的状态，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes集群Etcd数据库详解">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2022/11/10/Kubernetes%E9%9B%86%E7%BE%A4Etcd%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="Etcd，由CoreOS团队于2013年用Go言编写的分布式、高可用的开源一致性key-value存储系统，现由Cloud Native Computing Foundation负责管理，用于提供可靠的分布式键值存储、配置共享和服务发现、一致性保障等功能，如数据库选主、分布式锁等。Etcd提供的数据TTL失效、数据改变监视、多值、目录监听、分布式锁原子操作等功能可以方便的跟踪并管理集群节点的状态，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-11-10T15:20:36.000Z">
+<meta property="article:modified_time" content="2024-10-03T13:37:30.423Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="容器云">
+<meta property="article:tag" content="云原生">
+<meta property="article:tag" content="Etcd">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Kubernetes集群Etcd数据库详解 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Kubernetes集群Etcd数据库详解</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-11-10 23:20" pubdate>
+          2022年11月10日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          59 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kubernetes集群Etcd数据库详解</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Etcd，由CoreOS团队于2013年用Go言编写的分布式、高可用的开源一致性key-value存储系统，现由Cloud Native Computing Foundation负责管理，用于提供可靠的分布式键值存储、配置共享和服务发现、一致性保障等功能，如数据库选主、分布式锁等。Etcd提供的数据TTL失效、数据改变监视、多值、目录监听、分布式锁原子操作等功能可以方便的跟踪并管理集群节点的状态，从而实现了集群环境的服务发现和注册，解决了分布式系统如何管理节点间的状态这一难题，为跨服务器集群的数据存储提供了可靠的方式</p>
+<p>Etcd具有以下特点：</p>
+<ul>
+<li>简单易使用，基于HTTP+JSON的API，curl即可轻松使用</li>
+<li>易部署，由Go语言编写，跨平台，部署和维护简单</li>
+<li>可靠强一致性，使用Raft算法充分保证了分布式系统数据的强一致性，集群中的每个节点都存储有完整的数据</li>
+<li>高可用，具有容错能力，若集群有n个节点，当有(n-1)&#x2F;2节点发生故障时依然能提供服务</li>
+<li>持久化，将数据存储在分层组织的目录中，如同在标准文件系统中，数据更新后将通过WAL格式数据持久化到磁盘，并支持Snapshot快照</li>
+<li>快速，单实例每秒支持1000次写操作，2000+次读操作，极限写性能可达10K QPS</li>
+<li>安全，可选SSL客户认证机制</li>
+</ul>
+<hr>
+<h1 id="体系架构"><a href="#体系架构" class="headerlink" title="体系架构"></a>体系架构</h1><p>用户的请求数据经由HTTP Server转发给Store进行具体的事务处理，如涉及节点的修改，则交由Raft模块进行状态的变更、日志的记录，然后再同步给其余的Etcd节点以确认数据提交，最后进行数据的提交，再次同步</p>
+<h2 id="1-HTTP-Server"><a href="#1-HTTP-Server" class="headerlink" title="1.HTTP Server"></a>1.HTTP Server</h2><p>用于处理用户发送的API请求以及其它Etcd节点的同步与心跳信息请求</p>
+<h2 id="2-Store"><a href="#2-Store" class="headerlink" title="2.Store"></a>2.Store</h2><p>用于处理Etcd支持的各类功能的事务，包括数据索引、节点状态变更、监控与反馈、事件处理与执行等等，是Etcd对用户提供的大多数API功能的具体实现</p>
+<h2 id="3-Raft"><a href="#3-Raft" class="headerlink" title="3.Raft"></a>3.Raft</h2><p>强一致性算法的具体实现，是Etcd的核心，使得Etcd天然地成为一个强一致性、高可用的服务存储目录</p>
+<h2 id="4-WAL"><a href="#4-WAL" class="headerlink" title="4.WAL"></a>4.WAL</h2><p>WAL，Write Ahead Log，即预写式日志，是Etcd的持久化数据存储方式，记录了整个数据库变化的全部历程，即所有内存数据及其状态数据、节点索引数据提交前事先记录日志。这个机制极大的保障了整个集群的数据完整性，可快速从故障中恢复数据、数据回滚及重做。其中，Snapshot是为了防止数据过多而进行的状态快照，Entry表示存储的具体日志内容</p>
+<h1 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h1><h2 id="1-服务注册与发现"><a href="#1-服务注册与发现" class="headerlink" title="1.服务注册与发现"></a>1.服务注册与发现</h2><p>服务注册及健康状况的机制，即在同一个分布式集群中的进程或服务如何才能找到对方并建立连接。用户可在Etcd注册服务，并且对注册的服务配置key TTL，定时保持服务的心跳，从而达到监控健康状态的效果</p>
+<h2 id="2-消息发布与订阅"><a href="#2-消息发布与订阅" class="headerlink" title="2.消息发布与订阅"></a>2.消息发布与订阅</h2><p>分布式系统组件间通信方式最适用的即为消息发布与订阅机制，即构建一个共享配置中心，数据提供者在配置中心发布消息，而消息使用者则从配置中心订阅所需主题，一旦主题有消息发布就会实时通知订阅者，从而实现分布式系统配置的集中式管理与动态更新功能</p>
+<p>具体地说，业务系统将配置信息写入Etcd进行集中管理，启动的时候主动获取一次配置信息，同时在Etcd节点上注册一个Watcher并等待，之后每次配置有更新的时候，Etcd都会实时通知订阅者，以此达到获取最新配置信息的目的</p>
+<p>Kubernetes集群的API Server将群集状态持久化到Etcd，并通过watch API监视集群，从而发布关键的配置更改，如Pod的创建与删除等操作</p>
+<h2 id="3-分布式通知与协调"><a href="#3-分布式通知与协调" class="headerlink" title="3.分布式通知与协调"></a>3.分布式通知与协调</h2><p>分布式系统中，有一种典型的设计模式就是Master+Slave，即主从模式，具体表现为：Slave提供CPU、内存、磁盘以及网络等各种资源，Master用来协调这些节点以使其对外提供一个服务，如分布式存储（HDFS）、分布式计算（Hadoop）等。主从模式为保障业务的可用性通常会启动多个Master节点作为冗余，通过选主的方式将其中一个节点作为主节点提供服务，其余节点处于等待状态。Etcd的机制即可很容易的实现分布式进程的选主功能</p>
+<h2 id="4-分布式锁"><a href="#4-分布式锁" class="headerlink" title="4.分布式锁"></a>4.分布式锁</h2><p>Etcd的Raft算法保持了数据的强一致性，某次操作存储到集群中的值必然是全局一致的，这样的机制很容易实现分布式锁，分为两种方式，即保持独占和控制时序</p>
+<ul>
+<li>保持独占，即所有获取锁的用户最终只有一个用户可以得到。Etcd提供了实现分布式锁原子操作CAS（CompareAndSwap）的API，通过设置prevExist值，可保证在多个节点同时去创建某个目录时，只有一个能成功，创建成功的用户即为获得了锁</li>
+<li>控制时序，即所有想要获得锁的用户都会被安排执行，但是获得锁的顺序是全局唯一的，且决定了执行顺序。Etcd提供了自动创建有序键的API，对一个目录建值时指定为POST动作，同时会自动在目录下生成一个当前最大的值为键以存储这个新的值，即客户端编号，且还可以按顺序列出所有当前目录下的键值。此时这些键的值就是客户端的时序，而这些键中存储的值可代表客户端的编号</li>
+</ul>
+<hr>
+<h1 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h1><h2 id="1-查看集群成员列表"><a href="#1-查看集群成员列表" class="headerlink" title="1.查看集群成员列表"></a>1.查看集群成员列表</h2><pre><code class="hljs">/opt/etcd/bin/etcdctl --endpoints=https://192.168.100.180:2379,https://192.168.100.181:2379,https://192.168.100.182:2379 --cacert=/opt/etcd/ssl/ca.pem --cert=/opt/etcd/ssl/server.pem --key=/opt/etcd/ssl/server-key.pem member list --write-out=table
+</code></pre>
+<h2 id="2-查看集群成员健康状态"><a href="#2-查看集群成员健康状态" class="headerlink" title="2.查看集群成员健康状态"></a>2.查看集群成员健康状态</h2><pre><code class="hljs">/opt/etcd/bin/etcdctl --endpoints=https://192.168.100.180:2379,https://192.168.100.181:2379,https://192.168.100.182:2379 --cacert=/opt/etcd/ssl/ca.pem --cert=/opt/etcd/ssl/server.pem --key=/opt/etcd/ssl/server-key.pem endpoint health
+</code></pre>
+<h2 id="3-查看集群成员读写状态"><a href="#3-查看集群成员读写状态" class="headerlink" title="3.查看集群成员读写状态"></a>3.查看集群成员读写状态</h2><pre><code class="hljs">/opt/etcd/bin/etcdctl --endpoints=https://192.168.100.180:2379,https://192.168.100.181:2379,https://192.168.100.182:2379 --cacert=/opt/etcd/ssl/ca.pem --cert=/opt/etcd/ssl/server.pem --key=/opt/etcd/ssl/server-key.pem endpoint status --write-out=table
+</code></pre>
+<h2 id="4-写入数据"><a href="#4-写入数据" class="headerlink" title="4.写入数据"></a>4.写入数据</h2><pre><code class="hljs">/opt/etcd/bin/etcdctl --endpoints=https://192.168.100.180:2379,https://192.168.100.181:2379,https://192.168.100.182:2379 --cacert=/opt/etcd/ssl/ca.pem --cert=/opt/etcd/ssl/server.pem --key=/opt/etcd/ssl/server-key.pem --endpoints=localhost:2379 put /kubesre 123
+</code></pre>
+<h2 id="5-查询数据"><a href="#5-查询数据" class="headerlink" title="5.查询数据"></a>5.查询数据</h2><pre><code class="hljs">/opt/etcd/bin/etcdctl --endpoints=https://192.168.100.180:2379,https://192.168.100.181:2379,https://192.168.100.182:2379 --cacert=/opt/etcd/ssl/ca.pem --cert=/opt/etcd/ssl/server.pem --key=/opt/etcd/ssl/server-key.pem --endpoints=localhost:2379 get  /kubesre
+</code></pre>
+<h2 id="6-按key的前缀查询数据"><a href="#6-按key的前缀查询数据" class="headerlink" title="6.按key的前缀查询数据"></a>6.按key的前缀查询数据</h2><pre><code class="hljs">/opt/etcd/bin/etcdctl --endpoints=https://192.168.100.180:2379,https://192.168.100.181:2379,https://192.168.100.182:2379 --cacert=/opt/etcd/ssl/ca.pem --cert=/opt/etcd/ssl/server.pem --key=/opt/etcd/ssl/server-key.pem --endpoints=localhost:2379 get --prefix / 
+</code></pre>
+<h2 id="7-只显示键值"><a href="#7-只显示键值" class="headerlink" title="7.只显示键值"></a>7.只显示键值</h2><pre><code class="hljs">/opt/etcd/bin/etcdctl --endpoints=https://192.168.100.180:2379,https://192.168.100.181:2379,https://192.168.100.182:2379 --cacert=/opt/etcd/ssl/ca.pem --cert=/opt/etcd/ssl/server.pem --key=/opt/etcd/ssl/server-key.pem --endpoints=localhost:2379 get --prefix / --keys-only --debug 
+</code></pre>
+<h2 id="8-清空集群数据"><a href="#8-清空集群数据" class="headerlink" title="8.清空集群数据"></a>8.清空集群数据</h2><pre><code class="hljs">/opt/etcd/bin/etcdctl --endpoints=https://192.168.100.180:2379,https://192.168.100.181:2379,https://192.168.100.182:2379 --cacert=/opt/etcd/ssl/ca.pem --cert=/opt/etcd/ssl/server.pem --key=/opt/etcd/ssl/server-key.pem del --prefix /
+</code></pre>
+<hr>
+<p>Kubernetes集群是一个典型的声明式系统，即是通过API将用户的期望状态持久化到Etcd数据库，再由系统各个组件通过不断地读取数据库，最后以异步方式执行该状态。这种面向最终状态的方式很好的降低了运维和排查错误的成本，只需给出每个Pod的最终状态即可让各个组件自动执行，相比每执行一条命令就执行相关操作的面向过程的运维模式，大大的提高了系统整体的可靠性。但这样密集的I&#x2F;O操作，Etcd数据库的性能必然大受影响，甚至成为整个集群的性能瓶颈。所以，Etcd数据库的高性能运行对Kubernetes集群的稳定性至关重要</p>
+<hr>
+<h1 id="1-Etcd数据库备份"><a href="#1-Etcd数据库备份" class="headerlink" title="1.Etcd数据库备份"></a>1.Etcd数据库备份</h1><p>Kubernetes集群所有的对象都存储在Etcd上，定期备份数据对于灾难场景下的快速恢复非常重要。Etcd可通过快照的机制进行数据备份，快照文件包含所有Kubernetes状态和关键信息</p>
+<h2 id="1-1-备份kubernetes相关目录"><a href="#1-1-备份kubernetes相关目录" class="headerlink" title="1.1 备份kubernetes相关目录"></a>1.1 备份kubernetes相关目录</h2><pre><code class="hljs">sudo cp -r /etc/kubernetes /etc/kubernetes_bak
+sudo cp -r /var/lib/etcd /var/lib/etcd_bak
+# 二进制安装的集群
+sudo cp -r /var/lib/etcd/default.etcd /var/lib/etcd/default.etcd.bak
+sudo cp -r /var/lib/kubet /var/lib/kubet_bak
+</code></pre>
+<h2 id="1-2-备份数据库"><a href="#1-2-备份数据库" class="headerlink" title="1.2 备份数据库"></a>1.2 备份数据库</h2><pre><code class="hljs">sudo ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key --cacert=/etc/kubernetes/pki/etcd/ca.crt snapshot save /home/sword/etcd_bak/etcd-snap-$(date +%Y%m%d%H%M).db
+</code></pre>
+<h2 id="1-3-恢复数据库"><a href="#1-3-恢复数据库" class="headerlink" title="1.3 恢复数据库"></a>1.3 恢复数据库</h2><h3 id="1-3-1-停止Api-Server与Etcd服务"><a href="#1-3-1-停止Api-Server与Etcd服务" class="headerlink" title="1.3.1 停止Api Server与Etcd服务"></a>1.3.1 停止Api Server与Etcd服务</h3><pre><code class="hljs"># 二进制安装的集群用systemctl管理即可
+sudo mv /etc/kubernetes/manifests /etc/kubernetes/manifests_bak
+# 二进制安装的集群为sudo rm -rf /var/lib/etcd/default.etcd
+sudo rm -rf /var/lib/etcd
+</code></pre>
+<h3 id="1-3-2-恢复数据"><a href="#1-3-2-恢复数据" class="headerlink" title="1.3.2 恢复数据"></a>1.3.2 恢复数据</h3><pre><code class="hljs">sudo ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cert=/etc/kubernetes/pki/etcd/server.crt --key=/etc/kubernetes/pki/etcd/server.key --cacert=/etc/kubernetes/pki/etcd/ca.crt snapshot restore /home/sword/etcd_bak/etcd-snap-202303061755.db --data-dir=/var/lib/etcd
+</code></pre>
+<h2 id="1-4-启动kube-apiserver和Etcd，验证集群状态"><a href="#1-4-启动kube-apiserver和Etcd，验证集群状态" class="headerlink" title="1.4 启动kube-apiserver和Etcd，验证集群状态"></a>1.4 启动kube-apiserver和Etcd，验证集群状态</h2><pre><code class="hljs"># 二进制安装的集群用systemctl管理即可
+sudo mv /etc/kubernetes/manifests_bak /etc/kubernetes/manifests
+</code></pre>
+<ul>
+<li>注：高可用master节点的kubernetes集群恢复数据库的时候要在所有master节点执行恢复的命令</li>
+</ul>
+<hr>
+<h1 id="2-Etcd隔离环境"><a href="#2-Etcd隔离环境" class="headerlink" title="2.Etcd隔离环境"></a>2.Etcd隔离环境</h1><p>Etcd集群的性能和稳定性对网络和磁盘IO非常敏感，任何资源匮乏都会导致心跳超时，使得Kubernetes集群不能调度新的Pod，从而引发故障。故此，在单独的专用的隔离环境上运行Etcd集群十分必要，且磁盘也建议使用更为快速的本地SSD硬盘</p>
+<h2 id="2-1-部署Etcd集群"><a href="#2-1-部署Etcd集群" class="headerlink" title="2.1 部署Etcd集群"></a>2.1 部署Etcd集群</h2><h2 id="2-2-分发Etcd证书"><a href="#2-2-分发Etcd证书" class="headerlink" title="2.2 分发Etcd证书"></a>2.2 分发Etcd证书</h2><pre><code class="hljs">scp /opt/etcd/ssl/*.pem master01:/etc/kubernetes/pki/etcd
+mv /etc/kubernetes/pki/etcd/server.pem /etc/kubernetes/pki/etcd/etcd-server.pem
+mv /etc/kubernetes/pki/etcd/server-key.pem /etc/kubernetes/pki/etcd/etcd-server-key.pem
+</code></pre>
+<h2 id="2-3-创建初始化配置文件"><a href="#2-3-创建初始化配置文件" class="headerlink" title="2.3 创建初始化配置文件"></a>2.3 创建初始化配置文件</h2><pre><code class="hljs">vi kubeadm-config.yaml
+
+
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+kubernetesVersion: v1.20.12
+clusterName: kubernetes
+imageRepository: registry.aliyuncs.com/google_containers
+etcd: 
+  external:
+    endpoints:
+    - https://192.168.100.100:2379
+    - https://192.168.100.120:2379
+    - https://192.168.100.200:2379
+    caFile: /etc/kubernetes/pki/etcd/ca.pem
+    certFile: /etc/kubernetes/pki/etcd/etcd-server.pem
+    keyFile: /etc/kubernetes/pki/etcd/etcd-server-key.pem
+apiServer:
+  certSANs:
+  - 192.168.100.100
+  - 192.168.100.120
+  - 192.168.100.200
+  - 192.168.100.150
+controlPlaneEndpoint: &quot;192.168.100.150:8443&quot;
+networking:
+  podSubnet: &quot;172.30.0.0/16&quot;
+  serviceSubnet: &quot;10.254.0.0/16&quot;
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+mode: ipvs
+</code></pre>
+<h2 id="2-4-初始化集群"><a href="#2-4-初始化集群" class="headerlink" title="2.4 初始化集群"></a>2.4 初始化集群</h2><pre><code class="hljs">kubeadm init --config=kubeadm-config.yaml
+</code></pre>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/lihongbao80/article/details/126508726">https://blog.csdn.net/lihongbao80/article/details/126508726</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Jerry00713/article/details/126581563">https://blog.csdn.net/Jerry00713/article/details/126581563</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/fengge55/article/details/121797974">https://blog.csdn.net/fengge55/article/details/121797974</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/alwaysbefine/article/details/127500573">https://blog.csdn.net/alwaysbefine/article/details/127500573</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/yujia_666/article/details/120667639">https://blog.csdn.net/yujia_666/article/details/120667639</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/Kubernetes/">#Kubernetes</a>
+      
+        <a href="/hexo/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+      
+        <a href="/hexo/tags/Etcd/">#Etcd</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kubernetes集群Etcd数据库详解</div>
+      <div>https://css.ss-ss.top/hexo/2022/11/10/Kubernetes集群Etcd数据库详解/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年11月10日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2022/12/01/Kubernetes%E9%9B%86%E7%BE%A4%E6%B0%B4%E5%B9%B3%E8%87%AA%E5%8A%A8%E4%BC%B8%E7%BC%A9HPA%E8%AF%A6%E8%A7%A3/" title="Kubernetes集群水平自动伸缩HPA详解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kubernetes集群水平自动伸缩HPA详解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2022/11/06/CoreDNS%E6%90%AD%E5%BB%BADNS%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="CoreDNS搭建DNS服务器">
+                        <span class="hidden-mobile">CoreDNS搭建DNS服务器</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

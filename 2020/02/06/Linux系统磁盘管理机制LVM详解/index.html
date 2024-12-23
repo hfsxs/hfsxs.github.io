@@ -1,0 +1,812 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="LVM，Logical Volume Manager，即逻辑卷管理，Linux系统磁盘分区管理机制，是建立在硬盘和分区之上的一个逻辑层，为文件系统屏蔽了下层磁盘分区布局，从而提高磁盘分区管理的灵活性。其工作机制是将若干磁盘分区连接为一个整块的卷组（Volume Group），从而形成一个存储池，系统管理员可以从存储池随意创建逻辑卷组（Logical Volumes），最终在逻辑卷组上创建文件系统。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux系统磁盘扩容方案">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2020/02/06/Linux%E7%B3%BB%E7%BB%9F%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86%E6%9C%BA%E5%88%B6LVM%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="LVM，Logical Volume Manager，即逻辑卷管理，Linux系统磁盘分区管理机制，是建立在硬盘和分区之上的一个逻辑层，为文件系统屏蔽了下层磁盘分区布局，从而提高磁盘分区管理的灵活性。其工作机制是将若干磁盘分区连接为一个整块的卷组（Volume Group），从而形成一个存储池，系统管理员可以从存储池随意创建逻辑卷组（Logical Volumes），最终在逻辑卷组上创建文件系统。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-02-06T12:12:06.000Z">
+<meta property="article:modified_time" content="2024-06-13T02:33:45.496Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="存储">
+<meta property="article:tag" content="LVM">
+<meta property="article:tag" content="磁盘分区">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Linux系统磁盘扩容方案 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/hexo/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/hexo/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/hexo/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Linux系统磁盘扩容方案</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-02-06 20:12" pubdate>
+          2020年2月6日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          44 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Linux系统磁盘扩容方案</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>LVM，Logical Volume Manager，即逻辑卷管理，Linux系统磁盘分区管理机制，是建立在硬盘和分区之上的一个逻辑层，为文件系统屏蔽了下层磁盘分区布局，从而提高磁盘分区管理的灵活性。其工作机制是将若干磁盘分区连接为一个整块的卷组（Volume Group），从而形成一个存储池，系统管理员可以从存储池随意创建逻辑卷组（Logical Volumes），最终在逻辑卷组上创建文件系统。由此，可以灵活方便地调整存储卷组的大小，并对磁盘存储按照组的方式命名、管理和分配，如按照使用用途进行定义development和sales，而不是使用物理磁盘名sda和sdb。若系统添加了新的磁盘，也不必将磁盘的文件移动到新的磁盘，而是通过LVM直接扩展文件系统，即可实现跨越磁盘的扩容。此外，LVM机制还适用于快照、热备份和数据动态迁移的场景，当某个物理硬盘出现故障时，可以在不停机的情况下进行数据恢复和重建从而提高了数据的可靠性与可用性</p>
+<h1 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h1><h2 id="1-PV"><a href="#1-PV" class="headerlink" title="1.PV"></a>1.PV</h2><p>PV，Physical Volume，即物理卷，LVM的基本存储逻辑块，处于最底层，可以是整个硬盘、硬盘上的分区或从逻辑上与磁盘分区具有同样功能的设备，如hda1、sda1, c0d0p1、raid等。其基本单元为PE，Physical Extent，即物理区域，是具有唯一编号的可以被LVM寻址的最小存储单元，大小可根据实际情况在创建物理卷时指定，默认为4MB，大小确定后将不能改变，且同一个卷组中的所有物理卷的PE的大小需一致</p>
+<h2 id="2-VG"><a href="#2-VG" class="headerlink" title="2.VG"></a>2.VG</h2><p>VG，Volume Group，即逻辑卷组，基于物理卷所建立的操作系统逻辑上的硬盘，相当于非LVM系统的物理硬盘，由一个或多个PV组成且可动态地添加，一个或多个VG即构成一个LVM系统。基于VG即可建立逻辑分区（LV，Logical Volume），相当于非LVM系统中的硬盘分区，其上可创建文件系统，如&#x2F;root、&#x2F;home等，且大小可伸缩</p>
+<h1 id="2-创建流程"><a href="#2-创建流程" class="headerlink" title="2.创建流程"></a>2.创建流程</h1><h2 id="2-1-创建物理卷"><a href="#2-1-创建物理卷" class="headerlink" title="2.1 创建物理卷"></a>2.1 创建物理卷</h2><p>pvcreate命令用于将物理磁盘或分区创建为物理卷</p>
+<h2 id="2-2-创建卷组"><a href="#2-2-创建卷组" class="headerlink" title="2.2 创建卷组"></a>2.2 创建卷组</h2><p>vgcreate命令用于将多个物理卷组成一个卷组</p>
+<h2 id="2-3-创建逻辑卷"><a href="#2-3-创建逻辑卷" class="headerlink" title="2.3 创建逻辑卷"></a>2.3 创建逻辑卷</h2><p>lvcreate命令用于在卷组上创建逻辑卷</p>
+<h2 id="2-4-格式化逻辑卷"><a href="#2-4-格式化逻辑卷" class="headerlink" title="2.4 格式化逻辑卷"></a>2.4 格式化逻辑卷</h2><p>mkfs命令用于格式化逻辑卷，以便挂载使用</p>
+<h2 id="2-5-挂载逻辑卷"><a href="#2-5-挂载逻辑卷" class="headerlink" title="2.5 挂载逻辑卷"></a>2.5 挂载逻辑卷</h2><p>mount命令用于将逻辑卷挂载到指定的目录下</p>
+<hr>
+<h1 id="1-安装LVM"><a href="#1-安装LVM" class="headerlink" title="1.安装LVM"></a>1.安装LVM</h1><pre><code class="hljs">yum install -y lvm
+apt install -y lvm
+</code></pre>
+<h1 id="2-添加磁盘"><a href="#2-添加磁盘" class="headerlink" title="2.添加磁盘"></a>2.添加磁盘</h1><h2 id="2-1-查看当前磁盘"><a href="#2-1-查看当前磁盘" class="headerlink" title="2.1 查看当前磁盘"></a>2.1 查看当前磁盘</h2><pre><code class="hljs">lsblk
+
+
+NAME MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT                                                                                  
+sr0   11:0    1 1024M  0 rom                                                                                              
+vda   252:0    0  256G  0 disk                                                                                             
+├─vda1  252:1    0    1G  0 part /boot                                                                                       
+└─vda2  252:2    0  255G  0 part                                                                                             
+  ├─centos_centos7-root 253:0 0 50G 0 lvm  /                                                                                           
+  ├─centos_centos7-swap 253:1 0 2G 0 lvm  [SWAP]                                                                                      
+  └─centos_centos7-home 253:2 0 203G 0 lvm  /home                                                                                       
+vdb   252:16   0  100G  0 disk
+</code></pre>
+<h2 id="2-2-查看当前系统分区"><a href="#2-2-查看当前系统分区" class="headerlink" title="2.2 查看当前系统分区"></a>2.2 查看当前系统分区</h2><pre><code class="hljs">fdisk -l
+
+
+Disk /dev/vda: 274.9 GB, 274877906944 bytes, 536870912 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+Disk label type: dos
+Disk identifier: 0x0007a3a7
+
+   Device Boot      Start         End      Blocks   Id  System
+/dev/vda1   *        2048     2099199     1048576   83  Linux
+/dev/vda2         2099200   536870911   267385856   8e  Linux LVM
+
+Disk /dev/mapper/centos_centos7-root: 53.7 GB, 53687091200 bytes, 104857600 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/mapper/centos_centos7-swap: 2147 MB, 2147483648 bytes, 4194304 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/mapper/centos_centos7-home: 218.0 GB, 217961201664 bytes, 425705472 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+
+Disk /dev/vdb: 107.4 GB, 107374182400 bytes, 209715200 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+</code></pre>
+<h2 id="2-3-查看当前文件系统"><a href="#2-3-查看当前文件系统" class="headerlink" title="2.3 查看当前文件系统"></a>2.3 查看当前文件系统</h2><pre><code class="hljs">df -h
+
+
+Filesystem                       Size  Used Avail Use% Mounted on
+devtmpfs                         908M     0  908M   0% /dev
+tmpfs                            919M     0  919M   0% /dev/shm
+tmpfs                            919M  8.6M  911M   1% /run
+tmpfs                            919M     0  919M   0% /sys/fs/cgroup
+/dev/mapper/centos_centos7-root   50G  2.0G   49G   4% /
+/dev/mapper/centos_centos7-home  203G   33M  203G   1% /home
+/dev/vda1                       1014M  223M  792M  22% /boot
+tmpfs                             82M     0   82M   0% /run/user/1000
+tmpfs                             82M     0   82M   0% /run/user/0
+</code></pre>
+<h1 id="3-查看当前逻辑卷组"><a href="#3-查看当前逻辑卷组" class="headerlink" title="3.查看当前逻辑卷组"></a>3.查看当前逻辑卷组</h1><pre><code class="hljs">vgdisplay
+
+
+--- Volume group ---
+VG Name               centos_centos7
+System ID             
+Format                lvm2
+Metadata Areas        1
+Metadata Sequence No  4
+VG Access             read/write
+VG Status             resizable
+MAX LV                0
+Cur LV                3
+Open LV               3
+Max PV                0
+Cur PV                1
+Act PV                1
+VG Size               &lt;255.00 GiB
+PE Size               4.00 MiB
+Total PE              65279
+Alloc PE / Size       65278 / 254.99 GiB
+Free  PE / Size       1 / 4.00 MiB
+VG UUID               lLM9n5-z4TE-QIfp-NzXY-LVrS-gfRt-G4wnW0
+</code></pre>
+<h1 id="4-基于新磁盘创建物理卷"><a href="#4-基于新磁盘创建物理卷" class="headerlink" title="4.基于新磁盘创建物理卷"></a>4.基于新磁盘创建物理卷</h1><h2 id="4-1-创建物理卷"><a href="#4-1-创建物理卷" class="headerlink" title="4.1 创建物理卷"></a>4.1 创建物理卷</h2><pre><code class="hljs">pvcreate /dev/vdb
+  Physical volume &quot;/dev/vdb&quot; successfully created.
+</code></pre>
+<h2 id="4-2-验证物理卷"><a href="#4-2-验证物理卷" class="headerlink" title="4.2 验证物理卷"></a>4.2 验证物理卷</h2><pre><code class="hljs">pvscan 
+  PV /dev/vdb    VG lvm00            lvm2 [&lt;100.00 GiB / 96.00 MiB free]
+  PV /dev/vda2   VG centos_centos7   lvm2 [&lt;255.00 GiB / 4.00 MiB free]
+  Total: 2 [354.99 GiB] / in use: 2 [354.99 GiB] / in no VG: 0 [0   ]
+
+pvdisplay 
+  --- Physical volume ---
+  PV Name               /dev/vdb
+  VG Name               lvm00
+  PV Size               100.00 GiB / not usable 4.00 MiB
+  Allocatable           yes 
+  PE Size               4.00 MiB
+  Total PE              25599
+  Free PE               24
+  Allocated PE          25575
+  PV UUID               oJo0QX-053y-pmGd-1uVQ-9ucZ-I6Rk-7YUDEj
+</code></pre>
+<h1 id="5-基于物理卷创建逻辑卷组"><a href="#5-基于物理卷创建逻辑卷组" class="headerlink" title="5.基于物理卷创建逻辑卷组"></a>5.基于物理卷创建逻辑卷组</h1><h2 id="5-1-创建逻辑卷组"><a href="#5-1-创建逻辑卷组" class="headerlink" title="5.1 创建逻辑卷组"></a>5.1 创建逻辑卷组</h2><pre><code class="hljs">vgcreate lvm00 /dev/vdb
+  Volume group &quot;lvm00&quot; successfully created
+</code></pre>
+<h2 id="5-2-验证逻辑卷组"><a href="#5-2-验证逻辑卷组" class="headerlink" title="5.2 验证逻辑卷组"></a>5.2 验证逻辑卷组</h2><pre><code class="hljs">vgscan 
+  Reading volume groups from cache.
+  Found volume group &quot;lvm00&quot; using metadata type lvm2
+  Found volume group &quot;centos_centos7&quot; using metadata type lvm2
+
+vgdisplay 
+  --- Volume group ---
+  VG Name               lvm00
+  System ID             
+  Format                lvm2
+  Metadata Areas        1
+  Metadata Sequence No  2
+  VG Access             read/write
+  VG Status             resizable
+  MAX LV                0
+  Cur LV                1
+  Open LV               1
+  Max PV                0
+  Cur PV                1
+  Act PV                1
+  VG Size               &lt;100.00 GiB
+  PE Size               4.00 MiB
+  Total PE              25599
+  Alloc PE / Size       25575 / 99.90 GiB
+  Free  PE / Size       24 / 96.00 MiB
+  VG UUID               Se1Djo-IpJw-vj9b-2eBm-WrH6-mLLb-2rb4w1
+</code></pre>
+<h1 id="6-基于逻辑卷组创建逻辑卷"><a href="#6-基于逻辑卷组创建逻辑卷" class="headerlink" title="6.基于逻辑卷组创建逻辑卷"></a>6.基于逻辑卷组创建逻辑卷</h1><h2 id="6-1-创建逻辑卷"><a href="#6-1-创建逻辑卷" class="headerlink" title="6.1 创建逻辑卷"></a>6.1 创建逻辑卷</h2><pre><code class="hljs">lvcreate -L 99.9G -n data lvm00
+</code></pre>
+<h2 id="6-2-验证逻辑卷"><a href="#6-2-验证逻辑卷" class="headerlink" title="6.2 验证逻辑卷"></a>6.2 验证逻辑卷</h2><pre><code class="hljs">lvscan
+  ACTIVE            &#39;/dev/lvm00/data&#39; [99.90 GiB] inherit
+  ACTIVE            &#39;/dev/centos_centos7/swap&#39; [2.00 GiB] inherit
+  ACTIVE            &#39;/dev/centos_centos7/home&#39; [202.99 GiB] inherit
+  ACTIVE            &#39;/dev/centos_centos7/root&#39; [50.00 GiB] inherit
+
+lvdisplay 
+  --- Logical volume ---
+  LV Path                /dev/lvm00/data
+  LV Name                data
+  VG Name                lvm00
+  LV UUID                59KnzQ-a5rz-NwKP-a3aI-mgB3-dy2B-zdj3wX
+  LV Write Access        read/write
+  LV Creation host, time centos7, 2020-02-06 20:22:34 +0800
+  LV Status              available
+  # open                 1
+  LV Size                99.90 GiB
+  Current LE             25575
+  Segments               1
+  Allocation             inherit
+  Read ahead sectors     auto
+  - currently set to     8192
+  Block device           253:3
+</code></pre>
+<h1 id="7-基于逻辑卷创建磁盘分区"><a href="#7-基于逻辑卷创建磁盘分区" class="headerlink" title="7.基于逻辑卷创建磁盘分区"></a>7.基于逻辑卷创建磁盘分区</h1><h2 id="7-1-格式化磁盘分区"><a href="#7-1-格式化磁盘分区" class="headerlink" title="7.1 格式化磁盘分区"></a>7.1 格式化磁盘分区</h2><pre><code class="hljs">mkfs.ext4 /dev/lvm00/data
+</code></pre>
+<h2 id="7-2-挂载磁盘分区"><a href="#7-2-挂载磁盘分区" class="headerlink" title="7.2 挂载磁盘分区"></a>7.2 挂载磁盘分区</h2><pre><code class="hljs">mkdir -p /data
+mount /dev/lvm00/data /data
+</code></pre>
+<h1 id="8-验证文件系统"><a href="#8-验证文件系统" class="headerlink" title="8.验证文件系统"></a>8.验证文件系统</h1><pre><code class="hljs">df -h
+
+
+Filesystem                       Size  Used Avail Use% Mounted on
+devtmpfs                         908M     0  908M   0% /dev
+tmpfs                            919M     0  919M   0% /dev/shm
+tmpfs                            919M  8.6M  911M   1% /run
+tmpfs                            919M     0  919M   0% /sys/fs/cgroup
+/dev/mapper/centos_centos7-root   50G  2.0G   49G   4% /
+/dev/mapper/centos_centos7-home  203G   33M  203G   1% /home
+/dev/vda1                       1014M  223M  792M  22% /boot
+tmpfs                             82M     0   82M   0% /run/user/1000
+tmpfs                             82M     0   82M   0% /run/user/0
+/dev/mapper/lvm00-data            99G   61M   94G   1% /data
+</code></pre>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/13911915/2155531">https://blog.51cto.com/13911915/2155531</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_57554344/article/details/130558310">https://blog.csdn.net/m0_57554344/article/details/130558310</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_48195231/article/details/131010340">https://blog.csdn.net/weixin_48195231/article/details/131010340</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/hexo/tags/Linux/">#Linux</a>
+      
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/hexo/tags/%E5%AD%98%E5%82%A8/">#存储</a>
+      
+        <a href="/hexo/tags/LVM/">#LVM</a>
+      
+        <a href="/hexo/tags/%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA/">#磁盘分区</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Linux系统磁盘扩容方案</div>
+      <div>https://css.ss-ss.top/hexo/2020/02/06/Linux系统磁盘管理机制LVM详解/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年2月6日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/hexo/2020/02/07/Linux%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AESSH%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95/" title="Linux系统配置SSH免密登录">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Linux系统配置SSH免密登录</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/hexo/2020/02/06/Linux%E7%B3%BB%E7%BB%9F%E6%90%AD%E5%BB%BAFTP%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="Linux系统搭建FTP服务器">
+                        <span class="hidden-mobile">Linux系统搭建FTP服务器</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/hexo/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/hexo/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/hexo/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
