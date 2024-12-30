@@ -7,8 +7,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
-  <link rel="icon" href="/hexo/img/fluid.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -19,7 +19,7 @@
     <meta name="description" content="应用程序升级面临的最大挑战是新旧业务切换，也即是将软件从测试最后阶段发布到生产环境时保证系统不间断提供服务。为了减小或避免应用更新时对客户使用的影响，以及因发布导致的流量丢失或服务不可用问题，针对不同的业务场景和技术需求，最为常见的发布方式分为三种，即蓝绿发布、灰度发布和滚动发布 1.蓝绿发布蓝绿发布，即将应用服务集群分为逻辑上的蓝绿两组，先将绿组集群从负载均衡中移除进行升级，蓝组则继续对用户提供">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kubernetes集群服务发布方式详解">
-<meta property="og:url" content="https://css.ss-ss.top/hexo/2023/07/21/Kubernetes%E9%9B%86%E7%BE%A4%E6%9C%8D%E5%8A%A1%E5%8F%91%E5%B8%83%E6%96%B9%E5%BC%8F%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:url" content="https://hfsxs.github.io/2023/07/21/Kubernetes%E9%9B%86%E7%BE%A4%E6%9C%8D%E5%8A%A1%E5%8F%91%E5%B8%83%E6%96%B9%E5%BC%8F%E8%AF%A6%E8%A7%A3/index.html">
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="应用程序升级面临的最大挑战是新旧业务切换，也即是将软件从测试最后阶段发布到生产环境时保证系统不间断提供服务。为了减小或避免应用更新时对客户使用的影响，以及因发布导致的流量丢失或服务不可用问题，针对不同的业务场景和技术需求，最为常见的发布方式分为三种，即蓝绿发布、灰度发布和滚动发布 1.蓝绿发布蓝绿发布，即将应用服务集群分为逻辑上的蓝绿两组，先将绿组集群从负载均衡中移除进行升级，蓝组则继续对用户提供">
 <meta property="og:locale" content="zh_CN">
@@ -62,12 +62,12 @@
 <link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
 
 
-<link  rel="stylesheet" href="/hexo/css/main.css" />
+<link  rel="stylesheet" href="/css/main.css" />
 
 
-  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
   
-    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
 
 
@@ -76,15 +76,15 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
       Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
     }
   </script>
-  <script  src="/hexo/js/utils.js" ></script>
-  <script  src="/hexo/js/color-schema.js" ></script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
   
 
 
@@ -101,7 +101,7 @@
 <div class="header-inner" style="height: 70vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand" href="/hexo/">
+    <a class="navbar-brand" href="/">
       <strong>扬帆</strong>
     </a>
 
@@ -120,7 +120,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/">
+              <a class="nav-link" href="/">
                 <i class="iconfont icon-home-fill"></i>
                 首页
               </a>
@@ -132,7 +132,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/categories/">
+              <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
                 分类
               </a>
@@ -144,7 +144,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/tags/">
+              <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
                 标签
               </a>
@@ -156,7 +156,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/archives/">
+              <a class="nav-link" href="/archives/">
                 <i class="iconfont icon-archive-fill"></i>
                 归档
               </a>
@@ -168,7 +168,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/about/">
+              <a class="nav-link" href="/about/">
                 <i class="iconfont icon-user-fill"></i>
                 关于
               </a>
@@ -197,7 +197,7 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
@@ -457,7 +457,7 @@ kubectl -n devops rollout undo deployment hexo --to-revision=3
     
       <span class="category-chain">
         
-  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
   
   
 
@@ -472,21 +472,21 @@ kubectl -n devops rollout undo deployment hexo --to-revision=3
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/hexo/tags/Linux/">#Linux</a>
+        <a href="/tags/Linux/">#Linux</a>
       
-        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
       
-        <a href="/hexo/tags/Kubernetes/">#Kubernetes</a>
+        <a href="/tags/Kubernetes/">#Kubernetes</a>
       
-        <a href="/hexo/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+        <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
       
-        <a href="/hexo/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+        <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
       
-        <a href="/hexo/tags/%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83/">#蓝绿发布</a>
+        <a href="/tags/%E8%93%9D%E7%BB%BF%E5%8F%91%E5%B8%83/">#蓝绿发布</a>
       
-        <a href="/hexo/tags/%E6%BB%9A%E5%8A%A8%E5%8F%91%E5%B8%83/">#滚动发布</a>
+        <a href="/tags/%E6%BB%9A%E5%8A%A8%E5%8F%91%E5%B8%83/">#滚动发布</a>
       
-        <a href="/hexo/tags/%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/">#灰度发布</a>
+        <a href="/tags/%E7%81%B0%E5%BA%A6%E5%8F%91%E5%B8%83/">#灰度发布</a>
       
     </div>
   
@@ -499,7 +499,7 @@ kubectl -n devops rollout undo deployment hexo --to-revision=3
   <div class="license-box my-3">
     <div class="license-title">
       <div>Kubernetes集群服务发布方式详解</div>
-      <div>https://css.ss-ss.top/hexo/2023/07/21/Kubernetes集群服务发布方式详解/</div>
+      <div>https://hfsxs.github.io/2023/07/21/Kubernetes集群服务发布方式详解/</div>
     </div>
     <div class="license-meta">
       
@@ -541,7 +541,7 @@ kubectl -n devops rollout undo deployment hexo --to-revision=3
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/hexo/2023/08/01/Prometheus%E7%9B%91%E6%8E%A7Linux%E7%B3%BB%E7%BB%9F/" title="Prometheus监控Linux系统">
+                      <a href="/2023/08/01/Prometheus%E7%9B%91%E6%8E%A7Linux%E7%B3%BB%E7%BB%9F/" title="Prometheus监控Linux系统">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Prometheus监控Linux系统</span>
                         <span class="visible-mobile">上一篇</span>
@@ -551,7 +551,7 @@ kubectl -n devops rollout undo deployment hexo --to-revision=3
                   <article class="post-next col-6">
                     
                     
-                      <a href="/hexo/2023/07/15/Ceph%E9%9B%86%E7%BE%A4%E6%96%87%E4%BB%B6%E5%AD%98%E5%82%A8%E7%9A%84%E9%85%8D%E7%BD%AE%E4%B8%8E%E7%AE%A1%E7%90%86/" title="Ceph集群文件存储的配置与管理">
+                      <a href="/2023/07/15/Ceph%E9%9B%86%E7%BE%A4%E6%96%87%E4%BB%B6%E5%AD%98%E5%82%A8%E7%9A%84%E9%85%8D%E7%BD%AE%E4%B8%8E%E7%AE%A1%E7%90%86/" title="Ceph集群文件存储的配置与管理">
                         <span class="hidden-mobile">Ceph集群文件存储的配置与管理</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -678,15 +678,15 @@ kubectl -n devops rollout undo deployment hexo --to-revision=3
 
 <script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
 <script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/hexo/js/events.js" ></script>
-<script  src="/hexo/js/plugins.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
 
 
 
 
 
   
-    <script  src="/hexo/js/img-lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
@@ -758,7 +758,7 @@ kubectl -n devops rollout undo deployment hexo --to-revision=3
 
   <script>Fluid.plugins.imageCaption();</script>
 
-  <script  src="/hexo/js/local-search.js" ></script>
+  <script  src="/js/local-search.js" ></script>
 
 
 
@@ -766,7 +766,7 @@ kubectl -n devops rollout undo deployment hexo --to-revision=3
 
 <!-- 主题的启动项，将它保持在最底部 -->
 <!-- the boot of the theme, keep it at the bottom -->
-<script  src="/hexo/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script>
 
 
   

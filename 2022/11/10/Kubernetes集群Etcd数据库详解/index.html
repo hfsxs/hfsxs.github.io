@@ -7,8 +7,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
-  <link rel="icon" href="/hexo/img/fluid.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -19,7 +19,7 @@
     <meta name="description" content="Etcd，由CoreOS团队于2013年用Go言编写的分布式、高可用的开源一致性key-value存储系统，现由Cloud Native Computing Foundation负责管理，用于提供可靠的分布式键值存储、配置共享和服务发现、一致性保障等功能，如数据库选主、分布式锁等。Etcd提供的数据TTL失效、数据改变监视、多值、目录监听、分布式锁原子操作等功能可以方便的跟踪并管理集群节点的状态，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kubernetes集群Etcd数据库详解">
-<meta property="og:url" content="https://css.ss-ss.top/hexo/2022/11/10/Kubernetes%E9%9B%86%E7%BE%A4Etcd%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%A6%E8%A7%A3/index.html">
+<meta property="og:url" content="https://hfsxs.github.io/2022/11/10/Kubernetes%E9%9B%86%E7%BE%A4Etcd%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%A6%E8%A7%A3/index.html">
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="Etcd，由CoreOS团队于2013年用Go言编写的分布式、高可用的开源一致性key-value存储系统，现由Cloud Native Computing Foundation负责管理，用于提供可靠的分布式键值存储、配置共享和服务发现、一致性保障等功能，如数据库选主、分布式锁等。Etcd提供的数据TTL失效、数据改变监视、多值、目录监听、分布式锁原子操作等功能可以方便的跟踪并管理集群节点的状态，">
 <meta property="og:locale" content="zh_CN">
@@ -60,12 +60,12 @@
 <link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
 
 
-<link  rel="stylesheet" href="/hexo/css/main.css" />
+<link  rel="stylesheet" href="/css/main.css" />
 
 
-  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
   
-    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
 
 
@@ -74,15 +74,15 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
       Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
     }
   </script>
-  <script  src="/hexo/js/utils.js" ></script>
-  <script  src="/hexo/js/color-schema.js" ></script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
   
 
 
@@ -99,7 +99,7 @@
 <div class="header-inner" style="height: 70vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand" href="/hexo/">
+    <a class="navbar-brand" href="/">
       <strong>扬帆</strong>
     </a>
 
@@ -118,7 +118,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/">
+              <a class="nav-link" href="/">
                 <i class="iconfont icon-home-fill"></i>
                 首页
               </a>
@@ -130,7 +130,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/categories/">
+              <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
                 分类
               </a>
@@ -142,7 +142,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/tags/">
+              <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
                 标签
               </a>
@@ -154,7 +154,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/archives/">
+              <a class="nav-link" href="/archives/">
                 <i class="iconfont icon-archive-fill"></i>
                 归档
               </a>
@@ -166,7 +166,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/about/">
+              <a class="nav-link" href="/about/">
                 <i class="iconfont icon-user-fill"></i>
                 关于
               </a>
@@ -195,7 +195,7 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
@@ -413,7 +413,7 @@ mode: ipvs
     
       <span class="category-chain">
         
-  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
   
   
 
@@ -428,17 +428,17 @@ mode: ipvs
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/hexo/tags/Linux/">#Linux</a>
+        <a href="/tags/Linux/">#Linux</a>
       
-        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
       
-        <a href="/hexo/tags/Kubernetes/">#Kubernetes</a>
+        <a href="/tags/Kubernetes/">#Kubernetes</a>
       
-        <a href="/hexo/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+        <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
       
-        <a href="/hexo/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+        <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
       
-        <a href="/hexo/tags/Etcd/">#Etcd</a>
+        <a href="/tags/Etcd/">#Etcd</a>
       
     </div>
   
@@ -451,7 +451,7 @@ mode: ipvs
   <div class="license-box my-3">
     <div class="license-title">
       <div>Kubernetes集群Etcd数据库详解</div>
-      <div>https://css.ss-ss.top/hexo/2022/11/10/Kubernetes集群Etcd数据库详解/</div>
+      <div>https://hfsxs.github.io/2022/11/10/Kubernetes集群Etcd数据库详解/</div>
     </div>
     <div class="license-meta">
       
@@ -493,7 +493,7 @@ mode: ipvs
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/hexo/2022/12/01/Kubernetes%E9%9B%86%E7%BE%A4%E6%B0%B4%E5%B9%B3%E8%87%AA%E5%8A%A8%E4%BC%B8%E7%BC%A9HPA%E8%AF%A6%E8%A7%A3/" title="Kubernetes集群水平自动伸缩HPA详解">
+                      <a href="/2022/12/01/Kubernetes%E9%9B%86%E7%BE%A4%E6%B0%B4%E5%B9%B3%E8%87%AA%E5%8A%A8%E4%BC%B8%E7%BC%A9HPA%E8%AF%A6%E8%A7%A3/" title="Kubernetes集群水平自动伸缩HPA详解">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Kubernetes集群水平自动伸缩HPA详解</span>
                         <span class="visible-mobile">上一篇</span>
@@ -503,7 +503,7 @@ mode: ipvs
                   <article class="post-next col-6">
                     
                     
-                      <a href="/hexo/2022/11/06/CoreDNS%E6%90%AD%E5%BB%BADNS%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="CoreDNS搭建DNS服务器">
+                      <a href="/2022/11/06/CoreDNS%E6%90%AD%E5%BB%BADNS%E6%9C%8D%E5%8A%A1%E5%99%A8/" title="CoreDNS搭建DNS服务器">
                         <span class="hidden-mobile">CoreDNS搭建DNS服务器</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -630,15 +630,15 @@ mode: ipvs
 
 <script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
 <script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/hexo/js/events.js" ></script>
-<script  src="/hexo/js/plugins.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
 
 
 
 
 
   
-    <script  src="/hexo/js/img-lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
@@ -710,7 +710,7 @@ mode: ipvs
 
   <script>Fluid.plugins.imageCaption();</script>
 
-  <script  src="/hexo/js/local-search.js" ></script>
+  <script  src="/js/local-search.js" ></script>
 
 
 
@@ -718,7 +718,7 @@ mode: ipvs
 
 <!-- 主题的启动项，将它保持在最底部 -->
 <!-- the boot of the theme, keep it at the bottom -->
-<script  src="/hexo/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script>
 
 
   
