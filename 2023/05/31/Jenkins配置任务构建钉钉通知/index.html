@@ -7,8 +7,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
-  <link rel="icon" href="/img/fluid.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -19,16 +19,16 @@
     <meta name="description" content="1.钉钉群创建机器人【群设置】 —&gt; 【机器人】 —&gt; 【添加机器人】 —&gt; 【自定义】    2.jenkins安装Ding Talk插件3.jenkins配置钉钉机器人 【系统管理】 —&gt; 【钉钉】    4.项目配置钉钉机器人通知4.1 freestyle项目 自定义消息格式### $&amp;#123;PROJECT_NAME&amp;#125;项目构建构建$&amp;#123;JOB_S">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Jenkins配置任务构建钉钉通知">
-<meta property="og:url" content="http://example.com/2023/05/31/Jenkins%E9%85%8D%E7%BD%AE%E4%BB%BB%E5%8A%A1%E6%9E%84%E5%BB%BA%E9%92%89%E9%92%89%E9%80%9A%E7%9F%A5/index.html">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2023/05/31/Jenkins%E9%85%8D%E7%BD%AE%E4%BB%BB%E5%8A%A1%E6%9E%84%E5%BB%BA%E9%92%89%E9%92%89%E9%80%9A%E7%9F%A5/index.html">
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="1.钉钉群创建机器人【群设置】 —&gt; 【机器人】 —&gt; 【添加机器人】 —&gt; 【自定义】    2.jenkins安装Ding Talk插件3.jenkins配置钉钉机器人 【系统管理】 —&gt; 【钉钉】    4.项目配置钉钉机器人通知4.1 freestyle项目 自定义消息格式### $&amp;#123;PROJECT_NAME&amp;#125;项目构建构建$&amp;#123;JOB_S">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/hexo/img/wiki/jenkins/jenkins-006-001.jpg">
-<meta property="og:image" content="http://example.com/hexo/img/wiki/jenkins/jenkins-006-002.jpg">
-<meta property="og:image" content="http://example.com/hexo/img/wiki/jenkins/jenkins-006-003.jpg">
-<meta property="og:image" content="http://example.com/hexo/img/wiki/jenkins/jenkins-006-004.jpg">
-<meta property="og:image" content="http://example.com/hexo/img/wiki/jenkins/jenkins-006-005.jpg">
-<meta property="og:image" content="http://example.com/hexo/img/wiki/jenkins/jenkins-006-006.jpg">
+<meta property="og:image" content="https://css.ss-ss.top/hexo/img/wiki/jenkins/jenkins-006-001.jpg">
+<meta property="og:image" content="https://css.ss-ss.top/hexo/img/wiki/jenkins/jenkins-006-002.jpg">
+<meta property="og:image" content="https://css.ss-ss.top/hexo/img/wiki/jenkins/jenkins-006-003.jpg">
+<meta property="og:image" content="https://css.ss-ss.top/hexo/img/wiki/jenkins/jenkins-006-004.jpg">
+<meta property="og:image" content="https://css.ss-ss.top/hexo/img/wiki/jenkins/jenkins-006-005.jpg">
+<meta property="og:image" content="https://css.ss-ss.top/hexo/img/wiki/jenkins/jenkins-006-006.jpg">
 <meta property="article:published_time" content="2023-05-31T08:44:29.000Z">
 <meta property="article:modified_time" content="2023-12-31T12:59:38.595Z">
 <meta property="article:author" content="扬帆">
@@ -41,7 +41,7 @@
 <meta property="article:tag" content="容器云">
 <meta property="article:tag" content="云原生">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/hexo/img/wiki/jenkins/jenkins-006-001.jpg">
+<meta name="twitter:image" content="https://css.ss-ss.top/hexo/img/wiki/jenkins/jenkins-006-001.jpg">
   
   
   
@@ -69,12 +69,12 @@
 <link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
 
 
-<link  rel="stylesheet" href="/css/main.css" />
+<link  rel="stylesheet" href="/hexo/css/main.css" />
 
 
-  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
   
-    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
   
 
 
@@ -83,15 +83,15 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
       Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
     }
   </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
   
 
 
@@ -108,7 +108,7 @@
 <div class="header-inner" style="height: 70vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand" href="/">
+    <a class="navbar-brand" href="/hexo/">
       <strong>扬帆</strong>
     </a>
 
@@ -127,7 +127,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/">
+              <a class="nav-link" href="/hexo/">
                 <i class="iconfont icon-home-fill"></i>
                 首页
               </a>
@@ -139,7 +139,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/categories/">
+              <a class="nav-link" href="/hexo/categories/">
                 <i class="iconfont icon-category-fill"></i>
                 分类
               </a>
@@ -151,7 +151,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/tags/">
+              <a class="nav-link" href="/hexo/tags/">
                 <i class="iconfont icon-tags-fill"></i>
                 标签
               </a>
@@ -163,7 +163,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/archives/">
+              <a class="nav-link" href="/hexo/archives/">
                 <i class="iconfont icon-archive-fill"></i>
                 归档
               </a>
@@ -175,7 +175,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/about/">
+              <a class="nav-link" href="/hexo/about/">
                 <i class="iconfont icon-user-fill"></i>
                 关于
               </a>
@@ -204,7 +204,7 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
@@ -289,14 +289,14 @@
                 
                 <h1 id="1-钉钉群创建机器人"><a href="#1-钉钉群创建机器人" class="headerlink" title="1.钉钉群创建机器人"></a>1.钉钉群创建机器人</h1><p>【群设置】 —&gt; 【机器人】 —&gt; 【添加机器人】 —&gt; 【自定义】</p>
 <hr>
-<p><img src="/hexo/img/wiki/jenkins/jenkins-006-001.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-006-001"></p>
-<p><img src="/hexo/img/wiki/jenkins/jenkins-006-002.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-006-002"></p>
+<p><img src="/hexo/img/wiki/jenkins/jenkins-006-001.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-006-001"></p>
+<p><img src="/hexo/img/wiki/jenkins/jenkins-006-002.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-006-002"></p>
 <h1 id="2-jenkins安装Ding-Talk插件"><a href="#2-jenkins安装Ding-Talk插件" class="headerlink" title="2.jenkins安装Ding Talk插件"></a>2.jenkins安装Ding Talk插件</h1><h1 id="3-jenkins配置钉钉机器人"><a href="#3-jenkins配置钉钉机器人" class="headerlink" title="3.jenkins配置钉钉机器人"></a>3.jenkins配置钉钉机器人</h1><ul>
 <li>【系统管理】 —&gt; 【钉钉】</li>
 </ul>
-<p><img src="/hexo/img/wiki/jenkins/jenkins-006-003.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-006-003"></p>
-<p><img src="/hexo/img/wiki/jenkins/jenkins-006-004.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-006-004"></p>
-<h1 id="4-项目配置钉钉机器人通知"><a href="#4-项目配置钉钉机器人通知" class="headerlink" title="4.项目配置钉钉机器人通知"></a>4.项目配置钉钉机器人通知</h1><h2 id="4-1-freestyle项目"><a href="#4-1-freestyle项目" class="headerlink" title="4.1 freestyle项目"></a>4.1 freestyle项目</h2><p><img src="/hexo/img/wiki/jenkins/jenkins-006-005.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-006-005"></p>
+<p><img src="/hexo/img/wiki/jenkins/jenkins-006-003.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-006-003"></p>
+<p><img src="/hexo/img/wiki/jenkins/jenkins-006-004.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-006-004"></p>
+<h1 id="4-项目配置钉钉机器人通知"><a href="#4-项目配置钉钉机器人通知" class="headerlink" title="4.项目配置钉钉机器人通知"></a>4.项目配置钉钉机器人通知</h1><h2 id="4-1-freestyle项目"><a href="#4-1-freestyle项目" class="headerlink" title="4.1 freestyle项目"></a>4.1 freestyle项目</h2><p><img src="/hexo/img/wiki/jenkins/jenkins-006-005.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-006-005"></p>
 <h3 id="自定义消息格式"><a href="#自定义消息格式" class="headerlink" title="自定义消息格式"></a>自定义消息格式</h3><pre><code class="hljs">### $&#123;PROJECT_NAME&#125;项目构建构建$&#123;JOB_STATUS&#125;!
 ---------
 - 项目: $&#123;PROJECT_NAME&#125;
@@ -359,7 +359,7 @@ pipeline &#123;
     &#125;
 &#125;
 </code></pre>
-<h1 id="5-构建任务，测试钉钉通知"><a href="#5-构建任务，测试钉钉通知" class="headerlink" title="5.构建任务，测试钉钉通知"></a>5.构建任务，测试钉钉通知</h1><p><img src="/hexo/img/wiki/jenkins/jenkins-006-006.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-006-006"></p>
+<h1 id="5-构建任务，测试钉钉通知"><a href="#5-构建任务，测试钉钉通知" class="headerlink" title="5.构建任务，测试钉钉通知"></a>5.构建任务，测试钉钉通知</h1><p><img src="/hexo/img/wiki/jenkins/jenkins-006-006.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-006-006"></p>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://jenkinsci.github.io/dingtalk-plugin">https://jenkinsci.github.io/dingtalk-plugin</a></li>
@@ -385,7 +385,7 @@ pipeline &#123;
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
   
   
 
@@ -400,21 +400,21 @@ pipeline &#123;
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Linux/">#Linux</a>
+        <a href="/hexo/tags/Linux/">#Linux</a>
       
-        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
       
-        <a href="/tags/CICD/">#CICD</a>
+        <a href="/hexo/tags/CICD/">#CICD</a>
       
-        <a href="/tags/DevOps/">#DevOps</a>
+        <a href="/hexo/tags/DevOps/">#DevOps</a>
       
-        <a href="/tags/Jenkins/">#Jenkins</a>
+        <a href="/hexo/tags/Jenkins/">#Jenkins</a>
       
-        <a href="/tags/Kubernetes/">#Kubernetes</a>
+        <a href="/hexo/tags/Kubernetes/">#Kubernetes</a>
       
-        <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+        <a href="/hexo/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
       
-        <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+        <a href="/hexo/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
       
     </div>
   
@@ -427,7 +427,7 @@ pipeline &#123;
   <div class="license-box my-3">
     <div class="license-title">
       <div>Jenkins配置任务构建钉钉通知</div>
-      <div>http://example.com/2023/05/31/Jenkins配置任务构建钉钉通知/</div>
+      <div>https://css.ss-ss.top/hexo/2023/05/31/Jenkins配置任务构建钉钉通知/</div>
     </div>
     <div class="license-meta">
       
@@ -469,7 +469,7 @@ pipeline &#123;
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/06/04/Linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7/" title="Linux系统性能监控">
+                      <a href="/hexo/2023/06/04/Linux%E7%B3%BB%E7%BB%9F%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7/" title="Linux系统性能监控">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Linux系统性能监控</span>
                         <span class="visible-mobile">上一篇</span>
@@ -479,7 +479,7 @@ pipeline &#123;
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/05/27/Linux%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3/" title="Linux系统启动过程详解">
+                      <a href="/hexo/2023/05/27/Linux%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3/" title="Linux系统启动过程详解">
                         <span class="hidden-mobile">Linux系统启动过程详解</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -606,15 +606,15 @@ pipeline &#123;
 
 <script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
 <script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
 
 
 
 
 
   
-    <script  src="/js/img-lazyload.js" ></script>
+    <script  src="/hexo/js/img-lazyload.js" ></script>
   
 
 
@@ -686,7 +686,7 @@ pipeline &#123;
 
   <script>Fluid.plugins.imageCaption();</script>
 
-  <script  src="/js/local-search.js" ></script>
+  <script  src="/hexo/js/local-search.js" ></script>
 
 
 
@@ -694,7 +694,7 @@ pipeline &#123;
 
 <!-- 主题的启动项，将它保持在最底部 -->
 <!-- the boot of the theme, keep it at the bottom -->
-<script  src="/js/boot.js" ></script>
+<script  src="/hexo/js/boot.js" ></script>
 
 
   

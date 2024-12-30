@@ -7,8 +7,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
-  <link rel="icon" href="/img/fluid.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -19,19 +19,19 @@
     <meta name="description" content="DevOps，由Development和Operations组合而成，即开发 &amp;&amp; 运维，是一组用于促进开发、运营和质量保障部门之间沟通、协作与整合的过程、方法与系统的统称 软件工程模型软件系统的工程化贯穿了软件完整的生命周期，实质上就是将各项任务按照预定的框架与规程进行划分与整合，以便于清晰、直观地表达软件开发全过程，明确规定了要完成的主要活动和任务，即是软件工程模型 软件系统从">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Jenkins持续集成工具的安装与配置">
-<meta property="og:url" content="http://example.com/2023/01/03/Jenkins%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:url" content="https://css.ss-ss.top/hexo/2023/01/03/Jenkins%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90%E5%B7%A5%E5%85%B7%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/index.html">
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="DevOps，由Development和Operations组合而成，即开发 &amp;&amp; 运维，是一组用于促进开发、运营和质量保障部门之间沟通、协作与整合的过程、方法与系统的统称 软件工程模型软件系统的工程化贯穿了软件完整的生命周期，实质上就是将各项任务按照预定的框架与规程进行划分与整合，以便于清晰、直观地表达软件开发全过程，明确规定了要完成的主要活动和任务，即是软件工程模型 软件系统从">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/img/wiki/jenkins/jenkins-001-001.jpg">
-<meta property="og:image" content="http://example.com/img/wiki/jenkins/jenkins-001-002.jpg">
-<meta property="og:image" content="http://example.com/img/wiki/jenkins/jenkins-001-003.jpg">
-<meta property="og:image" content="http://example.com/img/wiki/jenkins/jenkins-001-004.jpg">
-<meta property="og:image" content="http://example.com/img/wiki/jenkins/jenkins-001-005.jpg">
-<meta property="og:image" content="http://example.com/img/wiki/jenkins/jenkins-001-006.jpg">
-<meta property="og:image" content="http://example.com/img/wiki/jenkins/jenkins-001-007.jpg">
-<meta property="og:image" content="http://example.com/img/wiki/jenkins/jenkins-001-008.jpg">
-<meta property="og:image" content="http://example.com/img/wiki/jenkins/jenkins-001-009.jpg">
+<meta property="og:image" content="https://css.ss-ss.top/img/wiki/jenkins/jenkins-001-001.jpg">
+<meta property="og:image" content="https://css.ss-ss.top/img/wiki/jenkins/jenkins-001-002.jpg">
+<meta property="og:image" content="https://css.ss-ss.top/img/wiki/jenkins/jenkins-001-003.jpg">
+<meta property="og:image" content="https://css.ss-ss.top/img/wiki/jenkins/jenkins-001-004.jpg">
+<meta property="og:image" content="https://css.ss-ss.top/img/wiki/jenkins/jenkins-001-005.jpg">
+<meta property="og:image" content="https://css.ss-ss.top/img/wiki/jenkins/jenkins-001-006.jpg">
+<meta property="og:image" content="https://css.ss-ss.top/img/wiki/jenkins/jenkins-001-007.jpg">
+<meta property="og:image" content="https://css.ss-ss.top/img/wiki/jenkins/jenkins-001-008.jpg">
+<meta property="og:image" content="https://css.ss-ss.top/img/wiki/jenkins/jenkins-001-009.jpg">
 <meta property="article:published_time" content="2023-01-03T02:04:48.000Z">
 <meta property="article:modified_time" content="2024-12-16T07:06:24.202Z">
 <meta property="article:author" content="扬帆">
@@ -44,7 +44,7 @@
 <meta property="article:tag" content="容器云">
 <meta property="article:tag" content="云原生">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/img/wiki/jenkins/jenkins-001-001.jpg">
+<meta name="twitter:image" content="https://css.ss-ss.top/img/wiki/jenkins/jenkins-001-001.jpg">
   
   
   
@@ -72,12 +72,12 @@
 <link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
 
 
-<link  rel="stylesheet" href="/css/main.css" />
+<link  rel="stylesheet" href="/hexo/css/main.css" />
 
 
-  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
   
-    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
   
 
 
@@ -86,15 +86,15 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"css.ss-ss.top","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
       Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
     }
   </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
   
 
 
@@ -111,7 +111,7 @@
 <div class="header-inner" style="height: 70vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand" href="/">
+    <a class="navbar-brand" href="/hexo/">
       <strong>扬帆</strong>
     </a>
 
@@ -130,7 +130,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/">
+              <a class="nav-link" href="/hexo/">
                 <i class="iconfont icon-home-fill"></i>
                 首页
               </a>
@@ -142,7 +142,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/categories/">
+              <a class="nav-link" href="/hexo/categories/">
                 <i class="iconfont icon-category-fill"></i>
                 分类
               </a>
@@ -154,7 +154,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/tags/">
+              <a class="nav-link" href="/hexo/tags/">
                 <i class="iconfont icon-tags-fill"></i>
                 标签
               </a>
@@ -166,7 +166,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/archives/">
+              <a class="nav-link" href="/hexo/archives/">
                 <i class="iconfont icon-archive-fill"></i>
                 归档
               </a>
@@ -178,7 +178,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/about/">
+              <a class="nav-link" href="/hexo/about/">
                 <i class="iconfont icon-user-fill"></i>
                 关于
               </a>
@@ -207,7 +207,7 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
@@ -327,9 +327,9 @@ WantedBy=multi-user.target
 sudo systemctl start jenkins.service
 sudo systemctl enable jenkins.service
 </code></pre>
-<h2 id="1-5-获取初始密码，解锁jenkins"><a href="#1-5-获取初始密码，解锁jenkins" class="headerlink" title="1.5 获取初始密码，解锁jenkins"></a>1.5 获取初始密码，解锁jenkins</h2><p><img src="/img/wiki/jenkins/jenkins-001-001.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-001-001"></p>
+<h2 id="1-5-获取初始密码，解锁jenkins"><a href="#1-5-获取初始密码，解锁jenkins" class="headerlink" title="1.5 获取初始密码，解锁jenkins"></a>1.5 获取初始密码，解锁jenkins</h2><p><img src="/img/wiki/jenkins/jenkins-001-001.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-001-001"></p>
 <hr>
-<h2 id="1-6-安装推荐插件"><a href="#1-6-安装推荐插件" class="headerlink" title="1.6 安装推荐插件"></a>1.6 安装推荐插件</h2><p><img src="/img/wiki/jenkins/jenkins-001-002.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-001-002"></p>
+<h2 id="1-6-安装推荐插件"><a href="#1-6-安装推荐插件" class="headerlink" title="1.6 安装推荐插件"></a>1.6 安装推荐插件</h2><p><img src="/img/wiki/jenkins/jenkins-001-002.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-001-002"></p>
 <hr>
 <h1 id="2-docker部署方式"><a href="#2-docker部署方式" class="headerlink" title="2.docker部署方式"></a>2.docker部署方式</h1><pre><code class="hljs">sudo mkdir /web/jenkins
 sudo chmod -R 777 /web/jenkins
@@ -522,13 +522,13 @@ spec:
 </code></pre>
 <h2 id="3-4-获取随机密码，解锁jenkins"><a href="#3-4-获取随机密码，解锁jenkins" class="headerlink" title="3.4 获取随机密码，解锁jenkins"></a>3.4 获取随机密码，解锁jenkins</h2><pre><code class="hljs">kubectl -n devops logs jenkins-655564d6f5-ld5tl
 </code></pre>
-<h1 id="4-创建项目，测试任务构建"><a href="#4-创建项目，测试任务构建" class="headerlink" title="4.创建项目，测试任务构建"></a>4.创建项目，测试任务构建</h1><p><img src="/img/wiki/jenkins/jenkins-001-003.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-001-003"></p>
-<p><img src="/img/wiki/jenkins/jenkins-001-004.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-001-004"></p>
-<p><img src="/img/wiki/jenkins/jenkins-001-005.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-001-005"></p>
-<p><img src="/img/wiki/jenkins/jenkins-001-006.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-001-006"></p>
-<p><img src="/img/wiki/jenkins/jenkins-001-007.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-001-007"></p>
-<p><img src="/img/wiki/jenkins/jenkins-001-008.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-001-008"></p>
-<p><img src="/img/wiki/jenkins/jenkins-001-009.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-001-009"></p>
+<h1 id="4-创建项目，测试任务构建"><a href="#4-创建项目，测试任务构建" class="headerlink" title="4.创建项目，测试任务构建"></a>4.创建项目，测试任务构建</h1><p><img src="/img/wiki/jenkins/jenkins-001-003.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-001-003"></p>
+<p><img src="/img/wiki/jenkins/jenkins-001-004.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-001-004"></p>
+<p><img src="/img/wiki/jenkins/jenkins-001-005.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-001-005"></p>
+<p><img src="/img/wiki/jenkins/jenkins-001-006.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-001-006"></p>
+<p><img src="/img/wiki/jenkins/jenkins-001-007.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-001-007"></p>
+<p><img src="/img/wiki/jenkins/jenkins-001-008.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-001-008"></p>
+<p><img src="/img/wiki/jenkins/jenkins-001-009.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-001-009"></p>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1559679">https://cloud.tencent.com/developer/article/1559679</a></li>
@@ -553,7 +553,7 @@ spec:
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
   
   
 
@@ -568,21 +568,21 @@ spec:
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Linux/">#Linux</a>
+        <a href="/hexo/tags/Linux/">#Linux</a>
       
-        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
       
-        <a href="/tags/CICD/">#CICD</a>
+        <a href="/hexo/tags/CICD/">#CICD</a>
       
-        <a href="/tags/DevOps/">#DevOps</a>
+        <a href="/hexo/tags/DevOps/">#DevOps</a>
       
-        <a href="/tags/Jenkins/">#Jenkins</a>
+        <a href="/hexo/tags/Jenkins/">#Jenkins</a>
       
-        <a href="/tags/Kubernetes/">#Kubernetes</a>
+        <a href="/hexo/tags/Kubernetes/">#Kubernetes</a>
       
-        <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+        <a href="/hexo/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
       
-        <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+        <a href="/hexo/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
       
     </div>
   
@@ -595,7 +595,7 @@ spec:
   <div class="license-box my-3">
     <div class="license-title">
       <div>Jenkins持续集成工具的安装与配置</div>
-      <div>http://example.com/2023/01/03/Jenkins持续集成工具的安装与配置/</div>
+      <div>https://css.ss-ss.top/hexo/2023/01/03/Jenkins持续集成工具的安装与配置/</div>
     </div>
     <div class="license-meta">
       
@@ -637,7 +637,7 @@ spec:
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/01/08/Python%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/" title="Python基础语法">
+                      <a href="/hexo/2023/01/08/Python%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/" title="Python基础语法">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Python基础语法</span>
                         <span class="visible-mobile">上一篇</span>
@@ -647,7 +647,7 @@ spec:
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/12/20/Kubernetes%E5%AE%9E%E6%88%98%E4%B9%8B%E9%83%A8%E7%BD%B2Cloudreve%E4%BA%91%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/" title="Kubernetes实战之部署Cloudreve云存储系统">
+                      <a href="/hexo/2022/12/20/Kubernetes%E5%AE%9E%E6%88%98%E4%B9%8B%E9%83%A8%E7%BD%B2Cloudreve%E4%BA%91%E5%AD%98%E5%82%A8%E7%B3%BB%E7%BB%9F/" title="Kubernetes实战之部署Cloudreve云存储系统">
                         <span class="hidden-mobile">Kubernetes实战之部署Cloudreve云存储系统</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -774,15 +774,15 @@ spec:
 
 <script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
 <script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
 
 
 
 
 
   
-    <script  src="/js/img-lazyload.js" ></script>
+    <script  src="/hexo/js/img-lazyload.js" ></script>
   
 
 
@@ -854,7 +854,7 @@ spec:
 
   <script>Fluid.plugins.imageCaption();</script>
 
-  <script  src="/js/local-search.js" ></script>
+  <script  src="/hexo/js/local-search.js" ></script>
 
 
 
@@ -862,7 +862,7 @@ spec:
 
 <!-- 主题的启动项，将它保持在最底部 -->
 <!-- the boot of the theme, keep it at the bottom -->
-<script  src="/js/boot.js" ></script>
+<script  src="/hexo/js/boot.js" ></script>
 
 
   
