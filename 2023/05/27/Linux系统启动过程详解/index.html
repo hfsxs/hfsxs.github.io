@@ -23,7 +23,7 @@
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="Linux系统的启动是指计算机加电到显示用户登陆提示的整个过程，最终将计算机带入工作状态，是一个复杂而有序的多阶段系统事件，对操作系统管理计算机资源的理解、系统性能的优化以及系统启动故障的排查非常有帮助  1.硬件引导计算机打开电源后，首先是BIOS开机自检，按照BIOS中设置的启动设备启动系统，通常为硬盘，然后由启动设备的主引导扇区所存储的引导加载程序（BootLoader）读取引导程序GRUB">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://hfsxs.github.io/hexo/img/wiki/linux/boot.png">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/linux/boot.png">
 <meta property="article:published_time" content="2023-05-27T15:24:22.000Z">
 <meta property="article:modified_time" content="2024-04-18T02:46:37.592Z">
 <meta property="article:author" content="扬帆">
@@ -31,7 +31,7 @@
 <meta property="article:tag" content="云计算">
 <meta property="article:tag" content="操作系统">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://hfsxs.github.io/hexo/img/wiki/linux/boot.png">
+<meta name="twitter:image" content="https://hfsxs.github.io/img/wiki/linux/boot.png">
   
   
   
@@ -278,7 +278,7 @@
               <div class="markdown-body">
                 
                 <p>Linux系统的启动是指计算机加电到显示用户登陆提示的整个过程，最终将计算机带入工作状态，是一个复杂而有序的多阶段系统事件，对操作系统管理计算机资源的理解、系统性能的优化以及系统启动故障的排查非常有帮助</p>
-<p><img src="/hexo/img/wiki/linux/boot.png" srcset="/img/loading.gif" lazyload alt="boot"></p>
+<p><img src="/img/wiki/linux/boot.png" srcset="/img/loading.gif" lazyload alt="boot"></p>
 <h1 id="1-硬件引导"><a href="#1-硬件引导" class="headerlink" title="1.硬件引导"></a>1.硬件引导</h1><p>计算机打开电源后，首先是BIOS开机自检，按照BIOS中设置的启动设备启动系统，通常为硬盘，然后由启动设备的主引导扇区所存储的引导加载程序（BootLoader）读取引导程序GRUB和硬盘分区表</p>
 <h1 id="2-加载内核"><a href="#2-加载内核" class="headerlink" title="2.加载内核"></a>2.加载内核</h1><p>GRUB引导程序加载内核和镜像文件到内存，进行操作系统内核的运行。之后，由Linux操作系统全面接管硬件</p>
 <h1 id="3-运行init"><a href="#3-运行init" class="headerlink" title="3.运行init"></a>3.运行init</h1><p>内核加载完毕后，Linux操作系统将会启动第一个守护进程init，进程PID为1，所有的进程都是其子进程，之后再读取进程运行等级文件&#x2F;etc&#x2F;inittab，以确定所需要启动的程序与服务。Linux系统运行级别，runlevel，代表了Linux的运行状态，分为7个级别，具体如下：</p>

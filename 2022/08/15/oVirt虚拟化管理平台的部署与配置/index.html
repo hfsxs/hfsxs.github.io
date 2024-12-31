@@ -23,10 +23,10 @@
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="oVirt，基于kvm的企业级开源虚拟化解决方案，是RedHat商业版RHEV的开源版，整合了libvirt、gluster、patternfly、ansible等一系列优秀的开源软件，定位是替代vmware、vsphere，相比OpenStack的庞大和复杂，其简洁的部署与维护更具优势  体系架构oVirt集群架构由三个部分构成，即管理节点Engine、主机节点Node以及存储节点 1.engi">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://hfsxs.github.io/hexo/img/wiki/ovirt/datacenter-local.jpg">
-<meta property="og:image" content="https://hfsxs.github.io/hexo/img/wiki/ovirt/host-add.jpg">
-<meta property="og:image" content="https://hfsxs.github.io/hexo/img/wiki/ovirt/storage-local-add.jpg">
-<meta property="og:image" content="https://hfsxs.github.io/hexo/img/wiki/ovirt/storage-iso-add.jpg">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/ovirt/datacenter-local.jpg">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/ovirt/host-add.jpg">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/ovirt/storage-local-add.jpg">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/ovirt/storage-iso-add.jpg">
 <meta property="article:published_time" content="2022-08-15T04:08:28.000Z">
 <meta property="article:modified_time" content="2023-12-31T12:59:38.628Z">
 <meta property="article:author" content="扬帆">
@@ -36,7 +36,7 @@
 <meta property="article:tag" content="虚拟化">
 <meta property="article:tag" content="oVirt">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://hfsxs.github.io/hexo/img/wiki/ovirt/datacenter-local.jpg">
+<meta name="twitter:image" content="https://hfsxs.github.io/img/wiki/ovirt/datacenter-local.jpg">
   
   
   
@@ -325,21 +325,21 @@ SSO_CALLBACK_PREFIX_CHECK=false
 </code></pre>
 <h2 id="重启ovirt-engine服务"><a href="#重启ovirt-engine服务" class="headerlink" title="重启ovirt-engine服务"></a>重启ovirt-engine服务</h2><pre><code class="hljs">sudo systemctl restart ovirt-engine.service
 </code></pre>
-<h1 id="5-修改数据中心存储类型为本地"><a href="#5-修改数据中心存储类型为本地" class="headerlink" title="5.修改数据中心存储类型为本地"></a>5.修改数据中心存储类型为本地</h1><p><img src="/hexo/img/wiki/ovirt/datacenter-local.jpg" srcset="/img/loading.gif" lazyload alt="001"></p>
+<h1 id="5-修改数据中心存储类型为本地"><a href="#5-修改数据中心存储类型为本地" class="headerlink" title="5.修改数据中心存储类型为本地"></a>5.修改数据中心存储类型为本地</h1><p><img src="/img/wiki/ovirt/datacenter-local.jpg" srcset="/img/loading.gif" lazyload alt="001"></p>
 <hr>
-<h1 id="6-新建Node节点"><a href="#6-新建Node节点" class="headerlink" title="6.新建Node节点"></a>6.新建Node节点</h1><p><img src="/hexo/img/wiki/ovirt/host-add.jpg" srcset="/img/loading.gif" lazyload alt="002"></p>
+<h1 id="6-新建Node节点"><a href="#6-新建Node节点" class="headerlink" title="6.新建Node节点"></a>6.新建Node节点</h1><p><img src="/img/wiki/ovirt/host-add.jpg" srcset="/img/loading.gif" lazyload alt="002"></p>
 <hr>
 <h1 id="7-新建本地存储域"><a href="#7-新建本地存储域" class="headerlink" title="7.新建本地存储域"></a>7.新建本地存储域</h1><pre><code class="hljs"># 创建虚拟机镜像存储目录并授予权限
 mkdir -p /home/ovirt/images &amp;&amp; chown -R vdsm.root /home/ovirt/images
 </code></pre>
 <hr>
-<p><img src="/hexo/img/wiki/ovirt/storage-local-add.jpg" srcset="/img/loading.gif" lazyload alt="003"></p>
+<p><img src="/img/wiki/ovirt/storage-local-add.jpg" srcset="/img/loading.gif" lazyload alt="003"></p>
 <hr>
 <h1 id="8-新建本地ISO存储域"><a href="#8-新建本地ISO存储域" class="headerlink" title="8.新建本地ISO存储域"></a>8.新建本地ISO存储域</h1><pre><code class="hljs"># 创建ISO光盘存储目录并授予权限
 mkdir -p /home/ovirt/iso &amp;&amp; chown -R vdsm.root /home/ovirt/iso
 </code></pre>
 <hr>
-<p><img src="/hexo/img/wiki/ovirt/storage-iso-add.jpg" srcset="/img/loading.gif" lazyload alt="004"></p>
+<p><img src="/img/wiki/ovirt/storage-iso-add.jpg" srcset="/img/loading.gif" lazyload alt="004"></p>
 <hr>
 <h1 id="9-上传ISO光盘文件"><a href="#9-上传ISO光盘文件" class="headerlink" title="9.上传ISO光盘文件"></a>9.上传ISO光盘文件</h1><h1 id="10-安装虚拟机"><a href="#10-安装虚拟机" class="headerlink" title="10.安装虚拟机"></a>10.安装虚拟机</h1><h2 id="10-1-Windows安装"><a href="#10-1-Windows安装" class="headerlink" title="10.1 Windows安装"></a>10.1 Windows安装</h2><h2 id="10-2-创建虚拟机"><a href="#10-2-创建虚拟机" class="headerlink" title="10.2 创建虚拟机"></a>10.2 创建虚拟机</h2><h2 id="10-3-虚拟机安装guest客户端"><a href="#10-3-虚拟机安装guest客户端" class="headerlink" title="10.3 虚拟机安装guest客户端"></a>10.3 虚拟机安装guest客户端</h2><pre><code class="hljs">sudo yum -y install epel-release ovirt-guest-agent-common
 sudo apt install -y ovirt-guest-agent
