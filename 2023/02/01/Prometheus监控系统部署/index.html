@@ -23,19 +23,18 @@
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="Prometheus是基于Go语言构建的由SoundCloud开发的开源监控告警系统，基本原理是通过HTTP协议周期性拉取被监控组件的状态，任意组件只要提供对应的HTTP接口即可接入，而不再需要任何SDK或其他集成过程 系统架构1.Prometheusprometheus server，Prometheus监控系统的核心部分，负责实现监控数据的收集、存储及数据查询 2.Exportersexpor">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/prometheus-001.jpg">
-<meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/prometheus-002.jpg">
-<meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/prometheus-003.jpg">
-<meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/prometheus-004.jpg">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/prometheus01.jpg">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/prometheus02.jpg">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/prometheus03.jpg">
 <meta property="article:published_time" content="2023-02-01T01:42:31.000Z">
-<meta property="article:modified_time" content="2024-10-14T08:54:16.940Z">
+<meta property="article:modified_time" content="2025-01-05T02:50:35.671Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
 <meta property="article:tag" content="Prometheus">
 <meta property="article:tag" content="监控告警">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://hfsxs.github.io/img/wiki/prometheus/prometheus-001.jpg">
+<meta name="twitter:image" content="https://hfsxs.github.io/img/wiki/prometheus/prometheus01.jpg">
   
   
   
@@ -227,7 +226,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.4k 字
+          3.3k 字
         
       </span>
     
@@ -238,7 +237,7 @@
         
         
         
-          29 分钟
+          28 分钟
         
       </span>
     
@@ -297,7 +296,7 @@
 <h1 id="监控指标"><a href="#监控指标" class="headerlink" title="监控指标"></a>监控指标</h1><h2 id="1-服务器监控"><a href="#1-服务器监控" class="headerlink" title="1.服务器监控"></a>1.服务器监控</h2><h3 id="1-1-CPU"><a href="#1-1-CPU" class="headerlink" title="1.1 CPU"></a>1.1 CPU</h3><p>CPU整体使用量、用户态百分比、内核态百分比，以及单个CPU的使用量、等待队列长度、I&#x2F;O等待百分比、CPU消耗最多的进程、上下文切换次数、缓存命中率等</p>
 <h3 id="1-2-内存"><a href="#1-2-内存" class="headerlink" title="1.2 内存"></a>1.2 内存</h3><p>内存整体使用量、剩余量、内存占用最高的进程、交换分区大小、缺页异常等</p>
 <h3 id="1-3-网络I-x2F-O"><a href="#1-3-网络I-x2F-O" class="headerlink" title="1.3 网络I&#x2F;O"></a>1.3 网络I&#x2F;O</h3><p>单个网卡的上行流量、下行流量、网络延迟、丢包率等</p>
-<h3 id="1-4-磁盘-I-x2F-O"><a href="#1-4-磁盘-I-x2F-O" class="headerlink" title="1.4 磁盘 I&#x2F;O"></a>1.4 磁盘 I&#x2F;O</h3><p>硬盘读写速率、IOPS、磁盘用量、读写延迟等</p>
+<h3 id="1-4-磁盘I-x2F-O"><a href="#1-4-磁盘I-x2F-O" class="headerlink" title="1.4 磁盘I&#x2F;O"></a>1.4 磁盘I&#x2F;O</h3><p>硬盘读写速率、IOPS、磁盘用量、读写延迟等</p>
 <h2 id="2-网络监控"><a href="#2-网络监控" class="headerlink" title="2.网络监控"></a>2.网络监控</h2><h3 id="2-1-网络性能监控"><a href="#2-1-网络性能监控" class="headerlink" title="2.1 网络性能监控"></a>2.1 网络性能监控</h3><p>网络监测、网络实时流量监控（网络延迟、访问量、成功率）、历史数据统计、汇总和历史数据分析等指标</p>
 <h3 id="2-2-网络检测"><a href="#2-2-网络检测" class="headerlink" title="2.2 网络检测"></a>2.2 网络检测</h3><p>网络攻击，如DDoS攻击，通过分析异常流量来确定网络攻击行为</p>
 <h3 id="2-3-设备监控"><a href="#2-3-设备监控" class="headerlink" title="2.3 设备监控"></a>2.3 设备监控</h3><p>数据中心内的多种网络设备监控，如路由器、防火墙和交换机等硬件设备，通过snmp协议收集监控数据</p>
@@ -312,7 +311,6 @@
 <h2 id="5-应用程序监控"><a href="#5-应用程序监控" class="headerlink" title="5.应用程序监控"></a>5.应用程序监控</h2><p>APM主要是针对应用程序的监控，包括应用程序的运行状态监控，性能监控，日志监控及调用链跟踪等。调用链跟踪是指追踪整个请求过程（从用户发送请求，通常指浏览器或者应用客户端）到后端API服务以及API服务和关联的中间件，或者其他组件之间的调用，构建出一个完整的调用拓扑结构，不仅如此，APM 还可以监控组件内部方法的调用层次（Controller–&gt;service–&gt;Dao）获取每个函数的执行耗时，从而为性能调优提供数据支撑</p>
 <hr>
 <h1 id="1-下载安装包"><a href="#1-下载安装包" class="headerlink" title="1.下载安装包"></a>1.下载安装包</h1><pre><code class="hljs">wget https://github.com/prometheus/prometheus/releases/download/v2.45.0/prometheus-2.45.0.linux-amd64.tar.gz
-wget https://github.com/prometheus/mysqld_exporter/releases/download/v0.15.0/mysqld_exporter-0.15.0.linux-amd64.tar.gz
 </code></pre>
 <h1 id="2-安装Prometheus"><a href="#2-安装Prometheus" class="headerlink" title="2.安装Prometheus"></a>2.安装Prometheus</h1><pre><code class="hljs">tar -xzvf prometheus-2.45.0.linux-amd64.tar.gz
 sudo mv prometheus-2.45.0.linux-amd64 /usr/local/prometheus
@@ -345,17 +343,17 @@ sudo systemctl enable prometheus.service
 </code></pre>
 <h1 id="5-验证Prometheus"><a href="#5-验证Prometheus" class="headerlink" title="5.验证Prometheus"></a>5.验证Prometheus</h1><pre><code class="hljs">curl http://127.0.0.1:9090/metrics
 </code></pre>
-<h1 id="6-部署grafana"><a href="#6-部署grafana" class="headerlink" title="6.部署grafana"></a>6.部署grafana</h1><h2 id="6-1-安装grafana"><a href="#6-1-安装grafana" class="headerlink" title="6.1 安装grafana"></a>6.1 安装grafana</h2><pre><code class="hljs">sudo docker run -it -d -p 3000:3000 --name grafana grafana
+<h1 id="6-部署Grafana"><a href="#6-部署Grafana" class="headerlink" title="6.部署Grafana"></a>6.部署Grafana</h1><h2 id="6-1-安装Grafana"><a href="#6-1-安装Grafana" class="headerlink" title="6.1 安装Grafana"></a>6.1 安装Grafana</h2><pre><code class="hljs">sudo docker run -it -d -p 3000:3000 --name grafana grafana
 </code></pre>
-<h2 id="6-2-登录grafana，更改默认密码"><a href="#6-2-登录grafana，更改默认密码" class="headerlink" title="6.2 登录grafana，更改默认密码"></a>6.2 登录grafana，更改默认密码</h2><ul>
-<li>登录网址：<a target="_blank" rel="noopener" href="http://ip:3000/">http://ip:3000</a></li>
-<li>账户密码：admin&#x2F;admin</li>
+<h2 id="6-2-登录Grafana，更改默认密码"><a href="#6-2-登录Grafana，更改默认密码" class="headerlink" title="6.2 登录Grafana，更改默认密码"></a>6.2 登录Grafana，更改默认密码</h2><ul>
+<li>地址：<a target="_blank" rel="noopener" href="http://ip:3000/">http://ip:3000</a></li>
+<li>账号密码：admin&#x2F;admin</li>
 </ul>
-<p><img src="/img/wiki/prometheus/prometheus-001.jpg" srcset="/img/loading.gif" lazyload alt="prometheus-001"></p>
-<h2 id="6-3-配置Prometheus数据源"><a href="#6-3-配置Prometheus数据源" class="headerlink" title="6.3 配置Prometheus数据源"></a>6.3 配置Prometheus数据源</h2><p>Configuration — &gt; Data Sources —&gt; Add data source —&gt; Prometheus</p>
-<p><img src="/img/wiki/prometheus/prometheus-002.jpg" srcset="/img/loading.gif" lazyload alt="prometheus-002"></p>
-<h2 id="6-3-导入Prometheus监控大盘"><a href="#6-3-导入Prometheus监控大盘" class="headerlink" title="6.3 导入Prometheus监控大盘"></a>6.3 导入Prometheus监控大盘</h2><p><img src="/img/wiki/prometheus/prometheus-003.jpg" srcset="/img/loading.gif" lazyload alt="prometheus-003"></p>
-<h2 id="6-4-验证grafana"><a href="#6-4-验证grafana" class="headerlink" title="6.4 验证grafana"></a>6.4 验证grafana</h2><p><img src="/img/wiki/prometheus/prometheus-004.jpg" srcset="/img/loading.gif" lazyload alt="prometheus-004"></p>
+<h2 id="6-3-配置数据源"><a href="#6-3-配置数据源" class="headerlink" title="6.3 配置数据源"></a>6.3 配置数据源</h2><p>Configuration — &gt; Data Sources —&gt; Add data source —&gt; Prometheus</p>
+<p><img src="/img/wiki/prometheus/prometheus01.jpg" srcset="/img/loading.gif" lazyload alt="prometheus01"></p>
+<h2 id="6-3-导入监控模板"><a href="#6-3-导入监控模板" class="headerlink" title="6.3 导入监控模板"></a>6.3 导入监控模板</h2><p>Dashboards — &gt; New — &gt; Import — &gt; 模版ID：3662</p>
+<p><img src="/img/wiki/prometheus/prometheus02.jpg" srcset="/img/loading.gif" lazyload alt="prometheus02"></p>
+<h2 id="6-4-验证Grafana"><a href="#6-4-验证Grafana" class="headerlink" title="6.4 验证Grafana"></a>6.4 验证Grafana</h2><p><img src="/img/wiki/prometheus/prometheus03.jpg" srcset="/img/loading.gif" lazyload alt="prometheus03"></p>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://andyoung.blog.csdn.net/article/details/122040410">https://andyoung.blog.csdn.net/article/details/122040410</a></li>
