@@ -4,138 +4,6 @@
   
   
   <entry>
-    <title>Obsidian构建个人知识库</title>
-    <link href="/2024/12/28/Obsidian%E6%9E%84%E5%BB%BA%E4%B8%AA%E4%BA%BA%E7%9F%A5%E8%AF%86%E5%BA%93/"/>
-    <url>/2024/12/28/Obsidian%E6%9E%84%E5%BB%BA%E4%B8%AA%E4%BA%BA%E7%9F%A5%E8%AF%86%E5%BA%93/</url>
-    
-    <content type="html"><![CDATA[<p>Obsidian，</p><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://blog.csdn.net/kiong_/article/details/135768925">https://blog.csdn.net/kiong_/article/details/135768925</a></li></ul>]]></content>
-    
-    
-    <categories>
-      
-      <category>工作</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>Linux</tag>
-      
-      <tag>云计算</tag>
-      
-      <tag>Git</tag>
-      
-      <tag>监控告警</tag>
-      
-      <tag>云笔记</tag>
-      
-      <tag>Obsidian</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Prometheus监控Nginx</title>
-    <link href="/2024/12/18/Prometheus%E7%9B%91%E6%8E%A7Nginx/"/>
-    <url>/2024/12/18/Prometheus%E7%9B%91%E6%8E%A7Nginx/</url>
-    
-    <content type="html"><![CDATA[]]></content>
-    
-    
-    <categories>
-      
-      <category>工作</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>Linux</tag>
-      
-      <tag>云计算</tag>
-      
-      <tag>Nginx</tag>
-      
-      <tag>Prometheus</tag>
-      
-      <tag>监控告警</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Prometheus监控Elasticsearch</title>
-    <link href="/2024/12/02/Prometheus%E7%9B%91%E6%8E%A7Elasticsearch/"/>
-    <url>/2024/12/02/Prometheus%E7%9B%91%E6%8E%A7Elasticsearch/</url>
-    
-    <content type="html"><![CDATA[]]></content>
-    
-    
-    <categories>
-      
-      <category>工作</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>Linux</tag>
-      
-      <tag>云计算</tag>
-      
-      <tag>Elasticsearch</tag>
-      
-      <tag>Prometheus</tag>
-      
-      <tag>监控告警</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>Prometheus监控Ingress-Controller</title>
-    <link href="/2024/11/30/Prometheus%E7%9B%91%E6%8E%A7Ingress-Controller/"/>
-    <url>/2024/11/30/Prometheus%E7%9B%91%E6%8E%A7Ingress-Controller/</url>
-    
-    <content type="html"><![CDATA[<hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://www.jianshu.com/p/0e4981381507">https://www.jianshu.com/p/0e4981381507</a></li><li><a href="https://blog.csdn.net/qq_44930876/article/details/142848211">https://blog.csdn.net/qq_44930876/article/details/142848211</a></li></ul>]]></content>
-    
-    
-    <categories>
-      
-      <category>工作</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>Linux</tag>
-      
-      <tag>云计算</tag>
-      
-      <tag>Prometheus</tag>
-      
-      <tag>监控告警</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>Jumpserver堡垒机的部署与配置</title>
     <link href="/2024/08/18/Jumpserver%E5%A0%A1%E5%9E%92%E6%9C%BA%E7%9A%84%E9%83%A8%E7%BD%B2%E4%B8%8E%E9%85%8D%E7%BD%AE/"/>
     <url>/2024/08/18/Jumpserver%E5%A0%A1%E5%9E%92%E6%9C%BA%E7%9A%84%E9%83%A8%E7%BD%B2%E4%B8%8E%E9%85%8D%E7%BD%AE/</url>
@@ -1679,7 +1547,7 @@
     <link href="/2023/08/01/Prometheus%E7%9B%91%E6%8E%A7Linux%E7%B3%BB%E7%BB%9F/"/>
     <url>/2023/08/01/Prometheus%E7%9B%91%E6%8E%A7Linux%E7%B3%BB%E7%BB%9F/</url>
     
-    <content type="html"><![CDATA[<p>实例，即Instance，Exporters暴露的HTTP方式的API，用于Prometheus周期性地采集监控样本数据，分布于不同节点的实例组构成任务，即Job，如node_exporter系统监控实例所组成的服务器资源监控任务、mysql_exporter监控实例所组成的数据库资源监控任务等</p><h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul><li>192.168.100.100 Prometheus node_exporter</li><li>192.168.100.120 node_exporter</li><li>192.168.100.121 node_exporter</li></ul><h1 id="1-下载安装包"><a href="#1-下载安装包" class="headerlink" title="1.下载安装包"></a>1.下载安装包</h1><pre><code class="hljs">wget https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz</code></pre><h1 id="2-安装node-exporter"><a href="#2-安装node-exporter" class="headerlink" title="2.安装node-exporter"></a>2.安装node-exporter</h1><pre><code class="hljs">tar -xzvf node_exporter-1.6.1.linux-amd64.tar.gzsudo mv node_exporter-1.6.1.linux-amd64 /usr/local/bin/node_exporter</code></pre><h1 id="3-创建启动脚本"><a href="#3-创建启动脚本" class="headerlink" title="3.创建启动脚本"></a>3.创建启动脚本</h1><pre><code class="hljs">sudo vi /lib/systemd/system/node_exporter.service[Unit]Description=node_exporterDocumentation=https://prometheus.ioAfter=network.target[Service]Type=simpleUser=rootExecStart=/usr/local/bin/node_exporterRestart=on-failure[Install]WantedBy=multi-user.target</code></pre><h1 id="4-启动node-exporter"><a href="#4-启动node-exporter" class="headerlink" title="4.启动node-exporter"></a>4.启动node-exporter</h1><pre><code class="hljs">sudo systemctl daemon-reloadsudo systemctl start node_exporter.servicesudo systemctl enable node_exporter.service</code></pre><h1 id="5-配置Prometheus"><a href="#5-配置Prometheus" class="headerlink" title="5.配置Prometheus"></a>5.配置Prometheus</h1><h2 id="5-1-配置监控实例"><a href="#5-1-配置监控实例" class="headerlink" title="5.1 配置监控实例"></a>5.1 配置监控实例</h2><pre><code class="hljs">sudo vi /usr/local/prometheus/prometheus.ymlglobal:  scrape_interval: 15s   evaluation_interval: 15s   scrape_timeout: 10s scrape_configs:  - job_name: &quot;prometheus&quot;    static_configs:      - targets: [&quot;localhost:9090&quot;]  - job_name: &quot;node&quot;    static_configs:      - targets: [&quot;192.168.100.120:9090&quot;]      - targets: [&quot;192.168.100.121:9090&quot;]  </code></pre><h2 id="5-2-重载Prometheus"><a href="#5-2-重载Prometheus" class="headerlink" title="5.2 重载Prometheus"></a>5.2 重载Prometheus</h2><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload</code></pre><h1 id="6-导入grafana模版"><a href="#6-导入grafana模版" class="headerlink" title="6.导入grafana模版"></a>6.导入grafana模版</h1><p>Dashboards —&gt; New —&gt; Import —&gt; 模版ID：11074</p><p><img src="/img/wiki/prometheus/prometheus-005.jpg" alt="prometheus-005"></p><p><img src="/img/wiki/prometheus/prometheus-006.jpg" alt="prometheus-006"></p><h1 id="7-验证Linux系统监控"><a href="#7-验证Linux系统监控" class="headerlink" title="7.验证Linux系统监控"></a>7.验证Linux系统监控</h1><p><img src="/img/wiki/prometheus/prometheus-007.jpg" alt="prometheus-007"></p><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://blog.csdn.net/weixin_43883625/article/details/129757960">https://blog.csdn.net/weixin_43883625/article/details/129757960</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<p>实例，即Instance，是Exporters暴露的HTTP方式的API，用于Prometheus周期性地采集监控样本数据。分布于不同节点的实例组构成任务，即Job，如node_exporter系统监控实例所组成的服务器资源监控任务、mysql_exporter监控实例所组成的数据库资源监控任务等</p><h1 id="1-下载安装包"><a href="#1-下载安装包" class="headerlink" title="1.下载安装包"></a>1.下载安装包</h1><pre><code class="hljs">wget https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz</code></pre><h1 id="2-安装node-exporter"><a href="#2-安装node-exporter" class="headerlink" title="2.安装node-exporter"></a>2.安装node-exporter</h1><pre><code class="hljs">tar -xzvf node_exporter-1.6.1.linux-amd64.tar.gzsudo mv node_exporter-1.6.1.linux-amd64 /usr/local/bin/node_exporter</code></pre><h1 id="3-创建启动脚本"><a href="#3-创建启动脚本" class="headerlink" title="3.创建启动脚本"></a>3.创建启动脚本</h1><pre><code class="hljs">sudo vi /lib/systemd/system/node_exporter.service[Unit]Description=node_exporterDocumentation=https://prometheus.ioAfter=network.target[Service]Type=simpleUser=rootExecStart=/usr/local/bin/node_exporterRestart=on-failure[Install]WantedBy=multi-user.target</code></pre><h1 id="4-启动node-exporter"><a href="#4-启动node-exporter" class="headerlink" title="4.启动node-exporter"></a>4.启动node-exporter</h1><pre><code class="hljs">sudo systemctl daemon-reloadsudo systemctl start node_exporter.servicesudo systemctl enable node_exporter.service</code></pre><h1 id="5-配置Prometheus"><a href="#5-配置Prometheus" class="headerlink" title="5.配置Prometheus"></a>5.配置Prometheus</h1><h2 id="5-1-配置监控实例"><a href="#5-1-配置监控实例" class="headerlink" title="5.1 配置监控实例"></a>5.1 配置监控实例</h2><pre><code class="hljs">sudo vi /usr/local/prometheus/prometheus.ymlglobal:  scrape_interval: 15s   evaluation_interval: 15s   scrape_timeout: 10s scrape_configs:  - job_name: &quot;prometheus&quot;    static_configs:      - targets: [&quot;localhost:9090&quot;]  - job_name: &quot;node&quot;    static_configs:      - targets: [&quot;192.168.100.120:9090&quot;]      - targets: [&quot;192.168.100.121:9090&quot;]  </code></pre><h2 id="5-2-重载Prometheus"><a href="#5-2-重载Prometheus" class="headerlink" title="5.2 重载Prometheus"></a>5.2 重载Prometheus</h2><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload</code></pre><h1 id="6-Grafana导入监控模版"><a href="#6-Grafana导入监控模版" class="headerlink" title="6.Grafana导入监控模版"></a>6.Grafana导入监控模版</h1><p>Dashboards —&gt; New —&gt; Import —&gt; 模版ID：11074</p><p><img src="/img/wiki/prometheus/linux01.jpg" alt="linux01"></p><p><img src="/img/wiki/prometheus/linux02.jpg" alt="linux02"></p><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://blog.csdn.net/weixin_43883625/article/details/129757960">https://blog.csdn.net/weixin_43883625/article/details/129757960</a></li></ul>]]></content>
     
     
     <categories>
