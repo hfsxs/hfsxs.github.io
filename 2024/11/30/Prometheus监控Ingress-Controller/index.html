@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/ingress.jpg">
 <meta property="article:published_time" content="2024-11-30T07:11:14.000Z">
-<meta property="article:modified_time" content="2025-01-13T08:21:59.448Z">
+<meta property="article:modified_time" content="2025-01-13T08:31:55.384Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -287,6 +287,7 @@
   targetPort: 10254
 </code></pre>
 <h1 id="2-配置Prometheus"><a href="#2-配置Prometheus" class="headerlink" title="2.配置Prometheus"></a>2.配置Prometheus</h1><h2 id="2-1-配置监控实例"><a href="#2-1-配置监控实例" class="headerlink" title="2.1 配置监控实例"></a>2.1 配置监控实例</h2><pre><code class="hljs">sudo vi /usr/local/prometheus/prometheus.yml
+
 
 - job_name: &quot;kubernetes-ingress-controller&quot;
   scheme: http
