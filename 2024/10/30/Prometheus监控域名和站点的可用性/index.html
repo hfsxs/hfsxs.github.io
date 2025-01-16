@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/blackbox-18538.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/blackbox-16124.jpg">
 <meta property="article:published_time" content="2024-10-30T01:36:59.000Z">
-<meta property="article:modified_time" content="2025-01-13T08:36:21.787Z">
+<meta property="article:modified_time" content="2025-01-16T06:27:29.288Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -236,7 +236,7 @@
         
         
         
-          71 分钟
+          72 分钟
         
       </span>
     
@@ -520,64 +520,64 @@ groups:
     labels:
       severity: Critical
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例探测失败，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例探测失败， 当前状态为 &#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例探测失败，请尽快处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例探测失败， 当前状态为 &#123;&#123; $value &#125;&#125;&quot;
   - alert: BlackboxSlowProbe
     expr: avg_over_time(probe_duration_seconds[1m]) &gt; 2
     for: 2m
     labels:
       severity: Warning
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例探测响应时长超限，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例探测响应时长超过1s，当前状态为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例探测响应时长超过1s，请尽快处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例探测响应时长超过1s，当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: BlackboxProbeSlowHttp
     expr: avg_over_time(probe_http_duration_seconds[1m]) &gt; 1
     for: 1m
     labels:
       severity: Warning
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例HTTP探测响应时长超限，请尽快处理！&quot;
-      description:  &quot;&#123;&#123; $labels.instance &#125;&#125;实例HTTP探测响应时长超限，当前状态为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例HTTP探测响应时长超过1s，请尽快处理！&quot;
+      description:  &quot;&#123;&#123; $labels.instance &#125;&#125; 实例HTTP探测响应时长超过1s，当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: BlackboxProbeSlowPing
     expr: avg_over_time(probe_icmp_duration_seconds[1m]) &gt; 1
     for: 1m
     labels:
       severity: Warning
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例ping探测响应时长超限，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例ping探测响应时长超限，当前状态为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例ping探测响应时长超过1s，请尽快处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例ping探测响应时长超过1s，当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: BlackboxProbeHttpFailure
     expr: probe_http_status_code &lt;= 199 OR probe_http_status_code &gt;= 400
     for: 1m
     labels:
       severity: Critical
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例HTTP探测失败，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例HTTP响应状态码不是200-399，当前状态为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例HTTP探测失败，请尽快处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例HTTP响应状态码不是200-399，当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: BlackboxSslCertificateWillExpireSoon
     expr: 3 &lt;= round((last_over_time(probe_ssl_earliest_cert_expiry[10m]) - time()) / 86400, 0.1) &lt; 30
     for: 5m
     labels:
       severity: Warning
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例SSL证书有效期小于30天，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例SSL证书有效期小于30天，状态为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例SSL证书有效期小于30天，请尽快处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例SSL证书有效期小于30天，状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: BlackboxSslCertificateWillExpireSoon
     expr: 0 &lt;= round((last_over_time(probe_ssl_earliest_cert_expiry[10m]) - time()) / 86400, 0.1) &lt; 3
     for: 0m
     labels:
       severity: Critical
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例SSL证书有效期小于3天，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例SSL证书有效期小于3天，状态为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例SSL证书有效期小于3天，请尽快处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例SSL证书有效期小于3天，状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: BlackboxSslCertificateExpired
     expr: round((last_over_time(probe_ssl_earliest_cert_expiry[10m]) - time()) / 86400, 0.1) &lt; 0
     for: 0m
     labels:
       severity: Critical
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例SSL证书已过期，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例SSL证书已过期，当前状态为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例SSL证书已过期，请尽快处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例SSL证书已过期，当前状态为&#123;&#123; $value &#125;&#125;&quot;
 </code></pre>
 <h1 id="4-重载Prometheus"><a href="#4-重载Prometheus" class="headerlink" title="4.重载Prometheus"></a>4.重载Prometheus</h1><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload
 </code></pre>
