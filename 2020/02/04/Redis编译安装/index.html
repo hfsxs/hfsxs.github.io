@@ -24,7 +24,7 @@
 <meta property="og:description" content="Redis，Remote Dictionary Server，即远程字典服务，由ANSI C语言编写的基于内存的高性能键值对NoSQL数据库，可用作数据库、缓存服务器或消息服务器，支持多种数据结构，如字符串、哈希表、链表、集合、有序集合、位图、Hyperloglogs等，所以又被称为数据结构服务器。Redis特别适用于涉及大数据量的场景，如商品抢购或瞬时访量过高的网站，以缓解成千上万的瞬时请求引发">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-02-04T13:31:17.000Z">
-<meta property="article:modified_time" content="2025-01-19T04:54:06.217Z">
+<meta property="article:modified_time" content="2025-01-19T12:12:41.503Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -327,15 +327,17 @@ vi /etc/redis/redis.conf
 
 # 设置IP
 bind 127.0.0.1
-# 设置redis服务为后台启动
+# 设置服务为后台启动
 daemonize yes
 # 设置进程文件路径
 pidfile /usr/local/redis/redis-server.pid
-# 设置redis持久化到硬盘数据的文件名
+# 设置持久化到硬盘数据的文件名
 dbfilename dump.rdb
 # 设置硬盘数据存储路径，防止redis意外重启数据丢失，启动时搜索该文件，将其数据导入，若无法找到则重新建立，为空表示数据已丢失
 dir /usr/local/redis/data
-# 设置redis最大内存占用量，若超限则将根据淘汰策略决定新写入请求或移除现有数据
+# 设置最大连接数
+maxclients 1000
+# 设置最大内存占用量，若超限则将根据淘汰策略决定新写入请求或移除现有数据
 maxmemory 1024M
 # 设置访问密码
 # requirepass redis
