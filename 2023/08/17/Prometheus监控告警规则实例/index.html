@@ -24,7 +24,7 @@
 <meta property="og:description" content="1.Prometheus监控规则vi &#x2F;usr&#x2F;local&#x2F;prometheus&#x2F;rules&#x2F;prometheus.yaml   groups: - name: prometheus   rules:   - alert: PrometheusAllTargetsMissing     expr: count by (job) (up) &#x3D;&#x3D; 0     for: 2m     labels:">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-08-17T00:57:51.000Z">
-<meta property="article:modified_time" content="2025-01-05T07:27:17.514Z">
+<meta property="article:modified_time" content="2025-01-22T09:29:42.465Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -233,7 +233,7 @@
         
         
         
-          342 分钟
+          345 分钟
         
       </span>
     
@@ -289,7 +289,7 @@ groups:
       severity: Critical
       cluster: Prometheus
     annotations:
-      summary: &#39;Prometheus系统所有监控指标丢失,请尽快处理!&#39;
+      summary: &#39;Prometheus系统所有监控指标丢失,请及时处理!&#39;
       description: &quot;Prometheus系统所有监控指标丢失&quot;
   - alert: PrometheusConfigurationReloadFailure
     expr: prometheus_config_last_reload_successful != 1
@@ -298,7 +298,7 @@ groups:
       severity: Warning
       cluster: Prometheus
     annotations:
-      summary: &#39;Prometheus系统配置重载失败,请尽快处理!&#39;
+      summary: &#39;Prometheus系统配置重载失败,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Prometheus系统配置重载失败&quot;
   - alert: PrometheusTooManyRestarts
     expr: changes(process_start_time_seconds&#123;job=~&quot;prometheus|pushgateway|alertmanager&quot;&#125;[15m]) &gt; 2
@@ -307,7 +307,7 @@ groups:
       severity: Warning
       cluster: Prometheus
     annotations:
-      summary: &#39;Prometheus系统多次重启,请尽快处理!&#39;
+      summary: &#39;Prometheus系统多次重启,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Prometheus系统15分钟内重启两次&quot;
   - alert: PrometheusAlertmanagerConfigurationReloadFailure
     expr: alertmanager_config_last_reload_successful != 1
@@ -316,7 +316,7 @@ groups:
       severity: Warning
       cluster: Prometheus
     annotations:
-      summary: &#39;Prometheus系统AlertManager告警组件配置重载失败,请尽快处理!&#39;
+      summary: &#39;Prometheus系统AlertManager告警组件配置重载失败,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Prometheus系统AlertManager告警组件配置重载失败&quot;
   - alert: PrometheusNotificationsBacklog
     expr: min_over_time(prometheus_notifications_queue_length[10m]) &gt; 0
@@ -325,7 +325,7 @@ groups:
       severity: Warning
       cluster: Prometheus
     annotations:
-      summary: &#39;Prometheus系统告警消息堆积,请尽快处理!&#39;
+      summary: &#39;Prometheus系统告警消息堆积,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Prometheus系统告警消息堆积超过10分钟&quot;
   - alert: PrometheusAlertmanagerNotificationFailing
     expr: rate(alertmanager_notifications_failed_total[1m]) &gt; 0
@@ -334,7 +334,7 @@ groups:
       severity: Critical
       cluster: Prometheus
     annotations:
-      summary: &#39;Prometheus系统AlertManager告警组件告警信息发送失败,请尽快处理!&#39;
+      summary: &#39;Prometheus系统AlertManager告警组件告警信息发送失败,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Prometheus系统AlertManager告警组件告警信息发送失败&quot;
   - alert: PrometheusTsdbCheckpointCreationFailures
     expr: increase(prometheus_tsdb_checkpoint_creations_failed_total[1m]) &gt; 0
@@ -343,7 +343,7 @@ groups:
       severity: Critical
       cluster: Prometheus
     annotations:
-      summary: &#39;Prometheus系统TSDB数据库checkpoint创建失败,请尽快处理!&#39;
+      summary: &#39;Prometheus系统TSDB数据库checkpoint创建失败,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Prometheus系统TSDB数据库checkpoint创建失败,当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: PrometheusTsdbCheckpointDeletionFailures
     expr: increase(prometheus_tsdb_checkpoint_deletions_failed_total[1m]) &gt; 0
@@ -352,7 +352,7 @@ groups:
       severity: Critical
       cluster: Prometheus
     annotations:
-      summary: &#39;Prometheus系统TSDB数据库checkpoint删除失败,请尽快处理!&#39;
+      summary: &#39;Prometheus系统TSDB数据库checkpoint删除失败,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Prometheus系统TSDB数据库checkpoint删除失败,当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: PrometheusTsdbCompactionsFailed
     expr: increase(prometheus_tsdb_compactions_failed_total[1m]) &gt; 0
@@ -361,7 +361,7 @@ groups:
       severity: Critical
       cluster: Prometheus
     annotations:
-      summary: &#39;Prometheus系统TSDB数据库数据压缩失败,请尽快处理!&#39;
+      summary: &#39;Prometheus系统TSDB数据库数据压缩失败,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Prometheus系统TSDB数据库数据压缩失败,当前频次为&#123;&#123; $value &#125;&#125;&quot;
   - alert: PrometheusTsdbHeadTruncationsFailed
     expr: increase(prometheus_tsdb_head_truncations_failed_total[1m]) &gt; 0
@@ -370,7 +370,7 @@ groups:
       severity: Critical
       cluster: Prometheus
     annotations:
-      summary: &#39;Prometheus系统TSDB数据库内存数据压缩失败,请尽快处理!&#39;
+      summary: &#39;Prometheus系统TSDB数据库内存数据压缩失败,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Prometheus系统TSDB数据库内存数据压缩失败,当前频次为&#123;&#123; $value &#125;&#125;&quot;
   - alert: PrometheusTsdbReloadFailures
     expr: increase(prometheus_tsdb_reloads_failures_total[1m]) &gt; 0
@@ -379,7 +379,7 @@ groups:
       severity: Critical
       cluster: Prometheus
     annotations:
-      summary: &#39;Prometheus系统TSDB数据库配置重载失败,请尽快处理!&#39;
+      summary: &#39;Prometheus系统TSDB数据库配置重载失败,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Prometheus系统TSDB数据库配置重载失败,当前状态为&#123;&#123; $value &#125;&#125;&quot;
 </code></pre>
 <h1 id="2-Alertmanager监控规则"><a href="#2-Alertmanager监控规则" class="headerlink" title="2.Alertmanager监控规则"></a>2.Alertmanager监控规则</h1><pre><code class="hljs">vi /usr/local/prometheus/rules/alertmanager.yaml
@@ -494,14 +494,14 @@ groups:
       severity: Critical
       cluster: CloudServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例宕机，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例宕机超过2分钟，当前状态为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例宕机，请及时处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例宕机超过2分钟，当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: HostCpuLoadAvage
     expr: sum(node_load5) by (instance) &gt; 10
     for: 1m
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例CPU负载过高，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例CPU负载过高，当前值为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例CPU负载过高，请及时处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例CPU负载过高，当前负载为&#123;&#123; $value &#125;&#125;&quot;
     labels:
       severity: Warning
       cluster: CloudServer
@@ -509,8 +509,8 @@ groups:
     expr: (1-((sum(increase(node_cpu_seconds_total&#123;mode=&quot;idle&quot;&#125;[5m])) by (instance))/ (sum(increase(node_cpu_seconds_total[5m])) by (instance))))*100 &gt; 80
     for: 1m
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例CPU使用率过高，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例CPU使用率超过80%，当前值为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例CPU使用率过高，请及时处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例CPU使用率超过80%，当前使用率为&#123;&#123; $value &#125;&#125;&quot;
     labels:
       severity: Warning
       cluster: CloudServer
@@ -518,8 +518,8 @@ groups:
     expr: (1-((node_memory_Buffers_bytes + node_memory_Cached_bytes + node_memory_MemFree_bytes)/node_memory_MemTotal_bytes))*100 &gt; 80
     for: 1m
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例内存使用率过高，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例内存使用率超过80%，当前使用率为&#123;&#123; $value &#125;&#125;%&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例内存使用率过高，请及时处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例内存使用率超过80%，当前使用率为&#123;&#123; $value &#125;&#125;%&quot;
     labels:
       severity: Warning
       cluster: CloudServer
@@ -527,8 +527,8 @@ groups:
     expr: ((sum(increase(node_cpu_seconds_total&#123;mode=&quot;iowait&quot;&#125;[5m])) by (instance))/(sum(increase(node_cpu_seconds_total[5m])) by (instance)))*100 &gt; 10
     for: 1m
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例磁盘IO过高，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例磁盘IO过高，当前负载值为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例磁盘IO过高，请及时处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例磁盘IO过高，当前负载值为&#123;&#123; $value &#125;&#125;&quot;
     labels:
       severity: Warning
       cluster: CloudServer
@@ -536,8 +536,8 @@ groups:
     expr: (1-(node_filesystem_free_bytes&#123;fstype=~&quot;ext4|xfs&quot;,mountpoint!~&quot;.*tmp|.*boot&quot; &#125;/node_filesystem_size_bytes&#123;fstype=~&quot;ext4|xfs&quot;,mountpoint!~&quot;.*tmp|.*boot&quot; &#125;))*100 &gt; 80
     for: 1m
     annotations:
-      summary: &quot;&#123;&#123; $labels.mountpoint &#125;&#125;磁盘分区容量不足，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例&#123;&#123; $labels.mountpoint &#125;&#125;磁盘分区使用率超过80%, 当前值使用率为&#123;&#123; $value &#125;&#125;%&quot;
+      summary: &quot;&#123;&#123; $labels.mountpoint &#125;&#125; 磁盘分区 &#123;&#123; $labels.mountpoint &#125;&#125;容量不足，请及时处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例磁盘分区 &#123;&#123; $labels.mountpoint &#125;&#125;使用率超过80%, 当前使用率为&#123;&#123; $value &#125;&#125;%&quot;
     labels:
       severity: Warning
       cluster: CloudServer
@@ -548,8 +548,8 @@ groups:
       severity: Warning
       cluster: CloudServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例Swap分区不足，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例Swap分区使用超过80%，当前值使用率为&#123;&#123; $value &#125;&#125;%&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例Swap分区容量不足，请及时处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例Swap分区使用超过80%，当前使用率为&#123;&#123; $value &#125;&#125;%&quot;
   - alert: HostNetworkConnection-ESTABLISHED
     expr:  sum(node_netstat_Tcp_CurrEstab) by (instance) &gt; 1000
     for: 5m
@@ -557,8 +557,8 @@ groups:
       severity: Warning
       cluster: CloudServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例TCP ESTABLISHED连接数过高，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例TCP ESTABLISHED连接数超过1000，当前连接数为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例TCP ESTABLISHED连接数过高，请及时处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例TCP ESTABLISHED连接数超过1000，当前连接数为&#123;&#123; $value &#125;&#125;&quot;
   - alert: HostNetworkConnection-TIME_WAIT
     expr:  sum(node_sockstat_TCP_tw) by (instance) &gt; 1000
     for: 5m
@@ -566,8 +566,8 @@ groups:
       severity: Warning
       cluster: CloudServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例TCP TIME_WAIT连接数过高，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例TCP TIME_WAIT连接数超过1000，当前连接数为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例TCP TIME_WAIT连接数过高，请及时处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例TCP TIME_WAIT连接数超过1000，当前连接数为&#123;&#123; $value &#125;&#125;&quot;
   - alert: HostUnusualNetworkThroughputIn
     expr:  sum by (instance, device) (rate(node_network_receive_bytes_total&#123;device=~&quot;ens.*&quot;&#125;[2m])) / 1024 / 1024 &gt; 100
     for: 5m
@@ -575,8 +575,8 @@ groups:
       severity: Warning
       cluster: CloudServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例网卡入流量过高，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例网卡&#123;&#123; $labels.device &#125;&#125;持续5分钟入流量带宽超过100MB/s, 当前值为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例网卡 &#123;&#123; $labels.device &#125;&#125;入流量过高，请及时处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例网卡 &#123;&#123; $labels.device &#125;&#125;持续5分钟入流量带宽超过100MB/s, 当前值为&#123;&#123; $value &#125;&#125;&quot;
   - alert: HostUnusualNetworkThroughputOut
     expr: sum by (instance, device) (rate(node_network_transmit_bytes_total&#123;device=~&quot;ens.*&quot;&#125;[2m])) / 1024 / 1024 &gt; 100
     for: 5m
@@ -584,8 +584,8 @@ groups:
       severity: Warning
       cluster: CloudServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例网卡出流量过高，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例网卡&#123;&#123; $labels.device &#125;&#125;持续5分钟出流量带宽超过100MB/s, 当前值为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例网卡 &#123;&#123; $labels.device &#125;&#125;出流量过高，请及时处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例网卡 &#123;&#123; $labels.device &#125;&#125;持续5分钟出流量带宽超过100MB/s, 当前值为&#123;&#123; $value &#125;&#125;&quot;
   - alert: HostUnusualDiskReadRate
     expr: sum by (instance, device) (rate(node_disk_read_bytes_total&#123;device=~&quot;sd.*&quot;&#125;[2m])) / 1024 / 1024 &gt; 50
     for: 5m
@@ -593,8 +593,8 @@ groups:
       severity: Warning
       cluster: CloudServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.device &#125;&#125;磁盘分区读取速率过高，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例磁盘分区&#123;&#123; $labels.device &#125;&#125;持续5分钟读取速度超过50MB/s, 当前值为&#123;&#123; $value &#125;&#125;&quot;     
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例磁盘分区 &#123;&#123; $labels.device &#125;&#125;读取速率过高，请及时处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例磁盘分区 &#123;&#123; $labels.device &#125;&#125;持续5分钟读取速度超过50MB/s, 当前值为&#123;&#123; $value &#125;&#125;&quot;     
   - alert: HostUnusualDiskWriteRate
     expr: sum by (instance, device) (rate(node_disk_written_bytes_total&#123;device=~&quot;sd.*&quot;&#125;[2m])) / 1024 / 1024 &gt; 50
     for: 2m
@@ -602,17 +602,17 @@ groups:
       severity: Warning
       cluster: CloudServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.device &#125;&#125;磁盘分区写入速率过高，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例磁盘分区&#123;&#123; $labels.device &#125;&#125;写入速度超过50 MB/s, 当前值为&#123;&#123; $value &#125;&#125;&quot;    
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例磁盘分区 &#123;&#123; $labels.device &#125;&#125;写入速率过高，请及时处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例磁盘分区 &#123;&#123; $labels.device &#125;&#125;写入速度超过50 MB/s, 当前值为&#123;&#123; $value &#125;&#125;&quot;    
   - alert: HostOutOfInodes
-    expr: node_filesystem_files_free&#123;fstype=~&quot;ext4|xfs&quot;,mountpoint!~&quot;.*tmp|.*boot&quot; &#125; / node_filesystem_files&#123;fstype=~&quot;ext4|xfs&quot;,mountpoint!~&quot;.*tmp|.*boot&quot; &#125; * 100 &lt; 10
+    expr: (1 - node_filesystem_files_free&#123;fstype=~&quot;ext4|xfs&quot;,mountpoint!~&quot;.*tmp|.*boot&quot; &#125; / node_filesystem_files&#123;fstype=~&quot;ext4|xfs&quot;,mountpoint!~&quot;.*tmp|.*boot&quot; &#125;) * 100 &gt; 90
     for: 2m
     labels:
       severity: Warning
       cluster: CloudServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.device &#125;&#125;磁盘分区Inode节点不足，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例&#123;&#123; $labels.mountpoint &#125;&#125;磁盘分区Inode节点不足，当前值为&#123;&#123; $value &#125;&#125;%&quot;    
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例 &#123;&#123; $labels.device &#125;&#125;磁盘分区Inode不足，请及时处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例 &#123;&#123; $labels.mountpoint &#125;&#125;磁盘分区Inode使用率大于90%，当前使用率为&#123;&#123; $value &#125;&#125;&quot;    
   - alert: HostUnusualDiskReadLatency
     expr: rate(node_disk_read_time_seconds_total&#123;device=~&quot;sd.*&quot;&#125;[1m]) / rate(node_disk_reads_completed_total&#123;device=~&quot;sd.*&quot;&#125;[1m]) &gt; 0.1 and rate(node_disk_reads_completed_total&#123;device=~&quot;sd.*&quot;&#125;[1m]) &gt; 0
     for: 2m
@@ -620,8 +620,8 @@ groups:
       severity: Warning
       cluster: CloudServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.device &#125;&#125;磁盘分区读延迟过高，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例磁盘分区&#123;&#123; $labels.device &#125;&#125;读延迟过高超过100ms, 当前值为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例磁盘分区 &#123;&#123; $labels.device &#125;&#125;读延迟过高，请及时处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例磁盘分区 &#123;&#123; $labels.device &#125;&#125;读延迟超过100ms, 当前值为&#123;&#123; $value &#125;&#125;&quot;
   - alert: HostUnusualDiskWriteLatency
     expr: rate(node_disk_write_time_seconds_total&#123;device=~&quot;sd.*&quot;&#125;[1m]) / rate(node_disk_writes_completed_total&#123;device=~&quot;sd.*&quot;&#125;[1m]) &gt; 0.1 and rate(node_disk_writes_completed_total&#123;device=~&quot;sd.*&quot;&#125;[1m]) &gt; 0
     for: 2m
@@ -629,8 +629,8 @@ groups:
       severity: Warning
       cluster: CloudServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.device &#125;&#125;磁盘分区写延迟过高，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例磁盘分区&#123;&#123; $labels.device &#125;&#125;写延迟超过100ms, 当前值为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例磁盘分区 &#123;&#123; $labels.device &#125;&#125;写延迟过高，请及时处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; 实例磁盘分区 &#123;&#123; $labels.device &#125;&#125;写延迟超过100ms, 当前值为&#123;&#123; $value &#125;&#125;&quot;
 </code></pre>
 <h1 id="4-MySQL监控规则"><a href="#4-MySQL监控规则" class="headerlink" title="4.MySQL监控规则"></a>4.MySQL监控规则</h1><pre><code class="hljs">vi /usr/local/prometheus/rules/mysql.yaml
 
@@ -645,8 +645,8 @@ groups:
       severity: Critical
       cluster: MysqlServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例宕机，请尽快处理!&#39;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例宕机超过1分钟，当前状态为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例宕机，请及时处理!&#39;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例宕机超过1分钟，当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: MysqlRestarted
     expr: mysql_global_status_uptime &lt; 60
     for: 0m
@@ -672,7 +672,7 @@ groups:
       severity: Warning
       cluster: MysqlServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例当前连接数过高，请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例当前连接数过高，请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例当前连接数超过最大连接数的80%，当前连接数为&#123;&#123; $value &#125;&#125;&quot;
   - alert: MysqlHighThreadsRunning
     expr: max_over_time(mysql_global_status_threads_running[1m]) / mysql_global_variables_max_connections * 100 &gt; 60
@@ -681,7 +681,7 @@ groups:
       severity: Warning
       cluster: MysqlServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例当前并发连接数过高，请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例当前并发连接数过高，请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例并发连接数超过最大连接数的60%，当前并发连接数为&#123;&#123; $value &#125;&#125;&quot;
   - alert: MysqlSlaveIoThreadNotRunning
     expr: ( mysql_slave_status_slave_io_running and ON (instance) mysql_slave_status_master_server_id &gt; 0 ) == 0
@@ -690,7 +690,7 @@ groups:
       severity: Critical
       cluster: MysqlServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例从库IO线程未启动，请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例从库IO线程未启动，请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例从库IO线程未启动，当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: MysqlSlaveSqlThreadNotRunning
     expr: ( mysql_slave_status_slave_sql_running and ON (instance) mysql_slave_status_master_server_id &gt; 0) == 0
@@ -699,7 +699,7 @@ groups:
       severity: Critical
       cluster: MysqlServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例从库SQL线程未启动，请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例从库SQL线程未启动，请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例从库SQL线程未启动，当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: MysqlSlaveReplicationLag
     expr: ( (mysql_slave_status_seconds_behind_master - mysql_slave_status_sql_delay) and ON (instance) mysql_slave_status_master_server_id &gt; 0 ) &gt; 30
@@ -708,7 +708,7 @@ groups:
       severity: Critical
       cluster: MysqlServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例从库滞后于主库，请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例从库滞后于主库，请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例从库滞后于主库，当前延迟时长为&#123;&#123; $value &#125;&#125;&quot;
   - alert: MysqlSlowQueries
     expr: rate(mysql_global_status_slow_queries[5m]) &gt; 0
@@ -717,7 +717,7 @@ groups:
       severity: Warning
       cluster: MysqlServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例存在慢查询，请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例存在慢查询，请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例存在慢查询，当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: MysqlInnodbLogWaits
     expr: rate(mysql_global_status_innodb_log_waits[15m]) &gt; 10
@@ -726,7 +726,7 @@ groups:
       severity: Warning
       cluster: MysqlServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例存在事务日志写入等待，请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例存在事务日志写入等待，请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例存在事务日志写入等待，当前等待写入的日志数为&#123;&#123; $value &#125;&#125;&quot;
 </code></pre>
 <h1 id="5-Redis监控规则"><a href="#5-Redis监控规则" class="headerlink" title="5.Redis监控规则"></a>5.Redis监控规则</h1><pre><code class="hljs">vi /usr/local/prometheus/rules/redis.yaml
@@ -742,7 +742,7 @@ groups:
       severity: Critical
       cluster: RedisServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Redis实例宕机，请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Redis实例宕机，请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Redis实例宕机超过1分钟,当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: RedisMissingMaster
     expr: count(redis_instance_info&#123;role=&quot;master&quot;&#125;) &lt; 1
@@ -769,7 +769,7 @@ groups:
       severity: Critical
       cluster: RedisServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Redis集群复制中断，请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Redis集群复制中断，请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Redis实例失联,从节点丢失&quot;
   - alert: RedisClusterFlapping
     expr: changes(redis_connected_slaves[1m]) &gt; 1
@@ -787,7 +787,7 @@ groups:
       severity: Critical
       cluster: RedisServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Redis实例备份缺失,请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Redis实例备份缺失,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Redis实例超过24小时备份缺失&quot;
   - alert: RedisOutOfConfiguredMaxmemory
     expr: redis_memory_used_bytes / redis_memory_max_bytes * 100 &gt; 80
@@ -796,7 +796,7 @@ groups:
       severity: Warning
       cluster: RedisServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Redis实例内存超限，请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Redis实例内存超限，请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Redis实例内存占用超过最大限制量80%, 当前值为&#123;&#123; $value &#125;&#125;&quot;
   - alert: RedisTooManyConnections
     expr: redis_connected_clients / redis_config_maxclients * 100 &gt; 80
@@ -805,7 +805,7 @@ groups:
       severity: Warning
       cluster: RedisServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Redis实例连接数过高，请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Redis实例连接数过高，请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Redis实例连接数超过最大连接数的80%, 当前连接数为&#123;&#123; $value &#125;&#125;&quot;
   - alert: RedisNotEnoughConnections
     expr: redis_connected_clients &lt; 5
@@ -839,7 +839,7 @@ groups:
       severity: Critical
       cluster: ElasticsearchServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch实例宕机，请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch实例宕机，请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch实例宕机超过1分钟,当前状态为&#123;&#123; $value &#125;&#125;&quot;
   rules:
   - alert: ElasticsearchHeapUsageTooHigh
@@ -849,7 +849,7 @@ groups:
       severity: Critical
       cluster: ElasticsearchServer
     annotations:
-      summary: &quot;Elasticsearch实例jvm内存超限，请尽快处理!&quot;
+      summary: &quot;Elasticsearch实例jvm内存超限，请及时处理!&quot;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch实例jvm内存超过最大限制的90%,当前值为&#123;&#123; $value &#125;&#125;&quot;
   - alert: ElasticsearchDiskOutOfSpace
     expr: elasticsearch_filesystem_data_available_bytes / elasticsearch_filesystem_data_size_bytes * 100 &lt; 10
@@ -858,7 +858,7 @@ groups:
       severity: Critical
       cluster: ElasticsearchServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch实例磁盘空间不足，请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch实例磁盘空间不足，请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch实例磁盘空间占用超过90%, 当前值为&#123;&#123; $value &#125;&#125;&quot;
   - alert: ElasticsearchClusterRed
     expr: elasticsearch_cluster_health_status&#123;color=&quot;red&quot;&#125; == 1
@@ -867,7 +867,7 @@ groups:
       severity: Critical
       cluster: ElasticsearchServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch集群状态为Red,请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch集群状态为Red,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch实例全部副本分片均不可用，集群状态为Red&quot;
   - alert: ElasticsearchClusterYellow
     expr: elasticsearch_cluster_health_status&#123;color=&quot;yellow&quot;&#125; == 1
@@ -876,7 +876,7 @@ groups:
       severity: Warning
       cluster: ElasticsearchServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch集群状态为Yellow,请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch集群状态为Yellow,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch实例存在不可用的副本分片，集群状态为Yellow&quot;
   - alert: ElasticsearchHealthyNodes
     expr: elasticsearch_cluster_health_number_of_nodes &lt; 3
@@ -885,7 +885,7 @@ groups:
       severity: Critical
       cluster: ElasticsearchServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch集群健康节点数不足,请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch集群健康节点数不足,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch集群健康节点数不足3,当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: ElasticsearchHealthyDataNodes
     expr: elasticsearch_cluster_health_number_of_data_nodes &lt; 3
@@ -894,7 +894,7 @@ groups:
       severity: Critical
       cluster: ElasticsearchServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch集群健康数据节点数不足,请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch集群健康数据节点数不足,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch集群健康数据节点数不足3,当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: ElasticsearchRelocatingShards
     expr: elasticsearch_cluster_health_relocating_shards &gt; 0
@@ -912,7 +912,7 @@ groups:
       severity: Warning
       cluster: ElasticsearchServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch实例重新定位分片时间过长,请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch实例重新定位分片时间过长,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch实例重新定位分片时间已超过15分钟!&quot;
   - alert: ElasticsearchInitializingShards
     expr: elasticsearch_cluster_health_initializing_shards &gt; 0
@@ -930,7 +930,7 @@ groups:
       severity: Warning
       cluster: ElasticsearchServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch实例初始化分片时间过长,请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch实例初始化分片时间过长,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;】Elasticsearch实例初始化分片时间已超过15分钟!&quot;
   - alert: ElasticsearchUnassignedShards
     expr: elasticsearch_cluster_health_unassigned_shards &gt; 0
@@ -939,7 +939,7 @@ groups:
       severity: Critical
       cluster: ElasticsearchServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch实例存在未分配的分片,请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch实例存在未分配的分片,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch实例存在未分配的分片!&quot;
   - alert: ElasticsearchPendingTasks
     expr: elasticsearch_cluster_health_number_of_pending_tasks &gt; 0
@@ -948,7 +948,7 @@ groups:
       severity: Warning
       cluster: ElasticsearchServer
     annotations:
-      summary: &#39;Elasticsearch实例存在待处理的任务,请尽快处理!&#39;
+      summary: &#39;Elasticsearch实例存在待处理的任务,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Elasticsearch实例存在待处理的任务,集群运行存在延迟, 当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: ElasticsearchNoNewDocuments
     expr: increase(elasticsearch_indices_docs&#123;es_data_node=&quot;true&quot;&#125;[10m]) &lt; 1
@@ -973,7 +973,7 @@ groups:
       severity: Critical
       cluster: ZookeeperServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;Zookeeper实例宕机,请尽快处理!&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;Zookeeper实例宕机,请及时处理!&quot;
       description: &#39;&#123;&#123; $labels.instance &#125;&#125;Zookeeper实例宕机超过1分钟,当前状态为&#123;&#123; $value &#125;&#125;&#39;
   - alert: ZookeeperMissLeader
     expr: absent(zk_server_state&#123;state=&quot;leader&quot;&#125;)  != 1
@@ -982,7 +982,7 @@ groups:
       severity: Critical
       cluster: ZookeeperServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;Zookeeper集群Leader丢失,请尽快处理!&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;Zookeeper集群Leader丢失,请及时处理!&quot;
       description: &#39;&#123;&#123; $labels.instance &#125;&#125;Zookeeper集群Leader丢失,当前状态为&#123;&#123; $value &#125;&#125;&#39;
   - alert: RequestsHeapTooHigh
     expr: avg(zk_outstanding_requests) by (instance) &gt; 10    
@@ -991,7 +991,7 @@ groups:
       severity: Critical
       cluster: ZookeeperServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;Zookeeper集群堆积请求量过高,请尽快处理!&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;Zookeeper集群堆积请求量过高,请及时处理!&quot;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Zookeeper集群堆积请求量大于10,当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: PendingSyncHeapTooHigh
     expr: avg(zk_pending_syncs) by (instance) &gt; 10
@@ -1000,7 +1000,7 @@ groups:
       severity: Critical
       cluster: ZookeeperServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;Zookeeper集群Leader节点Sync阻塞量过高,请尽快处理! &quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;Zookeeper集群Leader节点Sync阻塞量过高,请及时处理! &quot;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Zookeeper集群Leader节点Sync阻塞量大于10,当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: AvgResponseLatencyTooHigh
     expr: avg(zk_avg_latency) by (instance) &gt; 10
@@ -1009,7 +1009,7 @@ groups:
       severity: Critical
       cluster: ZookeeperServer
     annotations:
-      summary: &quot;Zookeeper集群平均响应延迟过高,请尽快处理!&quot;
+      summary: &quot;Zookeeper集群平均响应延迟过高,请及时处理!&quot;
       description: &#39;&#123;&#123; $labels.instance &#125;&#125;Zookeeper集群平均响应延迟大于10,当前状态为&#123;&#123; $value &#125;&#125;&#39;
   - alert: OpenFileTooMany
     expr: zk_open_file_descriptor_count &gt; zk_max_file_descriptor_count * 0.85
@@ -1018,7 +1018,7 @@ groups:
       severity: Critical
       cluster: ZookeeperServer
     annotations:
-      summary: &quot;Zookeeper集群文件打开量超限,请尽快处理! &quot;
+      summary: &quot;Zookeeper集群文件打开量超限,请及时处理! &quot;
       description: &#39;&#123;&#123; $labels.instance &#125;&#125;Zookeeper集群打开文件描述符数量超过最大限量的85%,当前状态为&#123;&#123; $value &#125;&#125;&#39;
 </code></pre>
 <h1 id="8-Kafka监控规则"><a href="#8-Kafka监控规则" class="headerlink" title="8.Kafka监控规则"></a>8.Kafka监控规则</h1><pre><code class="hljs">vi /usr/local/prometheus/rules/kafka.yaml
@@ -1034,7 +1034,7 @@ groups:
       severity: Critical
       cluster: KafkaServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Kafka实例宕机，请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Kafka实例宕机，请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Kafka实例宕机超过1分钟,当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: KafkaTopicsReplicas
     expr: sum(kafka_topic_partition_in_sync_replica) by (topic) &lt; 3
@@ -1043,7 +1043,7 @@ groups:
       severity: Critical
       cluster: KafkaServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Kafka实例&#123;&#123; $labels.topic &#125;&#125;Topic分区副本数不足,请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Kafka实例&#123;&#123; $labels.topic &#125;&#125;Topic分区副本数不足,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Kafka实例&#123;&#123; $labels.topic &#125;&#125;Topic分区副本数少于3,当前值为&#123;&#123; $value &#125;&#125;&quot;
   - alert: KafkaConsumersGroupLag
     expr: sum(kafka_consumergroup_lag) by (consumergroup) &gt; 50
@@ -1052,7 +1052,7 @@ groups:
       severity: Critical
       cluster: KafkaServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Kafka实例消费组消息堆积,请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Kafka实例消费组消息堆积,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Kafka实例消费组消费堆积量超过50, 当前Lag值为&#123;&#123; $value &#125;&#125;&quot;
   - alert: KafkaConsumersTopicLag
     expr: sum(kafka_consumergroup_lag) by (topic) &gt; 50
@@ -1061,7 +1061,7 @@ groups:
       severity: Critical
       cluster: KafkaServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Kafka实例Topic消息堆积,请尽快处理!&#39;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Kafka实例Topic消息堆积,请及时处理!&#39;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;Kafka实例Topic消息堆积量已超过50, 当前Lag值为&#123;&#123; $value &#125;&#125;&quot;
 </code></pre>
 <h1 id="9-Docker监控规则"><a href="#9-Docker监控规则" class="headerlink" title="9.Docker监控规则"></a>9.Docker监控规则</h1><pre><code class="hljs">vi /usr/local/prometheus/rules/docker.yaml
@@ -1077,7 +1077,7 @@ groups:
       severity: Critical
       cluster: CloudServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.name &#125;&#125;容器被Kill，请尽快处理!&quot;
+      summary: &quot;&#123;&#123; $labels.name &#125;&#125;容器被Kill，请及时处理!&quot;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例&#123;&#123; $labels.name &#125;&#125;容器被Kill&quot;
   - alert: ContainerCpuUsage
     expr: (sum by(instance, name) (rate(container_cpu_usage_seconds_total&#123;name!=&quot;&quot;&#125;[3m])) * 100) &gt; 80
@@ -1086,7 +1086,7 @@ groups:
       severity: Warning
       cluster: CloudServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.name &#125;&#125;容器CPU使用率过高，请尽快处理!&quot;
+      summary: &quot;&#123;&#123; $labels.name &#125;&#125;容器CPU使用率过高，请及时处理!&quot;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例&#123;&#123; $labels.name &#125;&#125;容器CPU使用率超过80%, 当前值为&#123;&#123; $value &#125;&#125;&quot;
   - alert: ContainerHighThrottleRate
     expr: rate(container_cpu_cfs_throttled_seconds_total[3m]) &gt; 1
@@ -1095,7 +1095,7 @@ groups:
       severity: Warning
       cluster: CloudServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.name &#125;&#125;容器CPU超限，请尽快处理!&quot;
+      summary: &quot;&#123;&#123; $labels.name &#125;&#125;容器CPU超限，请及时处理!&quot;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例&#123;&#123; $labels.name &#125;&#125;容器持续2分钟CPU超限, 当前值为&#123;&#123; $value &#125;&#125;&quot;
   - alert: ContainerMemoryUsage
     expr: (sum by(instance, name) (container_memory_working_set_bytes&#123;name!=&quot;&quot;&#125;) / sum by(instance, name) (container_spec_memory_limit_bytes&#123;name!=&quot;&quot;&#125; &gt; 0) * 100)  &gt; 80
@@ -1104,7 +1104,7 @@ groups:
       severity: Warning
       cluster: CloudServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.name &#125;&#125;容器内存使用率过高，请尽快处理!&quot;
+      summary: &quot;&#123;&#123; $labels.name &#125;&#125;容器内存使用率过高，请及时处理!&quot;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例&#123;&#123; $labels.name &#125;&#125;容器内存使用率超过80%, 当前值为&#123;&#123; $value &#125;&#125;&quot;
   - alert: ContainerVolumeUsage
     expr: (1 - (sum(container_fs_inodes_free) BY (instance) / sum(container_fs_inodes_total) BY (instance))) * 100 &gt; 80
@@ -1113,7 +1113,7 @@ groups:
       severity: Warning
       cluster: CloudServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.name &#125;&#125;容器磁盘使用率过高，请尽快处理!&quot;
+      summary: &quot;&#123;&#123; $labels.name &#125;&#125;容器磁盘使用率过高，请及时处理!&quot;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例&#123;&#123; $labels.name &#125;&#125;容器磁盘使用率超过80%, 当前值为&#123;&#123; $value &#125;&#125;&quot;
   - alert: ContainerLowCpuUtilization
     expr: (sum(rate(container_cpu_usage_seconds_total&#123;name!=&quot;&quot;&#125;[3m])) BY (instance, name) * 100) &lt; 20
@@ -1156,7 +1156,7 @@ groups:
       severity: Warning
       cluster: CloudServer
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例SSL证书即将过期,请尽快处理!&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125;实例SSL证书即将过期,请及时处理!&quot;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例SSL证书有效期不足7,天当前状态为&#123;&#123; $value &#125;&#125;&quot;
 </code></pre>
 <h1 id="11-Etcd集群监控规则"><a href="#11-Etcd集群监控规则" class="headerlink" title="11.Etcd集群监控规则"></a>11.Etcd集群监控规则</h1><pre><code class="hljs">vi /usr/local/prometheus/rules/etcd.yaml
