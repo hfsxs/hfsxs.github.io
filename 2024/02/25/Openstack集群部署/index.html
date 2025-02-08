@@ -24,7 +24,7 @@
 <meta property="og:description" content="OpenStack，NASA（美国国家航空航天局）和Rackspace合作开发的开源云计算管理平台项目，一套通过各种互补服务组件提供公有云和私有云基础设施即服务（IaaS）的解决方案，提供实施简单、可大规模扩展、丰富、标准统一的弹性云计算服务。OpenStack并不是一个软件，而是一系列开源项目的集合 Openstack自诞生之日起，其发展历程即充满了挑战与机遇，最终以其开放的架构、强大的兼容性与">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-02-25T10:41:59.000Z">
-<meta property="article:modified_time" content="2025-02-01T10:44:52.428Z">
+<meta property="article:modified_time" content="2025-02-01T10:53:40.407Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -312,7 +312,7 @@
 <h3 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h3><h4 id="1-认证鉴权"><a href="#1-认证鉴权" class="headerlink" title="1.认证鉴权"></a>1.认证鉴权</h4><p>用户登录界面dashboard或以命令行CLI通过RESTful API向keystone获取认证信息，keystone通过用户请求认证信息，并生成auth-token返回给对应的认证请求，完成用户认证授权流程</p>
 <h4 id="2-创建实例请求"><a href="#2-创建实例请求" class="headerlink" title="2.创建实例请求"></a>2.创建实例请求</h4><p>通过Horizon或Resetful API向nova-api发送创建虚拟机服务（boot instance）的请求，然后由nova-api向keystone发送认证请求，验证有效的用户及token，验证通过后与数据库通讯，并初始化新建虚拟机实例的数据库记录，同时调用rabbitmq，向nova-scheduler请求创建虚拟机的资源</p>
 <h4 id="3-实例调度"><a href="#3-实例调度" class="headerlink" title="3.实例调度"></a>3.实例调度</h4><p>nova-scheduler进程监听rabbitmq消息队列，获取到nova-api发来的创建虚拟机实例的请求，之后通过查询nova数据库计算资源的情况，并由调度算法计算符合虚拟机创建需要的主机。对于有符合虚拟机创建的主机，nova-scheduler更新数据库中虚拟机对应的物理主机信息，并基于rpc调用rabbitmq，向nova-compute发送对应的创建虚拟机请求的消息。nova-compute通过rpc调用向nova-conductor请求获取虚拟机消息（确认虚拟机实例的规格，即Flavor），</p>
-<p>虚拟机实例采用Glance提供镜像服务，然后使用Neutron为新建的虚拟机分配IP地址,并将其纳入虚拟网络中，之后在通过Cinder创建的卷为虚拟机挂载存储块,整个过程都在Ceilometer模块资源的监控下，Cinder产生的卷(Volume)和Glance提供的镜像(lmage)可以通过Swift的对象存储机制进行保存</p>
+<p>虚拟机实例采用Glance提供镜像服务，然后使用Neutron为新建的虚拟机分配IP地址,并将其纳入虚拟网络中，之后在通过Cinder创建的卷为虚拟机挂载存储块,整个过程都在Ceilometer模块资源的监控下，Cinder产生的卷(Volume)和Glance提供的镜像(Image)可以通过Swift的对象存储机制进行保存</p>
 <h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul>
 <li>172.100.100.180&#x2F;192.168.100.180 controller</li>
 <li>172.100.100.181 compute001</li>
