@@ -223,6 +223,75 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2020/02/05/Haproxy%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/" target="_self">
+          Haproxy配置文件详解
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2020/02/05/Haproxy%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E8%AF%A6%E8%A7%A3/" target="_self">
+        <div>
+          # 进程级全局配置，系统相关 global   # 设置全局日志的设备级别   log    127.0.0.1 local2   # 设置haproxy运行路径   chroot    &#x2F;usr&#x2F;local&#x2F;haproxy   # 设置pid文件路径   pidfile    &#x2F;var&#x2F;run&#x2F;haproxy.pid   # 设置进程运行用户   user    sword   # 设置运行进程
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-02-05 12:12" pubdate>
+              2020-02-05
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">#负载均衡</a>
+            
+              <a href="/tags/Haproxy/">#Haproxy</a>
+            
+              <a href="/tags/%E9%9B%86%E7%BE%A4/">#集群</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2020/02/05/Haproxy%E6%90%AD%E5%BB%BA%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E9%9B%86%E7%BE%A4/" target="_self">
           Haproxy搭建负载均衡集群
         </a>
@@ -851,79 +920,6 @@
               <a href="/tags/Tomcat/">#Tomcat</a>
             
               <a href="/tags/Memcached/">#Memcached</a>
-            
-              <a href="/tags/%E4%BC%9A%E8%AF%9D%E4%BF%9D%E6%8C%81/">#会话保持</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2020/02/04/Tomcat%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE%E5%9F%BA%E4%BA%8E%E7%BB%84%E6%92%AD%E6%96%B9%E5%BC%8F%E7%9A%84%E4%BC%9A%E8%AF%9D%E4%BF%9D%E6%8C%81/" target="_self">
-          Tomcat集群配置基于组播方式的会话保持
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2020/02/04/Tomcat%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE%E5%9F%BA%E4%BA%8E%E7%BB%84%E6%92%AD%E6%96%B9%E5%BC%8F%E7%9A%84%E4%BC%9A%E8%AF%9D%E4%BF%9D%E6%8C%81/" target="_self">
-        <div>
-          集群架构 172.16.100.100  node01  nginx tomcat 172.16.100.120  node02  tomcat 172.16.100.200  node03  tomcat   1.部署nginx、tomcat，配置负载均衡集群2.修改tomcat配置文件，启用session复制和Cluster功能vi  &#x2F;usr&#x2F;local&#x2F;tomcat&#x2F;conf&#x2F;server
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-02-04 10:12" pubdate>
-              2020-02-04
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">#负载均衡</a>
-            
-              <a href="/tags/Java/">#Java</a>
-            
-              <a href="/tags/%E9%9B%86%E7%BE%A4/">#集群</a>
-            
-              <a href="/tags/Tomcat/">#Tomcat</a>
             
               <a href="/tags/%E4%BC%9A%E8%AF%9D%E4%BF%9D%E6%8C%81/">#会话保持</a>
             

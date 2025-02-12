@@ -223,6 +223,79 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2024/07/12/Redis%E9%83%A8%E7%BD%B2%E5%88%86%E7%89%87%E5%BC%8F%E9%9B%86%E7%BE%A4/" target="_self">
+          Redis部署分片式集群
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/12/Redis%E9%83%A8%E7%BD%B2%E5%88%86%E7%89%87%E5%BC%8F%E9%9B%86%E7%BE%A4/" target="_self">
+        <div>
+          Redis Cluster是Redis官方推出的无中心架构的分布式集群解决方案，集群所有节点都用于存储数据和集群状态，其具体机制为：基于主从复制模式将数据均匀分片到集群节点用于管理集群数据和集群状态的哈希槽，每个节点负责一部分数据，其中主节点负责读写操作和集群状态维护，从节点复制主节点的数据与状态信息，并承担读操作。节点之间通过gossip协议交换状态信息，失去连接或不可达将被标记为不可用，并从可
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-07-12 09:46" pubdate>
+              2024-07-12
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/Redis/">#Redis</a>
+            
+              <a href="/tags/%E9%9B%86%E7%BE%A4/">#集群</a>
+            
+              <a href="/tags/NoSQL/">#NoSQL</a>
+            
+              <a href="/tags/%E7%BC%93%E5%AD%98/">#缓存</a>
+            
+              <a href="/tags/%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6/">#主从复制</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2024/06/30/Prometheus%E7%9B%91%E6%8E%A7Redis%E6%95%B0%E6%8D%AE%E5%BA%93/" target="_self">
           Prometheus监控Redis数据库
         </a>
@@ -839,75 +912,6 @@
               <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
             
               <a href="/tags/RabbitMQ/">#RabbitMQ</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2024/04/09/Prometheus%E7%9B%91%E6%8E%A7%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96%E5%AD%98%E5%82%A8%E6%96%B9%E6%A1%88/" target="_self">
-          Prometheus监控数据持久化存储方案
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/04/09/Prometheus%E7%9B%91%E6%8E%A7%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96%E5%AD%98%E5%82%A8%E6%96%B9%E6%A1%88/" target="_self">
-        <div>
-          Prometheus默认以tsdb时序数据库简单高效地将监控数据存储于本地，自2.0版本之后还将压缩数据的能力大大地提升（每个采样数据仅为3.5b左右），单节点即可满足大部分用户的监控需求。但本地存储也限制了其扩展性，带来了数据持久化等一系列问题。鉴于此，为解决单节点存储的限制，Prometheus提供了远程读写接口，用户可自行选择合适的时序数据库，如Influxdb、Thanos和Victori
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-04-09 10:20" pubdate>
-              2024-04-09
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
-            
-              <a href="/tags/Prometheus/">#Prometheus</a>
-            
-              <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
             
           </div>
         
