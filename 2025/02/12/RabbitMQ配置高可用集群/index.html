@@ -24,7 +24,7 @@
 <meta property="og:description" content="RabbitMQ，由Erlang语言开发的轻量级开源消息队列系统。RabbitMQ最初起源于金融系统，基于AMQP（高级消息队列协议，应用层协议的一个开放标准，为面向消息的中间件设计，基于此协议的客户端与消息中间件可传递消息，并不受产品、开发语言等条件的限制）传递消息，也可通过插件扩展的方式支持STOMP、MQTT、RabbitMQ Stream协议，广泛应用于分布式系统中存储、转发消息，在易用性">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-02-12T02:38:23.000Z">
-<meta property="article:modified_time" content="2025-02-14T08:07:30.845Z">
+<meta property="article:modified_time" content="2025-02-14T09:31:50.136Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.2k 字
+          3.9k 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          28 分钟
+          33 分钟
         
       </span>
     
@@ -295,16 +295,19 @@
 rpm -ivh rabbitmq-server-3.8.25-1.el7.noarch.rpm
 </code></pre>
 <h1 id="3-启动Rabbitmq"><a href="#3-启动Rabbitmq" class="headerlink" title="3.启动Rabbitmq"></a>3.启动Rabbitmq</h1><h1 id="4-配置默认集群"><a href="#4-配置默认集群" class="headerlink" title="4.配置默认集群"></a>4.配置默认集群</h1><p>默认集群，即Rabbitmq内建集群，具体机制是将交换机、队列、虚拟主机等元数据信息在各个节点同步，而基于性能和存储空间的考虑，队列的消息数据只存储于队列的创建者节点，其余节点根据队列的元数据信息再路由到创建者节点进行读写。也即是说，一旦队列创建者节点宕机，则消息数据将会丢失，直到其恢复，并不具备真正的高可用性</p>
-<p>Rabbitmq集群的主从不同于通常的架构，。一个queue第一次创建所在的节点是它的master节点，其他节点为slave节点。如果master由于某种原因失效，最先加入的slave会被提升为新的master。</p>
-<p>无论客户端请求到达master还是slave，最终数据都是从master节点获取。当请求到达master节点时，master节点直接将消息返回给client，同时master节点会通过GM（Guaranteed Multicast）协议将queue的最新状态广播到slave节点。GM保证了广播消息的原子性，即要么都更新要么都不更新。当请求到达slave节点时，slave节点需要将请求先重定向到master节点，master节点将消息返回给client，同时master节点会通过GM协议将queue的最新状态广播到slave节点</p>
+<p>Rabbitmq集群分为两种类型，即内存类型和磁盘类型：RAM Node，内存节点，消息存储于内存，优点是处理速度快，缺点是节点宕机将丢失数据，适用于实时的不需要消息持久化或对性能要求极高的场景；Disk Node，默认类型，数据存储于磁盘，能处理大量数据，且在节点故障后可从磁盘恢复，具备数据持久化和灾难恢复的能力。单节点只允许磁盘类型的节点，以防止重启RabbitMQ丢失数据。集群磁盘节点宕机仍然可以保持运行，但无法进行其他操作，如创建队列、交换器、绑定，添加用户、更改权限、添加和删除集群结点等，一直到其恢复正常，所以生产环境建议至少部署两个磁盘节点</p>
+<p>Rabbitmq集群的主从概念作用于队列，而不是节点，队列的创建者即为其Master节点，其余为slave节点，若Master节点宕机，则最先加入的slave将会被选举为新Master节点。对于读写操作而言，无论客户端请求到达哪个节点，最终都是操作Master节点。请求到达Master节点则直接将消息返回给客户端，并由Master节点会通过GM（Guaranteed Multicast）协议将队列的最新状态广播到其余节点。这一过程将由GM保证广播消息的原子性，即要么都更新成功，要么都不更新；若请求到达slave节点，则将请求先重定向到Master节点进行进一步处理</p>
 <h2 id="4-1-Slave节点关闭Rabbitmq"><a href="#4-1-Slave节点关闭Rabbitmq" class="headerlink" title="4.1 Slave节点关闭Rabbitmq"></a>4.1 Slave节点关闭Rabbitmq</h2><pre><code class="hljs">rabbitmqctl stop_app
 </code></pre>
 <h2 id="4-2-Slave节点同步Master节点集群通信密钥文件"><a href="#4-2-Slave节点同步Master节点集群通信密钥文件" class="headerlink" title="4.2 Slave节点同步Master节点集群通信密钥文件"></a>4.2 Slave节点同步Master节点集群通信密钥文件</h2><pre><code class="hljs">scp master:/var/lib/rabbitmq/.erlang.cookie /var/lib/rabbitmq
 </code></pre>
 <h2 id="4-3-Slave节点重置"><a href="#4-3-Slave节点重置" class="headerlink" title="4.3 Slave节点重置"></a>4.3 Slave节点重置</h2><pre><code class="hljs">rabbitmqctl reset
 </code></pre>
-<h2 id="4-4-Slave节点加入集群"><a href="#4-4-Slave节点加入集群" class="headerlink" title="4.4 Slave节点加入集群"></a>4.4 Slave节点加入集群</h2><pre><code class="hljs">rabbitmqctl join_cluster rabbit@master --ram
+<h2 id="4-4-Slave节点加入集群"><a href="#4-4-Slave节点加入集群" class="headerlink" title="4.4 Slave节点加入集群"></a>4.4 Slave节点加入集群</h2><pre><code class="hljs">rabbitmqctl join_cluster rabbit@master
 </code></pre>
+<ul>
+<li>注：参数–ram表示内存节点，也可通过命令进行设置：rabbitmqctl set_node_type_ram node01</li>
+</ul>
 <h2 id="4-5-启动Rabbitmq"><a href="#4-5-启动Rabbitmq" class="headerlink" title="4.5 启动Rabbitmq"></a>4.5 启动Rabbitmq</h2><pre><code class="hljs">rabbitmqctl start_app
 </code></pre>
 <h2 id="4-6-验证集群状态"><a href="#4-6-验证集群状态" class="headerlink" title="4.6 验证集群状态"></a>4.6 验证集群状态</h2><pre><code class="hljs">rabbitmqctl cluster_status
@@ -320,7 +323,8 @@ rabbitmqctl set_user_tags admin administrator
 </code></pre>
 <h2 id="4-9-登录Web验证集群状态"><a href="#4-9-登录Web验证集群状态" class="headerlink" title="4.9 登录Web验证集群状态"></a>4.9 登录Web验证集群状态</h2><pre><code class="hljs">http://ip:15672
 </code></pre>
-<h1 id="5-配置镜像集群"><a href="#5-配置镜像集群" class="headerlink" title="5.配置镜像集群"></a>5.配置镜像集群</h1><p>镜像集群，Rabbitmq内建集群的补全版，即将队列镜像（同步）到集群其余broker，类似于分片式的多副本冗余。若集群节点宕机，队列将自动地切换到其余节点以保证服务的可用性，消息数据也不会丢失。也即是说，集群所有节点都将存储消息数据，资源耗费较大，性能也将受到影响</p>
+<h1 id="5-配置镜像集群"><a href="#5-配置镜像集群" class="headerlink" title="5.配置镜像集群"></a>5.配置镜像集群</h1><p>镜像集群，Rabbitmq内建集群的进阶版，即将队列镜像（同步）到集群其余节点，类似于分片式的多副本冗余。若集群节点宕机，队列将自动地切换到其余节点以保证服务的可用性，消息数据也不会丢失。也即是说，镜像集群的所有节点都将存储消息数据，以保障数据的安全性，缺点是资源耗费较大，数据存在冗余，性能也将受到影响</p>
+<p>镜像集群由rabbitmqctl命令进行配置，具体命令为rabbitmqctl set_policy [-p Vhost] Name_Policy Pattern Definition [Priority]：-p Vhost，指定vhost；Name_Policy的名称，策略名称；Pattern，匹配队列的正则表达式；Definition，镜像定义，由三个参数定义，ha-mode用于设置镜像队列模式（all，表示在集群中所有节点进行镜像；exactly，表示在指定个数的节点进行镜像，节点的个数由ha-params指定；nodes，表示在指定的节点进行镜像，节点名称通过ha-params指定）、ha-params配合ha-mode参数使用以及设置队列同步方式的ha-sync-mode参数（可取值为automatic和manualha-sync-mode）；priority，策略的优先级</p>
 <pre><code class="hljs">rabbitmqctl set_policy ha-all &quot;^&quot; &#39;&#123;&quot;ha-mode&quot;:&quot;all&quot;&#125;&#39; 
 </code></pre>
 <hr>
