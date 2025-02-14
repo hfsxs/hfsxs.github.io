@@ -223,15 +223,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2025/02/12/Rabbitmq%E9%85%8D%E7%BD%AE%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4/" target="_self">
-          Rabbitmq配置主从复制集群
+        <a href="/2025/02/12/RabbitMQ%E9%85%8D%E7%BD%AE%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4/" target="_self">
+          RabbitMQ配置高可用集群
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/12/Rabbitmq%E9%85%8D%E7%BD%AE%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E9%9B%86%E7%BE%A4/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/12/RabbitMQ%E9%85%8D%E7%BD%AE%E9%AB%98%E5%8F%AF%E7%94%A8%E9%9B%86%E7%BE%A4/" target="_self">
         <div>
-          1.安装erlanghttps:&#x2F;&#x2F;packagecloud.io&#x2F;rabbitmq&#x2F;erlang  2.安装rabbitmqwget https:&#x2F;&#x2F;github.com&#x2F;rabbitmq&#x2F;rabbitmq-server&#x2F;releases&#x2F;download&#x2F;v3.8.25&#x2F;rabbitmq-server-3.8.25-1.el7.noarch.rpm rpm -ivh rabbitmq-serv
+          RabbitMQ，由Erlang语言开发的轻量级开源消息队列系统。RabbitMQ最初起源于金融系统，基于AMQP（高级消息队列协议，应用层协议的一个开放标准，为面向消息的中间件设计，基于此协议的客户端与消息中间件可传递消息，并不受产品、开发语言等条件的限制）传递消息，也可通过插件扩展的方式支持STOMP、MQTT、RabbitMQ Stream协议，广泛应用于分布式系统中存储、转发消息，在易用性
         </div>
       </a>
 
@@ -276,9 +276,76 @@
             
               <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">#中间件</a>
             
-              <a href="/tags/Rabbitmq/">#Rabbitmq</a>
+              <a href="/tags/RabbitMQ/">#RabbitMQ</a>
             
               <a href="/tags/MQ/">#MQ</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2025/02/11/Prometheus%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96/" target="_self">
+          Prometheus监控告警数据持久化
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2025/02/11/Prometheus%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96/" target="_self">
+        <div>
+          Prometheus监控系统的告警信息基于告警规则生成，并将生成的告警信息存储为时间序列，再发送给Alertmanager进行转发，整个过程一直专注于实时化告警的处理，并不会持久化存储。这一设计虽然简化了系统设计的复杂性，但大量的告警无疑将会影响故障排查和响应效率，也难以直观地区分告警的轻重缓急。此外，也不能对历史告警进行检索与统计，无法对业务系统的瓶颈与缺陷进行分析。Alertsnitch工具弥
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-11 13:48" pubdate>
+              2025-02-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/Prometheus/">#Prometheus</a>
+            
+              <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
             
           </div>
         
@@ -785,75 +852,6 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2024-07-18 10:48" pubdate>
               2024-07-18
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/Redis/">#Redis</a>
-            
-              <a href="/tags/NoSQL/">#NoSQL</a>
-            
-              <a href="/tags/%E7%BC%93%E5%AD%98/">#缓存</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2024/07/15/Redis%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96%E8%AF%A6%E8%A7%A3/" target="_self">
-          Redis数据持久化详解
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/15/Redis%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96%E8%AF%A6%E8%A7%A3/" target="_self">
-        <div>
-          Redis是基于内存的NoSQL数据库，内存操作带来的优势是性能极高，但缺点就是服务关闭或主机宕机之后数据将会丢失。Redis持久化机制即是将内存数据写入到硬盘保存到文件，服务或主机重启之后再进行加载并将数据恢复到内存，从而避免数据的意外丢失。Redis数据持久化实现技术分为两种，即RDB和AOF 1.RDB方式RDB，Redis DataBase，内存快照，默认开启的持久化方式，即将内存某一时刻
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-07-15 10:16" pubdate>
-              2024-07-15
             </time>
           </div>
         
