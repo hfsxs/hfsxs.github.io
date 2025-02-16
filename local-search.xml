@@ -68,6 +68,39 @@
   
   
   <entry>
+    <title>Prometheus监控MySQL数据库</title>
+    <link href="/2025/01/31/Prometheus%E7%9B%91%E6%8E%A7MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/"/>
+    <url>/2025/01/31/Prometheus%E7%9B%91%E6%8E%A7MySQL%E6%95%B0%E6%8D%AE%E5%BA%93/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1-下载安装包"><a href="#1-下载安装包" class="headerlink" title="1.下载安装包"></a>1.下载安装包</h1><pre><code class="hljs">wget https://github.com/prometheus/mysqld_exporter/releases/download/v0.16.0/mysqld_exporter-0.16.0.linux-amd64.tar.gz</code></pre><h1 id="2-安装mysqld-exporter"><a href="#2-安装mysqld-exporter" class="headerlink" title="2.安装mysqld_exporter"></a>2.安装mysqld_exporter</h1><pre><code class="hljs">tar -xzvf mysqld_exporter-0.16.0.linux-amd64.tar.gzsudo cp mysqld_exporter /usr/local/bin</code></pre><h1 id="3-创建MySQL监控账户并授权"><a href="#3-创建MySQL监控账户并授权" class="headerlink" title="3.创建MySQL监控账户并授权"></a>3.创建MySQL监控账户并授权</h1><pre><code class="hljs">MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON *.* TO &#39;exporter&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;Prometheus_exporter&#39;; MariaDB [(none)]&gt; flush privileges;</code></pre><h1 id="4-创建启动脚本"><a href="#4-创建启动脚本" class="headerlink" title="4.创建启动脚本"></a>4.创建启动脚本</h1><pre><code class="hljs">sudo vi /lib/systemd/system/mysqld_exporter.service[Unit]Description=Prometheus MySQL ExporterAfter=network.target[Service]Type=simpleUser=rootGroup=rootRestart=alwaysExecStart=/usr/local/bin/mysqld_exporter \--config.my-cnf=/etc/mysqld_exporter.conf  \--collect.auto_increment.columns \--collect.info_schema.processlist \--collect.binlog_size \--collect.info_schema.tablestats \--collect.info_schema.innodb_metrics \--collect.info_schema.userstats \--collect.info_schema.tables \--collect.perf_schema.tablelocks \--collect.perf_schema.indexiowaits \--collect.perf_schema.tableiowaits \--collect.slave_status[Install]WantedBy=multi-user.target</code></pre><h1 id="5-启动mysqld-exporter"><a href="#5-启动mysqld-exporter" class="headerlink" title="5.启动mysqld_exporter"></a>5.启动mysqld_exporter</h1><pre><code class="hljs">sudo systemctl daemon-reloadsudo systemctl start mysqld_exporter.servicesudo systemctl enable mysqld_exporter.service</code></pre><h1 id="6-配置Prometheus"><a href="#6-配置Prometheus" class="headerlink" title="6.配置Prometheus"></a>6.配置Prometheus</h1><h2 id="6-1-配置监控实例"><a href="#6-1-配置监控实例" class="headerlink" title="6.1 配置监控实例"></a>6.1 配置监控实例</h2><pre><code class="hljs">sudo vi /usr/local/prometheus/prometheus.ymlglobal:  scrape_interval: 15s   evaluation_interval: 15s   scrape_timeout: 10s scrape_configs:  - job_name: &quot;prometheus&quot;    static_configs:      - targets: [&quot;localhost:9090&quot;]  - job_name: mysql    static_configs:    - targets:      - 10.1.11.240:9104 </code></pre><h2 id="6-2-重载Prometheus"><a href="#6-2-重载Prometheus" class="headerlink" title="6.2 重载Prometheus"></a>6.2 重载Prometheus</h2><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload</code></pre><h1 id="6-Grafana导入监控模版"><a href="#6-Grafana导入监控模版" class="headerlink" title="6.Grafana导入监控模版"></a>6.Grafana导入监控模版</h1><p>Dashboards —&gt; New —&gt; Import —&gt; 模版ID：7362</p><p><img src="/img/wiki/prometheus/mysql.jpg" alt="linux"></p><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://www.cnblogs.com/yangmeichong/p/18156342">https://www.cnblogs.com/yangmeichong/p/18156342</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>MySQL</tag>
+      
+      <tag>Prometheus</tag>
+      
+      <tag>监控告警</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Prometheus监控Nginx</title>
     <link href="/2024/12/18/Prometheus%E7%9B%91%E6%8E%A7Nginx/"/>
     <url>/2024/12/18/Prometheus%E7%9B%91%E6%8E%A7Nginx/</url>

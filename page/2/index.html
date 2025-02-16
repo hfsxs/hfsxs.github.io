@@ -223,6 +223,75 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2024/07/18/Redis%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86%E7%AD%96%E7%95%A5/" target="_self">
+          Redis缓存数据管理策略
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2024/07/18/Redis%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86%E7%AD%96%E7%95%A5/" target="_self">
+        <div>
+          Redis通常用于高并发场景的缓存层，以减轻频繁数据库读写操所造成的非常耗时的磁盘IO压力，工作机制为：将即时性和数据一致性要求不高而访问量又特别巨大的热点数据（如电商系统的商品列表等）加载到处理速度更快的Redis内存数据库，直接供应用程序调用而不必再经过需要磁盘IO的数据库。若所调用的数据不存在，再到数据库去查询，并将之写入到Redis。同时，数据库有更新操作也应及时更新到Redis，以免造成
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-07-18 10:48" pubdate>
+              2024-07-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/Redis/">#Redis</a>
+            
+              <a href="/tags/NoSQL/">#NoSQL</a>
+            
+              <a href="/tags/%E7%BC%93%E5%AD%98/">#缓存</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2024/07/15/Redis%E6%95%B0%E6%8D%AE%E6%8C%81%E4%B9%85%E5%8C%96%E8%AF%A6%E8%A7%A3/" target="_self">
           Redis数据持久化详解
         </a>
@@ -835,81 +904,6 @@
               <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
             
               <a href="/tags/Memcached/">#Memcached</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2024/04/27/Prometheus%E7%9B%91%E6%8E%A7%E9%85%8D%E7%BD%AECeph%E9%9B%86%E7%BE%A4%E7%9B%91%E6%8E%A7/" target="_self">
-          Prometheus监控配置Ceph集群监控
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2024/04/27/Prometheus%E7%9B%91%E6%8E%A7%E9%85%8D%E7%BD%AECeph%E9%9B%86%E7%BE%A4%E7%9B%91%E6%8E%A7/" target="_self">
-        <div>
-          Ceph集群Manager组件内部集成了Prometheus监控模块，并监听在每个Manager节点的9283端口，用于将采集到的信息通过http接口传送到Prometheus。当然，也可以通过ceph_exporter完成监控信息的采集 1.Ceph集群启用Prometheus监控模块ceph mgr module enable prometheus  # 验证监控模块 ceph mgr mod
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-04-27 18:18" pubdate>
-              2024-04-27
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/Ceph/">#Ceph</a>
-            
-              <a href="/tags/%E5%AD%98%E5%82%A8/">#存储</a>
-            
-              <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/">#分布式存储</a>
-            
-              <a href="/tags/%E4%BA%91%E5%AD%98%E5%82%A8/">#云存储</a>
-            
-              <a href="/tags/Prometheus/">#Prometheus</a>
-            
-              <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
             
           </div>
         
