@@ -23,14 +23,16 @@
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="Prometheus监控系统的告警信息基于告警规则生成，并将生成的告警信息存储为时间序列，再发送给Alertmanager进行转发，整个过程一直专注于实时化告警的处理，并不会持久化存储。这一设计虽然简化了系统设计的复杂性，但大量的告警无疑将会影响故障排查和响应效率，也难以直观地区分告警的轻重缓急。此外，也不能对历史告警进行检索与统计，无法对业务系统的瓶颈与缺陷进行分析。Alertsnitch工具弥">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/alertsnitch.jpg">
 <meta property="article:published_time" content="2025-02-11T05:48:45.000Z">
-<meta property="article:modified_time" content="2025-02-14T07:50:24.025Z">
+<meta property="article:modified_time" content="2025-02-17T01:28:24.224Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
 <meta property="article:tag" content="Prometheus">
 <meta property="article:tag" content="监控告警">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hfsxs.github.io/img/wiki/prometheus/alertsnitch.jpg">
   
   
   
@@ -341,7 +343,10 @@ echo &quot;Done creating model&quot;
 sudo systemctl start alertsnitch.service
 sudo systemctl enable alertsnitch.service
 </code></pre>
-<h1 id="5-配置Alertmanager"><a href="#5-配置Alertmanager" class="headerlink" title="5.配置Alertmanager"></a>5.配置Alertmanager</h1><h2 id="5-1-配置Alertsnitch关联Alertmanager"><a href="#5-1-配置Alertsnitch关联Alertmanager" class="headerlink" title="5.1 配置Alertsnitch关联Alertmanager"></a>5.1 配置Alertsnitch关联Alertmanager</h2><pre><code class="hljs">route:
+<h1 id="5-配置Alertmanager"><a href="#5-配置Alertmanager" class="headerlink" title="5.配置Alertmanager"></a>5.配置Alertmanager</h1><h2 id="5-1-配置Alertsnitch关联Alertmanager"><a href="#5-1-配置Alertsnitch关联Alertmanager" class="headerlink" title="5.1 配置Alertsnitch关联Alertmanager"></a>5.1 配置Alertsnitch关联Alertmanager</h2><pre><code class="hljs">sudo vi /usr/local/prometheus/alertmanager.yml 
+
+
+route:
   group_by: [&#39;alertname&#39;,&#39;cluster&#39;]
   # 设置组内告警发送的等待时间，即组内收到第一个告警后的发送等待时间，目标是等待组内新增的告警以便同时合并发送，默认为30s
   group_wait: 10s
@@ -367,9 +372,10 @@ receivers:
       - url: &#39;http://10.1.11.182:9567/webhook&#39;
         send_resolved: true
 </code></pre>
-<h2 id="5-2-重启Alertmanager"><a href="#5-2-重启Alertmanager" class="headerlink" title="5.2 重启Alertmanager"></a>5.2 重启Alertmanager</h2><pre><code class="hljs">sudo systemctl restart alertname.service
+<h2 id="5-2-重启Alertmanager"><a href="#5-2-重启Alertmanager" class="headerlink" title="5.2 重启Alertmanager"></a>5.2 重启Alertmanager</h2><pre><code class="hljs">sudo systemctl restart alertmanager.service
 </code></pre>
 <h1 id="6-配置Grafana"><a href="#6-配置Grafana" class="headerlink" title="6.配置Grafana"></a>6.配置Grafana</h1><h2 id="6-1-配置MySQL数据源"><a href="#6-1-配置MySQL数据源" class="headerlink" title="6.1 配置MySQL数据源"></a>6.1 配置MySQL数据源</h2><h2 id="6-2-导入监控模版"><a href="#6-2-导入监控模版" class="headerlink" title="6.2 导入监控模版"></a>6.2 导入监控模版</h2><p>Dashboards —&gt; Manage —&gt; Import —&gt; 模版ID：15833</p>
+<p><img src="/img/wiki/prometheus/alertsnitch.jpg" srcset="/img/loading.gif" lazyload alt="alertsnitch"></p>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/gered/p/17091907.html">https://www.cnblogs.com/gered/p/17091907.html</a></li>
