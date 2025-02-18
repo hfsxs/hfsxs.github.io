@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/dingtalk.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/wechat.jpg">
 <meta property="article:published_time" content="2023-10-24T07:51:46.000Z">
-<meta property="article:modified_time" content="2025-01-05T14:54:33.915Z">
+<meta property="article:modified_time" content="2025-02-18T08:29:30.926Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -239,7 +239,7 @@
         
         
         
-          99 分钟
+          103 分钟
         
       </span>
     
@@ -318,15 +318,16 @@ route:
   # 设置告警未解决时重复发送的时间间隔，且此期间组内无新增告警，默认4h，建议根据告警严重程度进行设置
   repeat_interval: 1h 
   # 设置默认告警接收者，即未被子路由的receivers.name选项匹配到的告警接收者
-  receiver: &#39;webhook&#39;
+  receiver: &#39;email&#39;
 
   # 设置告警信息子路由
   routes:
   # 设置告警接收器，即指定发送人以及发送渠道，支持多种类型，如邮箱、钉钉、企业微信等
   - receiver: &#39;email&#39;
-    group_wait: 10s
-    match:
-      team: node
+    # 设置匹配到该路由后是否继续匹配其余同级路由，默认为false，即匹配到后不再继续匹配
+    continue: true
+  - receiver: &#39;webhook&#39;
+    continue: true
 
 # 设置告警接收者
 receivers:
@@ -537,19 +538,20 @@ route:
   # 设置告警未解决时重复发送的时间间隔，且此期间组内无新增告警，默认4h，建议根据告警严重程度进行设置
   repeat_interval: 1h 
   # 设置默认告警接收者，即未被子路由的receivers.name选项匹配到的告警接收者
-  receiver: &#39;webhook&#39;
+  receiver: &#39;email&#39;
 
   # 设置告警信息子路由
   routes:
   # 设置告警接收器，即指定发送人以及发送渠道，支持多种类型，如邮箱、钉钉、企业微信等
   - receiver: &#39;email&#39;
-    group_wait: 10s
-    match:
-      team: node
+    # 设置匹配到该路由后是否继续匹配其余同级路由，默认为false，即匹配到后不再继续匹配
+    continue: true
+  - receiver: &#39;dingtalk&#39;
+    continue: true
 
 # 设置告警接收者
 receivers:
- - name: &#39;webhook&#39;
+ - name: &#39;dingtalk&#39;
    webhook_configs:
    - url: http://localhost:8060/dingtalk/ops_dingding/send
      # 设置当前收件人需要接收告警恢复通知
@@ -665,16 +667,33 @@ sudo systemctl enable alertmanager-webhook.service
 <h2 id="4-4-配置Alertmanager"><a href="#4-4-配置Alertmanager" class="headerlink" title="4.4 配置Alertmanager"></a>4.4 配置Alertmanager</h2><pre><code class="hljs">sudo vi /opt/prometheus/alertmanager.yml
 
 
+  # 设置告警信息子路由
+  routes:
+  # 设置告警接收器，即指定发送人以及发送渠道，支持多种类型，如邮箱、钉钉、企业微信等
+  - receiver: &#39;email&#39;
+    # 设置匹配到该路由后是否继续匹配其余同级路由，默认为false，即匹配到后不再继续匹配
+    continue: true
+  - receiver: &#39;dingtalk&#39;
+    continue: true
+  - receiver: &#39;wechat&#39;
+    continue: true
+
+# 设置告警接收者
 receivers:
-  - name: &#39;email&#39;
-    email_configs:
-    - to: &#39;784956466@qq.com&#39;
-      html: &#39;&#123;&#123; template "email.html" . &#125;&#125;&#39;
-      send_resolved: true
-  - name: &#39;wechat&#39;
-    webhook_configs:
-    - url: &#39;http://127.0.0.1:9095/qywechat&#39;
-      send_resolved: true
+ - name: &#39;dingtalk&#39;
+   webhook_configs:
+   - url: http://localhost:8060/dingtalk/ops_dingding/send
+     # 设置当前收件人需要接收告警恢复通知
+     send_resolved: true
+ - name: &#39;email&#39;
+   email_configs:
+   - to: &#39;xxxxxxxxxxxx@163.com&#39;
+   - to: &#39;xxxxxxxxxxxx@qq.com&#39;
+     send_resolved: true
+ - name: &#39;wechat&#39;
+   webhook_configs:
+   - url: &#39;http://127.0.0.1:9095/qywechat&#39;
+     send_resolved: true
 </code></pre>
 <h2 id="4-5-重启Alertmanager，验证告警信息"><a href="#4-5-重启Alertmanager，验证告警信息" class="headerlink" title="4.5 重启Alertmanager，验证告警信息"></a>4.5 重启Alertmanager，验证告警信息</h2><p><img src="/img/wiki/prometheus/wechat.jpg" srcset="/img/loading.gif" lazyload alt="wechat"></p>
 <hr>
