@@ -7,8 +7,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
-  <link rel="icon" href="/hexo/img/fluid.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -19,7 +19,7 @@
     <meta name="description" content="1.配置代理节点持久化存储1.1 创建PV、PVCvi jenkins-slave-data.yaml   apiVersion: v1 kind: PersistentVolume metadata:   # 设置PV名称   name: jenkins-slave-data   # 设置PV标签，用于PVC的定向绑定   labels:     app: jenkins-slave-data">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Jenkins基于Kubernetes集群配置动态agent节点">
-<meta property="og:url" content="https://hfsxs.github.io/hexo/2023/04/18/Jenkins%E5%9F%BA%E4%BA%8EKubernetes%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE%E5%8A%A8%E6%80%81agent%E8%8A%82%E7%82%B9/index.html">
+<meta property="og:url" content="https://hfsxs.github.io/2023/04/18/Jenkins%E5%9F%BA%E4%BA%8EKubernetes%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE%E5%8A%A8%E6%80%81agent%E8%8A%82%E7%82%B9/index.html">
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="1.配置代理节点持久化存储1.1 创建PV、PVCvi jenkins-slave-data.yaml   apiVersion: v1 kind: PersistentVolume metadata:   # 设置PV名称   name: jenkins-slave-data   # 设置PV标签，用于PVC的定向绑定   labels:     app: jenkins-slave-data">
 <meta property="og:locale" content="zh_CN">
@@ -73,12 +73,12 @@
 <link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
 
 
-<link  rel="stylesheet" href="/hexo/css/main.css" />
+<link  rel="stylesheet" href="/css/main.css" />
 
 
-  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
   
-    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
   
 
 
@@ -87,15 +87,15 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"hfsxs.github.io","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
       Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
     }
   </script>
-  <script  src="/hexo/js/utils.js" ></script>
-  <script  src="/hexo/js/color-schema.js" ></script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
   
 
 
@@ -112,7 +112,7 @@
 <div class="header-inner" style="height: 70vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand" href="/hexo/">
+    <a class="navbar-brand" href="/">
       <strong>扬帆</strong>
     </a>
 
@@ -131,7 +131,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/">
+              <a class="nav-link" href="/">
                 <i class="iconfont icon-home-fill"></i>
                 首页
               </a>
@@ -143,7 +143,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/categories/">
+              <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
                 分类
               </a>
@@ -155,7 +155,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/tags/">
+              <a class="nav-link" href="/tags/">
                 <i class="iconfont icon-tags-fill"></i>
                 标签
               </a>
@@ -167,7 +167,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/archives/">
+              <a class="nav-link" href="/archives/">
                 <i class="iconfont icon-archive-fill"></i>
                 归档
               </a>
@@ -179,7 +179,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/hexo/about/">
+              <a class="nav-link" href="/about/">
                 <i class="iconfont icon-user-fill"></i>
                 关于
               </a>
@@ -208,7 +208,7 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
@@ -339,16 +339,16 @@ spec:
 <h2 id="1-2-部署PV、PVC"><a href="#1-2-部署PV、PVC" class="headerlink" title="1.2 部署PV、PVC"></a>1.2 部署PV、PVC</h2><pre><code class="hljs">kubectl apply -f jenkins-slave-data.yaml
 </code></pre>
 <h1 id="2-jenkins安装kubernetes插件"><a href="#2-jenkins安装kubernetes插件" class="headerlink" title="2.jenkins安装kubernetes插件"></a>2.jenkins安装kubernetes插件</h1><h1 id="3-登录jenkins，创建kubernetes云"><a href="#3-登录jenkins，创建kubernetes云" class="headerlink" title="3.登录jenkins，创建kubernetes云"></a>3.登录jenkins，创建kubernetes云</h1><p>【系统管理】 -&gt; 【节点管理】 -&gt; 【Clouds】 -&gt; 【新增一个云】</p>
-<p><img src="/img/wiki/jenkins/jenkins-003-001.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-003-001"></p>
-<p><img src="/img/wiki/jenkins/jenkins-003-002.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-003-002"></p>
-<p><img src="/img/wiki/jenkins/jenkins-003-003.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-003-003"></p>
-<p><img src="/img/wiki/jenkins/jenkins-003-004.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-003-004"></p>
-<h1 id="4-部署动态agent节点"><a href="#4-部署动态agent节点" class="headerlink" title="4.部署动态agent节点"></a>4.部署动态agent节点</h1><h2 id="4-1-Pod模版部署方式"><a href="#4-1-Pod模版部署方式" class="headerlink" title="4.1 Pod模版部署方式"></a>4.1 Pod模版部署方式</h2><h3 id="4-1-1-配置POd模版"><a href="#4-1-1-配置POd模版" class="headerlink" title="4.1.1 配置POd模版"></a>4.1.1 配置POd模版</h3><p><img src="/img/wiki/jenkins/jenkins-003-005.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-003-005"></p>
-<p><img src="/img/wiki/jenkins/jenkins-003-006.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-003-006"></p>
-<h3 id="4-1-2-配置Pod容器"><a href="#4-1-2-配置Pod容器" class="headerlink" title="4.1.2 配置Pod容器"></a>4.1.2 配置Pod容器</h3><p><img src="/img/wiki/jenkins/jenkins-003-007.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-003-007"></p>
-<p><img src="/img/wiki/jenkins/jenkins-003-008.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-003-008"></p>
-<p><img src="/img/wiki/jenkins/jenkins-003-009.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-003-009"></p>
-<p><img src="/img/wiki/jenkins/jenkins-003-010.jpg" srcset="/hexo/img/loading.gif" lazyload alt="jenkins-003-010"></p>
+<p><img src="/img/wiki/jenkins/jenkins-003-001.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-003-001"></p>
+<p><img src="/img/wiki/jenkins/jenkins-003-002.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-003-002"></p>
+<p><img src="/img/wiki/jenkins/jenkins-003-003.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-003-003"></p>
+<p><img src="/img/wiki/jenkins/jenkins-003-004.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-003-004"></p>
+<h1 id="4-部署动态agent节点"><a href="#4-部署动态agent节点" class="headerlink" title="4.部署动态agent节点"></a>4.部署动态agent节点</h1><h2 id="4-1-Pod模版部署方式"><a href="#4-1-Pod模版部署方式" class="headerlink" title="4.1 Pod模版部署方式"></a>4.1 Pod模版部署方式</h2><h3 id="4-1-1-配置POd模版"><a href="#4-1-1-配置POd模版" class="headerlink" title="4.1.1 配置POd模版"></a>4.1.1 配置POd模版</h3><p><img src="/img/wiki/jenkins/jenkins-003-005.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-003-005"></p>
+<p><img src="/img/wiki/jenkins/jenkins-003-006.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-003-006"></p>
+<h3 id="4-1-2-配置Pod容器"><a href="#4-1-2-配置Pod容器" class="headerlink" title="4.1.2 配置Pod容器"></a>4.1.2 配置Pod容器</h3><p><img src="/img/wiki/jenkins/jenkins-003-007.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-003-007"></p>
+<p><img src="/img/wiki/jenkins/jenkins-003-008.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-003-008"></p>
+<p><img src="/img/wiki/jenkins/jenkins-003-009.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-003-009"></p>
+<p><img src="/img/wiki/jenkins/jenkins-003-010.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-003-010"></p>
 <h2 id="4-2-pipeline部署方式"><a href="#4-2-pipeline部署方式" class="headerlink" title="4.2 pipeline部署方式"></a>4.2 pipeline部署方式</h2><h3 id="4-2-1-创建ServiceAccount"><a href="#4-2-1-创建ServiceAccount" class="headerlink" title="4.2.1 创建ServiceAccount"></a>4.2.1 创建ServiceAccount</h3><pre><code class="hljs">vi jenkins-serviceAccount.yaml
 
 
@@ -489,7 +489,7 @@ pipeline &#123;
     
       <span class="category-chain">
         
-  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
   
   
 
@@ -504,21 +504,21 @@ pipeline &#123;
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/hexo/tags/Linux/">#Linux</a>
+        <a href="/tags/Linux/">#Linux</a>
       
-        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
       
-        <a href="/hexo/tags/CICD/">#CICD</a>
+        <a href="/tags/CICD/">#CICD</a>
       
-        <a href="/hexo/tags/DevOps/">#DevOps</a>
+        <a href="/tags/DevOps/">#DevOps</a>
       
-        <a href="/hexo/tags/Jenkins/">#Jenkins</a>
+        <a href="/tags/Jenkins/">#Jenkins</a>
       
-        <a href="/hexo/tags/Kubernetes/">#Kubernetes</a>
+        <a href="/tags/Kubernetes/">#Kubernetes</a>
       
-        <a href="/hexo/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+        <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
       
-        <a href="/hexo/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+        <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
       
     </div>
   
@@ -531,7 +531,7 @@ pipeline &#123;
   <div class="license-box my-3">
     <div class="license-title">
       <div>Jenkins基于Kubernetes集群配置动态agent节点</div>
-      <div>https://hfsxs.github.io/hexo/2023/04/18/Jenkins基于Kubernetes集群配置动态agent节点/</div>
+      <div>https://hfsxs.github.io/2023/04/18/Jenkins基于Kubernetes集群配置动态agent节点/</div>
     </div>
     <div class="license-meta">
       
@@ -573,7 +573,7 @@ pipeline &#123;
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/hexo/2023/04/20/Kubernetes%E9%9B%86%E7%BE%A4Helm%E5%B7%A5%E5%85%B7%E8%AF%A6%E8%A7%A3/" title="Kubernetes集群Helm工具详解">
+                      <a href="/2023/04/20/Kubernetes%E9%9B%86%E7%BE%A4Helm%E5%B7%A5%E5%85%B7%E8%AF%A6%E8%A7%A3/" title="Kubernetes集群Helm工具详解">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Kubernetes集群Helm工具详解</span>
                         <span class="visible-mobile">上一篇</span>
@@ -583,7 +583,7 @@ pipeline &#123;
                   <article class="post-next col-6">
                     
                     
-                      <a href="/hexo/2023/04/16/Jenkins%E9%85%8D%E7%BD%AEagent%E8%8A%82%E7%82%B9/" title="Jenkins配置agent节点">
+                      <a href="/2023/04/16/Jenkins%E9%85%8D%E7%BD%AEagent%E8%8A%82%E7%82%B9/" title="Jenkins配置agent节点">
                         <span class="hidden-mobile">Jenkins配置agent节点</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -740,15 +740,15 @@ pipeline &#123;
 
 <script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
 <script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/hexo/js/events.js" ></script>
-<script  src="/hexo/js/plugins.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
 
 
 
 
 
   
-    <script  src="/hexo/js/img-lazyload.js" ></script>
+    <script  src="/js/img-lazyload.js" ></script>
   
 
 
@@ -820,7 +820,7 @@ pipeline &#123;
 
   <script>Fluid.plugins.imageCaption();</script>
 
-  <script  src="/hexo/js/local-search.js" ></script>
+  <script  src="/js/local-search.js" ></script>
 
 
 
@@ -828,7 +828,7 @@ pipeline &#123;
 
 <!-- 主题的启动项，将它保持在最底部 -->
 <!-- the boot of the theme, keep it at the bottom -->
-<script  src="/hexo/js/boot.js" ></script>
+<script  src="/js/boot.js" ></script>
 
 
   
