@@ -7,8 +7,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
-  <link rel="icon" href="/img/fluid.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/hexo/img/fluid.png">
+  <link rel="icon" href="/hexo/img/fluid.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -19,7 +19,7 @@
     <meta name="description" content="Linux内核，即kernel，是由林纳斯·托瓦兹编写的开源操作系统核心程序，负责管理硬件、文件系统和网络等资源，目前由Linux开源社区维护、更新与修复。Linux内核版本是指其版本号，是其独特的标识，包括主版本号、次版本号和修订号，通常主版本号表示基本的架构和功能的重大改变，次版本号表示较小的变化（偶数为稳定版，奇数为开发版），修订号表示修复次数，如4.18.10。Linux内核版本大致分为两">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Centos7升级内核">
-<meta property="og:url" content="https://hfsxs.github.io/2023/09/04/Centos7%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8/index.html">
+<meta property="og:url" content="https://hfsxs.github.io/hexo/2023/09/04/Centos7%E5%8D%87%E7%BA%A7%E5%86%85%E6%A0%B8/index.html">
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="Linux内核，即kernel，是由林纳斯·托瓦兹编写的开源操作系统核心程序，负责管理硬件、文件系统和网络等资源，目前由Linux开源社区维护、更新与修复。Linux内核版本是指其版本号，是其独特的标识，包括主版本号、次版本号和修订号，通常主版本号表示基本的架构和功能的重大改变，次版本号表示较小的变化（偶数为稳定版，奇数为开发版），修订号表示修复次数，如4.18.10。Linux内核版本大致分为两">
 <meta property="og:locale" content="zh_CN">
@@ -57,12 +57,12 @@
 <link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
 
 
-<link  rel="stylesheet" href="/css/main.css" />
+<link  rel="stylesheet" href="/hexo/css/main.css" />
 
 
-  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  <link id="highlight-css" rel="stylesheet" href="/hexo/css/highlight.css" />
   
-    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+    <link id="highlight-css-dark" rel="stylesheet" href="/hexo/css/highlight-dark.css" />
   
 
 
@@ -71,15 +71,15 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/hexo/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/hexo/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
       Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
     }
   </script>
-  <script  src="/js/utils.js" ></script>
-  <script  src="/js/color-schema.js" ></script>
+  <script  src="/hexo/js/utils.js" ></script>
+  <script  src="/hexo/js/color-schema.js" ></script>
   
 
 
@@ -96,7 +96,7 @@
 <div class="header-inner" style="height: 70vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand" href="/">
+    <a class="navbar-brand" href="/hexo/">
       <strong>扬帆</strong>
     </a>
 
@@ -115,7 +115,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/">
+              <a class="nav-link" href="/hexo/">
                 <i class="iconfont icon-home-fill"></i>
                 首页
               </a>
@@ -127,7 +127,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/categories/">
+              <a class="nav-link" href="/hexo/categories/">
                 <i class="iconfont icon-category-fill"></i>
                 分类
               </a>
@@ -139,7 +139,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/tags/">
+              <a class="nav-link" href="/hexo/tags/">
                 <i class="iconfont icon-tags-fill"></i>
                 标签
               </a>
@@ -151,7 +151,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/archives/">
+              <a class="nav-link" href="/hexo/archives/">
                 <i class="iconfont icon-archive-fill"></i>
                 归档
               </a>
@@ -163,7 +163,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/about/">
+              <a class="nav-link" href="/hexo/about/">
                 <i class="iconfont icon-user-fill"></i>
                 关于
               </a>
@@ -192,7 +192,7 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+     style="background: url('/hexo/img/default.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
@@ -315,7 +315,7 @@ grub2-set-default 0
     
       <span class="category-chain">
         
-  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  <a href="/hexo/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
   
   
 
@@ -330,11 +330,11 @@ grub2-set-default 0
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Linux/">#Linux</a>
+        <a href="/hexo/tags/Linux/">#Linux</a>
       
-        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+        <a href="/hexo/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
       
-        <a href="/tags/CentOS/">#CentOS</a>
+        <a href="/hexo/tags/CentOS/">#CentOS</a>
       
     </div>
   
@@ -347,7 +347,7 @@ grub2-set-default 0
   <div class="license-box my-3">
     <div class="license-title">
       <div>Centos7升级内核</div>
-      <div>https://hfsxs.github.io/2023/09/04/Centos7升级内核/</div>
+      <div>https://hfsxs.github.io/hexo/2023/09/04/Centos7升级内核/</div>
     </div>
     <div class="license-meta">
       
@@ -389,7 +389,7 @@ grub2-set-default 0
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/09/15/Python%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%BE%93%E5%87%BA/" title="Python格式化输出">
+                      <a href="/hexo/2023/09/15/Python%E6%A0%BC%E5%BC%8F%E5%8C%96%E8%BE%93%E5%87%BA/" title="Python格式化输出">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Python格式化输出</span>
                         <span class="visible-mobile">上一篇</span>
@@ -399,7 +399,7 @@ grub2-set-default 0
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/09/01/Kubernetes%E9%9B%86%E7%BE%A4%E7%BD%91%E7%BB%9C%E7%AD%96%E7%95%A5%E8%AF%A6%E8%A7%A3/" title="Kubernetes集群网络策略详解">
+                      <a href="/hexo/2023/09/01/Kubernetes%E9%9B%86%E7%BE%A4%E7%BD%91%E7%BB%9C%E7%AD%96%E7%95%A5%E8%AF%A6%E8%A7%A3/" title="Kubernetes集群网络策略详解">
                         <span class="hidden-mobile">Kubernetes集群网络策略详解</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -556,15 +556,15 @@ grub2-set-default 0
 
 <script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
 <script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/js/events.js" ></script>
-<script  src="/js/plugins.js" ></script>
+<script  src="/hexo/js/events.js" ></script>
+<script  src="/hexo/js/plugins.js" ></script>
 
 
 
 
 
   
-    <script  src="/js/img-lazyload.js" ></script>
+    <script  src="/hexo/js/img-lazyload.js" ></script>
   
 
 
@@ -636,7 +636,7 @@ grub2-set-default 0
 
   <script>Fluid.plugins.imageCaption();</script>
 
-  <script  src="/js/local-search.js" ></script>
+  <script  src="/hexo/js/local-search.js" ></script>
 
 
 
@@ -644,7 +644,7 @@ grub2-set-default 0
 
 <!-- 主题的启动项，将它保持在最底部 -->
 <!-- the boot of the theme, keep it at the bottom -->
-<script  src="/js/boot.js" ></script>
+<script  src="/hexo/js/boot.js" ></script>
 
 
   
