@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/alertsnitch.jpg">
 <meta property="article:published_time" content="2025-02-11T05:48:45.000Z">
-<meta property="article:modified_time" content="2025-02-17T01:28:24.224Z">
+<meta property="article:modified_time" content="2025-02-19T07:42:54.515Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -226,7 +226,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.8k 字
+          3k 字
         
       </span>
     
@@ -237,7 +237,7 @@
         
         
         
-          24 分钟
+          26 分钟
         
       </span>
     
@@ -313,7 +313,7 @@ After=network.target
 Type=simple
 User=root
 Group=root
-Environment=&quot;ALERTSNITCH_DSN=root:123456@tcp(10.1.11.188:3306)/alertsnitch&quot;
+Environment=&quot;ALERTSNITCH_DSN=alertsnitch:alertsnitch@tcp(10.1.11.188:3306)/alertsnitch&quot;
 ExecStart=/usr/local/bin/alertsnitch
 Restart=always
 RestartSec=5
@@ -340,6 +340,9 @@ mysql --user=root --password=&quot;123456&quot; &quot;alertsnitch&quot; &lt; ../
 echo &quot;Done creating model&quot;
 </code></pre>
 <h2 id="3-2-初始化数据库"><a href="#3-2-初始化数据库" class="headerlink" title="3.2 初始化数据库"></a>3.2 初始化数据库</h2><pre><code class="hljs">sh bootstrap_mysql.sh
+</code></pre>
+<h2 id="3-3-创建数据账户并授权"><a href="#3-3-创建数据账户并授权" class="headerlink" title="3.3 创建数据账户并授权"></a>3.3 创建数据账户并授权</h2><pre><code class="hljs">MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON *.* TO &#39;alertsnitch&#39;@&#39;%&#39; IDENTIFIED BY &#39;alertsnitch&#39;;
+MariaDB [(none)]&gt; flush privileges;
 </code></pre>
 <h2 id="4-启动Alertsnitch"><a href="#4-启动Alertsnitch" class="headerlink" title="4.启动Alertsnitch"></a>4.启动Alertsnitch</h2><pre><code class="hljs">sudo systemctl daemon-reload
 sudo systemctl start alertsnitch.service
