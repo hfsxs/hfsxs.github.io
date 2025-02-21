@@ -866,6 +866,35 @@
   
   
   <entry>
+    <title>Openstack集群部署</title>
+    <link href="/2024/03/10/Openstack%E9%9B%86%E7%BE%A4%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/"/>
+    <url>/2024/03/10/Openstack%E9%9B%86%E7%BE%A4%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1-配置外部网络"><a href="#1-配置外部网络" class="headerlink" title="1.配置外部网络"></a>1.配置外部网络</h1><h2 id="1-1-查看物理网络配置"><a href="#1-1-查看物理网络配置" class="headerlink" title="1.1 查看物理网络配置"></a>1.1 查看物理网络配置</h2><pre><code class="hljs">cat /etc/neutron/plugins/ml2/ml2_conf.ini[ml2]type_drivers = flat,vlan,vxlantenant_network_types = vxlanmechanism_drivers = linuxbridge,l2populationextension_drivers = port_security[ml2_type_flat]flat_networks = provider</code></pre><h2 id="1-2-创建外部网络"><a href="#1-2-创建外部网络" class="headerlink" title="1.2 创建外部网络"></a>1.2 创建外部网络</h2><p><img src="/img/wiki/openstack/openstack001.jpg" alt="openstack001"></p><p><img src="/img/wiki/openstack/openstack002.jpg" alt="openstack002"></p><p><img src="/img/wiki/openstack/openstack003.jpg" alt="openstack003"></p><h1 id="2-配置内部网络"><a href="#2-配置内部网络" class="headerlink" title="2.配置内部网络"></a>2.配置内部网络</h1><p><img src="/img/wiki/openstack/openstack004.jpg" alt="openstack004"></p><p><img src="/img/wiki/openstack/openstack005.jpg" alt="openstack005"></p><p><img src="/img/wiki/openstack/openstack006.jpg" alt="openstack006"></p><h1 id="3-配置路由器"><a href="#3-配置路由器" class="headerlink" title="3.配置路由器"></a>3.配置路由器</h1><p><img src="/img/wiki/openstack/openstack007.jpg" alt="openstack007"></p><p><img src="/img/wiki/openstack/openstack008.jpg" alt="openstack008"></p><p><img src="/img/wiki/openstack/openstack009.jpg" alt="openstack009"></p><h1 id="4-验证网络配置"><a href="#4-验证网络配置" class="headerlink" title="4.验证网络配置"></a>4.验证网络配置</h1><p><img src="/img/wiki/openstack/openstack010.jpg" alt="openstack010"></p><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://blog.csdn.net/m0_57464618/article/details/129899280">https://blog.csdn.net/m0_57464618/article/details/129899280</a></li><li><a href="https://blog.csdn.net/qq_36073886/article/details/130849987">https://blog.csdn.net/qq_36073886/article/details/130849987</a></li><li><a href="https://blog.csdn.net/weixin_51202460/article/details/123985315">https://blog.csdn.net/weixin_51202460/article/details/123985315</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>Openstack</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>MySQL数据库性能调优</title>
     <link href="/2024/02/29/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/"/>
     <url>/2024/02/29/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98/</url>
