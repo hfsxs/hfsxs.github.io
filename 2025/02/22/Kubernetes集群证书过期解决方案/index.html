@@ -16,15 +16,15 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="参考文档 https:&#x2F;&#x2F;cloud.tencent.com&#x2F;developer&#x2F;article&#x2F;1962891">
+    <meta name="description" content="Kubernetes集群所有组件之间的通信都需要通过SSL证书进行身份验证与安全传输，证书一旦过期则不能正常通信，导致应用程序无法使用。Kubernetes官方推荐的集群部署工具kubeadm所引导的集群的证书有效期都是1年，这其实是为了引导客户体验新版本，当然也可以避开集群的升级而只对证书进行续期，所设计的流程也是十分方便与快捷 1.备份原证书文件sudo cp -r &#x2F;etc&#x2F;kubernet">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kubernetes集群证书过期解决方案">
 <meta property="og:url" content="https://hfsxs.github.io/2025/02/22/Kubernetes%E9%9B%86%E7%BE%A4%E8%AF%81%E4%B9%A6%E8%BF%87%E6%9C%9F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="参考文档 https:&#x2F;&#x2F;cloud.tencent.com&#x2F;developer&#x2F;article&#x2F;1962891">
+<meta property="og:description" content="Kubernetes集群所有组件之间的通信都需要通过SSL证书进行身份验证与安全传输，证书一旦过期则不能正常通信，导致应用程序无法使用。Kubernetes官方推荐的集群部署工具kubeadm所引导的集群的证书有效期都是1年，这其实是为了引导客户体验新版本，当然也可以避开集群的升级而只对证书进行续期，所设计的流程也是十分方便与快捷 1.备份原证书文件sudo cp -r &#x2F;etc&#x2F;kubernet">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-02-22T08:45:40.000Z">
-<meta property="article:modified_time" content="2025-02-22T08:47:57.224Z">
+<meta property="article:modified_time" content="2025-02-24T02:27:50.285Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -241,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          55 字
+          645 字
         
       </span>
     
@@ -252,7 +252,7 @@
         
         
         
-          1 分钟
+          6 分钟
         
       </span>
     
@@ -303,9 +303,26 @@
             
               <div class="markdown-body">
                 
-                <hr>
+                <p>Kubernetes集群所有组件之间的通信都需要通过SSL证书进行身份验证与安全传输，证书一旦过期则不能正常通信，导致应用程序无法使用。Kubernetes官方推荐的集群部署工具kubeadm所引导的集群的证书有效期都是1年，这其实是为了引导客户体验新版本，当然也可以避开集群的升级而只对证书进行续期，所设计的流程也是十分方便与快捷</p>
+<h1 id="1-备份原证书文件"><a href="#1-备份原证书文件" class="headerlink" title="1.备份原证书文件"></a>1.备份原证书文件</h1><pre><code class="hljs">sudo cp -r /etc/kubernetes/pki/ /etc/kubernetes/pki_20250222
+</code></pre>
+<h1 id="2-确认证书有效期"><a href="#2-确认证书有效期" class="headerlink" title="2.确认证书有效期"></a>2.确认证书有效期</h1><pre><code class="hljs">kubeadm certs check-expiration
+</code></pre>
+<h1 id="3-更新集群所有证书"><a href="#3-更新集群所有证书" class="headerlink" title="3.更新集群所有证书"></a>3.更新集群所有证书</h1><pre><code class="hljs">kubeadm certs renew all
+</code></pre>
+<h1 id="4-重启kubelet组件"><a href="#4-重启kubelet组件" class="headerlink" title="4.重启kubelet组件"></a>4.重启kubelet组件</h1><pre><code class="hljs">sudo systemctl restart kubelet
+</code></pre>
+<h1 id="5-配置kubectl集群认证令牌"><a href="#5-配置kubectl集群认证令牌" class="headerlink" title="5.配置kubectl集群认证令牌"></a>5.配置kubectl集群认证令牌</h1><pre><code class="hljs">sudo rm -rf $HOME/.kube/*
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+</code></pre>
+<h1 id="6-验证集群功能"><a href="#6-验证集群功能" class="headerlink" title="6.验证集群功能"></a>6.验证集群功能</h1><pre><code class="hljs">kubectl get nodes
+</code></pre>
+<hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://juejin.cn/post/7403245452215320614">https://juejin.cn/post/7403245452215320614</a></li>
 <li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1962891">https://cloud.tencent.com/developer/article/1962891</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/IT_ZRS/article/details/140191159">https://blog.csdn.net/IT_ZRS/article/details/140191159</a></li>
 </ul>
 
                 
@@ -381,7 +398,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年2月22日</div>
+          <div>2025年2月24日</div>
         </div>
       
       <div class="license-meta-item">
