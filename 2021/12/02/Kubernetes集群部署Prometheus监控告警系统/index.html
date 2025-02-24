@@ -23,8 +23,9 @@
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="Kube-Prometheus，Coreos基于Prometheus Operator开发的专为Kubernetes集群设计的一站式开箱即用监控方案，以定制资源管理应用和组件的方式简便快捷地实现Prometheus实例的部署、管理及监控规则的定义，从而大大降低了Kubernetes集群接入Prometheus监控系统的难度，无需手动编写繁杂的YAML文件进行部署与管理 Prometheus Ope">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/kubernetes.jpg">
 <meta property="article:published_time" content="2021-12-02T07:21:47.000Z">
-<meta property="article:modified_time" content="2024-02-21T06:53:00.747Z">
+<meta property="article:modified_time" content="2025-02-24T06:53:34.897Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -34,6 +35,7 @@
 <meta property="article:tag" content="Prometheus">
 <meta property="article:tag" content="监控告警">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hfsxs.github.io/img/wiki/prometheus/kubernetes.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -596,6 +598,7 @@ kubectl -n monitoring get svc
 <li>默认用户名&#x2F;密码：admin&#x2F;admin</li>
 </ul>
 <h2 id="8-3-导入监控大盘模版"><a href="#8-3-导入监控大盘模版" class="headerlink" title="8.3 导入监控大盘模版"></a>8.3 导入监控大盘模版</h2><p>Manage —&gt; Import —&gt; 模版ID：13105</p>
+<p><img src="/img/wiki/prometheus/kubernetes.jpg" srcset="/img/loading.gif" lazyload alt="kubernetes"></p>
 <h1 id="9-配置告警"><a href="#9-配置告警" class="headerlink" title="9.配置告警"></a>9.配置告警</h1><p>Prometheus的告警功能由Prometheus Server和AlertManager共同完成，Prometheus Server对配置的告警规则周期性的计算，将触发告警条件的规则生成告警通知并发送给AlertManager，AlertManager对告警通知进行分组、去重后再根据路由规则将其路由到不同的receiver，如Email、短信或Webhook等</p>
 <h2 id="9-1-配置邮箱告警"><a href="#9-1-配置邮箱告警" class="headerlink" title="9.1 配置邮箱告警"></a>9.1 配置邮箱告警</h2><h3 id="9-1-1-发送邮箱开启SMTP服务，获取登录授权码"><a href="#9-1-1-发送邮箱开启SMTP服务，获取登录授权码" class="headerlink" title="9.1.1 发送邮箱开启SMTP服务，获取登录授权码"></a>9.1.1 发送邮箱开启SMTP服务，获取登录授权码</h3><h3 id="9-1-2-创建AlertManager配置文件"><a href="#9-1-2-创建AlertManager配置文件" class="headerlink" title="9.1.2 创建AlertManager配置文件"></a>9.1.2 创建AlertManager配置文件</h3><pre><code class="hljs">vi alertmanager.yaml
 
@@ -957,7 +960,7 @@ kubectl -n monitoring create secret generic alertmanager-main --from-file=alertm
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2024年2月21日</div>
+          <div>2025年2月24日</div>
         </div>
       
       <div class="license-meta-item">
