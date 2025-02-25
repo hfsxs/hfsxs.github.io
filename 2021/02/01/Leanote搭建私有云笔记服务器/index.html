@@ -422,21 +422,48 @@ sudo systemctl enable leanote.service
               
   
 
-<p class="note note-primary">
-<strong> 本文作者: </strong><a href="/">扬帆</a> <br>
-<strong> 本文链接: </strong><a href="https://hfsxs.github.io/2021/02/01/Leanote%E6%90%AD%E5%BB%BA%E7%A7%81%E6%9C%89%E4%BA%91%E7%AC%94%E8%AE%B0%E6%9C%8D%E5%8A%A1%E5%99%A8/">https://hfsxs.github.io/2021/02/01/Leanote%E6%90%AD%E5%BB%BA%E7%A7%81%E6%9C%89%E4%BA%91%E7%AC%94%E8%AE%B0%E6%9C%8D%E5%8A%A1%E5%99%A8/</a> <br>
-<strong> 版权声明: </strong>
-    
-    
-        <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
-        <span class="hint--top hint--rounded" aria-label="BY - 署名">
-            <i class="iconfont icon-cc-by"></i>
-        </span>
-        </a>
-    
-    
-</p>
-
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Leanote搭建私有云笔记服务器</div>
+      <div>https://hfsxs.github.io/2021/02/01/Leanote搭建私有云笔记服务器/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年2月1日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2023年12月31日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
 
 
 
@@ -642,7 +669,7 @@ sudo systemctl enable leanote.service
         if(String(snum).length ==1 ){
                 snum = "0" + snum;
         }
-        document.getElementById("timeDate").innerHTML = "🚀本站已飞行 "+dnum+"&nbsp 天";
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
         document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
     }
     setInterval("createtime()",250);
