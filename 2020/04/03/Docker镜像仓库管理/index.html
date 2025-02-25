@@ -766,7 +766,7 @@ docker-compose down
         if(String(snum).length ==1 ){
                 snum = "0" + snum;
         }
-        document.getElementById("timeDate").innerHTML = "🚀本网站已飞行 & nbsp"+dnum+"&nbsp 天";
+        document.getElementById("timeDate").innerHTML = "🚀本网站已飞行 "+dnum+"&nbsp 天";
         document.getElementById("times").innerHTML = hnum + "&nbsp 时 & nbsp" + mnum + "&nbsp 分 & nbsp" + snum + "&nbsp 秒";
     }
     setInterval("createtime()",250);
