@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/kubernetes.jpg">
 <meta property="article:published_time" content="2021-12-02T07:21:47.000Z">
-<meta property="article:modified_time" content="2025-02-27T05:30:06.844Z">
+<meta property="article:modified_time" content="2025-02-27T08:23:47.557Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -315,7 +315,7 @@
 <h3 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h3><p>Service用于对应Kubernetes集群中的Metrics Server Pod，也即是Prometheus监控的对象，提供给ServiceMonitor选取让Prometheus Server来获取信息，如Node Exporter Service、Mysql Exporter Service等</p>
 <h3 id="Alertmanager"><a href="#Alertmanager" class="headerlink" title="Alertmanager"></a>Alertmanager</h3><p>Alertmanager也是自定义资源类型，由Operator根据资源描述的内容部署Alertmanager集群</p>
 <hr>
-<h1 id="1-部署nfs"><a href="#1-部署nfs" class="headerlink" title="1.部署nfs"></a>1.部署nfs</h1><h1 id="2-下载Prometheus-Operator"><a href="#2-下载Prometheus-Operator" class="headerlink" title="2.下载Prometheus Operator"></a>2.下载Prometheus Operator</h1><pre><code class="hljs">wget -O kube-prometheus-0.8.0.tar.gz https://github.com/prometheus-operator/kube-prometheus/archive/refs/tags/v0.8.0.tar.gz
+<h1 id="1-部署nfs"><a href="#1-部署nfs" class="headerlink" title="1.部署nfs"></a>1.部署nfs</h1><h1 id="2-下载Kube-Prometheus"><a href="#2-下载Kube-Prometheus" class="headerlink" title="2.下载Kube-Prometheus"></a>2.下载Kube-Prometheus</h1><pre><code class="hljs">wget -O kube-prometheus-0.8.0.tar.gz https://github.com/prometheus-operator/kube-prometheus/archive/refs/tags/v0.8.0.tar.gz
 </code></pre>
 <h1 id="3-部署CRD"><a href="#3-部署CRD" class="headerlink" title="3.部署CRD"></a>3.部署CRD</h1><pre><code class="hljs">tar -xzvf kube-prometheus-0.8.0.tar.gz &amp;&amp; cd kube-prometheus-0.8.0/manifests
 kubectl apply -f setup/
