@@ -627,6 +627,43 @@
   
   
   <entry>
+    <title>Openstack集群网络配置</title>
+    <link href="/2024/05/30/Openstack%E9%9B%86%E7%BE%A4%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/"/>
+    <url>/2024/05/30/Openstack%E9%9B%86%E7%BE%A4%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/</url>
+    
+    <content type="html"><![CDATA[<p>Neutron，基于SDN（Software Defined Networking，即软件定义网络）理念设计的网络虚拟化方案，Openstack H版本开始启用的网络组件，用于实现网络即服务（Networking-as-a-Service）功能。Neutron为复杂的多租户云环境提供了灵活的网络划分和独立的网络环境，方便、快速、动态地响应业务的网络需求，以保障网络的连通性和隔离性，如随时创建、修改和删除虚拟网络设备，无需再像传统的网络管理方式那样，很大程度依赖于手工配置和维护各种网络硬件设备</p><h1 id="功能概述"><a href="#功能概述" class="headerlink" title="功能概述"></a>功能概述</h1><p>Neutron为整个OpenStack环境提供网络支持，作为一个灵活的框架，通过配置调用开源或商业软件用于实现各种网络功能，如二层交换、三层路由、负载均衡、防火墙和VPN等</p><h2 id="1-二层交换Switching"><a href="#1-二层交换Switching" class="headerlink" title="1.二层交换Switching"></a>1.二层交换Switching</h2><p>OpenStack虚拟机实例通过虚拟交换机连接到虚拟二层网络，Neutron支持多种虚拟交换机，如Linux原生的Linux Bridge和Open vSwitch，除了可以创建传统的VLAN网络，还可以创建基于隧道技术的Overlay网络，如VxLAN和GRE（Linux Bridge 目前只支持 VxLAN）</p><h1 id="2-三层路由Routing"><a href="#2-三层路由Routing" class="headerlink" title="2.三层路由Routing"></a>2.三层路由Routing</h1><p>Neutron vrouter（虚拟路由器）是一个三层的（L3）的抽象，通过IP forwarding、iptables等技术实现路由和NAT，模拟物理路由器，为虚拟机实例提供跨网段的通信，以及外部网络之间的通信。此外，Neutron还支持物理路由器</p><h1 id="3-负载均衡LoadBalancing"><a href="#3-负载均衡LoadBalancing" class="headerlink" title="3.负载均衡LoadBalancing"></a>3.负载均衡LoadBalancing</h1><p>Openstack于Grizzly版本引入Load-Balancing-as-a-Service，LBaaS，即负载均衡即服务，提供了将负载分发到多个虚拟机实例的能力，并支持多种负载均衡产品和方案，不同的实现以Plugin的形式集成到Neutron，目前默认的Plugin为HAProxy</p><h1 id="4-防火墙Firewalling"><a href="#4-防火墙Firewalling" class="headerlink" title="4.防火墙Firewalling"></a>4.防火墙Firewalling</h1><p>Neutron通过Security Group和Firewall-as-a-Service两种方式保障虚拟机实例和网络的安全，两者都通过iptables规则进行实现，前者用于限制虚拟机实例网络包的进出，后者则用于限制虚拟路由器网络包的进出</p><h1 id="5-虚拟专用网VPN"><a href="#5-虚拟专用网VPN" class="headerlink" title="5.虚拟专用网VPN"></a>5.虚拟专用网VPN</h1><p>Neutron远程访问技术，即利用公用网络进行加密架设成专用网络，形成内网穿透隧道，从而构成局域网，提供了VPNaaS（VPN-as-a-Service），即VPN即服务</p><h1 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h1><h2 id="1-Network"><a href="#1-Network" class="headerlink" title="1.Network"></a>1.Network</h2><p>Network，网络，隔离的二层广播域，Neutron支持多种类型Network，如Local、Flat、 VLAN,、VxLAN和GRE</p><h3 id="1-1-Local"><a href="#1-1-Local" class="headerlink" title="1.1 Local"></a>1.1 Local</h3><p>Local网络与其他网络和节点隔离，其中的虚拟机实例只能与位于同一节点上同一网络的实例通信，主要用于单机测试</p><h3 id="1-2-Flat"><a href="#1-2-Flat" class="headerlink" title="1.2 Flat"></a>1.2 Flat</h3><p>Flat网络是无vlan tagging的网络，其中的虚拟机实例能与位于同一网络的实例通信，且可以跨多个节点</p><h3 id="1-3-VLAN"><a href="#1-3-VLAN" class="headerlink" title="1.3 VLAN"></a>1.3 VLAN</h3><p>VLAN网络是具有802.1q tagging的网络，是一个二层的广播域，同一VLAN中的虚拟机实例可以通信，不同VLAN之间需通过router通信，且可跨节点，是应用最广泛的网络类型</p><h3 id="1-4-VxLAN"><a href="#1-4-VxLAN" class="headerlink" title="1.4 VxLAN"></a>1.4 VxLAN</h3><p>VxLAN是基于隧道技术的overlay网络，通过唯一的segmentation ID（也称VNI）与其他VxLAN网络区分，其中的网络数据包通过VNI封装成UDP包进行传输。因为二层的包通过封装在三层传输，能够克服VLAN和物理网络基础设施的限制</p><h3 id="1-5-GRE"><a href="#1-5-GRE" class="headerlink" title="1.5 GRE"></a>1.5 GRE</h3><p>GRE网络类似于与VxLAN，也是overlay网络，主要区别在于使用IP包而非UDP进行封装</p><h2 id="2-Subnet"><a href="#2-Subnet" class="headerlink" title="2.Subnet"></a>2.Subnet</h2><p>Subnet，子网，IPv4或IPv6地址段，虚拟机实例的IP即从中分配，每个Subnet都需要定义IP地址范围和掩码</p><ul><li>Network与Subnet是一对多关系，即同一Network的Subnet可以是不同的IP段，但CIDR不能重叠</li><li>不同Network的Subnet的CIDR和IP都可以重叠，因为Neutron的router通过Linux Network Namespace实现。Network Namespace，网络隔离机制，通过网络命名空间的每个router都有各自独立的路由表，若两个subnet通过同一个router路由，根据router的配置，只有指定的一个subnet可被路由；若两个subnet通过不同router路由，因为router的路由表是独立的，所以两个subnet都可被路由</li></ul><h2 id="3-Port"><a href="#3-Port" class="headerlink" title="3.Port"></a>3.Port</h2><p>端口，即虚拟交换机的端口，其上定义了MAC地址和IP地址，并将MAC地址和IP地址分配给绑定某个端口的虚拟机实例的虚拟网卡VIF（Virtual Interface）</p><ul><li>注：Project、Network、Subnet、Port之间的关系：Project 1 : m Network 1 : m Subnet 1 : m Port 1 : 1 VIF m : 1 Instance</li></ul><h1 id="体系架构"><a href="#体系架构" class="headerlink" title="体系架构"></a>体系架构</h1><p>Neutron作为Openstack的核心组件，采用分布式架构，由多个组件共同对外提供网络服务</p><p><img src="/img/wiki/openstack/openstack011.jpg" alt="openstack011"></p><h2 id="1-Neutron-Server"><a href="#1-Neutron-Server" class="headerlink" title="1.Neutron Server"></a>1.Neutron Server</h2><p>运行于控制节点，对外提供OpenStack网络API的入口接收请求，并调用Plugin进行处理</p><h2 id="2-Neutron-Plugin"><a href="#2-Neutron-Plugin" class="headerlink" title="2.Neutron Plugin"></a>2.Neutron Plugin</h2><p>处理Neutron Server发来的请求，维护OpenStack逻辑网络状态，并调用Agent处理请求</p><h2 id="3-Neutron-Agent"><a href="#3-Neutron-Agent" class="headerlink" title="3.Neutron Agent"></a>3.Neutron Agent</h2><p>处理Plugin的请求，负责在network provider上真正实现各种网络功能</p><h2 id="4-Network-Provider"><a href="#4-Network-Provider" class="headerlink" title="4.Network Provider"></a>4.Network Provider</h2><p>提供网络服务的虚拟或物理网络设备，如Linux Bridge、OpenvSwitch或其他支持Neutron的物理交换机</p><h2 id="5-Queue"><a href="#5-Queue" class="headerlink" title="5.Queue"></a>5.Queue</h2><p>Neutron Server、Plugin和Agent之间通过Messaging Queue通信和调用</p><h2 id="6-Database"><a href="#6-Database" class="headerlink" title="6.Database"></a>6.Database</h2><p>OpenStack用于存储网络状态信息，如Network、Subnet、Port、Router等</p><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><hr><ul><li><a href="https://www.cnblogs.com/vincenshen/articles/6775236.html">https://www.cnblogs.com/vincenshen/articles/6775236.html</a></li><li><a href="https://blog.csdn.net/chenxiangui88/article/details/78093318">https://blog.csdn.net/chenxiangui88/article/details/78093318</a></li><li><a href="https://admin.dandelioncloud.cn/article/details/1435377339587969026">https://admin.dandelioncloud.cn/article/details/1435377339587969026</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>网络</tag>
+      
+      <tag>虚拟化</tag>
+      
+      <tag>私有云</tag>
+      
+      <tag>Openstack</tag>
+      
+      <tag>公有云</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Linux系统配置网卡bond</title>
     <link href="/2024/05/16/Linux%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE%E7%BD%91%E5%8D%A1bond/"/>
     <url>/2024/05/16/Linux%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE%E7%BD%91%E5%8D%A1bond/</url>
@@ -927,7 +964,15 @@
       
       <tag>云计算</tag>
       
+      <tag>网络</tag>
+      
+      <tag>虚拟化</tag>
+      
+      <tag>私有云</tag>
+      
       <tag>Openstack</tag>
+      
+      <tag>公有云</tag>
       
     </tags>
     
@@ -989,7 +1034,13 @@
       
       <tag>云计算</tag>
       
+      <tag>虚拟化</tag>
+      
+      <tag>私有云</tag>
+      
       <tag>Openstack</tag>
+      
+      <tag>公有云</tag>
       
     </tags>
     
@@ -2181,7 +2232,13 @@
       
       <tag>云计算</tag>
       
+      <tag>虚拟化</tag>
+      
+      <tag>私有云</tag>
+      
       <tag>Openstack</tag>
+      
+      <tag>公有云</tag>
       
     </tags>
     
