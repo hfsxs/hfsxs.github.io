@@ -319,9 +319,9 @@
       
       <tag>Kafka</tag>
       
-      <tag>消息队列</tag>
-      
       <tag>中间件</tag>
+      
+      <tag>MQ</tag>
       
     </tags>
     
@@ -352,9 +352,9 @@
       
       <tag>Kafka</tag>
       
-      <tag>消息队列</tag>
-      
       <tag>中间件</tag>
+      
+      <tag>MQ</tag>
       
     </tags>
     
@@ -486,11 +486,11 @@
       
       <tag>集群</tag>
       
+      <tag>高可用</tag>
+      
       <tag>NoSQL</tag>
       
       <tag>缓存</tag>
-      
-      <tag>主从复制</tag>
       
     </tags>
     
@@ -618,8 +618,6 @@
       
       <tag>LVM</tag>
       
-      <tag>磁盘分区</tag>
-      
     </tags>
     
   </entry>
@@ -627,7 +625,7 @@
   
   
   <entry>
-    <title>Openstack集群网络配置</title>
+    <title>Openstack集群网络模型详解</title>
     <link href="/2024/05/30/Openstack%E9%9B%86%E7%BE%A4%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/"/>
     <url>/2024/05/30/Openstack%E9%9B%86%E7%BE%A4%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B%E8%AF%A6%E8%A7%A3/</url>
     
@@ -806,6 +804,45 @@
   
   
   <entry>
+    <title>Openstack集群基于Ceph存储方案</title>
+    <link href="/2024/04/25/Openstack%E9%9B%86%E7%BE%A4%E5%9F%BA%E4%BA%8ECeph%E5%AD%98%E5%82%A8%E6%96%B9%E6%A1%88/"/>
+    <url>/2024/04/25/Openstack%E9%9B%86%E7%BE%A4%E5%9F%BA%E4%BA%8ECeph%E5%AD%98%E5%82%A8%E6%96%B9%E6%A1%88/</url>
+    
+    <content type="html"><![CDATA[<p>Ceph作为当前非常流行的开源分布式存储系统，以其高扩展性、高性能、高可靠性等优点，广泛应用于众多云计算厂商的公有云、私有云与混合云环境，也即是云计算超融合基础设施（HCI）解决方案。作为云原生技术引领者之一的Openstack，目前已将Ceph作为主流的后端存储，两者已融合为一种高性能、高可用性、高扩展性的成熟的解决方案，优点如下：</p><ul><li>Ceph代替了价格昂贵的商业存储设备，降低了整体成本</li><li>Openstack所有计算节点共享存储，迁移时不需要拷贝根磁盘，即使计算节点宕机，也能立即在其他计算节点启动虚拟机</li><li>Ceph RBD所具备的COW（Copy On Write）特性，使得创建虚拟机时只需基于镜像clone即可，不需要下载整个镜像，而clone操作基本是0开销，从而实现秒级、高并发的虚拟机启动</li><li>Ceph RBD支持thin provisioning，即按需分配空间，类似于Linux文件系统的sparse稀疏文件，即创建虚拟硬盘最初并不占用物理存储空间，只有当写入数据时，才按需分配存储空间</li><li>Openstack除了可将Ceph RBD作为Nova、Cinder、Glance这些组件的后端存储，还可将Swift、Manila组件分别对接Ceph RGW与CephFS。作为统一存储解决方案，Ceph有效降低了云环境的整体复杂性与运维成本，完全满足了对存储类型的需求</li></ul><hr><h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul><li>172.100.100.180 controller</li><li>172.100.100.181 compute001</li><li>172.100.100.182 compute002</li><li>172.100.100.183 storage001</li><li>172.100.100.184 storage002</li><li>172.100.100.185 storage003</li></ul><h1 id="1-部署Ceph集群"><a href="#1-部署Ceph集群" class="headerlink" title="1.部署Ceph集群"></a>1.部署Ceph集群</h1><h1 id="2-创建RBD存储池"><a href="#2-创建RBD存储池" class="headerlink" title="2.创建RBD存储池"></a>2.创建RBD存储池</h1><h2 id="2-1-创建数据卷存储池"><a href="#2-1-创建数据卷存储池" class="headerlink" title="2.1 创建数据卷存储池"></a>2.1 创建数据卷存储池</h2><pre><code class="hljs"># 用于存储Cinder组件的数据卷ceph osd pool create volumes 128</code></pre><h2 id="2-2-创建镜像存储池"><a href="#2-2-创建镜像存储池" class="headerlink" title="2.2 创建镜像存储池"></a>2.2 创建镜像存储池</h2><pre><code class="hljs"># 用于存储Glance组件的镜像ceph osd pool create images 128</code></pre><h2 id="2-3-创建虚拟机实例存储池"><a href="#2-3-创建虚拟机实例存储池" class="headerlink" title="2.3 创建虚拟机实例存储池"></a>2.3 创建虚拟机实例存储池</h2><pre><code class="hljs"># 用于存储Nova组件的实例启动镜像ceph osd pool create vms 128</code></pre><h1 id="3-创建客户端用户并授权"><a href="#3-创建客户端用户并授权" class="headerlink" title="3.创建客户端用户并授权"></a>3.创建客户端用户并授权</h1><h2 id="3-1-创建cinder用户"><a href="#3-1-创建cinder用户" class="headerlink" title="3.1 创建cinder用户"></a>3.1 创建cinder用户</h2><pre><code class="hljs"># 用于Cinder组件创建虚拟机实例与数据卷ceph auth get-or-create client.cinder mon &#39;allow r&#39; osd &#39;allow class-read object_prefix rbd_children, allow rwx pool=volumes, allow rwx pool=vms, allow rx pool=images&#39; -o /etc/ceph/ceph.client.cinder.keyring</code></pre><h2 id="3-2-创建glance用户"><a href="#3-2-创建glance用户" class="headerlink" title="3.2 创建glance用户"></a>3.2 创建glance用户</h2><pre><code class="hljs"># 用于Clance组件创建镜像ceph auth get-or-create client.glance mon &#39;allow r&#39; osd &#39;allow class-read object_prefix rbd_children, allow rwx pool=images&#39; -o /etc/ceph/ceph.client.glance.keyring</code></pre><h2 id="3-3-将配置文件发送到Openstack节点"><a href="#3-3-将配置文件发送到Openstack节点" class="headerlink" title="3.3 将配置文件发送到Openstack节点"></a>3.3 将配置文件发送到Openstack节点</h2><pre><code class="hljs">scp -r /etc/ceph/ controller:/etcscp -r /etc/ceph/ compute001:/etcscp -r /etc/ceph/ compute002:/etc</code></pre><h1 id="4-Openstack控制节点配置"><a href="#4-Openstack控制节点配置" class="headerlink" title="4.Openstack控制节点配置"></a>4.Openstack控制节点配置</h1><h2 id="4-1-安装Ceph客户端"><a href="#4-1-安装Ceph客户端" class="headerlink" title="4.1 安装Ceph客户端"></a>4.1 安装Ceph客户端</h2><pre><code class="hljs">sudo apt install -y python3-rbd</code></pre><h2 id="4-2-设置Ceph密钥文件权限"><a href="#4-2-设置Ceph密钥文件权限" class="headerlink" title="4.2 设置Ceph密钥文件权限"></a>4.2 设置Ceph密钥文件权限</h2><pre><code class="hljs">sudo chown glance:glance /etc/ceph/ceph.client.glance.keyring</code></pre><h2 id="4-3-配置镜像服务"><a href="#4-3-配置镜像服务" class="headerlink" title="4.3 配置镜像服务"></a>4.3 配置镜像服务</h2><pre><code class="hljs">sudo cp /etc/glance/glance-api.conf /etc/glance/glance-api.conf.lvmsudo vi /etc/glance/glance-api.conf[default]# 启用镜像写时复制功能show_image_direct_url = True[glance_store]stores = rbddefault_store = rbdrbd_store_chunk_size = 8rbd_store_pool = imagesrbd_store_user = glancerbd_store_ceph_conf = /etc/ceph/ceph.conf</code></pre><h2 id="4-4-重启镜像服务"><a href="#4-4-重启镜像服务" class="headerlink" title="4.4 重启镜像服务"></a>4.4 重启镜像服务</h2><pre><code class="hljs"> sudo systemctl restart openstack-glance-api.service</code></pre><h2 id="4-5-验证镜像服务"><a href="#4-5-验证镜像服务" class="headerlink" title="4.5 验证镜像服务"></a>4.5 验证镜像服务</h2><h1 id="5-Openstack计算节点配置"><a href="#5-Openstack计算节点配置" class="headerlink" title="5.Openstack计算节点配置"></a>5.Openstack计算节点配置</h1><h2 id="5-1-安装Ceph客户端"><a href="#5-1-安装Ceph客户端" class="headerlink" title="5.1 安装Ceph客户端"></a>5.1 安装Ceph客户端</h2><pre><code class="hljs">sudo apt install -y ceph-common</code></pre><h2 id="设置Ceph密钥文件权限"><a href="#设置Ceph密钥文件权限" class="headerlink" title="设置Ceph密钥文件权限"></a>设置Ceph密钥文件权限</h2><pre><code class="hljs">sudo chown nova:nova /etc/ceph/ceph.client.cinder.keyring</code></pre><h2 id="5-2-配置libvirt"><a href="#5-2-配置libvirt" class="headerlink" title="5.2 配置libvirt"></a>5.2 配置libvirt</h2><p>由于libvirt进程在挂载或卸载一个由Cinder提供的Volume时需要访问Ceph集群，所以需要创建client.cinder用户的访问秘钥，再添加到libvirtd 守护进程，且每个计算节点都需添加，即用作cinder-volume调用凭证</p><h3 id="5-2-1-获取cinder密钥"><a href="#5-2-1-获取cinder密钥" class="headerlink" title="5.2.1 获取cinder密钥"></a>5.2.1 获取cinder密钥</h3><pre><code class="hljs">ceph auth get-key client.cinder &gt; client.cinder.key</code></pre><h3 id="5-2-2-生成uuid"><a href="#5-2-2-生成uuid" class="headerlink" title="5.2.2 生成uuid"></a>5.2.2 生成uuid</h3><pre><code class="hljs">uuidgen</code></pre><h3 id="5-2-2-创建libvirt密钥文件"><a href="#5-2-2-创建libvirt密钥文件" class="headerlink" title="5.2.2 创建libvirt密钥文件"></a>5.2.2 创建libvirt密钥文件</h3><pre><code class="hljs">vi secret.xml&lt;secret ephemeral=&#39;no&#39; private=&#39;no&#39;&gt;  &lt;uuid&gt;6421C80B-85FF-4D1E-A042-A23B99DB4689&lt;/uuid&gt;   &lt;usage type=&#39;ceph&#39;&gt;     &lt;name&gt;client.cinder secret&lt;/name&gt;   &lt;/usage&gt;&lt;/secret&gt;</code></pre><h3 id="5-2-3-创建libvirt密钥"><a href="#5-2-3-创建libvirt密钥" class="headerlink" title="5.2.3 创建libvirt密钥"></a>5.2.3 创建libvirt密钥</h3><pre><code class="hljs">virsh secret-define --file secret.xml</code></pre><h3 id="5-2-4-分配libvirt密钥"><a href="#5-2-4-分配libvirt密钥" class="headerlink" title="5.2.4 分配libvirt密钥"></a>5.2.4 分配libvirt密钥</h3><pre><code class="hljs">virsh secret-set-value --secret 6421C80B-85FF-4D1E-A042-A23B99DB4689 --base64 $(cat client.cinder.key) &amp;&amp; rm client.cinder.key secret.xml</code></pre><h3 id="5-3-启用RBD客户端缓存和管理Socket"><a href="#5-3-启用RBD客户端缓存和管理Socket" class="headerlink" title="5.3 启用RBD客户端缓存和管理Socket"></a>5.3 启用RBD客户端缓存和管理Socket</h3><pre><code class="hljs">sudo mkdir -p /var/run/ceph/guests/ /var/log/qemu/sudo chown -R libvirt-qemu:libvirt /var/run/ceph/guests /var/log/qemu/sudo vi /etc/ceph/ceph.conf[client]rbd cache = true# 启用RBD客户端缓存功能rbd cache writethrough until flush = trueadmin socket = /var/run/ceph/guests/$cluster-$type.$id.$pid.$cctid.asok# 设置rbd调用日志，用于故障排查log file = /var/log/qemu/qemu-guest-$pid.logrbd concurrent management ops = 20</code></pre><h2 id="5-4-配置计算服务"><a href="#5-4-配置计算服务" class="headerlink" title="5.4 配置计算服务"></a>5.4 配置计算服务</h2><pre><code class="hljs">sudo cp /etc/nova/nova.conf /etc/nova/nova.conf.lvmsudo vi /etc/nova/nova.conf[libvirt]virt_type = kvminject_password = falseinject_key = falseinject_partition = -2disk_cachemodes = &quot;network=writeback&quot;images_type = rbdimages_rbd_pool = vmsimages_rbd_ceph_conf = /etc/ceph/ceph.confhw_disk_discard = unmaprbd_user = cinderrbd_secret_uuid = 6421C80B-85FF-4D1E-A042-A23B99DB4689# 启用虚拟机热迁移功能live_migration_flag = &quot;VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_PERSIST_DEST,VIR_MIGRATE_TUNNELLED&quot;</code></pre><h2 id="5-5-重启计算服务"><a href="#5-5-重启计算服务" class="headerlink" title="5.5 重启计算服务"></a>5.5 重启计算服务</h2><pre><code class="hljs">sudo systemctl restart nova-compute.service</code></pre><ul><li>注：其余计算节点也都要按步骤执行，uuid保持一致即可</li></ul><h1 id="6-Openstack存储节点配置"><a href="#6-Openstack存储节点配置" class="headerlink" title="6.Openstack存储节点配置"></a>6.Openstack存储节点配置</h1><h2 id="6-1-安装Ceph客户端"><a href="#6-1-安装Ceph客户端" class="headerlink" title="6.1 安装Ceph客户端"></a>6.1 安装Ceph客户端</h2><pre><code class="hljs">sudo apt install -y ceph-common</code></pre><h2 id="6-2-设置Ceph密钥文件权限"><a href="#6-2-设置Ceph密钥文件权限" class="headerlink" title="6.2 设置Ceph密钥文件权限"></a>6.2 设置Ceph密钥文件权限</h2><pre><code class="hljs">sudo chown cinder:cinder /etc/ceph/ceph.client.cinder.keyring</code></pre><h2 id="6-3-配置存储服务"><a href="#6-3-配置存储服务" class="headerlink" title="6.3 配置存储服务"></a>6.3 配置存储服务</h2><pre><code class="hljs">sudo cp /etc/cinder/cinder.conf /etc/cinder/cinder.conf.lvmsudo vi /etc/cinder/cinder.conf[DEFAULT]enabled_backends = lvm,cephglance_api_version = 2[ceph]rbd_pool = volumesrbd_user = cinderrbd_ceph_conf = /etc/ceph/ceph.confrbd_flatten_volume_from_snapshot = falserbd_secret_uuid = 6421C80B-85FF-4D1E-A042-A23B99DB4689rbd_max_clone_depth = 5rbd_store_chunk_size = 4rados_connect_timeout = -1volume_driver = cinder.volume.drivers.rbd.RBDDrivervolume_backend_name = ceph</code></pre><h2 id="6-4-重启存储服务"><a href="#6-4-重启存储服务" class="headerlink" title="6.4 重启存储服务"></a>6.4 重启存储服务</h2><pre><code class="hljs">sudo systemctl restart openstack-cinder-api openstack-cinder-volume</code></pre><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://docs.ceph.com/en/mimic/rbd/rbd-openstack">https://docs.ceph.com/en/mimic/rbd/rbd-openstack</a></li><li><a href="https://blog.csdn.net/qq_41786090/article/details/131574739">https://blog.csdn.net/qq_41786090/article/details/131574739</a></li><li><a href="https://blog.csdn.net/qq_37242520/article/details/106059132">https://blog.csdn.net/qq_37242520/article/details/106059132</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>Ceph</tag>
+      
+      <tag>存储</tag>
+      
+      <tag>虚拟化</tag>
+      
+      <tag>私有云</tag>
+      
+      <tag>Openstack</tag>
+      
+      <tag>公有云</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Prometheus监控RabbitMQ消息队列</title>
     <link href="/2024/04/15/Prometheus%E7%9B%91%E6%8E%A7RabbitMQ%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/"/>
     <url>/2024/04/15/Prometheus%E7%9B%91%E6%8E%A7RabbitMQ%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97/</url>
@@ -899,10 +936,6 @@
       <tag>云计算</tag>
       
       <tag>操作系统</tag>
-      
-      <tag>init</tag>
-      
-      <tag>Systemd</tag>
       
     </tags>
     
@@ -1383,8 +1416,6 @@
       
       <tag>Python</tag>
       
-      <tag>编程语言</tag>
-      
     </tags>
     
   </entry>
@@ -1483,8 +1514,6 @@
       <tag>云计算</tag>
       
       <tag>Python</tag>
-      
-      <tag>编程语言</tag>
       
     </tags>
     
@@ -1655,8 +1684,6 @@
       
       <tag>Python</tag>
       
-      <tag>编程语言</tag>
-      
     </tags>
     
   </entry>
@@ -1718,8 +1745,6 @@
       <tag>云计算</tag>
       
       <tag>Python</tag>
-      
-      <tag>编程语言</tag>
       
     </tags>
     
@@ -2298,7 +2323,7 @@
       
       <tag>监控告警</tag>
       
-      <tag>系统性能</tag>
+      <tag>性能优化</tag>
       
     </tags>
     
@@ -2656,8 +2681,6 @@
       
       <tag>Python</tag>
       
-      <tag>编程语言</tag>
-      
     </tags>
     
   </entry>
@@ -2720,8 +2743,6 @@
       
       <tag>Python</tag>
       
-      <tag>编程语言</tag>
-      
     </tags>
     
   </entry>
@@ -2783,8 +2804,6 @@
       <tag>云计算</tag>
       
       <tag>Python</tag>
-      
-      <tag>编程语言</tag>
       
     </tags>
     
@@ -2879,8 +2898,6 @@
       
       <tag>Python</tag>
       
-      <tag>编程语言</tag>
-      
     </tags>
     
   </entry>
@@ -2910,8 +2927,6 @@
       
       <tag>Python</tag>
       
-      <tag>编程语言</tag>
-      
     </tags>
     
   </entry>
@@ -2940,8 +2955,6 @@
       <tag>云计算</tag>
       
       <tag>Python</tag>
-      
-      <tag>编程语言</tag>
       
     </tags>
     
@@ -4246,8 +4259,6 @@
       
       <tag>Ubuntu</tag>
       
-      <tag>无线网络</tag>
-      
     </tags>
     
   </entry>
@@ -4937,8 +4948,6 @@
       
       <tag>云计算</tag>
       
-      <tag>Sudo</tag>
-      
     </tags>
     
   </entry>
@@ -4998,8 +5007,6 @@
       <tag>存储</tag>
       
       <tag>LVM</tag>
-      
-      <tag>磁盘分区</tag>
       
     </tags>
     
@@ -5123,8 +5130,6 @@
       
       <tag>负载均衡</tag>
       
-      <tag>集群</tag>
-      
       <tag>Keepalived</tag>
       
       <tag>高可用</tag>
@@ -5158,8 +5163,6 @@
       
       <tag>云计算</tag>
       
-      <tag>集群</tag>
-      
       <tag>Keepalived</tag>
       
       <tag>高可用</tag>
@@ -5190,8 +5193,6 @@
       <tag>Linux</tag>
       
       <tag>云计算</tag>
-      
-      <tag>集群</tag>
       
       <tag>Keepalived</tag>
       
@@ -5228,8 +5229,6 @@
       
       <tag>Haproxy</tag>
       
-      <tag>集群</tag>
-      
     </tags>
     
   </entry>
@@ -5260,8 +5259,6 @@
       <tag>负载均衡</tag>
       
       <tag>Haproxy</tag>
-      
-      <tag>集群</tag>
       
     </tags>
     
@@ -5325,8 +5322,6 @@
       
       <tag>Nginx</tag>
       
-      <tag>集群</tag>
-      
       <tag>LVS</tag>
       
     </tags>
@@ -5362,8 +5357,6 @@
       
       <tag>Java</tag>
       
-      <tag>集群</tag>
-      
       <tag>Tomcat</tag>
       
       <tag>会话保持</tag>
@@ -5397,15 +5390,9 @@
       
       <tag>Redis</tag>
       
-      <tag>集群</tag>
-      
-      <tag>高可用</tag>
-      
       <tag>NoSQL</tag>
       
       <tag>缓存</tag>
-      
-      <tag>主从复制</tag>
       
     </tags>
     
@@ -5436,13 +5423,11 @@
       
       <tag>Redis</tag>
       
-      <tag>集群</tag>
+      <tag>中间件</tag>
       
       <tag>NoSQL</tag>
       
       <tag>缓存</tag>
-      
-      <tag>主从复制</tag>
       
     </tags>
     
@@ -5541,8 +5526,6 @@
       
       <tag>Java</tag>
       
-      <tag>集群</tag>
-      
       <tag>Tomcat</tag>
       
       <tag>Memcached</tag>
@@ -5579,8 +5562,6 @@
       <tag>负载均衡</tag>
       
       <tag>Java</tag>
-      
-      <tag>集群</tag>
       
       <tag>Tomcat</tag>
       
@@ -5906,8 +5887,6 @@
       
       <tag>数据库</tag>
       
-      <tag>主从复制</tag>
-      
     </tags>
     
   </entry>
@@ -5941,8 +5920,6 @@
       
       <tag>数据库</tag>
       
-      <tag>主从复制</tag>
-      
     </tags>
     
   </entry>
@@ -5975,8 +5952,6 @@
       <tag>SQL</tag>
       
       <tag>数据库</tag>
-      
-      <tag>主从复制</tag>
       
     </tags>
     
