@@ -4,6 +4,37 @@
   
   
   <entry>
+    <title>Linux基于Ollama部署本地AI大模型</title>
+    <link href="/2025/03/02/Linux%E5%9F%BA%E4%BA%8EOllama%E9%83%A8%E7%BD%B2%E6%9C%AC%E5%9C%B0AI%E5%A4%A7%E6%A8%A1%E5%9E%8B/"/>
+    <url>/2025/03/02/Linux%E5%9F%BA%E4%BA%8EOllama%E9%83%A8%E7%BD%B2%E6%9C%AC%E5%9C%B0AI%E5%A4%A7%E6%A8%A1%E5%9E%8B/</url>
+    
+    <content type="html"><![CDATA[<p>Ollama，管理和运维大语言模型（LLM，Large Language Model）的可扩展的轻量级开源框架，用于大语言模型的本地化部署、运行与管理，致力于简化大语言模型的运维流程和使用门槛。Ollama支持文本生成、翻译、代码编写、问答等多种自然语言处理任务，并以强大的扩展性支持多种开源语言模型文件的热加载，如Llama 3、Phi 3、Mistral、Gemma、DeepSeek等</p><h1 id="1-安装Ollama"><a href="#1-安装Ollama" class="headerlink" title="1.安装Ollama"></a>1.安装Ollama</h1><h2 id="1-1-二进制安装"><a href="#1-1-二进制安装" class="headerlink" title="1.1 二进制安装"></a>1.1 二进制安装</h2><pre><code class="hljs">curl -fsSL https://ollama.com/install.sh | bash</code></pre><h2 id="1-2-Docker安装"><a href="#1-2-Docker安装" class="headerlink" title="1.2 Docker安装"></a>1.2 Docker安装</h2><pre><code class="hljs">sudo docker run -p 11434:11434 ollama/ollama</code></pre><h1 id="2-运行大模型"><a href="#2-运行大模型" class="headerlink" title="2.运行大模型"></a>2.运行大模型</h1><pre><code class="hljs">ollama run deepseek-r1:32b</code></pre><h1 id="3-安装AI界面"><a href="#3-安装AI界面" class="headerlink" title="3.安装AI界面"></a>3.安装AI界面</h1><pre><code class="hljs">curl -LsSf https://astral.sh/uv/install.sh | sh</code></pre><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://mp.weixin.qq.com/s/vdSXxTy2WLLrdOVLaem_2g">https://mp.weixin.qq.com/s/vdSXxTy2WLLrdOVLaem_2g</a></li><li><a href="https://www.runoob.com/ollama/ollama-tutorial.html">https://www.runoob.com/ollama/ollama-tutorial.html</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>AI</tag>
+      
+      <tag>大模型</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Kubernetes集群证书过期解决方案</title>
     <link href="/2025/02/22/Kubernetes%E9%9B%86%E7%BE%A4%E8%AF%81%E4%B9%A6%E8%BF%87%E6%9C%9F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"/>
     <url>/2025/02/22/Kubernetes%E9%9B%86%E7%BE%A4%E8%AF%81%E4%B9%A6%E8%BF%87%E6%9C%9F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</url>
