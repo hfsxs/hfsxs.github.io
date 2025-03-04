@@ -24,7 +24,7 @@
 <meta property="og:description" content="Ollama，管理和运维大语言模型（LLM，Large Language Model）的可扩展的轻量级开源框架，用于大语言模型的本地化部署、运行与管理，致力于简化大语言模型的运维流程和使用门槛。Ollama支持文本生成、翻译、代码编写、问答等多种自然语言处理任务，并以强大的扩展性支持多种开源语言模型文件的热加载，如Llama 3、Phi 3、Mistral、Gemma、DeepSeek等 1.安装">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-02T15:34:37.000Z">
-<meta property="article:modified_time" content="2025-03-02T15:38:49.293Z">
+<meta property="article:modified_time" content="2025-03-03T08:51:27.879Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -239,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          487 字
+          721 字
         
       </span>
     
@@ -250,20 +250,12 @@
         
         
         
-          5 分钟
+          7 分钟
         
       </span>
     
 
     
-    
-      
-        <span id="busuanzi_container_page_pv" style="display: none">
-          <i class="iconfont icon-eye" aria-hidden="true"></i>
-          <span id="busuanzi_value_page_pv"></span> 次
-        </span>
-        
-      
     
   </div>
 
@@ -308,12 +300,17 @@
 </code></pre>
 <h1 id="2-运行大模型"><a href="#2-运行大模型" class="headerlink" title="2.运行大模型"></a>2.运行大模型</h1><pre><code class="hljs">ollama run deepseek-r1:32b
 </code></pre>
-<h1 id="3-安装AI界面"><a href="#3-安装AI界面" class="headerlink" title="3.安装AI界面"></a>3.安装AI界面</h1><pre><code class="hljs">curl -LsSf https://astral.sh/uv/install.sh | sh
+<h1 id="3-安装AI界面"><a href="#3-安装AI界面" class="headerlink" title="3.安装AI界面"></a>3.安装AI界面</h1><h2 id="3-1-二进制安装"><a href="#3-1-二进制安装" class="headerlink" title="3.1 二进制安装"></a>3.1 二进制安装</h2><pre><code class="hljs">curl -LsSf https://astral.sh/uv/install.sh | sh
+</code></pre>
+<h2 id="3-2-Docker安装"><a href="#3-2-Docker安装" class="headerlink" title="3.2 Docker安装"></a>3.2 Docker安装</h2><pre><code class="hljs">sudo docker run -p 8080:8080 --name open-webui \
+-e OLLAMA_BASE_URL=http://172.16.100.200:11434 \
+--restart always -v open-webui-data:/app/backend/data ghcr.io/open-webui/open-webui
 </code></pre>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/717086397">https://zhuanlan.zhihu.com/p/717086397</a></li>
 <li><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/vdSXxTy2WLLrdOVLaem_2g">https://mp.weixin.qq.com/s/vdSXxTy2WLLrdOVLaem_2g</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.runoob.com/ollama/ollama-tutorial.html">https://www.runoob.com/ollama/ollama-tutorial.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/python123456_/article/details/145747807">https://blog.csdn.net/python123456_/article/details/145747807</a></li>
 </ul>
 
                 
@@ -385,7 +382,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月2日</div>
+          <div>2025年3月3日</div>
         </div>
       
       <div class="license-meta-item">
