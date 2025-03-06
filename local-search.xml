@@ -231,6 +231,35 @@
   
   
   <entry>
+    <title>Elasticsearch配置安全认证</title>
+    <link href="/2024/12/06/Elasticsearch%E9%85%8D%E7%BD%AE%E5%AE%89%E5%85%A8%E8%AE%A4%E8%AF%81/"/>
+    <url>/2024/12/06/Elasticsearch%E9%85%8D%E7%BD%AE%E5%AE%89%E5%85%A8%E8%AE%A4%E8%AF%81/</url>
+    
+    <content type="html"><![CDATA[<p>Elasticsearch作为分布式、可扩展的搜索和分析引擎，随着大数据时代的到来已经成为了许多企业和组织的重要数据处理工具。与此同时，数据安全问题也日益凸显，即确保数据的安全与合规，并保障数据资产不至泄露。Elasticsearch安全认证机制分为两种方式，即X-Pack安全插件和SSL证书认证</p><h1 id="1-X-Pack"><a href="#1-X-Pack" class="headerlink" title="1.X-Pack"></a>1.X-Pack</h1><p>X-Pack，Elastic 6.8版本之后开发的免费的安全扩展插件，并在7.0版本之后默认集成，无需再单独安装</p><h2 id="1-1-启用X-Pack"><a href="#1-1-启用X-Pack" class="headerlink" title="1.1 启用X-Pack"></a>1.1 启用X-Pack</h2><pre><code class="hljs">sudo vi /etc/elasticsearch/elasticsearch.ymlxpack.security.enabled: truexpack.security.transport.ssl.enabled: true</code></pre><h2 id="1-2-重启Elasticsearch"><a href="#1-2-重启Elasticsearch" class="headerlink" title="1.2 重启Elasticsearch"></a>1.2 重启Elasticsearch</h2><pre><code class="hljs">sudo systemctl restart elasticsearch.service </code></pre><h2 id="1-3-设置内置账户密码"><a href="#1-3-设置内置账户密码" class="headerlink" title="1.3 设置内置账户密码"></a>1.3 设置内置账户密码</h2><pre><code class="hljs">/usr/share/elasticsearch/bin/elasticsearch-setup-passwords interactive******************************************************************************Note: The &#39;elasticsearch-setup-passwords&#39; tool has been deprecated. This       command will be removed in a future release.******************************************************************************Initiating the setup of passwords for reserved users elastic,apm_system,kibana,kibana_system,logstash_system,beats_system,remote_monitoring_user.You will be prompted to enter passwords as the process progresses.Please confirm that you would like to continue [y/N]yEnter password for [elastic]: Reenter password for [elastic]: Enter password for [apm_system]: Reenter password for [apm_system]: Enter password for [kibana_system]: Reenter password for [kibana_system]: Enter password for [logstash_system]: Reenter password for [logstash_system]: Enter password for [beats_system]: Reenter password for [beats_system]: Enter password for [remote_monitoring_user]: Reenter password for [remote_monitoring_user]: Changed password for user [apm_system]Changed password for user [kibana_system]Changed password for user [kibana]Changed password for user [logstash_system]Changed password for user [beats_system]Changed password for user [remote_monitoring_user]Changed password for user [elastic]</code></pre><h2 id="1-4-验证账户密码"><a href="#1-4-验证账户密码" class="headerlink" title="1.4 验证账户密码"></a>1.4 验证账户密码</h2><pre><code class="hljs">curl http://localhost:9200 -u elastic:password&#123;  &quot;name&quot; : &quot;node01&quot;,  &quot;cluster_name&quot; : &quot;es-node01&quot;,  &quot;cluster_uuid&quot; : &quot;XXXXXX1234567890&quot;,  &quot;version&quot; : &#123;    &quot;number&quot; : &quot;8.15.0&quot;,    &quot;build_flavor&quot; : &quot;default&quot;,    &quot;build_type&quot; : &quot;docker&quot;,    &quot;build_hash&quot; : &quot;1a77947f34deddb41af25e6f0ddb8e830159c179&quot;,    &quot;build_date&quot; : &quot;2024-08-05T10:05:34.233336849Z&quot;,    &quot;build_snapshot&quot; : false,    &quot;lucene_version&quot; : &quot;9.11.1&quot;,    &quot;minimum_wire_compatibility_version&quot; : &quot;7.17.0&quot;,    &quot;minimum_index_compatibility_version&quot; : &quot;7.0.0&quot;  &#125;,  &quot;tagline&quot; : &quot;You Know, for Search&quot;&#125;</code></pre><h2 id="1-5-配置Kibana"><a href="#1-5-配置Kibana" class="headerlink" title="1.5 配置Kibana"></a>1.5 配置Kibana</h2><pre><code class="hljs">sudo vi /etc/kibana/kibana.ymlelasticsearch.username: &quot;kibana_system&quot;elasticsearch.password: &quot;password&quot;</code></pre><ul><li>注：重启Kibana生效配置</li></ul><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://blog.csdn.net/qq_42263280/article/details/141438215">https://blog.csdn.net/qq_42263280/article/details/141438215</a></li><li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.17/security-minimal-setup.html">https://www.elastic.co/guide/en/elasticsearch/reference/7.17/security-minimal-setup.html</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>Elasticsearch</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Prometheus监控Ingress-Controller</title>
     <link href="/2024/11/30/Prometheus%E7%9B%91%E6%8E%A7Ingress-Controller/"/>
     <url>/2024/11/30/Prometheus%E7%9B%91%E6%8E%A7Ingress-Controller/</url>
