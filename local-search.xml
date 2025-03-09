@@ -198,11 +198,11 @@
   
   
   <entry>
-    <title>Prometheus监控Nginx</title>
-    <link href="/2024/12/18/Prometheus%E7%9B%91%E6%8E%A7Nginx/"/>
-    <url>/2024/12/18/Prometheus%E7%9B%91%E6%8E%A7Nginx/</url>
+    <title>Prometheus监控Elasticsearch</title>
+    <link href="/2024/12/18/Prometheus%E7%9B%91%E6%8E%A7Elasticsearch/"/>
+    <url>/2024/12/18/Prometheus%E7%9B%91%E6%8E%A7Elasticsearch/</url>
     
-    <content type="html"><![CDATA[<h1 id="1-nginx开启stub-status模块"><a href="#1-nginx开启stub-status模块" class="headerlink" title="1.nginx开启stub_status模块"></a>1.nginx开启stub_status模块</h1><h1 id="2-下载nginx-exporter"><a href="#2-下载nginx-exporter" class="headerlink" title="2.下载nginx_exporter"></a>2.下载nginx_exporter</h1><pre><code class="hljs">wget https://github.com/nginxinc/nginx-prometheus-exporter/releases/download/v1.4.0/nginx-prometheus-exporter_1.4.0_linux_amd64.tar.gz</code></pre><h1 id="3-安装nginx-exporter"><a href="#3-安装nginx-exporter" class="headerlink" title="3.安装nginx_exporter"></a>3.安装nginx_exporter</h1><pre><code class="hljs">tar -xzvf nginx-prometheus-exporter_1.4.0_linux_amd64.tar.gzsudo mv nginx-prometheus-exporter /usr/local/prometheus/nginx_exportersudo chmod +x /usr/local/prometheus/nginx_exporter</code></pre><h1 id="4-创建启动脚本"><a href="#4-创建启动脚本" class="headerlink" title="4.创建启动脚本"></a>4.创建启动脚本</h1><pre><code class="hljs">sudo vi /lib/systemd/system/nginx_exporter.service[Unit]Description=nginx_prometheus_exporterAfter=network.target[Service]Type=simpleUser=rootGroup=rootRestart=alwaysExecStart=/usr/local/prometheus/nginx_exporter --nginx.scrape-uri=http://10.1.11.180:20080/stub_status --web.listen-address=:9113[Install]WantedBy=multi-user.target</code></pre><h1 id="5-启动nginx-exporter"><a href="#5-启动nginx-exporter" class="headerlink" title="5.启动nginx_exporter"></a>5.启动nginx_exporter</h1><pre><code class="hljs">sudo systemctl daemon-reloadsudo systemctl enable nginx_exporter.servicesudo systemctl start memcached_exporter.service</code></pre><h1 id="6-配置Prometheus"><a href="#6-配置Prometheus" class="headerlink" title="6.配置Prometheus"></a>6.配置Prometheus</h1><h2 id="6-1-配置监控实例"><a href="#6-1-配置监控实例" class="headerlink" title="6.1 配置监控实例"></a>6.1 配置监控实例</h2><pre><code class="hljs">sudo vi /usr/local/prometheus/prometheus.ymlscrape_configs:  - job_name: &quot;nginx&quot;    static_configs:      - targets: [&quot;10.1.11.180:9113&quot;]</code></pre><h2 id="6-2-创建告警规则"><a href="#6-2-创建告警规则" class="headerlink" title="6.2 创建告警规则"></a>6.2 创建告警规则</h2><h2 id="6-3-重载Prometheus"><a href="#6-3-重载Prometheus" class="headerlink" title="6.3 重载Prometheus"></a>6.3 重载Prometheus</h2><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload</code></pre><h1 id="7-Grafana导入监控模版"><a href="#7-Grafana导入监控模版" class="headerlink" title="7.Grafana导入监控模版"></a>7.Grafana导入监控模版</h1><p>Dashboards —&gt; New —&gt; Import —&gt; 模版ID：12708</p><p><img src="/img/wiki/prometheus/nginx.jpg" alt="nginx"></p><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://blog.csdn.net/qq_18138507/article/details/142816442">https://blog.csdn.net/qq_18138507/article/details/142816442</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<h1 id="1-下载安装包"><a href="#1-下载安装包" class="headerlink" title="1.下载安装包"></a>1.下载安装包</h1><pre><code class="hljs">wget https://github.com/prometheus-community/elasticsearch_exporter/releases/download/v1.8.0/elasticsearch_exporter-1.8.0.linux-amd64.tar.gz</code></pre><h1 id="2-安装elasticsearch-exporter"><a href="#2-安装elasticsearch-exporter" class="headerlink" title="2.安装elasticsearch_exporter"></a>2.安装elasticsearch_exporter</h1><pre><code class="hljs">tar -xzvf elasticsearch_exporter-1.8.0.linux-amd64.tar.gzsudo mv elasticsearch_exporter-1.8.0.linux-amd64 /usr/local/bin/elasticsearch_exporter</code></pre><h1 id="3-创建启动脚本"><a href="#3-创建启动脚本" class="headerlink" title="3.创建启动脚本"></a>3.创建启动脚本</h1><pre><code class="hljs">sudo vi /lib/systemd/system/elasticsearch_exporter.service[Unit]Description=elasticsearch_exporterDocumentation=https://github.com/prometheus-community/elasticsearch_exporterAfter=network.target[Service]Type=simpleUser=rootExecStart=/usr/local/bin/elasticsearch_exporter --es.uri http://elastic:password@localhost:9200KillMode=mixedRestart=on-failure[Install]WantedBy=multi-user.target</code></pre><h1 id="4-启动elasticsearch-exporter"><a href="#4-启动elasticsearch-exporter" class="headerlink" title="4.启动elasticsearch_exporter"></a>4.启动elasticsearch_exporter</h1><pre><code class="hljs">sudo systemctl daemon-reloadsudo systemctl start elasticsearch_exporter.servicesudo systemctl enable elasticsearch_exporter.service</code></pre><h1 id="5-配置Prometheus"><a href="#5-配置Prometheus" class="headerlink" title="5.配置Prometheus"></a>5.配置Prometheus</h1><h2 id="5-1-配置监控实例"><a href="#5-1-配置监控实例" class="headerlink" title="5.1 配置监控实例"></a>5.1 配置监控实例</h2><pre><code class="hljs">sudo vi /usr/local/prometheus/prometheus.ymlglobal:  scrape_interval: 15s   evaluation_interval: 15s   scrape_timeout: 10s scrape_configs:  - job_name: &quot;prometheus&quot;    static_configs:      - targets: [&quot;localhost:9090&quot;]  - job_name: &#39;elasticsearch&#39;    static_configs:      - targets:        - localhost:9114</code></pre><h2 id="5-2-重载Prometheus"><a href="#5-2-重载Prometheus" class="headerlink" title="5.2 重载Prometheus"></a>5.2 重载Prometheus</h2><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload</code></pre><h1 id="6-Grafana导入监控模版"><a href="#6-Grafana导入监控模版" class="headerlink" title="6.Grafana导入监控模版"></a>6.Grafana导入监控模版</h1><p>Dashboards —&gt; New —&gt; Import —&gt; 模版ID：7259</p><p><img src="/img/wiki/prometheus/elasticsearch.jpg" alt="linux"></p><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://blog.csdn.net/dl_11/article/details/141680508">https://blog.csdn.net/dl_11/article/details/141680508</a></li></ul>]]></content>
     
     
     <categories>
@@ -218,7 +218,7 @@
       
       <tag>云计算</tag>
       
-      <tag>Nginx</tag>
+      <tag>Elasticsearch</tag>
       
       <tag>Prometheus</tag>
       
@@ -252,6 +252,39 @@
       <tag>云计算</tag>
       
       <tag>Elasticsearch</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Prometheus监控Nginx</title>
+    <link href="/2024/12/04/Prometheus%E7%9B%91%E6%8E%A7Nginx/"/>
+    <url>/2024/12/04/Prometheus%E7%9B%91%E6%8E%A7Nginx/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1-nginx开启stub-status模块"><a href="#1-nginx开启stub-status模块" class="headerlink" title="1.nginx开启stub_status模块"></a>1.nginx开启stub_status模块</h1><h1 id="2-下载nginx-exporter"><a href="#2-下载nginx-exporter" class="headerlink" title="2.下载nginx_exporter"></a>2.下载nginx_exporter</h1><pre><code class="hljs">wget https://github.com/nginxinc/nginx-prometheus-exporter/releases/download/v1.4.0/nginx-prometheus-exporter_1.4.0_linux_amd64.tar.gz</code></pre><h1 id="3-安装nginx-exporter"><a href="#3-安装nginx-exporter" class="headerlink" title="3.安装nginx_exporter"></a>3.安装nginx_exporter</h1><pre><code class="hljs">tar -xzvf nginx-prometheus-exporter_1.4.0_linux_amd64.tar.gzsudo mv nginx-prometheus-exporter /usr/local/prometheus/nginx_exportersudo chmod +x /usr/local/prometheus/nginx_exporter</code></pre><h1 id="4-创建启动脚本"><a href="#4-创建启动脚本" class="headerlink" title="4.创建启动脚本"></a>4.创建启动脚本</h1><pre><code class="hljs">sudo vi /lib/systemd/system/nginx_exporter.service[Unit]Description=nginx_prometheus_exporterAfter=network.target[Service]Type=simpleUser=rootGroup=rootRestart=alwaysExecStart=/usr/local/prometheus/nginx_exporter --nginx.scrape-uri=http://10.1.11.180:20080/stub_status --web.listen-address=:9113[Install]WantedBy=multi-user.target</code></pre><h1 id="5-启动nginx-exporter"><a href="#5-启动nginx-exporter" class="headerlink" title="5.启动nginx_exporter"></a>5.启动nginx_exporter</h1><pre><code class="hljs">sudo systemctl daemon-reloadsudo systemctl enable nginx_exporter.servicesudo systemctl start memcached_exporter.service</code></pre><h1 id="6-配置Prometheus"><a href="#6-配置Prometheus" class="headerlink" title="6.配置Prometheus"></a>6.配置Prometheus</h1><h2 id="6-1-配置监控实例"><a href="#6-1-配置监控实例" class="headerlink" title="6.1 配置监控实例"></a>6.1 配置监控实例</h2><pre><code class="hljs">sudo vi /usr/local/prometheus/prometheus.ymlscrape_configs:  - job_name: &quot;nginx&quot;    static_configs:      - targets: [&quot;10.1.11.180:9113&quot;]</code></pre><h2 id="6-2-创建告警规则"><a href="#6-2-创建告警规则" class="headerlink" title="6.2 创建告警规则"></a>6.2 创建告警规则</h2><h2 id="6-3-重载Prometheus"><a href="#6-3-重载Prometheus" class="headerlink" title="6.3 重载Prometheus"></a>6.3 重载Prometheus</h2><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload</code></pre><h1 id="7-Grafana导入监控模版"><a href="#7-Grafana导入监控模版" class="headerlink" title="7.Grafana导入监控模版"></a>7.Grafana导入监控模版</h1><p>Dashboards —&gt; New —&gt; Import —&gt; 模版ID：12708</p><p><img src="/img/wiki/prometheus/nginx.jpg" alt="nginx"></p><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://blog.csdn.net/qq_18138507/article/details/142816442">https://blog.csdn.net/qq_18138507/article/details/142816442</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>Nginx</tag>
+      
+      <tag>Prometheus</tag>
+      
+      <tag>监控告警</tag>
       
     </tags>
     

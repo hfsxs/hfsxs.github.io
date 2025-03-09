@@ -16,30 +16,30 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1.nginx开启stub_status模块2.下载nginx_exporterwget https:&#x2F;&#x2F;github.com&#x2F;nginxinc&#x2F;nginx-prometheus-exporter&#x2F;releases&#x2F;download&#x2F;v1.4.0&#x2F;nginx-prometheus-exporter_1.4.0_linux_amd64.tar.gz  3.安装nginx_exportertar -x">
+    <meta name="description" content="1.下载安装包wget https:&#x2F;&#x2F;github.com&#x2F;prometheus-community&#x2F;elasticsearch_exporter&#x2F;releases&#x2F;download&#x2F;v1.8.0&#x2F;elasticsearch_exporter-1.8.0.linux-amd64.tar.gz  2.安装elasticsearch_exportertar -xzvf elasticsearch_e">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Prometheus监控Nginx">
-<meta property="og:url" content="https://hfsxs.github.io/2024/12/18/Prometheus%E7%9B%91%E6%8E%A7Nginx/index.html">
+<meta property="og:title" content="Prometheus监控Elasticsearch">
+<meta property="og:url" content="https://hfsxs.github.io/2024/12/18/Prometheus%E7%9B%91%E6%8E%A7Elasticsearch/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="1.nginx开启stub_status模块2.下载nginx_exporterwget https:&#x2F;&#x2F;github.com&#x2F;nginxinc&#x2F;nginx-prometheus-exporter&#x2F;releases&#x2F;download&#x2F;v1.4.0&#x2F;nginx-prometheus-exporter_1.4.0_linux_amd64.tar.gz  3.安装nginx_exportertar -x">
+<meta property="og:description" content="1.下载安装包wget https:&#x2F;&#x2F;github.com&#x2F;prometheus-community&#x2F;elasticsearch_exporter&#x2F;releases&#x2F;download&#x2F;v1.8.0&#x2F;elasticsearch_exporter-1.8.0.linux-amd64.tar.gz  2.安装elasticsearch_exportertar -xzvf elasticsearch_e">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/nginx.jpg">
-<meta property="article:published_time" content="2024-12-18T11:04:07.000Z">
-<meta property="article:modified_time" content="2025-01-07T07:42:54.916Z">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/elasticsearch.jpg">
+<meta property="article:published_time" content="2024-12-18T03:40:01.000Z">
+<meta property="article:modified_time" content="2025-03-08T14:34:32.586Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
-<meta property="article:tag" content="Nginx">
+<meta property="article:tag" content="Elasticsearch">
 <meta property="article:tag" content="Prometheus">
 <meta property="article:tag" content="监控告警">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://hfsxs.github.io/img/wiki/prometheus/nginx.jpg">
+<meta name="twitter:image" content="https://hfsxs.github.io/img/wiki/prometheus/elasticsearch.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Prometheus监控Nginx - 扬帆</title>
+  <title>Prometheus监控Elasticsearch - 扬帆</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -219,7 +219,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Prometheus监控Nginx</span>
+            <span id="subtitle">Prometheus监控Elasticsearch</span>
           
         </div>
 
@@ -230,8 +230,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-12-18 19:04" pubdate>
-          2024年12月18日 晚上
+        <time datetime="2024-12-18 11:40" pubdate>
+          2024年12月18日 中午
         </time>
       </span>
     
@@ -242,7 +242,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.2k 字
+          1.3k 字
         
       </span>
     
@@ -253,7 +253,7 @@
         
         
         
-          10 分钟
+          12 分钟
         
       </span>
     
@@ -291,53 +291,63 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Prometheus监控Nginx</h1>
+            <h1 style="display: none">Prometheus监控Elasticsearch</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="1-nginx开启stub-status模块"><a href="#1-nginx开启stub-status模块" class="headerlink" title="1.nginx开启stub_status模块"></a>1.nginx开启stub_status模块</h1><h1 id="2-下载nginx-exporter"><a href="#2-下载nginx-exporter" class="headerlink" title="2.下载nginx_exporter"></a>2.下载nginx_exporter</h1><pre><code class="hljs">wget https://github.com/nginxinc/nginx-prometheus-exporter/releases/download/v1.4.0/nginx-prometheus-exporter_1.4.0_linux_amd64.tar.gz
+                <h1 id="1-下载安装包"><a href="#1-下载安装包" class="headerlink" title="1.下载安装包"></a>1.下载安装包</h1><pre><code class="hljs">wget https://github.com/prometheus-community/elasticsearch_exporter/releases/download/v1.8.0/elasticsearch_exporter-1.8.0.linux-amd64.tar.gz
 </code></pre>
-<h1 id="3-安装nginx-exporter"><a href="#3-安装nginx-exporter" class="headerlink" title="3.安装nginx_exporter"></a>3.安装nginx_exporter</h1><pre><code class="hljs">tar -xzvf nginx-prometheus-exporter_1.4.0_linux_amd64.tar.gz
-sudo mv nginx-prometheus-exporter /usr/local/prometheus/nginx_exporter
-sudo chmod +x /usr/local/prometheus/nginx_exporter
+<h1 id="2-安装elasticsearch-exporter"><a href="#2-安装elasticsearch-exporter" class="headerlink" title="2.安装elasticsearch_exporter"></a>2.安装elasticsearch_exporter</h1><pre><code class="hljs">tar -xzvf elasticsearch_exporter-1.8.0.linux-amd64.tar.gz
+sudo mv elasticsearch_exporter-1.8.0.linux-amd64 /usr/local/bin/elasticsearch_exporter
 </code></pre>
-<h1 id="4-创建启动脚本"><a href="#4-创建启动脚本" class="headerlink" title="4.创建启动脚本"></a>4.创建启动脚本</h1><pre><code class="hljs">sudo vi /lib/systemd/system/nginx_exporter.service
+<h1 id="3-创建启动脚本"><a href="#3-创建启动脚本" class="headerlink" title="3.创建启动脚本"></a>3.创建启动脚本</h1><pre><code class="hljs">sudo vi /lib/systemd/system/elasticsearch_exporter.service
 
 
 [Unit]
-Description=nginx_prometheus_exporter
+Description=elasticsearch_exporter
+Documentation=https://github.com/prometheus-community/elasticsearch_exporter
 After=network.target
 
 [Service]
 Type=simple
 User=root
-Group=root
-Restart=always
-ExecStart=/usr/local/prometheus/nginx_exporter --nginx.scrape-uri=http://10.1.11.180:20080/stub_status --web.listen-address=:9113
+ExecStart=/usr/local/bin/elasticsearch_exporter --es.uri http://elastic:password@localhost:9200
+KillMode=mixed
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
 </code></pre>
-<h1 id="5-启动nginx-exporter"><a href="#5-启动nginx-exporter" class="headerlink" title="5.启动nginx_exporter"></a>5.启动nginx_exporter</h1><pre><code class="hljs">sudo systemctl daemon-reload
-sudo systemctl enable nginx_exporter.service
-sudo systemctl start memcached_exporter.service
+<h1 id="4-启动elasticsearch-exporter"><a href="#4-启动elasticsearch-exporter" class="headerlink" title="4.启动elasticsearch_exporter"></a>4.启动elasticsearch_exporter</h1><pre><code class="hljs">sudo systemctl daemon-reload
+sudo systemctl start elasticsearch_exporter.service
+sudo systemctl enable elasticsearch_exporter.service
 </code></pre>
-<h1 id="6-配置Prometheus"><a href="#6-配置Prometheus" class="headerlink" title="6.配置Prometheus"></a>6.配置Prometheus</h1><h2 id="6-1-配置监控实例"><a href="#6-1-配置监控实例" class="headerlink" title="6.1 配置监控实例"></a>6.1 配置监控实例</h2><pre><code class="hljs">sudo vi /usr/local/prometheus/prometheus.yml
+<h1 id="5-配置Prometheus"><a href="#5-配置Prometheus" class="headerlink" title="5.配置Prometheus"></a>5.配置Prometheus</h1><h2 id="5-1-配置监控实例"><a href="#5-1-配置监控实例" class="headerlink" title="5.1 配置监控实例"></a>5.1 配置监控实例</h2><pre><code class="hljs">sudo vi /usr/local/prometheus/prometheus.yml
+
+
+global:
+  scrape_interval: 15s 
+  evaluation_interval: 15s 
+  scrape_timeout: 10s 
 
 scrape_configs:
-
-  - job_name: &quot;nginx&quot;
+  - job_name: &quot;prometheus&quot;
     static_configs:
-      - targets: [&quot;10.1.11.180:9113&quot;]
+      - targets: [&quot;localhost:9090&quot;]
+
+  - job_name: &#39;elasticsearch&#39;
+    static_configs:
+      - targets:
+        - localhost:9114
 </code></pre>
-<h2 id="6-2-创建告警规则"><a href="#6-2-创建告警规则" class="headerlink" title="6.2 创建告警规则"></a>6.2 创建告警规则</h2><h2 id="6-3-重载Prometheus"><a href="#6-3-重载Prometheus" class="headerlink" title="6.3 重载Prometheus"></a>6.3 重载Prometheus</h2><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload
+<h2 id="5-2-重载Prometheus"><a href="#5-2-重载Prometheus" class="headerlink" title="5.2 重载Prometheus"></a>5.2 重载Prometheus</h2><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload
 </code></pre>
-<h1 id="7-Grafana导入监控模版"><a href="#7-Grafana导入监控模版" class="headerlink" title="7.Grafana导入监控模版"></a>7.Grafana导入监控模版</h1><p>Dashboards —&gt; New —&gt; Import —&gt; 模版ID：12708</p>
-<p><img src="/img/wiki/prometheus/nginx.jpg" srcset="/img/loading.gif" lazyload alt="nginx"></p>
+<h1 id="6-Grafana导入监控模版"><a href="#6-Grafana导入监控模版" class="headerlink" title="6.Grafana导入监控模版"></a>6.Grafana导入监控模版</h1><p>Dashboards —&gt; New —&gt; Import —&gt; 模版ID：7259</p>
+<p><img src="/img/wiki/prometheus/elasticsearch.jpg" srcset="/img/loading.gif" lazyload alt="linux"></p>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_18138507/article/details/142816442">https://blog.csdn.net/qq_18138507/article/details/142816442</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/dl_11/article/details/141680508">https://blog.csdn.net/dl_11/article/details/141680508</a></li>
 </ul>
 
                 
@@ -376,7 +386,7 @@ scrape_configs:
       
         <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
       
-        <a href="/tags/Nginx/">#Nginx</a>
+        <a href="/tags/Elasticsearch/">#Elasticsearch</a>
       
         <a href="/tags/Prometheus/">#Prometheus</a>
       
@@ -392,8 +402,8 @@ scrape_configs:
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Prometheus监控Nginx</div>
-      <div>https://hfsxs.github.io/2024/12/18/Prometheus监控Nginx/</div>
+      <div>Prometheus监控Elasticsearch</div>
+      <div>https://hfsxs.github.io/2024/12/18/Prometheus监控Elasticsearch/</div>
     </div>
     <div class="license-meta">
       
@@ -411,7 +421,7 @@ scrape_configs:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年1月7日</div>
+          <div>2025年3月8日</div>
         </div>
       
       <div class="license-meta-item">
