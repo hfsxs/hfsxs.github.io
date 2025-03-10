@@ -24,7 +24,7 @@
 <meta property="og:description" content="1.Prometheus监控规则vi &#x2F;usr&#x2F;local&#x2F;prometheus&#x2F;rules&#x2F;prometheus.yaml   groups: - name: prometheus   rules:   - alert: PrometheusAllTargetsMissing     expr: count by (job) (up) &#x3D;&#x3D; 0     for: 2m     labels:">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-08-17T00:57:51.000Z">
-<meta property="article:modified_time" content="2025-02-07T08:33:45.256Z">
+<meta property="article:modified_time" content="2025-03-10T02:53:11.822Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -502,7 +502,7 @@ groups:
 
 
 groups:
-- name: nodes
+- name: Linux
   rules:
   - alert: InstanceDown
     expr: up == 0
@@ -653,7 +653,7 @@ groups:
 
 
 groups:
-- name: Mysql
+- name: MySQL
   rules:
   - alert: MysqlDown
     expr: mysql_up == 0
@@ -1085,7 +1085,7 @@ groups:
 
 
 groups:
-- name: docker
+- name: Docker
   rules:
   - alert: ContainerKilled
     expr: time() - container_last_seen&#123;name!=&quot;&quot;&#125; &gt; 60
@@ -1155,7 +1155,7 @@ groups:
 
 
 groups:
-- name: ssl
+- name: SSL
   rules:
   - alert: SslCertificateProbeFailed
     expr: ssl_probe_success == 0
@@ -1369,7 +1369,7 @@ groups:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年2月7日</div>
+          <div>2025年3月10日</div>
         </div>
       
       <div class="license-meta-item">
