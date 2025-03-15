@@ -1,0 +1,883 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Ceph作为当前非常流行的开源分布式存储系统，以其高扩展性、高性能、高可靠性等优点，广泛应用于众多云计算厂商的公有云、私有云与混合云环境，也即是云计算超融合基础设施（HCI）解决方案。作为云原生技术引领者之一的Openstack，目前已将Ceph作为主流的后端存储，两者已融合为一种高性能、高可用性、高扩展性的成熟的解决方案，优点如下：  Ceph代替了价格昂贵的商业存储设备，降低了整体成本 Ope">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Openstack集群基于Ceph存储方案">
+<meta property="og:url" content="https://hfsxs.github.io/%E5%B7%A5%E4%BD%9C/Openstack-Ceph/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="Ceph作为当前非常流行的开源分布式存储系统，以其高扩展性、高性能、高可靠性等优点，广泛应用于众多云计算厂商的公有云、私有云与混合云环境，也即是云计算超融合基础设施（HCI）解决方案。作为云原生技术引领者之一的Openstack，目前已将Ceph作为主流的后端存储，两者已融合为一种高性能、高可用性、高扩展性的成熟的解决方案，优点如下：  Ceph代替了价格昂贵的商业存储设备，降低了整体成本 Ope">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-04-25T15:27:02.000Z">
+<meta property="article:modified_time" content="2025-03-15T08:40:46.332Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Ceph">
+<meta property="article:tag" content="存储">
+<meta property="article:tag" content="虚拟化">
+<meta property="article:tag" content="私有云">
+<meta property="article:tag" content="Openstack">
+<meta property="article:tag" content="公有云">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Openstack集群基于Ceph存储方案 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Openstack集群基于Ceph存储方案</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-04-25 23:27" pubdate>
+          2024年4月25日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          38 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Openstack集群基于Ceph存储方案</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Ceph作为当前非常流行的开源分布式存储系统，以其高扩展性、高性能、高可靠性等优点，广泛应用于众多云计算厂商的公有云、私有云与混合云环境，也即是云计算超融合基础设施（HCI）解决方案。作为云原生技术引领者之一的Openstack，目前已将Ceph作为主流的后端存储，两者已融合为一种高性能、高可用性、高扩展性的成熟的解决方案，优点如下：</p>
+<ul>
+<li>Ceph代替了价格昂贵的商业存储设备，降低了整体成本</li>
+<li>Openstack所有计算节点共享存储，迁移时不需要拷贝根磁盘，即使计算节点宕机，也能立即在其他计算节点启动虚拟机</li>
+<li>Ceph RBD所具备的COW（Copy On Write）特性，使得创建虚拟机时只需基于镜像clone即可，不需要下载整个镜像，而clone操作基本是0开销，从而实现秒级、高并发的虚拟机启动</li>
+<li>Ceph RBD支持thin provisioning，即按需分配空间，类似于Linux文件系统的sparse稀疏文件，即创建虚拟硬盘最初并不占用物理存储空间，只有当写入数据时，才按需分配存储空间</li>
+<li>Openstack除了可将Ceph RBD作为Nova、Cinder、Glance这些组件的后端存储，还可将Swift、Manila组件分别对接Ceph RGW与CephFS。作为统一存储解决方案，Ceph有效降低了云环境的整体复杂性与运维成本，完全满足了对存储类型的需求</li>
+</ul>
+<hr>
+<h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul>
+<li>172.100.100.180 controller</li>
+<li>172.100.100.181 compute001</li>
+<li>172.100.100.182 compute002</li>
+<li>172.100.100.183 storage001</li>
+<li>172.100.100.184 storage002</li>
+<li>172.100.100.185 storage003</li>
+</ul>
+<h1 id="1-部署Ceph集群"><a href="#1-部署Ceph集群" class="headerlink" title="1.部署Ceph集群"></a>1.部署Ceph集群</h1><h1 id="2-创建RBD存储池"><a href="#2-创建RBD存储池" class="headerlink" title="2.创建RBD存储池"></a>2.创建RBD存储池</h1><h2 id="2-1-创建数据卷存储池"><a href="#2-1-创建数据卷存储池" class="headerlink" title="2.1 创建数据卷存储池"></a>2.1 创建数据卷存储池</h2><pre><code class="hljs"># 用于存储Cinder组件的数据卷
+ceph osd pool create volumes 128
+</code></pre>
+<h2 id="2-2-创建镜像存储池"><a href="#2-2-创建镜像存储池" class="headerlink" title="2.2 创建镜像存储池"></a>2.2 创建镜像存储池</h2><pre><code class="hljs"># 用于存储Glance组件的镜像
+ceph osd pool create images 128
+</code></pre>
+<h2 id="2-3-创建虚拟机实例存储池"><a href="#2-3-创建虚拟机实例存储池" class="headerlink" title="2.3 创建虚拟机实例存储池"></a>2.3 创建虚拟机实例存储池</h2><pre><code class="hljs"># 用于存储Nova组件的实例启动镜像
+ceph osd pool create vms 128
+</code></pre>
+<h1 id="3-创建客户端用户并授权"><a href="#3-创建客户端用户并授权" class="headerlink" title="3.创建客户端用户并授权"></a>3.创建客户端用户并授权</h1><h2 id="3-1-创建cinder用户"><a href="#3-1-创建cinder用户" class="headerlink" title="3.1 创建cinder用户"></a>3.1 创建cinder用户</h2><pre><code class="hljs"># 用于Cinder组件创建虚拟机实例与数据卷
+ceph auth get-or-create client.cinder mon &#39;allow r&#39; osd &#39;allow class-read object_prefix rbd_children, allow rwx pool=volumes, allow rwx pool=vms, allow rx pool=images&#39; -o /etc/ceph/ceph.client.cinder.keyring
+</code></pre>
+<h2 id="3-2-创建glance用户"><a href="#3-2-创建glance用户" class="headerlink" title="3.2 创建glance用户"></a>3.2 创建glance用户</h2><pre><code class="hljs"># 用于Clance组件创建镜像
+ceph auth get-or-create client.glance mon &#39;allow r&#39; osd &#39;allow class-read object_prefix rbd_children, allow rwx pool=images&#39; -o /etc/ceph/ceph.client.glance.keyring
+</code></pre>
+<h2 id="3-3-将配置文件发送到Openstack节点"><a href="#3-3-将配置文件发送到Openstack节点" class="headerlink" title="3.3 将配置文件发送到Openstack节点"></a>3.3 将配置文件发送到Openstack节点</h2><pre><code class="hljs">scp -r /etc/ceph/ controller:/etc
+scp -r /etc/ceph/ compute001:/etc
+scp -r /etc/ceph/ compute002:/etc
+</code></pre>
+<h1 id="4-Openstack控制节点配置"><a href="#4-Openstack控制节点配置" class="headerlink" title="4.Openstack控制节点配置"></a>4.Openstack控制节点配置</h1><h2 id="4-1-安装Ceph客户端"><a href="#4-1-安装Ceph客户端" class="headerlink" title="4.1 安装Ceph客户端"></a>4.1 安装Ceph客户端</h2><pre><code class="hljs">sudo apt install -y python3-rbd
+</code></pre>
+<h2 id="4-2-设置Ceph密钥文件权限"><a href="#4-2-设置Ceph密钥文件权限" class="headerlink" title="4.2 设置Ceph密钥文件权限"></a>4.2 设置Ceph密钥文件权限</h2><pre><code class="hljs">sudo chown glance:glance /etc/ceph/ceph.client.glance.keyring
+</code></pre>
+<h2 id="4-3-配置镜像服务"><a href="#4-3-配置镜像服务" class="headerlink" title="4.3 配置镜像服务"></a>4.3 配置镜像服务</h2><pre><code class="hljs">sudo cp /etc/glance/glance-api.conf /etc/glance/glance-api.conf.lvm
+sudo vi /etc/glance/glance-api.conf
+
+
+[default]
+# 启用镜像写时复制功能
+show_image_direct_url = True
+
+[glance_store]
+stores = rbd
+default_store = rbd
+rbd_store_chunk_size = 8
+rbd_store_pool = images
+rbd_store_user = glance
+rbd_store_ceph_conf = /etc/ceph/ceph.conf
+</code></pre>
+<h2 id="4-4-重启镜像服务"><a href="#4-4-重启镜像服务" class="headerlink" title="4.4 重启镜像服务"></a>4.4 重启镜像服务</h2><pre><code class="hljs"> sudo systemctl restart openstack-glance-api.service
+</code></pre>
+<h2 id="4-5-验证镜像服务"><a href="#4-5-验证镜像服务" class="headerlink" title="4.5 验证镜像服务"></a>4.5 验证镜像服务</h2><h1 id="5-Openstack计算节点配置"><a href="#5-Openstack计算节点配置" class="headerlink" title="5.Openstack计算节点配置"></a>5.Openstack计算节点配置</h1><h2 id="5-1-安装Ceph客户端"><a href="#5-1-安装Ceph客户端" class="headerlink" title="5.1 安装Ceph客户端"></a>5.1 安装Ceph客户端</h2><pre><code class="hljs">sudo apt install -y ceph-common
+</code></pre>
+<h2 id="设置Ceph密钥文件权限"><a href="#设置Ceph密钥文件权限" class="headerlink" title="设置Ceph密钥文件权限"></a>设置Ceph密钥文件权限</h2><pre><code class="hljs">sudo chown nova:nova /etc/ceph/ceph.client.cinder.keyring
+</code></pre>
+<h2 id="5-2-配置libvirt"><a href="#5-2-配置libvirt" class="headerlink" title="5.2 配置libvirt"></a>5.2 配置libvirt</h2><p>由于libvirt进程在挂载或卸载一个由Cinder提供的Volume时需要访问Ceph集群，所以需要创建client.cinder用户的访问秘钥，再添加到libvirtd 守护进程，且每个计算节点都需添加，即用作cinder-volume调用凭证</p>
+<h3 id="5-2-1-获取cinder密钥"><a href="#5-2-1-获取cinder密钥" class="headerlink" title="5.2.1 获取cinder密钥"></a>5.2.1 获取cinder密钥</h3><pre><code class="hljs">ceph auth get-key client.cinder &gt; client.cinder.key
+</code></pre>
+<h3 id="5-2-2-生成uuid"><a href="#5-2-2-生成uuid" class="headerlink" title="5.2.2 生成uuid"></a>5.2.2 生成uuid</h3><pre><code class="hljs">uuidgen
+</code></pre>
+<h3 id="5-2-2-创建libvirt密钥文件"><a href="#5-2-2-创建libvirt密钥文件" class="headerlink" title="5.2.2 创建libvirt密钥文件"></a>5.2.2 创建libvirt密钥文件</h3><pre><code class="hljs">vi secret.xml
+
+
+&lt;secret ephemeral=&#39;no&#39; private=&#39;no&#39;&gt;
+  &lt;uuid&gt;6421C80B-85FF-4D1E-A042-A23B99DB4689&lt;/uuid&gt; 
+  &lt;usage type=&#39;ceph&#39;&gt; 
+    &lt;name&gt;client.cinder secret&lt;/name&gt; 
+  &lt;/usage&gt;
+&lt;/secret&gt;
+</code></pre>
+<h3 id="5-2-3-创建libvirt密钥"><a href="#5-2-3-创建libvirt密钥" class="headerlink" title="5.2.3 创建libvirt密钥"></a>5.2.3 创建libvirt密钥</h3><pre><code class="hljs">virsh secret-define --file secret.xml
+</code></pre>
+<h3 id="5-2-4-分配libvirt密钥"><a href="#5-2-4-分配libvirt密钥" class="headerlink" title="5.2.4 分配libvirt密钥"></a>5.2.4 分配libvirt密钥</h3><pre><code class="hljs">virsh secret-set-value --secret 6421C80B-85FF-4D1E-A042-A23B99DB4689 --base64 $(cat client.cinder.key) &amp;&amp; rm client.cinder.key secret.xml
+</code></pre>
+<h3 id="5-3-启用RBD客户端缓存和管理Socket"><a href="#5-3-启用RBD客户端缓存和管理Socket" class="headerlink" title="5.3 启用RBD客户端缓存和管理Socket"></a>5.3 启用RBD客户端缓存和管理Socket</h3><pre><code class="hljs">sudo mkdir -p /var/run/ceph/guests/ /var/log/qemu/
+sudo chown -R libvirt-qemu:libvirt /var/run/ceph/guests /var/log/qemu/
+
+sudo vi /etc/ceph/ceph.conf
+
+
+[client]
+rbd cache = true
+# 启用RBD客户端缓存功能
+rbd cache writethrough until flush = true
+admin socket = /var/run/ceph/guests/$cluster-$type.$id.$pid.$cctid.asok
+# 设置rbd调用日志，用于故障排查
+log file = /var/log/qemu/qemu-guest-$pid.log
+rbd concurrent management ops = 20
+</code></pre>
+<h2 id="5-4-配置计算服务"><a href="#5-4-配置计算服务" class="headerlink" title="5.4 配置计算服务"></a>5.4 配置计算服务</h2><pre><code class="hljs">sudo cp /etc/nova/nova.conf /etc/nova/nova.conf.lvm
+sudo vi /etc/nova/nova.conf
+
+
+[libvirt]
+virt_type = kvm
+inject_password = false
+inject_key = false
+inject_partition = -2
+disk_cachemodes = &quot;network=writeback&quot;
+images_type = rbd
+images_rbd_pool = vms
+images_rbd_ceph_conf = /etc/ceph/ceph.conf
+hw_disk_discard = unmap
+rbd_user = cinder
+rbd_secret_uuid = 6421C80B-85FF-4D1E-A042-A23B99DB4689
+# 启用虚拟机热迁移功能
+live_migration_flag = &quot;VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_PERSIST_DEST,VIR_MIGRATE_TUNNELLED&quot;
+</code></pre>
+<h2 id="5-5-重启计算服务"><a href="#5-5-重启计算服务" class="headerlink" title="5.5 重启计算服务"></a>5.5 重启计算服务</h2><pre><code class="hljs">sudo systemctl restart nova-compute.service
+</code></pre>
+<ul>
+<li>注：其余计算节点也都要按步骤执行，uuid保持一致即可</li>
+</ul>
+<h1 id="6-Openstack存储节点配置"><a href="#6-Openstack存储节点配置" class="headerlink" title="6.Openstack存储节点配置"></a>6.Openstack存储节点配置</h1><h2 id="6-1-安装Ceph客户端"><a href="#6-1-安装Ceph客户端" class="headerlink" title="6.1 安装Ceph客户端"></a>6.1 安装Ceph客户端</h2><pre><code class="hljs">sudo apt install -y ceph-common
+</code></pre>
+<h2 id="6-2-设置Ceph密钥文件权限"><a href="#6-2-设置Ceph密钥文件权限" class="headerlink" title="6.2 设置Ceph密钥文件权限"></a>6.2 设置Ceph密钥文件权限</h2><pre><code class="hljs">sudo chown cinder:cinder /etc/ceph/ceph.client.cinder.keyring
+</code></pre>
+<h2 id="6-3-配置存储服务"><a href="#6-3-配置存储服务" class="headerlink" title="6.3 配置存储服务"></a>6.3 配置存储服务</h2><pre><code class="hljs">sudo cp /etc/cinder/cinder.conf /etc/cinder/cinder.conf.lvm
+sudo vi /etc/cinder/cinder.conf
+
+
+[DEFAULT]
+
+enabled_backends = lvm,ceph
+glance_api_version = 2
+
+[ceph]
+rbd_pool = volumes
+rbd_user = cinder
+rbd_ceph_conf = /etc/ceph/ceph.conf
+rbd_flatten_volume_from_snapshot = false
+rbd_secret_uuid = 6421C80B-85FF-4D1E-A042-A23B99DB4689
+rbd_max_clone_depth = 5
+rbd_store_chunk_size = 4
+rados_connect_timeout = -1
+volume_driver = cinder.volume.drivers.rbd.RBDDriver
+volume_backend_name = ceph
+</code></pre>
+<h2 id="6-4-重启存储服务"><a href="#6-4-重启存储服务" class="headerlink" title="6.4 重启存储服务"></a>6.4 重启存储服务</h2><pre><code class="hljs">sudo systemctl restart openstack-cinder-api openstack-cinder-volume
+</code></pre>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://docs.ceph.com/en/mimic/rbd/rbd-openstack">https://docs.ceph.com/en/mimic/rbd/rbd-openstack</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41786090/article/details/131574739">https://blog.csdn.net/qq_41786090/article/details/131574739</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_37242520/article/details/106059132">https://blog.csdn.net/qq_37242520/article/details/106059132</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/Ceph/">#Ceph</a>
+      
+        <a href="/tags/%E5%AD%98%E5%82%A8/">#存储</a>
+      
+        <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
+      
+        <a href="/tags/%E7%A7%81%E6%9C%89%E4%BA%91/">#私有云</a>
+      
+        <a href="/tags/Openstack/">#Openstack</a>
+      
+        <a href="/tags/%E5%85%AC%E6%9C%89%E4%BA%91/">#公有云</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Openstack集群基于Ceph存储方案</div>
+      <div>https://hfsxs.github.io/工作/Openstack-Ceph/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年4月25日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月15日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/%E5%B7%A5%E4%BD%9C/Prometheus-Ceph/" title="Prometheus监控配置Ceph集群监控">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Prometheus监控配置Ceph集群监控</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/%E5%B7%A5%E4%BD%9C/Prometheus-RabbitMQ/" title="Prometheus监控RabbitMQ消息队列">
+                        <span class="hidden-mobile">Prometheus监控RabbitMQ消息队列</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+
+<div>
+<span id="timeDate"> 正在载入天数...</span>
+<span id="times"> 载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime(){
+        var grt= new Date("1/12/2025 01:15:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if(String(snum).length ==1 ){
+                snum = "0" + snum;
+        }
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
+        document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+</div>
+
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

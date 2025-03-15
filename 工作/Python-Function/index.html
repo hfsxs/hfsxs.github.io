@@ -1,0 +1,1025 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="函数，可重复调用的具有某种特定功能的代码块，通过调用即可实现其功能，面向对象编程中也被称为方法。函数分为内置函数与自定义函数两类：内置函数，Python库自带的已经定义好的函数，直接调用即可，如input、print、max等；自定义函数，Python无法提供的对应各自业务需求的需要开发的函数。函数的引入使得程序更加模块化，不再需要编写大量的重复代码 1.函数定义定义函数，即创建函数，由def关键">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python函数">
+<meta property="og:url" content="https://hfsxs.github.io/%E5%B7%A5%E4%BD%9C/Python-Function/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="函数，可重复调用的具有某种特定功能的代码块，通过调用即可实现其功能，面向对象编程中也被称为方法。函数分为内置函数与自定义函数两类：内置函数，Python库自带的已经定义好的函数，直接调用即可，如input、print、max等；自定义函数，Python无法提供的对应各自业务需求的需要开发的函数。函数的引入使得程序更加模块化，不再需要编写大量的重复代码 1.函数定义定义函数，即创建函数，由def关键">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-02-15T13:05:32.000Z">
+<meta property="article:modified_time" content="2025-03-15T01:34:14.360Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Python函数 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Python函数</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-02-15 21:05" pubdate>
+          2023年2月15日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          67 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python函数</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>函数，可重复调用的具有某种特定功能的代码块，通过调用即可实现其功能，面向对象编程中也被称为方法。函数分为内置函数与自定义函数两类：内置函数，Python库自带的已经定义好的函数，直接调用即可，如input、print、max等；自定义函数，Python无法提供的对应各自业务需求的需要开发的函数。函数的引入使得程序更加模块化，不再需要编写大量的重复代码</p>
+<h1 id="1-函数定义"><a href="#1-函数定义" class="headerlink" title="1.函数定义"></a>1.函数定义</h1><p>定义函数，即创建函数，由def关键字实现，语法格式为：</p>
+<p>def 函数名(参数列表):<br>    函数体<br>    return [返回值]</p>
+<ul>
+<li><p>def，用于定义函数的关键字，其后为函数标识符和圆括号()，最后的“:”代表函数的起始</p>
+</li>
+<li><p>函数名，即为符合Python语法的标识符，建议以能够体现出函数的功能来命名</p>
+</li>
+<li><p>参数，即需要函数加工运算的一个或多个的初始输入数据，多个参数以“,”隔离，且参数值和参数名称是按函数声明中定义的顺序进行匹配，也可没有参数</p>
+</li>
+<li><p>函数体，即用于实现某种功能的代码块，须进行缩进。Python编码规范建议一个函数只做一件事，函数体建议不超过20行，否则说明这个函数不止做了一件事情，应该将之拆分为更小的函数，或调用其他函数来实现部分功能</p>
+</li>
+<li><p>return，用于设置函数的返回值，表示函数的结束，可选参数，即返回值视具体情况而定是否设置，无return语句表示返回None</p>
+<p>  def my_function():<br>  print(“Hello world”)</p>
+</li>
+</ul>
+<h1 id="2-函数调用"><a href="#2-函数调用" class="headerlink" title="2.函数调用"></a>2.函数调用</h1><p>函数定义之后即可进行调用，调用方式为：函数名+(参数列表)</p>
+<pre><code class="hljs">def my_function():
+    print(&quot;Hello world&quot;)
+
+# 调用函数my_function 
+my_function()
+</code></pre>
+<h1 id="3-函数参数"><a href="#3-函数参数" class="headerlink" title="3.函数参数"></a>3.函数参数</h1><p>定义函数时其参数就被确定下来，函数的接口也就固定了，调用函数只需要知道如何传递正确的参数，以及函数将返回什么样的值即可，从而使得函数内部的复杂逻辑被封装起来，调用者无需了解。也即是说，参数决定了函数的调用方式</p>
+<h2 id="3-1-位置参数"><a href="#3-1-位置参数" class="headerlink" title="3.1 位置参数"></a>3.1 位置参数</h2><p>位置参数，也称必传参数、顺序参数，是Python最常见的参数传递方式，调用时必须按照函数定义时参数的顺序，依次传递参数的值，且一一对应，个数不多不少，否则将出现语法错误</p>
+<pre><code class="hljs">&gt;&gt;&gt; def add(a,b):
+...     return a+b
+... 
+&gt;&gt;&gt; add(1,2)
+3
+&gt;&gt;&gt; 
+</code></pre>
+<h2 id="3-2-默认参数"><a href="#3-2-默认参数" class="headerlink" title="3.2 默认参数"></a>3.2 默认参数</h2><p>函数定义时，可为参数指定默认值，这个参数就被称为默认参数，而不再是位置参数了。调用函数时，若没有传递该参数的值就将使用默认值，也可给默认参数传递自定义的值。默认参数简化了函数的调用，在为最常用的情况提供简便调用的同时，也可在特殊情况传递新的值</p>
+<pre><code class="hljs">&gt;&gt;&gt; def sq(x,n = 2):
+...     return x**n
+... 
+&gt;&gt;&gt; sq(3)
+9
+&gt;&gt;&gt; sq(3,3)
+27
+&gt;&gt;&gt;
+</code></pre>
+<ul>
+<li>注：默认参数必须定义在位置参数后面，且尽量指向不可变的对象，如整型、字符串、元组，可变对象如列表、字典由于本身就是指向变量的地址，则调用时将会更改其内部元素的数值</li>
+</ul>
+<h2 id="3-3-关键字参数"><a href="#3-3-关键字参数" class="headerlink" title="3.3 关键字参数"></a>3.3 关键字参数</h2><p>调用函数时，使用参数的名称和相应的值来传递参数，这样明确指定参数的值即无需依赖位置，从而可以改变传递参数的顺序，还可以使用默认参数只传递部分参数而不是全部</p>
+<pre><code class="hljs">&gt;&gt;&gt; def info(name,age):
+...     print(&quot;Name is&quot;,name)
+...     print(&quot;Age is&quot;,age)
+... 
+
+&gt;&gt;&gt; info(age = 15,name = &#39;LiLei&#39;)
+Name is LiLei
+Age is 15
+&gt;&gt;&gt; 
+</code></pre>
+<h2 id="3-4-不定长参数"><a href="#3-4-不定长参数" class="headerlink" title="3.4 不定长参数"></a>3.4 不定长参数</h2><p>不定长参数表示函数接受任意数量的位置参数，作为元组或字典进行传递，通过在参数名前加上“ * ”定义，即“ *args ”或“ **kwargs ”</p>
+<h3 id="3-4-1-args"><a href="#3-4-1-args" class="headerlink" title="3.4.1 *args"></a>3.4.1 *args</h3><p>一个星号的不定长参数表示接收任意参数，调用时会将实际参数作为元组传入形式参数，若参数是列表则会将整个列表当做一个参数传入</p>
+<pre><code class="hljs">&gt;&gt;&gt; def add(*num):
+...     total = 0
+...     for n in num:
+...         total +=n
+...     return total
+... 
+
+&gt;&gt;&gt; add(1,2,3,4)
+10
+</code></pre>
+<h3 id="3-4-2-kwargs"><a href="#3-4-2-kwargs" class="headerlink" title="3.4.2 **kwargs"></a>3.4.2 **kwargs</h3><p>两个星的不定长参数表示接受任意数量的键值对作为参数，调用的时会将实际参数作为字典传入形式参数</p>
+<pre><code class="hljs">&gt;&gt;&gt; def info(**stu):
+...     for k,v in stu.items():
+...         print(k,&quot;:&quot;,v)
+... 
+
+&gt;&gt;&gt; info(name=&quot;Lilei&quot;,age=15,city=&quot;Beijing&quot;)
+name : Lilei
+age : 15
+city : Beijing
+</code></pre>
+<ul>
+<li>注：不定长参数必须定义在所有位置参数和默认参数后面</li>
+</ul>
+<h1 id="4-变量作用域"><a href="#4-变量作用域" class="headerlink" title="4.变量作用域"></a>4.变量作用域</h1><p>变量作用域是指变量的有效范围，即变量的访问权限，取决变量所定义的位置，两种最基本的变量作用域为全局作用域和局部作用域：全局作用域变量定义在函数外部，可在整个程序范围内调用；局部作用域变量定义在函数内部，只能在其被声明的函数内部访问，调用函数时局部变量都将被加入到作用域中</p>
+<pre><code class="hljs"># 定义全局变量total
+&gt;&gt;&gt; total = 0
+&gt;&gt;&gt; def plus(m,n):
+        # 定义局部变量total
+...     total = m + n
+...     print(&quot;函数内部变量total=&quot;,total)
+...     return total
+... 
+&gt;&gt;&gt; plus(10,20)
+函数内部变量total= 30
+30
+&gt;&gt;&gt; print(&quot;函数全局变量total=&quot;,total)
+函数全局变量total= 0
+</code></pre>
+<h1 id="5-回调函数"><a href="#5-回调函数" class="headerlink" title="5.回调函数"></a>5.回调函数</h1><p>回调函数，即将函数作为参数的函数，也就是说其参数是另一个函数，用于降低函数调用之间的耦合性，适用于事件处理、异步编程、定时器与事件循环、钩子函数等场景</p>
+<pre><code class="hljs">&gt;&gt;&gt; def area(r):
+...     circle = 3.14 * r * r
+...     return circle
+... 
+&gt;&gt;&gt; area(3)
+28.259999999999998
+
+&gt;&gt;&gt; def r_circle(a):
+...     r = a * 2
+...     return r
+... 
+&gt;&gt;&gt; r_circle(area(3))
+56.519999999999996
+</code></pre>
+<h1 id="6-递归函数"><a href="#6-递归函数" class="headerlink" title="6.递归函数"></a>6.递归函数</h1><p>递归函数，即函数体内调用其自身的函数，每次递归都会将原始问题分解为规模较小的子问题，如此反复执行，直到达到为防止无限循环而设置的终止条件，也即是原始问题的解决方案。理论上，所有的递归函数都可以写为循环的方式，但循环的逻辑不如递归简单而清晰。需要注意的是，递归函数可能会导致栈溢出，建议深度不超过100层</p>
+<pre><code class="hljs"># 计算1到100的和，相比起循环方式，递归函数的语意显然更为简洁
+&gt;&gt;&gt; def sum_num(n):
+...     if n &lt;= 0:
+...         return 0
+...     return n+sum_num(n-1)
+... 
+&gt;&gt;&gt; sum_num(100)
+5050
+</code></pre>
+<h1 id="7-函数式编程"><a href="#7-函数式编程" class="headerlink" title="7.函数式编程"></a>7.函数式编程</h1><p>函数式编程，即将计算作为纯函数数据处理的编程范式，并尽可能避免或最小化可变状态和副作用，也就是只依赖于输入参数并返回输出结果，而避免出现可变状态和副作用。纯函数通常易于测试、可组合和并发执行，使得代码更具可读性、可维护性和可重用性，编程过程中可进行尝试</p>
+<h2 id="7-1-匿名函数"><a href="#7-1-匿名函数" class="headerlink" title="7.1 匿名函数"></a>7.1 匿名函数</h2><p>匿名函数，Anonymous functions，即无需用def关键字这样标准的显式地定义的函数，而是由Lambda关键字创建。lambda函数是Python语言用于快速地定义一次性的、小型的、功能简单的函数，即用即删，非常轻量化，通常搭配内置函数</p>
+<h3 id="7-1-1-语法格式"><a href="#7-1-1-语法格式" class="headerlink" title="7.1.1 语法格式"></a>7.1.1 语法格式</h3><pre><code class="hljs">lambda 参数列表: 表达式
+</code></pre>
+<ul>
+<li>lambda函数的函数体只是一个表达式，而非代码块，相对简单，因此只能封装有限的逻辑</li>
+<li>lambda函数的输入即为参数列表的值，不能写return，返回值即为表达式的计算值</li>
+<li>lambda函数有自己独立的命名空间，且不能访问自由参数列表之外或全局命名空间的参数</li>
+</ul>
+<h3 id="7-1-2-定义匿名函数"><a href="#7-1-2-定义匿名函数" class="headerlink" title="7.1.2 定义匿名函数"></a>7.1.2 定义匿名函数</h3><pre><code class="hljs">&gt;&gt;&gt; area = lambda l,w: l * w
+</code></pre>
+<h3 id="7-1-3-调用匿名函数"><a href="#7-1-3-调用匿名函数" class="headerlink" title="7.1.3 调用匿名函数"></a>7.1.3 调用匿名函数</h3><pre><code class="hljs">&gt;&gt;&gt; area(2,5)
+10
+</code></pre>
+<h2 id="7-2-推导式"><a href="#7-2-推导式" class="headerlink" title="7.2 推导式"></a>7.2 推导式</h2><p>Python语言的推导式用于从数据序列构建另一个新的数据序列，可快速生成容器类型的数据结构，如列表、字典、集合等</p>
+<h3 id="7-2-1-列表推导式"><a href="#7-2-1-列表推导式" class="headerlink" title="7.2.1 列表推导式"></a>7.2.1 列表推导式</h3><p>语法格式：<br>    [表达式 for 变量 in 序列] 或 [表达式 for in 序列 if 条件]</p>
+<ul>
+<li>表达式，列表生成元素的表达式，可以是有返回值的函数</li>
+<li>for语句，迭代列表，并将变量传入表达式</li>
+<li>if语句，过滤列表中不符合条件的值</li>
+<li>序列，列表、字典、集合和元组等容器型数据结构</li>
+</ul>
+<hr>
+<pre><code class="hljs"># 列表range(1,10)执行for循环，并将每个元素带入表达式x*x以生成新列表
+&gt;&gt;&gt; list = [x*x for x in range(1,10)]
+&gt;&gt;&gt; print(list)
+[1, 4, 9, 16, 25, 36, 49, 64, 81]
+# 上述推导式新增循环条件，即只对能被2整除的元素进行循环
+&gt;&gt;&gt; [x * x for x in range(1,11) if x % 2 ==0]
+[4, 16, 36, 64, 100]
+# 多重循环，即同时循环x、y两个变量，循环序列为字符串
+&gt;&gt;&gt; [x + y for x in &#39;123&#39; for y in &#39;abc&#39;]
+[&#39;1a&#39;, &#39;1b&#39;, &#39;1c&#39;, &#39;2a&#39;, &#39;2b&#39;, &#39;2c&#39;, &#39;3a&#39;, &#39;3b&#39;, &#39;3c&#39;]
+# 元组型、集合型数据列表推导式的结果仍然是列表型
+&gt;&gt;&gt; num1 = (1,2,3)
+&gt;&gt;&gt; num2 = &#123;1,2,3&#125;
+&gt;&gt;&gt; [x + y for x in num1 for y in num2]
+[2, 3, 4, 3, 4, 5, 4, 5, 6]
+# 字典stu进行列表推导式，即将字典的Value转换为列表
+&gt;&gt;&gt; stu = &#123;&#39;name&#39;: &#39;Lilei&#39;,&#39;age&#39;: 15,&#39;no&#39;: 10000&#125;
+&gt;&gt;&gt; [stu[key] for key in stu]
+[&#39;Lilei&#39;, 15, 10000]
+</code></pre>
+<h3 id="7-2-2-字典推导式"><a href="#7-2-2-字典推导式" class="headerlink" title="7.2.2 字典推导式"></a>7.2.2 字典推导式</h3><p>字典推导式的语法格式基本与列表推导式一致，即是将其他类型的容器数据结构转换为字典类型</p>
+<pre><code class="hljs">&gt;&gt;&gt; &#123;x: x**2 for x in (1,2,3)&#125;
+&#123;1: 1, 2: 4, 3: 9&#125;
+
+# 元组stu执行for循环，并将每个元素的值作为字典推导式的Key，每个元素的长度作为字典推导式的Value
+&gt;&gt;&gt; stu = (&quot;Lilei&quot;,&quot;John&quot;,&quot;Bob&quot;)
+&gt;&gt;&gt; print(stu)
+&gt;&gt;&gt; &#123;&#39;Lilei&#39;: 5, &#39;John&#39;: 4, &#39;Bob&#39;: 3&#125;
+</code></pre>
+<h3 id="7-2-3-集合推导式"><a href="#7-2-3-集合推导式" class="headerlink" title="7.2.3 集合推导式"></a>7.2.3 集合推导式</h3><p>集合推导式的语法格式基本与列表推导式一致，即是将其他类型的容器数据结构转换为集合类型</p>
+<pre><code class="hljs"># 由于集合是无序的数据类型，所以字典推导式的结果随机排布
+&gt;&gt;&gt; str = &quot;Python&quot;
+&gt;&gt;&gt; &#123;ch for ch in str&#125;
+&#123;&#39;n&#39;, &#39;P&#39;, &#39;y&#39;, &#39;o&#39;, &#39;h&#39;, &#39;t&#39;&#125;
+</code></pre>
+<ul>
+<li>注：元组没有推导式，可用类型转换函数tuple()快速生成，如tuple(x for x in range(1,10))</li>
+</ul>
+<h2 id="7-3-迭代器"><a href="#7-3-迭代器" class="headerlink" title="7.3 迭代器"></a>7.3 迭代器</h2><p>迭代器，Python语言可被标记遍历位置的可迭代对象，是一种访问集合元素的方式，表示一连串的元素流对象。其工作流程是从第一个元素开始不断地被next()函数调用并返回下一个元素，直到没有元素时抛出StopIteration错误。迭代器可用for语句循环遍历，整个遍历过程被迭代的元素流有序序列的长度都不被知晓，不像是列表或元组那样一次性将所有元素加载到内存，而是通过next()函数动态地返回下一次将要处理的数据，因此将会节省不少的内存和空间。迭代器由两个方法组成，即iter()和next()，前者用于创建迭代器，后者用于循环迭代器</p>
+<p>总之，迭代器可用于遍历可迭代对象，如列表、元组等数据类型，但可由next()方法动态调用而非一次性加载所有元素到内存，所以性能较优</p>
+<pre><code class="hljs">&gt;&gt;&gt; list = [1,2,3,4]
+&gt;&gt;&gt; it = iter(list)
+&gt;&gt;&gt; for x in it:
+...     print(x)
+... 
+1
+2
+3
+4
+</code></pre>
+<h2 id="7-4-生成器"><a href="#7-4-生成器" class="headerlink" title="7.4 生成器"></a>7.4 生成器</h2><p>生成器，Python语言快速创建迭代器的机制，使用关键字yield定义，写法类似于函数，但不像普通函数用return关键字返回某个值以供调用并结束程序，而是执行yield语句返回迭代器对象，并保存当前位置，下次执行next()方法或for循环时从当前位置继续运行。生成器实质上是一种特殊的迭代器，具有迭代器的性质，即循环计算可迭代对象的元素值而非一次性加载，且自动实现迭代器的功能而不必再调用iter()和next()方法</p>
+<h3 id="7-4-1-创建生成器"><a href="#7-4-1-创建生成器" class="headerlink" title="7.4.1 创建生成器"></a>7.4.1 创建生成器</h3><pre><code class="hljs">&gt;&gt;&gt; def countdown(n):
+...     while n &gt; 0:
+            # yield关键字标识该函数为生成器函数
+...         yield n
+...         n -= 1
+...
+# 创建生成器对象
+&gt;&gt;&gt; gen = countdown(10)
+# 通过next()方法迭代生成器对象，每次调用都从上次的位置开始
+&gt;&gt; print(next(gen))
+10
+&gt;&gt;&gt; print(next(gen))
+9
+&gt;&gt;&gt; print(next(gen))
+8
+&gt;&gt;&gt; print(next(gen))
+5
+# 通过for循环遍历生成器对象，开始位置为上次的迭代位置，直到全部遍历为止
+&gt;&gt;&gt; for num in gen:
+...     print(num)
+... 
+4
+3
+2
+1
+</code></pre>
+<h3 id="7-4-2-生成器表达式"><a href="#7-4-2-生成器表达式" class="headerlink" title="7.4.2 生成器表达式"></a>7.4.2 生成器表达式</h3><p>功能简单的生成器可写成简洁的表达式，语法类似于推导式，且比推导式更为节省内存</p>
+<pre><code class="hljs">&gt;&gt;&gt; gen = (i*i for i in range(5))
+&gt;&gt;&gt; next(gen)
+0
+&gt;&gt;&gt; next(gen)
+1
+&gt;&gt;&gt; next(gen)
+4
+&gt;&gt;&gt; for i in gen:
+...     print(i)
+... 
+9
+16
+</code></pre>
+<h2 id="7-5-装饰器"><a href="#7-5-装饰器" class="headerlink" title="7.5 装饰器"></a>7.5 装饰器</h2><p>装饰器，Python语言用于为已经存在的函数或类动态地增加额外的功能，且不改变原函数或类的代码，其参数是被装饰的函数或类，返回值为带有装饰功能的函数。装饰器适用于切面需求的场景，如日志、缓存、性能测试、事务处理及权限校验等，以抽离大量与函数功能本身无关的重复代码并继续重用，简化程序开发流程，使得代码更具健壮性</p>
+<h3 id="7-5-1-装饰器定义与调用"><a href="#7-5-1-装饰器定义与调用" class="headerlink" title="7.5.1 装饰器定义与调用"></a>7.5.1 装饰器定义与调用</h3><p>装饰器函数通常以@符号为标识，并置于要修饰的函数或类之前</p>
+<pre><code class="hljs"># 定义函数logs()，其参数为函数func，返回值为函数wrapper，函数具体功能为：输出函数logs()的参数（其参数是函数，并输出函数名）
+&gt;&gt;&gt; def logs(func):
+...     def wrapper(*args,**kwargs):
+...         print(f&quot;Calling function: &#123;func.__name__&#125;&quot;)
+...         return func(*args,**kwargs)
+...     return wrapper
+... 
+# 调用函数logs()作为装饰函数，用于装饰函数add()
+&gt;&gt;&gt; @logs
+... def add(a,b):
+...     return a + b
+... 
+&gt;&gt;&gt; add(2,3)
+Calling function: add
+5
+</code></pre>
+<ul>
+<li>logs()作为装饰器函数用于输出功能函数add()的函数名，是装饰器函数日志功能场景的实现。当然，功能函数本身也能实现这个效果，但若多个功能函数（如减法乘法除法函数等）都需要这一功能时，每个功能函数就都需再增加重复的代码，装饰器则只需直接@引用logs()函数即可，显得更加简洁与清晰，同时将功能函数与日志记录分离，逻辑性更强</li>
+</ul>
+<h3 id="7-5-2-带参数的装饰器"><a href="#7-5-2-带参数的装饰器" class="headerlink" title="7.5.2 带参数的装饰器"></a>7.5.2 带参数的装饰器</h3><p>普通的不带参数的装饰器其实定义了两层函数，如logs()最外层为装饰器本身，内层wrapper()函数为装饰器的返回函数，带参数的装饰器即是在此基础上再定义一层函数用于接收参数</p>
+<pre><code class="hljs">&gt;&gt;&gt; def limit(max_times):
+...     def logs(func):
+...         def wrapper(*args,**kwargs):
+...             if wrapper.max_time &lt; max_times:
+...                 result = func(*args,**kwargs)
+...                 wrapper.max_time +=1
+...                 print(f&quot;Calling function: &#123;func.__name__&#125;&quot;)
+...                 return result
+...             else:
+...                 print(f&quot;函数 &#39;&#123;func.__name__&#125;&#39; 已达到最大执行次数.&quot;)
+...                 return None
+...         wrapper.max_time = 0
+...         return wrapper
+...     return logs
+... 
+...
+&gt;&gt;&gt; @limit(3)
+... def add(a,b):
+...     return a + b
+... 
+...
+&gt;&gt;&gt; add(1,2)
+Calling function: add
+3
+&gt;&gt;&gt; add(1,2)
+Calling function: add
+3
+&gt;&gt;&gt; add(1,2)
+Calling function: add
+3
+&gt;&gt;&gt; add(1,2)
+函数 &#39;add&#39; 已达到最大执行次数.
+</code></pre>
+<h3 id="7-5-3-类装饰器"><a href="#7-5-3-类装饰器" class="headerlink" title="7.5.3 类装饰器"></a>7.5.3 类装饰器</h3><p>装饰器也可由类构建</p>
+<pre><code class="hljs">&gt;&gt;&gt; class RecordTime(object):
+...     def __init__(self,func):
+...         self._func = func
+...     def __call__(self):
+...         start_time = time.time()
+...         self._func()
+...         end_time = time.time()
+...         print(&#39;spend is &#123;&#125;&#39;.format(end_time - start_time))
+... 
+&gt;&gt;&gt; @RecordTime
+... def func():
+...     print(&#39;func...&#39;)
+...     time.sleep(3)
+... 
+&gt;&gt;&gt; func()
+func...
+spend is 3.000955820083618
+</code></pre>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/Python/">#Python</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python函数</div>
+      <div>https://hfsxs.github.io/工作/Python-Function/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年2月15日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月15日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/%E6%9E%81%E5%AE%A2/Hexo/" title="Hexo搭建博客">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Hexo搭建博客</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/%E5%B7%A5%E4%BD%9C/KubernetesProbe/" title="Kubernetes集群监控探针详解">
+                        <span class="hidden-mobile">Kubernetes集群监控探针详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+
+<div>
+<span id="timeDate"> 正在载入天数...</span>
+<span id="times"> 载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime(){
+        var grt= new Date("1/12/2025 01:15:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if(String(snum).length ==1 ){
+                snum = "0" + snum;
+        }
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
+        document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+</div>
+
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,997 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="# 设置安装目录 ServerRoot &quot;&#x2F;usr&#x2F;local&#x2F;httpd&quot;  # 设置HTTP服务器响应头，值为major|minor|minimal|productonly|os|full，显示Apache版本和操作系统名称 ServerTokens OS   # Mutex default:logs  # 设置监听端口，默认监听所有网卡 #Listen 12.34.56.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apache配置文件详解">
+<meta property="og:url" content="https://hfsxs.github.io/%E5%B7%A5%E4%BD%9C/ApacheConfig/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="# 设置安装目录 ServerRoot &quot;&#x2F;usr&#x2F;local&#x2F;httpd&quot;  # 设置HTTP服务器响应头，值为major|minor|minimal|productonly|os|full，显示Apache版本和操作系统名称 ServerTokens OS   # Mutex default:logs  # 设置监听端口，默认监听所有网卡 #Listen 12.34.56.">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-02-01T01:20:10.000Z">
+<meta property="article:modified_time" content="2025-03-15T13:52:05.500Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Apache">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Apache配置文件详解 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Apache配置文件详解</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-02-01 09:20" pubdate>
+          2020年2月1日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          70 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Apache配置文件详解</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <pre><code class="hljs"># 设置安装目录
+ServerRoot &quot;/usr/local/httpd&quot;
+
+# 设置HTTP服务器响应头，值为major|minor|minimal|productonly|os|full，显示Apache版本和操作系统名称
+ServerTokens OS 
+
+# Mutex default:logs
+
+# 设置监听端口，默认监听所有网卡
+#Listen 12.34.56.78:80
+Listen 80
+
+# 设置启用的模块
+LoadModule authn_file_module modules/mod_authn_file.so
+#LoadModule authn_dbm_module modules/mod_authn_dbm.so
+#LoadModule authn_anon_module modules/mod_authn_anon.so
+#LoadModule authn_dbd_module modules/mod_authn_dbd.so
+#LoadModule authn_socache_module modules/mod_authn_socache.so
+LoadModule authn_core_module modules/mod_authn_core.so
+LoadModule authz_host_module modules/mod_authz_host.so
+LoadModule authz_groupfile_module modules/mod_authz_groupfile.so
+LoadModule authz_user_module modules/mod_authz_user.so
+#LoadModule authz_dbm_module modules/mod_authz_dbm.so
+#LoadModule authz_owner_module modules/mod_authz_owner.so
+#LoadModule authz_dbd_module modules/mod_authz_dbd.so
+LoadModule authz_core_module modules/mod_authz_core.so
+LoadModule access_compat_module modules/mod_access_compat.so
+LoadModule auth_basic_module modules/mod_auth_basic.so
+#LoadModule auth_form_module modules/mod_auth_form.so
+#LoadModule auth_digest_module modules/mod_auth_digest.so
+#LoadModule allowmethods_module modules/mod_allowmethods.so
+#LoadModule file_cache_module modules/mod_file_cache.so
+#LoadModule cache_module modules/mod_cache.so
+#LoadModule mem_cache_module modules/mod_mem_cache.so
+#LoadModule cache_disk_module modules/mod_cache_disk.so
+#LoadModule cache_socache_module modules/mod_cache_socache.so
+#LoadModule socache_shmcb_module modules/mod_socache_shmcb.so
+#LoadModule socache_dbm_module modules/mod_socache_dbm.so
+#LoadModule socache_memcache_module
+modules/mod_socache_memcache.so
+#LoadModule watchdog_module modules/mod_watchdog.so
+#LoadModule macro_module modules/mod_macro.so
+#LoadModule dbd_module modules/mod_dbd.so
+#LoadModule dumpio_module modules/mod_dumpio.so
+#LoadModule buffer_module modules/mod_buffer.so
+#LoadModule ratelimit_module modules/mod_ratelimit.so
+LoadModule reqtimeout_module modules/mod_reqtimeout.so
+#LoadModule ext_filter_module modules/mod_ext_filter.so
+#LoadModule request_module modules/mod_request.so
+#LoadModule include_module modules/mod_include.so
+LoadModule filter_module modules/mod_filter.so
+#LoadModule substitute_module modules/mod_substitute.so
+#LoadModule sed_module modules/mod_sed.so
+LoadModule mime_module modules/mod_mime.so
+LoadModule log_config_module modules/mod_log_config.so
+#LoadModule log_debug_module modules/mod_log_debug.so
+#LoadModule logio_module modules/mod_logio.so
+LoadModule env_module modules/mod_env.so
+#LoadModule unique_id_module modules/mod_unique_id.so
+LoadModule setenvif_module modules/mod_setenvif.so
+LoadModule version_module modules/mod_version.so
+#LoadModule remoteip_module modules/mod_remoteip.so
+#LoadModule proxy_module modules/mod_proxy.so
+#LoadModule proxy_connect_module modules/mod_proxy_connect.so
+#LoadModule proxy_ftp_module modules/mod_proxy_ftp.so
+#LoadModule proxy_http_module modules/mod_proxy_http.so
+#LoadModule proxy_fcgi_module modules/mod_proxy_fcgi.so
+#LoadModule proxy_scgi_module modules/mod_proxy_scgi.so
+#LoadModule proxy_fdpass_module modules/mod_proxy_fdpass.so
+#LoadModule proxy_wstunnel_module modules/mod_proxy_wstunnel.so
+#LoadModule proxy_ajp_module modules/mod_proxy_ajp.so
+#LoadModule proxy_balancer_module modules/mod_proxy_balancer.so
+#LoadModule proxy_express_module modules/mod_proxy_express.so
+#LoadModule proxy_hcheck_module modules/mod_proxy_hcheck.so
+#LoadModule session_module modules/mod_session.so
+#LoadModule session_cookie_module modules/mod_session_cookie.so
+#LoadModule session_dbd_module modules/mod_session_dbd.so
+#LoadModule slotmem_shm_module modules/mod_slotmem_shm.so
+#LoadModule lbmethod_byrequests_module modules/mod_lbmethod_byrequests.so
+#LoadModule lbmethod_bytraffic_module modules/mod_lbmethod_bytraffic.so
+#LoadModule lbmethod_bybusyness_module modules/mod_lbmethod_bybusyness.so
+#LoadModule lbmethod_heartbeat_module modules/mod_lbmethod_heartbeat.so
+#LoadModule mpm_event_module modules/mod_mpm_event.so
+#LoadModule mpm_prefork_module modules/mod_mpm_prefork.so
+LoadModule mpm_worker_module modules/mod_mpm_worker.so
+LoadModule unixd_module modules/mod_unixd.so
+#LoadModule dav_module modules/mod_dav.so
+LoadModule status_module modules/mod_status.so
+LoadModule autoindex_module modules/mod_autoindex.so
+#LoadModule info_module modules/mod_info.so
+#LoadModule dav_fs_module modules/mod_dav_fs.so
+#LoadModule vhost_alias_module modules/mod_vhost_alias.so
+#LoadModule negotiation_module modules/mod_negotiation.so
+LoadModule dir_module modules/mod_dir.so
+#LoadModule actions_module modules/mod_actions.so
+#LoadModule speling_module modules/mod_speling.so
+#LoadModule userdir_module modules/mod_userdir.so
+LoadModule alias_module modules/mod_alias.so
+
+&lt;IfModule unixd_module&gt;
+  # 设置运行用户及用户组        
+  User daemon
+  Group daemon
+&lt;/IfModule&gt;
+
+# 设置服务进程数
+# StartServers    8
+# 设置服务器保持的最少空闲进程数，若空闲子进程小于此值，就创建一个新的子进程作准备
+#MinSpareServers    5   
+# 设置服务器保持的最大空闲进程数，若空闲子进程大于此值，就逐一删除子进程以提高系统性能
+#MaxSpareServers    20
+
+# 设置服务器最大进程数
+#ServerLimit    256
+# 设置服务器最大并发连接数
+#MaxClients    256
+# 设置子进程在结束处理请求之前最大能处理的连接请求数，超过此值就释放重新建立，为0表示永不释放
+#MaxRequestsPerChild  4000  
+
+# 设置pid文件路径
+PidFile /var/run/httpd.pid
+
+# 设置TCP连接超时时长，超过则主动关闭，接受下一个连接
+Timeout 60
+
+# 设置开启持久连接功能，实现一个连接处理多个请求，以提高响应速度，降低服务器开销
+KeepAlive On
+# 设置持久连接时长，即一个HTTP请求响应结束后不关闭连接，等待下一个请求的超时时长
+# KeepAliveTimeout 30
+# 设置一个连接所处理的最大请求数，默认为100，为0则表示无限制
+# MaxKeepAliveRequests 100
+
+# 设置管理员邮箱
+ServerAdmin you@example.com
+
+# 设置服务器域名和端口
+ServerName localhost:80
+
+# 设置服务器根目录访问控制权限
+&lt;Directory /&gt;
+  AllowOverride none
+  Require all denied
+&lt;/Directory&gt;
+
+# 设置网站根目录
+DocumentRoot &quot;/usr/local/httpd/htdocs&quot;
+
+# 设置网站根目录访问控制权限
+&lt;Directory &quot;/usr/local/httpd/htdocs&quot;&gt;
+  Options Indexes FollowSymLinks
+  AllowOverride None
+  Require all granted
+&lt;/Directory&gt;
+
+# 设置默认索引页
+&lt;IfModule dir_module&gt;
+  DirectoryIndex index.html
+&lt;/IfModule&gt;
+
+&lt;Files &quot;.ht*&quot;&gt;
+  # 设置.ht文件拒绝访问
+  Require all denied
+&lt;/Files&gt;
+
+# 设置错误日志存储路径
+ErrorLog &quot;logs/error_log&quot;
+
+# 设置错误日志级别
+LogLevel warn
+
+&lt;IfModule log_config_module&gt;
+  # 设置访问日志文件格式
+  LogFormat &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b \&quot;%&#123;Referer&#125;i\&quot; \&quot;%&#123;User-Agent&#125;i\&quot;&quot; combined
+  LogFormat &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b&quot; common
+
+  &lt;IfModule logio_module&gt;
+    # 设置访问日志记录请求的输入/输出字节数，包括请求头与响应头正文之和，能正确反映SSL/TLS加密所造成的影响
+    LogFormat &quot;%h %l %u %t \&quot;%r\&quot; %&gt;s %b \&quot;%&#123;Referer&#125;i\&quot; \&quot;%&#123;User-Agent&#125;i\&quot; %I %O&quot; combinedio
+  &lt;/IfModule&gt;
+
+  # 设置访问日志存储路径
+  CustomLog &quot;logs/access_log&quot; common
+&lt;/IfModule&gt;
+
+# 设置访问日志不记录客户端主机名，避免客户端域名反向解析造成服务器性能下降
+HostnameLookups Off 
+
+&lt;IfModule alias_module&gt;
+  # 设置URL重定向
+  ScriptAlias /cgi-bin/ &quot;/usr/local/httpd/cgi-bin/&quot;
+&lt;/IfModule&gt;
+
+&lt;IfModule cgid_module&gt;
+
+&lt;/IfModule&gt;
+
+&lt;Directory &quot;/usr/local/httpd/cgi-bin&quot;&gt;
+  AllowOverride None
+  Options None
+  Require all granted
+&lt;/Directory&gt;
+
+&lt;IfModule headers_module&gt;
+
+&lt;/IfModule&gt;
+
+&lt;IfModule mime_module&gt;
+  TypesConfig /etc/httpd/conf/mime.types
+
+  #AddType application/x-gzip .tgz
+
+  #AddEncoding x-compress .Z
+  #AddEncoding x-gzip .gz .tgz
+
+  AddType application/x-compress .Z
+  AddType application/x-gzip .gz .tgz
+  AddType application/x-php .php
+
+  #AddHandler cgi-script .cgi
+
+  #AddHandler type-map var
+
+  #AddType text/html .shtml
+  #AddOutputFilter INCLUDES .shtml
+
+  AddDefaultCharset UTF-8
+&lt;/IfModule&gt;
+
+#MIMEMagicFile /etc/httpd/conf/magic
+#ErrorDocument 500 &quot;The server made a boo boo.&quot;
+#ErrorDocument 404 /missing.html
+#ErrorDocument 404 &quot;/cgi-bin/missing_handler.pl&quot;
+#ErrorDocument 402 http://www.example.com/subscription_info.html
+
+#MaxRanges unlimited
+
+#EnableMMAP off
+#EnableSendfile on
+
+# Server-pool management (MPM specific)
+#Include /etc/httpd/conf/extra/httpd-mpm.conf
+
+# Multi-language error messages
+#Include /etc/httpd/conf/extra/httpd-multilang-errordoc.conf
+
+# Fancy directory listings
+#Include /etc/httpd/conf/extra/httpd-autoindex.conf
+
+# Language settings
+#Include /etc/httpd/conf/extra/httpd-languages.conf
+
+# User home directories
+#Include /etc/httpd/conf/extra/httpd-userdir.conf
+
+# Real-time info on requests and configuration
+#Include /etc/httpd/conf/extra/httpd-info.conf
+
+# 设置虚拟主机
+#Include /etc/httpd/conf/extra/httpd-vhosts.conf
+
+# Local access to the Apache HTTP Server Manual
+#Include /etc/httpd/conf/extra/httpd-manual.conf
+
+# Distributed authoring and versioning (WebDAV)
+#Include /etc/httpd/conf/extra/httpd-dav.conf
+
+# Various default settings
+#Include /etc/httpd/conf/extra/httpd-default.conf
+
+# Configure mod_proxy_html to understand HTML4/XHTML1
+&lt;IfModule proxy_html_module&gt;
+  Include /etc/httpd/conf/extra/proxy-html.conf
+&lt;/IfModule&gt;
+
+# 设置SSL安全连接
+#Include /etc/httpd/conf/extra/httpd-ssl.conf
+
+&lt;IfModule ssl_module&gt;
+  SSLRandomSeed startup builtin
+  SSLRandomSeed connect builtin
+&lt;/IfModule&gt;
+</code></pre>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/Apache/">#Apache</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Apache配置文件详解</div>
+      <div>https://hfsxs.github.io/工作/ApacheConfig/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年2月1日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月15日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/%E5%B7%A5%E4%BD%9C/ApacheLB/" title="Apache配置Tomcat负载均衡集群">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Apache配置Tomcat负载均衡集群</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/%E5%B7%A5%E4%BD%9C/Apache/" title="Apache编译安装">
+                        <span class="hidden-mobile">Apache编译安装</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+
+<div>
+<span id="timeDate"> 正在载入天数...</span>
+<span id="times"> 载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime(){
+        var grt= new Date("1/12/2025 01:15:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if(String(snum).length ==1 ){
+                snum = "0" + snum;
+        }
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
+        document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+</div>
+
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
