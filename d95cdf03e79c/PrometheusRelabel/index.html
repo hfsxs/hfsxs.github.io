@@ -16,15 +16,15 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="relabel，即标签重写，是Prometheus监控在数据抓取之前对其标签动态改写的功能，由配置项relabel_configs完成对标签的添加、删除、重命名、合并及提取替换等操作，以满足不同场景下的需求，更好地分析和查询数据 1.内置标签targets以”__”为前置的标签一般是系统内置标签，不会写入到指标数据，但可通过标签重新操作将之写入指标数据，如instance标签就是通过对target">
+    <meta name="description" content="Relabel，即标签重写，是Prometheus监控在数据抓取之前对其标签动态改写的功能，由配置项relabel_configs完成对标签的添加、删除、重命名、合并及提取替换等操作，以满足不同场景下的需求，更好地分析和查询数据 1.内置标签targets以”__”为前置的标签一般是系统内置标签，不会写入到指标数据，但可通过标签重新操作将之写入指标数据，如instance标签就是通过对target">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Prometheus监控标签重写">
 <meta property="og:url" content="https://hfsxs.github.io/d95cdf03e79c/PrometheusRelabel/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="relabel，即标签重写，是Prometheus监控在数据抓取之前对其标签动态改写的功能，由配置项relabel_configs完成对标签的添加、删除、重命名、合并及提取替换等操作，以满足不同场景下的需求，更好地分析和查询数据 1.内置标签targets以”__”为前置的标签一般是系统内置标签，不会写入到指标数据，但可通过标签重新操作将之写入指标数据，如instance标签就是通过对target">
+<meta property="og:description" content="Relabel，即标签重写，是Prometheus监控在数据抓取之前对其标签动态改写的功能，由配置项relabel_configs完成对标签的添加、删除、重命名、合并及提取替换等操作，以满足不同场景下的需求，更好地分析和查询数据 1.内置标签targets以”__”为前置的标签一般是系统内置标签，不会写入到指标数据，但可通过标签重新操作将之写入指标数据，如instance标签就是通过对target">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-11-27T07:07:02.000Z">
-<meta property="article:modified_time" content="2025-03-15T08:36:41.624Z">
+<meta property="article:modified_time" content="2025-03-15T14:55:58.080Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -294,7 +294,7 @@
             
               <div class="markdown-body">
                 
-                <p>relabel，即标签重写，是Prometheus监控在数据抓取之前对其标签动态改写的功能，由配置项relabel_configs完成对标签的添加、删除、重命名、合并及提取替换等操作，以满足不同场景下的需求，更好地分析和查询数据</p>
+                <p>Relabel，即标签重写，是Prometheus监控在数据抓取之前对其标签动态改写的功能，由配置项relabel_configs完成对标签的添加、删除、重命名、合并及提取替换等操作，以满足不同场景下的需求，更好地分析和查询数据</p>
 <h1 id="1-内置标签"><a href="#1-内置标签" class="headerlink" title="1.内置标签"></a>1.内置标签</h1><p>targets以”__”为前置的标签一般是系统内置标签，不会写入到指标数据，但可通过标签重新操作将之写入指标数据，如instance标签就是通过对target实例的内置标签__address__所做的重写操作。常见内置标签如下：</p>
 <ul>
 <li>__address__，当前Target实例的访问地址<host>:<port></li>
@@ -515,7 +515,7 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/60f1811c1a33/Python-Object/" title="Python面向对象">
+                      <a href="/60f1811c1a33/PythonObject/" title="Python面向对象">
                         <i class="iconfont icon-arrowleft"></i>
                         <span class="hidden-mobile">Python面向对象</span>
                         <span class="visible-mobile">上一篇</span>

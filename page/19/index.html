@@ -307,13 +307,13 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/87134ab29ec8/MySQL-SemiSync/" target="_self">
+        <a href="/87134ab29ec8/MySQLSemiSyncReplication/" target="_self">
           MySQL数据库配置半同步主从复制集群
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/87134ab29ec8/MySQL-SemiSync/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/87134ab29ec8/MySQLSemiSyncReplication/" target="_self">
         <div>
           MySQL数据复制有两种方式，即异步复制、半同步复制、全同步复制，默认为异步方式 异步方式从节点通过IO线程拉取主节点的binlog，这个过程中主节点并不关注从节点是否已经接收、处理数据和数据处理的进度，而是继续处理客户端提出的事务已生成binlog文件工从节点拉取。若主节点此时发生故障，则已经提交的事务就存在并没被从节点拉取的数据，或者从节点拉取到的binlog日志文件不完整，就会造成主从节点的
         </div>
@@ -445,13 +445,13 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/6b4a854c383b/MySQL-MasterSlave/" target="_self">
+        <a href="/6b4a854c383b/MySQLReplication/" target="_self">
           MySQL数据库配置主从复制集群
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/6b4a854c383b/MySQL-MasterSlave/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/6b4a854c383b/MySQLReplication/" target="_self">
         <div>
           MySQL的复制功能是构建大规模、高性能数据库应用的基础，就是将一台数据库服务器的数据和其它服务器保持同步，主库可同步到多台备库，备库也可作为其他服务器的主库，主备之间可以有多种不同的组合方式。复制的基本原理即主库记录DDL和DML操作写入二进制日志，从库连接主库并将获取到的二进制日志重新执行，从而保持主备数据的一致性 工作流程1.主库记录binlog主节点启动binlog dump线程，事务处理
         </div>
@@ -514,13 +514,13 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/48850901dfed/MySQL-Backup/" target="_self">
+        <a href="/48850901dfed/MySQLBackup/" target="_self">
           MySQL数据库的备份与恢复
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/48850901dfed/MySQL-Backup/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/48850901dfed/MySQLBackup/" target="_self">
         <div>
           MySQL数据库的备份是确保数据安全的重要措施，是拯救数据库的最后手段，所以生产环境的数据一定要有备份。数据库备份工具和策略的选择直接影响数据的恢复效率，需要根据不同的需求和场景做不同的判断，以适应不同的备份需求和场景。MySQL数据备份方式大致分为两类，即逻辑备份和物理备份 1.逻辑备份逻辑备份，即数据库对象级的备份，具体是指将数据库对象通过SQL查询并转储到文件，该文件包含了用于创建转储对象（
         </div>

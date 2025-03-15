@@ -24,7 +24,7 @@
 <meta property="og:description" content="LVS，即Linux Virtual Server，Linux虚拟服务器，是由章文嵩博士发起的实现负载均衡集群的开源项目，目前已是Linux内核标准的一部分。LVS架构从逻辑上可分为调度层、Server集群层和共享存储层，LVS工作在TCP&#x2F;IP的第四层，即网络层，适用于1000-2000万PV或并发请求1万以上的Nginx不堪负载的大型网站 LVS架构 ipvs，即ip virtual">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-02-05T01:09:44.000Z">
-<meta property="article:modified_time" content="2025-03-15T09:10:14.633Z">
+<meta property="article:modified_time" content="2025-03-15T14:59:58.870Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -328,12 +328,6 @@
 <h2 id="10-LBLCR"><a href="#10-LBLCR" class="headerlink" title="10.LBLCR"></a>10.LBLCR</h2><p>带复制的基于本地的最少连接，适用于Cache集群系统。该算法根据请求的目标IP地址找出该目标IP地址对应的服务器组，按最小连接原则从服务器组中选出一台服务器，若未超载，将请求发送到该服务器；若服务器超载，则按最小连接原则从这个集群中选出一台服务器，将该服务器加入到服务器组中，将请求发送到该服务器。同时，当该服务器组有一段时间没有被修改， 将最忙的服务器从服务器组中删除，以降低复制的程度</p>
 <h2 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h2><p>LVS可实现负载均衡，但不能进行健康检查，若某个rs出现故障，LVS仍然会进行请求转发，这样就会导致请求的无效。所以经常会配合keepalived工作，实现后端服务器的健康检查及LVS的高可用功能<br>实际的生产环境中，lvs通常会和nginx配合使用。虽然nginx单独也可实现负载均衡的功能，但请求和响应流量都会经过nginx，当后端的服务器规模庞大时，网络带宽就成为了整个集群的瓶颈。所以，lvs和nginx配合使用，既保障了lvs四层工作的高效性，又避免了nginx流量集中以及lvs映射出错的弊端，且nginx还可以处理静态资源，以及承载业务切换、分流、前置缓存的任务，这样就会大大减轻后端服务器的压力，从而提高整个集群的性能</p>
 <hr>
-<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
-<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/8a61de3f8be9">https://www.jianshu.com/p/8a61de3f8be9</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/191226139/2089891">https://blog.51cto.com/191226139/2089891</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lixigang/p/5371815.html">https://www.cnblogs.com/lixigang/p/5371815.html</a></li>
-</ul>
-<hr>
 <h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul>
 <li>172.16.100.100 ds</li>
 <li>172.16.100.150 rs1</li>
@@ -404,9 +398,12 @@ sh /usr/local/sbin/lvs_dr_rs.sh
 <h2 id="1-6-查看调度规则，验证集群功能"><a href="#1-6-查看调度规则，验证集群功能" class="headerlink" title="1.6 查看调度规则，验证集群功能"></a>1.6 查看调度规则，验证集群功能</h2><pre><code class="hljs">ipvsadm -ln
 </code></pre>
 <h1 id="2-NAT模式"><a href="#2-NAT模式" class="headerlink" title="2.NAT模式"></a>2.NAT模式</h1><h1 id="3-TUN模式-1"><a href="#3-TUN模式-1" class="headerlink" title="3.TUN模式"></a>3.TUN模式</h1><hr>
-<h1 id="参考文档-1"><a href="#参考文档-1" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/MacoLee/p/5856858.html">https://www.cnblogs.com/MacoLee/p/5856858.html</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Ki8Qzvka6Gz4n450m/article/details/79119665">https://blog.csdn.net/Ki8Qzvka6Gz4n450m/article/details/79119665</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/8a61de3f8be9">https://www.jianshu.com/p/8a61de3f8be9</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/191226139/2089891">https://blog.51cto.com/191226139/2089891</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lixigang/p/5371815.html">https://www.cnblogs.com/lixigang/p/5371815.html</a></li>
 </ul>
 
                 
@@ -519,7 +516,7 @@ sh /usr/local/sbin/lvs_dr_rs.sh
                   <article class="post-next col-6">
                     
                     
-                      <a href="/ff8b2a2f1636/Tomcat-Redis/" title="Tomcat集群配置基于Redis的会话保持">
+                      <a href="/ff8b2a2f1636/TomcatRedis/" title="Tomcat集群配置基于Redis的会话保持">
                         <span class="hidden-mobile">Tomcat集群配置基于Redis的会话保持</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>

@@ -1,0 +1,1107 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1.部署nfs2.部署StorageClass3.部署zookeeper集群vi zookeeper.yaml   apiVersion: v1 kind: Service metadata:   name: zookeeper   namespace: logging   labels:     app: zookeeper spec:   ports:     - port: 2181">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kafka集群基于Kubernetes部署">
+<meta property="og:url" content="https://hfsxs.github.io/31f8928cfb58/KafkaOnKubernetes/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="1.部署nfs2.部署StorageClass3.部署zookeeper集群vi zookeeper.yaml   apiVersion: v1 kind: Service metadata:   name: zookeeper   namespace: logging   labels:     app: zookeeper spec:   ports:     - port: 2181">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-03-31T07:45:31.000Z">
+<meta property="article:modified_time" content="2025-03-15T15:13:37.620Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Kafka">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="容器云">
+<meta property="article:tag" content="MQ">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Kafka集群基于Kubernetes部署 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Kafka集群基于Kubernetes部署</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-31 15:45" pubdate>
+          2023年3月31日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          82 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kafka集群基于Kubernetes部署</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="1-部署nfs"><a href="#1-部署nfs" class="headerlink" title="1.部署nfs"></a>1.部署nfs</h1><h1 id="2-部署StorageClass"><a href="#2-部署StorageClass" class="headerlink" title="2.部署StorageClass"></a>2.部署StorageClass</h1><h1 id="3-部署zookeeper集群"><a href="#3-部署zookeeper集群" class="headerlink" title="3.部署zookeeper集群"></a>3.部署zookeeper集群</h1><pre><code class="hljs">vi zookeeper.yaml
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+  namespace: logging
+  labels:
+    app: zookeeper
+spec:
+  ports:
+    - port: 2181
+      name: client
+  selector:
+    app: zookeeper
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeepers
+  namespace: logging
+  labels:
+    app: zookeeper
+spec:
+  ports:
+    - port: 2888
+      name: server
+    - port: 3888
+      name: leader-election
+  clusterIP: None
+  selector:
+    app: zookeeper
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: zookeeper-pdb
+  namespace: logging
+spec:
+  selector:
+    matchLabels:
+      app: zookeeper
+  maxUnavailable: 1
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: zookeeper
+  namespace: logging
+spec:
+  selector:
+    matchLabels:
+      app: zookeeper
+  serviceName: zookeepers
+  replicas: 3
+  updateStrategy:
+    type: RollingUpdate
+  podManagementPolicy: Parallel
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      containers:
+        - name: zookeeper
+          imagePullPolicy: IfNotPresent
+          image: registry.cn-hangzhou.aliyuncs.com/swords/zookeeper:v3.6.0
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 200m
+              memory: 300M
+          ports:
+            - containerPort: 2181
+              name: client
+            - containerPort: 2888
+              name: server
+            - containerPort: 3888
+              name: leader-election
+          command:
+            - bash
+            - -x
+            - -c
+            - |
+              SERVERS=3 &amp;&amp;
+              HOST=`hostname -s` &amp;&amp;
+              DOMAIN=`hostname -d` &amp;&amp;
+              CLIENT_PORT=2181 &amp;&amp;
+              SERVER_PORT=2888 &amp;&amp;
+              ELECTION_PORT=3888 &amp;&amp;
+              PROMETHEUS_PORT=7000 &amp;&amp;
+              ZOO_DATA_DIR=/var/lib/zookeeper/data &amp;&amp;
+              ZOO_DATA_LOG_DIR=/var/lib/zookeeper/datalog &amp;&amp;
+              &#123;
+                echo &quot;clientPort=$&#123;CLIENT_PORT&#125;&quot;
+                echo &#39;tickTime=2000&#39;
+                echo &#39;initLimit=300&#39;
+                echo &#39;syncLimit=10&#39;
+                echo &#39;maxClientCnxns=2000&#39;
+                echo &#39;maxSessionTimeout=60000000&#39;
+                echo &quot;dataDir=$&#123;ZOO_DATA_DIR&#125;&quot;
+                echo &quot;dataLogDir=$&#123;ZOO_DATA_LOG_DIR&#125;&quot;
+                echo &#39;autopurge.snapRetainCount=10&#39;
+                echo &#39;autopurge.purgeInterval=1&#39;
+                echo &#39;preAllocSize=131072&#39;
+                echo &#39;snapCount=3000000&#39;
+                echo &#39;leaderServes=yes&#39;
+                echo &#39;standaloneEnabled=false&#39;
+                echo &#39;4lw.commands.whitelist=*&#39;
+                echo &#39;metricsProvider.className=org.apache.zookeeper.metrics.prometheus.PrometheusMetricsProvider&#39;
+                echo &quot;metricsProvider.httpPort=$&#123;PROMETHEUS_PORT&#125;&quot;
+              &#125; &gt; /conf/zoo.cfg &amp;&amp;
+              &#123;
+                echo &quot;zookeeper.root.logger=CONSOLE&quot;
+                echo &quot;zookeeper.console.threshold=INFO&quot;
+                echo &quot;TZ=Asia/Shanghai&quot;
+                echo &quot;log4j.rootLogger=\$&#123;zookeeper.root.logger&#125;&quot;
+                echo &quot;log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender&quot;
+                echo &quot;log4j.appender.CONSOLE.Threshold=\$&#123;zookeeper.console.threshold&#125;&quot;
+                echo &quot;log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout&quot;
+                echo &quot;log4j.appender.CONSOLE.layout.ConversionPattern=%d&#123;ISO8601&#125; [myid:%X&#123;myid&#125;] - %-5p [%t:%C&#123;1&#125;@%L] - %m%n&quot;
+              &#125; &gt; /conf/log4j.properties &amp;&amp;
+              echo &#39;JVMFLAGS=&quot;-Xms128M -Xmx4G -XX:+UseG1GC -XX:+CMSParallelRemarkEnabled&quot;&#39; &gt; /conf/java.env &amp;&amp;
+              if [[ $HOST =~ (.*)-([0-9]+)$ ]]; then
+                  NAME=$&#123;BASH_REMATCH[1]&#125;
+                  ORD=$&#123;BASH_REMATCH[2]&#125;
+              else
+                  echo &quot;Failed to parse name and ordinal of Pod&quot;
+                  exit 1
+              fi &amp;&amp;
+              mkdir -p $&#123;ZOO_DATA_DIR&#125; &amp;&amp;
+              mkdir -p $&#123;ZOO_DATA_LOG_DIR&#125; &amp;&amp;
+              export MY_ID=$((ORD+1)) &amp;&amp;
+              echo $MY_ID &gt; $ZOO_DATA_DIR/myid &amp;&amp;
+              for (( i=1; i&lt;=$SERVERS; i++ )); do
+                  echo &quot;server.$i=$NAME-$((i-1)).$DOMAIN:$SERVER_PORT:$ELECTION_PORT&quot; &gt;&gt; /conf/zoo.cfg;
+              done &amp;&amp;
+              chown -Rv zookeeper &quot;$ZOO_DATA_DIR&quot; &quot;$ZOO_DATA_LOG_DIR&quot; &quot;$ZOO_LOG_DIR&quot; &quot;$ZOO_CONF_DIR&quot; &amp;&amp;
+              zkServer.sh start-foreground
+          readinessProbe:
+            exec:
+              command:
+                - bash
+                - -c
+                - &quot;OK=$(echo ruok | nc 127.0.0.1 2181); if [[ \&quot;$OK\&quot; == \&quot;imok\&quot; ]]; then exit 0; else exit 1; fi&quot;
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            exec:
+              command:
+                - bash
+                - -c
+                - &quot;OK=$(echo ruok | nc 127.0.0.1 2181); if [[ \&quot;$OK\&quot; == \&quot;imok\&quot; ]]; then exit 0; else exit 1; fi&quot;
+            initialDelaySeconds: 10
+            timeoutSeconds: 5
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/zookeeper
+      securityContext:
+        runAsUser: 0
+        fsGroup: 0
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - zookeeper
+            topologyKey: &quot;kubernetes.io/hostname&quot;
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        storageClassName: sc-nfs
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi
+</code></pre>
+<h1 id="4-部署kafka集群"><a href="#4-部署kafka集群" class="headerlink" title="4.部署kafka集群"></a>4.部署kafka集群</h1><pre><code class="hljs">vi kafka.yaml
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka
+  namespace: logging
+  labels:
+    app: kafka
+spec:
+  ports:
+  - port: 9092
+    name: server
+  clusterIP: None
+  selector:
+    app: kafka
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: kafka-pdb
+  namespace: logging
+spec:
+  selector:
+    matchLabels:
+      app: kafka
+  minAvailable: 2
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kafka
+  namespace: logging
+spec:
+  selector:
+    matchLabels:
+      app: kafka
+  serviceName: kafka
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      terminationGracePeriodSeconds: 300
+      imagePullSecrets:
+      - name: regauth
+      containers:
+      - name: kafka
+        imagePullPolicy: IfNotPresent
+        image: registry.cn-hangzhou.aliyuncs.com/swords/kafka:v2.12
+        resources:
+          limits:
+            cpu: 500m
+            memory: 1024Mi
+          requests:
+            cpu: 100m
+            memory: 800Mi
+        ports:
+        - containerPort: 9092
+          name: server
+        command:
+        - sh
+        - -c
+        - &quot;exec /opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server.properties --override broker.id=$&#123;HOSTNAME##*-&#125; \
+          --override listeners=PLAINTEXT://:9092 \
+          --override zookeeper.connect=zookeeper-0.zookeepers.logging.svc.cluster.local:2181,zookeeper-1.zookeepers.logging.svc.cluster.local:2181 \
+          --override log.dir=/opt/kafka/logs \
+          --override auto.create.topics.enable=true \
+          --override auto.leader.rebalance.enable=true \
+          --override background.threads=10 \
+          --override compression.type=producer \
+          --override delete.topic.enable=false \
+          --override leader.imbalance.check.interval.seconds=300 \
+          --override leader.imbalance.per.broker.percentage=10 \
+          --override log.flush.interval.messages=9223372036854775807 \
+          --override log.flush.offset.checkpoint.interval.ms=60000 \
+          --override log.flush.scheduler.interval.ms=9223372036854775807 \
+          --override log.retention.bytes=-1 \
+          --override log.retention.hours=72 \
+          --override log.roll.hours=168 \
+          --override log.roll.jitter.hours=0 \
+          --override log.segment.bytes=1073741824 \
+          --override log.segment.delete.delay.ms=60000 \
+          --override message.max.bytes=1000012 \
+          --override min.insync.replicas=1 \
+          --override num.io.threads=8 \
+          --override num.network.threads=3 \
+          --override num.recovery.threads.per.data.dir=1 \
+          --override num.replica.fetchers=1 \
+          --override offset.metadata.max.bytes=4096 \
+          --override offsets.commit.required.acks=-1 \
+          --override offsets.commit.timeout.ms=5000 \
+          --override offsets.load.buffer.size=5242880 \
+          --override offsets.retention.check.interval.ms=600000 \
+          --override offsets.retention.minutes=1440 \
+          --override offsets.topic.compression.codec=0 \
+          --override offsets.topic.num.partitions=50 \
+          --override offsets.topic.replication.factor=3 \
+          --override offsets.topic.segment.bytes=104857600 \
+          --override queued.max.requests=500 \
+          --override quota.consumer.default=9223372036854775807 \
+          --override quota.producer.default=9223372036854775807 \
+          --override replica.fetch.min.bytes=1 \
+          --override replica.fetch.wait.max.ms=500 \
+          --override replica.high.watermark.checkpoint.interval.ms=5000 \
+          --override replica.lag.time.max.ms=10000 \
+          --override replica.socket.receive.buffer.bytes=65536 \
+          --override replica.socket.timeout.ms=30000 \
+          --override request.timeout.ms=30000 \
+          --override socket.receive.buffer.bytes=102400 \
+          --override socket.request.max.bytes=104857600 \
+          --override socket.send.buffer.bytes=102400 \
+          --override unclean.leader.election.enable=true \
+          --override zookeeper.session.timeout.ms=6000 \
+          --override zookeeper.set.acl=false \
+          --override broker.id.generation.enable=true \
+          --override connections.max.idle.ms=600000 \
+          --override controlled.shutdown.enable=true \
+          --override controlled.shutdown.max.retries=3 \
+          --override controlled.shutdown.retry.backoff.ms=5000 \
+          --override controller.socket.timeout.ms=30000 \
+          --override default.replication.factor=2 \
+          --override fetch.purgatory.purge.interval.requests=1000 \
+          --override group.max.session.timeout.ms=300000 \
+          --override group.min.session.timeout.ms=6000 \
+          --override inter.broker.protocol.version=2.2.0 \
+          --override log.cleaner.backoff.ms=15000 \
+          --override log.cleaner.dedupe.buffer.size=134217728 \
+          --override log.cleaner.delete.retention.ms=86400000 \
+          --override log.cleaner.enable=true \
+          --override log.cleaner.io.buffer.load.factor=0.9 \
+          --override log.cleaner.io.buffer.size=524288 \
+          --override log.cleaner.io.max.bytes.per.second=1.7976931348623157E308 \
+          --override log.cleaner.min.cleanable.ratio=0.5 \
+          --override log.cleaner.min.compaction.lag.ms=0 \
+          --override log.cleaner.threads=1 \
+          --override log.cleanup.policy=delete \
+          --override log.index.interval.bytes=4096 \
+          --override log.index.size.max.bytes=10485760 \
+          --override log.message.timestamp.difference.max.ms=9223372036854775807 \
+          --override log.message.timestamp.type=CreateTime \
+          --override log.preallocate=false \
+          --override log.retention.check.interval.ms=300000 \
+          --override max.connections.per.ip=2147483647 \
+          --override num.partitions=4 \
+          --override producer.purgatory.purge.interval.requests=1000 \
+          --override replica.fetch.backoff.ms=1000 \
+          --override replica.fetch.max.bytes=1048576 \
+          --override replica.fetch.response.max.bytes=10485760 \
+          --override reserved.broker.max.id=1000 &quot;
+        env:
+        - name: KAFKA_HEAP_OPTS
+          value : &quot;-Xmx512M -Xms512M&quot;
+        - name: KAFKA_OPTS
+          value: &quot;-Dlogging.level=INFO&quot;
+        - name: TZ
+          value: Asia/Shanghai
+        volumeMounts:
+        - name: data
+          mountPath: /opt/kafka/logs
+        readinessProbe:
+          tcpSocket:
+            port: 9092
+          timeoutSeconds: 1
+          initialDelaySeconds: 5
+      securityContext:
+        runAsUser: 1000
+        fsGroup: 1000
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - kafka
+            topologyKey: &quot;kubernetes.io/hostname&quot;
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ &quot;ReadWriteMany&quot; ]
+      storageClassName: sc-nfs
+      resources:
+        requests:
+          storage: 10Gi
+</code></pre>
+<h1 id="5-查看kfka集群状态"><a href="#5-查看kfka集群状态" class="headerlink" title="5.查看kfka集群状态"></a>5.查看kfka集群状态</h1><pre><code class="hljs">kubectl -n logging get pod -o wide
+</code></pre>
+<h1 id="6-验证kafka集群"><a href="#6-验证kafka集群" class="headerlink" title="6.验证kafka集群"></a>6.验证kafka集群</h1><hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.orchome.com/1277">https://www.orchome.com/1277</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/50a9d38ada27">https://www.jianshu.com/p/50a9d38ada27</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/shanghaibao123/article/details/124351255">https://blog.csdn.net/shanghaibao123/article/details/124351255</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/Kafka/">#Kafka</a>
+      
+        <a href="/tags/Kubernetes/">#Kubernetes</a>
+      
+        <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+      
+        <a href="/tags/MQ/">#MQ</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kafka集群基于Kubernetes部署</div>
+      <div>https://hfsxs.github.io/31f8928cfb58/KafkaOnKubernetes/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月31日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月15日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/366da75c6693/JenkinsAgent/" title="Jenkins配置agent节点">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Jenkins配置agent节点</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/732fc11f807e/KubernetesShedulerPolicy/" title="Kubernetes集群调度策略详解">
+                        <span class="hidden-mobile">Kubernetes集群调度策略详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+
+<div>
+<span id="timeDate"> 正在载入天数...</span>
+<span id="times"> 载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime(){
+        var grt= new Date("1/12/2025 01:15:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if(String(snum).length ==1 ){
+                snum = "0" + snum;
+        }
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
+        document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+</div>
+
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
