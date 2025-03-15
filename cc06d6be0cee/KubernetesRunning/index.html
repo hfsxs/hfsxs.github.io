@@ -1,0 +1,1088 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1.部署Mysql数据库2.部署nfs3.部署StorageClass4.配置镜像仓库免密拉取4.1 创建镜像仓库认证文件sudo docker login sudo docker login registry.sword.org sudo docker login ccr.ccs.tencentyun.com sudo docker login registry.cn-hangzhou.aliy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes实战之部署Cloudreve云存储系统">
+<meta property="og:url" content="https://hfsxs.github.io/cc06d6be0cee/KubernetesRunning/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="1.部署Mysql数据库2.部署nfs3.部署StorageClass4.配置镜像仓库免密拉取4.1 创建镜像仓库认证文件sudo docker login sudo docker login registry.sword.org sudo docker login ccr.ccs.tencentyun.com sudo docker login registry.cn-hangzhou.aliy">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-12-20T04:18:11.000Z">
+<meta property="article:modified_time" content="2025-03-15T09:41:57.892Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="存储">
+<meta property="article:tag" content="云存储">
+<meta property="article:tag" content="Cloudreve">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="容器云">
+<meta property="article:tag" content="云原生">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Kubernetes实战之部署Cloudreve云存储系统 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Kubernetes实战之部署Cloudreve云存储系统</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-12-20 12:18" pubdate>
+          2022年12月20日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          47 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kubernetes实战之部署Cloudreve云存储系统</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="1-部署Mysql数据库"><a href="#1-部署Mysql数据库" class="headerlink" title="1.部署Mysql数据库"></a>1.部署Mysql数据库</h1><h1 id="2-部署nfs"><a href="#2-部署nfs" class="headerlink" title="2.部署nfs"></a>2.部署nfs</h1><h1 id="3-部署StorageClass"><a href="#3-部署StorageClass" class="headerlink" title="3.部署StorageClass"></a>3.部署StorageClass</h1><h1 id="4-配置镜像仓库免密拉取"><a href="#4-配置镜像仓库免密拉取" class="headerlink" title="4.配置镜像仓库免密拉取"></a>4.配置镜像仓库免密拉取</h1><h1 id="4-1-创建镜像仓库认证文件"><a href="#4-1-创建镜像仓库认证文件" class="headerlink" title="4.1 创建镜像仓库认证文件"></a>4.1 创建镜像仓库认证文件</h1><pre><code class="hljs">sudo docker login
+sudo docker login registry.sword.org
+sudo docker login ccr.ccs.tencentyun.com
+sudo docker login registry.cn-hangzhou.aliyuncs.com
+</code></pre>
+<h3 id="4-2-创建镜像拉取密钥"><a href="#4-2-创建镜像拉取密钥" class="headerlink" title="4.2 创建镜像拉取密钥"></a>4.2 创建镜像拉取密钥</h3><pre><code class="hljs">kubectl create secret generic regcred \
+  --from-file=.dockerconfigjson=/root/.docker/config.json \
+  --type=kubernetes.io/dockerconfigjson
+</code></pre>
+<h1 id="5-部署Redis缓存服务"><a href="#5-部署Redis缓存服务" class="headerlink" title="5.部署Redis缓存服务"></a>5.部署Redis缓存服务</h1><h2 id="5-1-创建配置文件"><a href="#5-1-创建配置文件" class="headerlink" title="5.1 创建配置文件"></a>5.1 创建配置文件</h2><pre><code class="hljs">vi redis-conf.yaml
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-conf
+data:
+  maxclients: &quot;1024&quot;
+  dir: &quot;/var/lib/redis&quot;
+  dbfilename: &quot;dump.rdb&quot;
+</code></pre>
+<h2 id="5-2-创建redis持久化存储资源部署文件"><a href="#5-2-创建redis持久化存储资源部署文件" class="headerlink" title="5.2 创建redis持久化存储资源部署文件"></a>5.2 创建redis持久化存储资源部署文件</h2><pre><code class="hljs">vi redis-data.yaml
+
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-data
+  namespace: default
+spec:
+  # 设置PVC StorageClassName
+  storageClassName: sc-nfs
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+</code></pre>
+<h2 id="5-3-创建redis应用资源部署文件"><a href="#5-3-创建redis应用资源部署文件" class="headerlink" title="5.3 创建redis应用资源部署文件"></a>5.3 创建redis应用资源部署文件</h2><pre><code class="hljs">vi redis-deployment.yaml
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment  
+spec:
+  selector:
+    matchLabels:
+      app: redis-servers
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: redis-servers
+    spec:
+      containers:
+        - name: redis
+          image: registry.cn-hangzhou.aliyuncs.com/swords/redis
+          imagePullPolicy: IfNotPresent
+          command: [ &quot;/usr/bin/redis-server&quot; ]
+          args: [&quot;--requirepass&quot;,&quot;$(requirepass)&quot;,&quot;--dir&quot;,&quot;$(dir)&quot;]
+          envFrom:
+          - configMapRef:
+              name: redis-conf
+          env:
+            - name: requirepass
+              valueFrom:
+                secretKeyRef:
+                  name: redis-auth
+                  key: requirepass
+          ports:
+            - containerPort: 6379
+              name: tcp-redis
+              protocol: TCP
+          resources:
+              limits:
+                cpu: 500m
+              requests:
+                cpu: 200m
+          volumeMounts:
+            - name: redis-data
+              mountPath: /var/lib/redis
+      volumes:
+        - name: redis-data
+          persistentVolumeClaim:
+            claimName: redis-data
+      # 设置镜像拉取认证密钥
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+spec:
+  selector:
+    app: redis-servers
+  ports:
+  - port: 6379
+    targetPort: 6379
+</code></pre>
+<h2 id="5-4-部署redis服务"><a href="#5-4-部署redis服务" class="headerlink" title="5.4 部署redis服务"></a>5.4 部署redis服务</h2><pre><code class="hljs"># 部署redis认证密钥
+kubectl create secret generic redis-auth --from-literal=requirepass=&#39;redis&#39;
+# 部署配置文件
+kubectl apply -f redis-conf.yaml
+# 部署数据持久化存储
+kubectl apply -f redis-data.yaml
+# 部署redis
+kubectl apply -f redis-deployment.yaml
+</code></pre>
+<h1 id="6-部署Cloudreve"><a href="#6-部署Cloudreve" class="headerlink" title="6.部署Cloudreve"></a>6.部署Cloudreve</h1><h2 id="6-1-创建配置文件"><a href="#6-1-创建配置文件" class="headerlink" title="6.1 创建配置文件"></a>6.1 创建配置文件</h2><pre><code class="hljs">vi conf.ini
+
+
+[System]
+Debug = false
+Mode = master
+Listen = :5212
+SessionSecret = fVVTsAm06i7YQjE0uX6dEhgNarFd6Bfg0BNceMT6n3jI0l7TGHMlqobQ235NksNu
+HashIDSalt = l5j19NsR47owEy0qQcL0IUKSgsy1Zc4tMophQ6Rane72he0AIySBWXsYAlRsYomN
+
+[Database]
+Type = mysql
+Port = 3306
+User = cloudreve
+Password = cloudreve
+Host = 192.168.100.120
+Name = cloudreve
+TablePrefix = sword_
+
+[Redis]
+Server = redis-service:6379
+Password = redis
+DB = 3
+</code></pre>
+<h2 id="6-2-创建持久化存储资源部署文件"><a href="#6-2-创建持久化存储资源部署文件" class="headerlink" title="6.2 创建持久化存储资源部署文件"></a>6.2 创建持久化存储资源部署文件</h2><pre><code class="hljs">vi cloudreve-data.yaml
+
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  # 设置PV名称
+  name: cloudreve-data
+  # 设置PV标签，用于PVC的定向绑定
+  labels:
+    app: cloudreve-data
+spec:
+  # 设置存储类别
+  storageClassName: nfs
+  # 设置访问模式
+  accessModes:
+    - ReadWriteMany
+  # 设置PV的存储空间
+  capacity:
+    storage: 500Gi
+  # 设置PV的回收策略
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    path: /web/cloudreve/data
+    server: 192.168.100.200
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: cloudreve-data
+  namespace: default
+spec:
+  # 设置PVC存储类别，用于指定存储类型
+  storageClassName: nfs
+  # 设置访问模式，匹配相同模式的PV
+  accessModes:
+  - ReadWriteMany
+  # 设置PVC所申请存储空间的大小
+  resources:
+    requests:
+      storage: 500Gi
+  selector: 
+    matchLabels:
+      app: cloudreve-data
+</code></pre>
+<h2 id="6-3-创建cloudreve应用资源部署文件"><a href="#6-3-创建cloudreve应用资源部署文件" class="headerlink" title="6.3 创建cloudreve应用资源部署文件"></a>6.3 创建cloudreve应用资源部署文件</h2><pre><code class="hljs">vi cloudreve-deployment.yaml
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudreve-deployment  
+spec:
+  selector:
+    matchLabels:
+      app: cloudreve-servers
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cloudreve-servers
+    spec:
+      containers:
+        - name: cloudreve
+          image: cloudreve/cloudreve
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5212
+              name: tcp-cloudreve
+              protocol: TCP
+          resources:
+              limits:
+                cpu: 500m
+              requests:
+                cpu: 200m
+          volumeMounts:
+            - name: cloudreve-conf
+              mountPath: /cloudreve/conf.ini
+              subPath: conf.ini
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: cloudreve-conf
+          configMap:
+            name: cloudreve-conf
+        - name: data
+          persistentVolumeClaim:
+            claimName: cloudreve-data
+      # 设置镜像拉取认证密钥
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cloudreve-service
+spec:
+  type: NodePort
+  sessionAffinity: ClientIP
+  selector:
+    app: cloudreve-servers
+  ports:
+  - port: 5212
+    targetPort: 5212
+    nodePort: 32512
+</code></pre>
+<h2 id="6-4-部署"><a href="#6-4-部署" class="headerlink" title="6.4 部署"></a>6.4 部署</h2><pre><code class="hljs"># 部署配置文件cloudreve
+kubectl create configmap cloudreve-conf --from-file=conf.ini
+# 部署数据持久化存储
+kubectl apply -f cloudreve-data.yaml
+# 部署cloudreve
+kubectl apply -f cloudreve-deployment.yaml
+</code></pre>
+<h2 id="6-5-部署HPA"><a href="#6-5-部署HPA" class="headerlink" title="6.5 部署HPA"></a>6.5 部署HPA</h2><pre><code class="hljs">kubectl autoscale deployment cloudreve-deployment --cpu-percent=90 --min=1 --max=3
+</code></pre>
+<h1 id="7-部署Nginx"><a href="#7-部署Nginx" class="headerlink" title="7.部署Nginx"></a>7.部署Nginx</h1><h2 id="7-1-创建配置文件"><a href="#7-1-创建配置文件" class="headerlink" title="7.1 创建配置文件"></a>7.1 创建配置文件</h2><pre><code class="hljs">vi nginx-conf.yaml
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+data:
+  cloudreve.conf: |
+    server &#123;
+      listen       80;
+      server_name  localhost;
+
+      location / &#123;
+                                                   
+      access_log  /var/log/nginx/cloudreve_access.log  main;
+      error_log  /var/log/nginx/cloudreve_error.log;
+
+      proxy_pass http://cloudreve-service:5212;
+
+      &#125;
+
+      location /wiki &#123;
+
+        root  /web;
+        autoindex on;
+        charset utf-8;
+        autoindex_exact_size off;
+        autoindex_localtime on;
+
+        access_log  /var/log/nginx/wiki_access.log  main;
+        error_log  /var/log/nginx/wiki_error.log;
+
+      &#125;
+    &#125;
+</code></pre>
+<h2 id="7-2-创建nginx应用资源部署文件"><a href="#7-2-创建nginx应用资源部署文件" class="headerlink" title="7.2 创建nginx应用资源部署文件"></a>7.2 创建nginx应用资源部署文件</h2><pre><code class="hljs">vi nginx-deployment.yaml
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment  
+spec:
+  selector:
+    matchLabels:
+      app: nginx-servers
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx-servers
+    spec:
+      containers:
+        - name: nginx
+          image: registry.cn-hangzhou.aliyuncs.com/swords/nginx
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: tcp-nginx
+              protocol: TCP
+          resources:
+              limits:
+                cpu: 500m
+              requests:
+                cpu: 200m
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+            - name: nginx-logs
+              mountPath: /var/log/nginx
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+        - name: nginx-logs
+          hostPath:
+            path: /var/log/nginx
+      # 设置镜像拉取认证密钥
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  type: NodePort
+  selector:
+    app: nginx-servers
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 30080
+</code></pre>
+<h2 id="7-3-部署nginx"><a href="#7-3-部署nginx" class="headerlink" title="7.3 部署nginx"></a>7.3 部署nginx</h2><pre><code class="hljs"># 部署主配置文件
+kubectl create configmap nginx-conf --from-file=nginx.conf
+# 部署配置文件
+kubectl apply -f nginx-confs.yaml
+# 部署nginx应用
+kubectl apply -f nginx-deployment.yaml
+</code></pre>
+<h2 id="7-4-部署HPA"><a href="#7-4-部署HPA" class="headerlink" title="7.4 部署HPA"></a>7.4 部署HPA</h2><pre><code class="hljs">kubectl autoscale deployment nginx-deployment --cpu-percent=90 --min=1 --max=3
+</code></pre>
+<h1 id="8-验证cloudreve存储系统"><a href="#8-验证cloudreve存储系统" class="headerlink" title="8.验证cloudreve存储系统"></a>8.验证cloudreve存储系统</h1><pre><code class="hljs">kubectl get pvc
+kubectl get svc
+kubectl get pod -o wide
+</code></pre>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/%E5%AD%98%E5%82%A8/">#存储</a>
+      
+        <a href="/tags/%E4%BA%91%E5%AD%98%E5%82%A8/">#云存储</a>
+      
+        <a href="/tags/Cloudreve/">#Cloudreve</a>
+      
+        <a href="/tags/Kubernetes/">#Kubernetes</a>
+      
+        <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+      
+        <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kubernetes实战之部署Cloudreve云存储系统</div>
+      <div>https://hfsxs.github.io/cc06d6be0cee/KubernetesRunning/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年12月20日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月15日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/c415904c52d9/Jenkins/" title="Jenkins持续集成工具的安装与配置">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Jenkins持续集成工具的安装与配置</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/b5d009ade62c/KubernetesELK/" title="Kubernetes集群部署EFK日志管理平台">
+                        <span class="hidden-mobile">Kubernetes集群部署EFK日志管理平台</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+
+<div>
+<span id="timeDate"> 正在载入天数...</span>
+<span id="times"> 载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime(){
+        var grt= new Date("1/12/2025 01:15:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if(String(snum).length ==1 ){
+                snum = "0" + snum;
+        }
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
+        document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+</div>
+
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

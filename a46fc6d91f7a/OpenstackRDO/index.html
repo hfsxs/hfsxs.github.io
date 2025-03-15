@@ -1,0 +1,829 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="集群架构 172.100.100.180 controler 172.100.100.181 compute01 172.100.100.182 compute02   1.配置系统环境1.1 配置hostssudo vi &#x2F;etc&#x2F;hosts   172.100.100.180 controler 172.100.100.181 compute01 172.100.100.182 compute">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Openstack集群基于RDO工具部署">
+<meta property="og:url" content="https://hfsxs.github.io/a46fc6d91f7a/OpenstackRDO/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="集群架构 172.100.100.180 controler 172.100.100.181 compute01 172.100.100.182 compute02   1.配置系统环境1.1 配置hostssudo vi &#x2F;etc&#x2F;hosts   172.100.100.180 controler 172.100.100.181 compute01 172.100.100.182 compute">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-06-18T14:55:12.000Z">
+<meta property="article:modified_time" content="2025-03-15T08:40:19.915Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="虚拟化">
+<meta property="article:tag" content="私有云">
+<meta property="article:tag" content="Openstack">
+<meta property="article:tag" content="公有云">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Openstack集群基于RDO工具部署 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Openstack集群基于RDO工具部署</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-06-18 22:55" pubdate>
+          2023年6月18日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          27 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Openstack集群基于RDO工具部署</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul>
+<li>172.100.100.180 controler</li>
+<li>172.100.100.181 compute01</li>
+<li>172.100.100.182 compute02</li>
+</ul>
+<hr>
+<h1 id="1-配置系统环境"><a href="#1-配置系统环境" class="headerlink" title="1.配置系统环境"></a>1.配置系统环境</h1><h2 id="1-1-配置hosts"><a href="#1-1-配置hosts" class="headerlink" title="1.1 配置hosts"></a>1.1 配置hosts</h2><pre><code class="hljs">sudo vi /etc/hosts
+
+
+172.100.100.180 controler
+172.100.100.181 compute01
+172.100.100.182 compute02
+</code></pre>
+<h2 id="1-2-配置字符集"><a href="#1-2-配置字符集" class="headerlink" title="1.2 配置字符集"></a>1.2 配置字符集</h2><pre><code class="hljs">sudo vi /etc/environment
+
+
+LANG=en_US.utf-8
+LC_ALL=en_US.utf-8
+</code></pre>
+<h2 id="1-3-关闭防火墙"><a href="#1-3-关闭防火墙" class="headerlink" title="1.3 关闭防火墙"></a>1.3 关闭防火墙</h2><h2 id="1-4-禁用selinux"><a href="#1-4-禁用selinux" class="headerlink" title="1.4 禁用selinux"></a>1.4 禁用selinux</h2><h2 id="1-5-禁用NetworkManager"><a href="#1-5-禁用NetworkManager" class="headerlink" title="1.5 禁用NetworkManager"></a>1.5 禁用NetworkManager</h2><pre><code class="hljs">sudo systemctl stop NetworkManager
+sudo systemctl disable NetworkManager
+</code></pre>
+<h2 id="1-6-控制节点配置外网网卡"><a href="#1-6-控制节点配置外网网卡" class="headerlink" title="1.6 控制节点配置外网网卡"></a>1.6 控制节点配置外网网卡</h2><h1 id="2-配置集群免密登录"><a href="#2-配置集群免密登录" class="headerlink" title="2.配置集群免密登录"></a>2.配置集群免密登录</h1><h1 id="3-配置集群时间同步"><a href="#3-配置集群时间同步" class="headerlink" title="3.配置集群时间同步"></a>3.配置集群时间同步</h1><pre><code class="hljs">sudo yum install -y ntp ntpdate
+</code></pre>
+<h1 id="4-安装OpenStack库"><a href="#4-安装OpenStack库" class="headerlink" title="4.安装OpenStack库"></a>4.安装OpenStack库</h1><pre><code class="hljs">sudo yum update -y
+sudo yum install -y centos-release-openstack-train
+sudo yum update -y
+</code></pre>
+<h1 id="5-控制节点安装RDO"><a href="#5-控制节点安装RDO" class="headerlink" title="5.控制节点安装RDO"></a>5.控制节点安装RDO</h1><pre><code class="hljs">sudo yum install -y openstack-packstack
+</code></pre>
+<h1 id="6-控制节点初始化集群"><a href="#6-控制节点初始化集群" class="headerlink" title="6.控制节点初始化集群"></a>6.控制节点初始化集群</h1><h2 id="6-1-生成应答文件"><a href="#6-1-生成应答文件" class="headerlink" title="6.1 生成应答文件"></a>6.1 生成应答文件</h2><pre><code class="hljs">packstack --gen-answer-file=openstack.txt
+</code></pre>
+<h2 id="6-2-Allinone部署"><a href="#6-2-Allinone部署" class="headerlink" title="6.2 Allinone部署"></a>6.2 Allinone部署</h2><pre><code class="hljs">sudo packstack --allinone --default-password=Openstack_2023 \
+--os-neutron-l2-agent=openvswitch --ntp-servers=ntp.ntsc.ac.cn \
+--os-neutron-ovs-bridge-interfaces=br-ex:eth0 --provision-demo=n \
+--os-neutron-ovs-bridge-mappings=extnet:br-ex --os-aodh-install=n \
+--os-neutron-ml2-type-drivers=vxlan,vlan,gre,flat,geneve,local \
+--os-neutron-ml2-tenant-network-types=vxlan,vlan,gre,geneve,local \
+--os-neutron-ml2-mechanism-drivers=openvswitch,l2population \
+--os-ceilometer-install=n --os-swift-install=n
+</code></pre>
+<h2 id="6-3-多节点部署"><a href="#6-3-多节点部署" class="headerlink" title="6.3 多节点部署"></a>6.3 多节点部署</h2><h3 id="6-3-1-生成应答文件"><a href="#6-3-1-生成应答文件" class="headerlink" title="6.3.1 生成应答文件"></a>6.3.1 生成应答文件</h3><pre><code class="hljs">packstack --default-password=Openstack_2023 --gen-answer-file=openstack.txt
+</code></pre>
+<h3 id="6-3-2-配置应答文件"><a href="#6-3-2-配置应答文件" class="headerlink" title="6.3.2 配置应答文件"></a>6.3.2 配置应答文件</h3><pre><code class="hljs">vi openstack.txt
+
+
+# 设置是否安装OpenStack对象存储组件swift，默认为y，生产环境设为n，不安装
+CONFIG_SWIFT_INSTALL=n
+# 设置是否安装Openstack计量组件，可不安装
+CONFIG_CEILOMETER_INSTALL=n
+# 设置是否安装OpenStack遥测告警组件aodh，默认为y，生产环境设为n，不安装
+CONFIG_AODH_INSTALL=n
+# 设置NTP时间同步服务器
+CONFIG_NTP_SERVERS=ntp.ntsc.ac.cn
+# 设置控制节点IP
+CONFIG_CONTROLLER_HOST=172.100.100.180
+# 设置计算节点IP
+CONFIG_COMPUTE_HOSTS=172.100.100.181,172.100.100.182
+# 设置网络节点IP
+CONFIG_NETWORK_HOSTS=172.100.100.180
+# 设置块存储节点IP
+CONFIG_STORAGE_HOST=172.100.100.180
+# 设置块存储大小，默认为20G，存储路径为/var/lib/cinder
+CONFIG_CINDER_VOLUMES_SIZE=180G
+# 设置是否安装OpenStack主防火墙，用于控制进出网络的网络包
+CONFIG_NEUTRON_FWAAS=y
+# 设置是否安装OpenStack VPN
+CONFIG_NEUTRON_VPNAAS=y
+# 设置二层网络模块网络类型驱动
+CONFIG_NEUTRON_ML2_TYPE_DRIVERS=vxlan,gre,flat,vlan,geneve,local
+# 设置二层网络模块租户网络类型
+CONFIG_NEUTRON_ML2_TENANT_NETWORK_TYPES=vxlan,gre,vlan,geneve,local
+# 设置二层网络模块网络机制驱动，即设备实现机制
+CONFIG_NEUTRON_ML2_MECHANISM_DRIVER=openvswitch,l2population
+# 设置设置flat二层网络
+CONFIG_NEUTRON_ML2_FLAT_NETWORKS=extnet
+# 设置二层网络代理架构，OVN不支持LBaaS、VPNaaS和FWaaS
+CONFIG_NEUTRON_L2_AGENT=openvswitch
+# 设置flat二层网络关联的网桥
+CONFIG_NEUTRON_OVS_BRIDGE_MAPPINGS=extnet:br-ex
+# 设置桥接网卡，即将br-ex网卡桥接到eth0网卡用于外网连接
+CONFIG_NEUTRON_OVS_BRIDGE_IFACES=br-ex:eth0
+# 设置是否部署演示环境，设为否
+CONFIG_PROVISION_DEMO=n
+</code></pre>
+<h3 id="6-3-3-备份应答文件"><a href="#6-3-3-备份应答文件" class="headerlink" title="6.3.3 备份应答文件"></a>6.3.3 备份应答文件</h3><pre><code class="hljs">grep -vE &quot;^#|^$&quot; openstack.txt &gt; openstack.txt.bak
+</code></pre>
+<h2 id="6-4-控制节点初始化集群"><a href="#6-4-控制节点初始化集群" class="headerlink" title="6.4 控制节点初始化集群"></a>6.4 控制节点初始化集群</h2><pre><code class="hljs">packstack --answer-file=openstack.txt
+</code></pre>
+<h1 id="7-配置Dashboard"><a href="#7-配置Dashboard" class="headerlink" title="7.配置Dashboard"></a>7.配置Dashboard</h1><h2 id="7-1-配置Dashboard访问地址"><a href="#7-1-配置Dashboard访问地址" class="headerlink" title="7.1 配置Dashboard访问地址"></a>7.1 配置Dashboard访问地址</h2><pre><code class="hljs">sudo cp /etc/httpd/conf.d/15-horizon_vhost.conf /etc/httpd/conf.d/15-horizon_vhost.conf.bak
+sudo sed -i &#39;s/ServerAlias 172.100.100.180/192.168.100.180/g&#39; /etc/httpd/conf.d/15-horizon_vhost.conf
+</code></pre>
+<h2 id="7-2-配置控制台访问地址"><a href="#7-2-配置控制台访问地址" class="headerlink" title="7.2 配置控制台访问地址"></a>7.2 配置控制台访问地址</h2><pre><code class="hljs">sudo cp /etc/nova/nova.conf /etc/nova/nova.conf.bak
+sudo sed -i &#39;s/172.100.100.180:6080/192.168.100.180:6080/g&#39; /etc/nova/nova.conf
+server_proxyclient_address
+</code></pre>
+<h2 id="7-3-重启httpd、nova服务"><a href="#7-3-重启httpd、nova服务" class="headerlink" title="7.3 重启httpd、nova服务"></a>7.3 重启httpd、nova服务</h2><pre><code class="hljs">sudo systemctl restart httpd.service
+sudo systemctl restart openstack-nova-novncproxy.service 
+</code></pre>
+<h1 id="8-验证Openstack"><a href="#8-验证Openstack" class="headerlink" title="8.验证Openstack"></a>8.验证Openstack</h1><hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/fengdejiyixx/p/14776814.html">https://www.cnblogs.com/fengdejiyixx/p/14776814.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/CN_TangZheng/article/details/104543185">https://blog.csdn.net/CN_TangZheng/article/details/104543185</a></li>
+<li><a target="_blank" rel="noopener" href="https://m.dandelioncloud.cn/article/details/1613550192089595906">https://m.dandelioncloud.cn/article/details/1613550192089595906</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
+      
+        <a href="/tags/%E7%A7%81%E6%9C%89%E4%BA%91/">#私有云</a>
+      
+        <a href="/tags/Openstack/">#Openstack</a>
+      
+        <a href="/tags/%E5%85%AC%E6%9C%89%E4%BA%91/">#公有云</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Openstack集群基于RDO工具部署</div>
+      <div>https://hfsxs.github.io/a46fc6d91f7a/OpenstackRDO/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年6月18日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月15日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2d0108bf70ef/JenkinsPipeline/" title="Jenkins工作流Pipeline语法">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Jenkins工作流Pipeline语法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/a8753eddc52d/LinuxKernelOptimization/" title="Linux系统内核优化">
+                        <span class="hidden-mobile">Linux系统内核优化</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+
+<div>
+<span id="timeDate"> 正在载入天数...</span>
+<span id="times"> 载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime(){
+        var grt= new Date("1/12/2025 01:15:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if(String(snum).length ==1 ){
+                snum = "0" + snum;
+        }
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
+        document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+</div>
+
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

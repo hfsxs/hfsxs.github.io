@@ -1,0 +1,855 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="bind，安全高效的开源域名解析服务程序，发源于1980年代加州大学伯克利分校的由美国国防高级研究项目管理局 (DARPA)资助的研究生项目，故取名为Berkeley Internet Name Domain，以其稳定性、可靠性和灵活性广泛应用于各类操作系统与网络环境，是当今互联网最为流行的域名解析方案 DNSDNS，Domain Name System，即域名系统，是互联网基础设施类的服务，以层">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Bind搭建DNS服务器">
+<meta property="og:url" content="https://hfsxs.github.io/1bdfd1db799b/Bind/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="bind，安全高效的开源域名解析服务程序，发源于1980年代加州大学伯克利分校的由美国国防高级研究项目管理局 (DARPA)资助的研究生项目，故取名为Berkeley Internet Name Domain，以其稳定性、可靠性和灵活性广泛应用于各类操作系统与网络环境，是当今互联网最为流行的域名解析方案 DNSDNS，Domain Name System，即域名系统，是互联网基础设施类的服务，以层">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-02-03T03:10:09.000Z">
+<meta property="article:modified_time" content="2025-03-15T13:51:21.179Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Bind">
+<meta property="article:tag" content="DNS">
+<meta property="article:tag" content="域名解析">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Bind搭建DNS服务器 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Bind搭建DNS服务器</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-02-03 11:10" pubdate>
+          2020年2月3日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          24 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Bind搭建DNS服务器</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>bind，安全高效的开源域名解析服务程序，发源于1980年代加州大学伯克利分校的由美国国防高级研究项目管理局 (DARPA)资助的研究生项目，故取名为Berkeley Internet Name Domain，以其稳定性、可靠性和灵活性广泛应用于各类操作系统与网络环境，是当今互联网最为流行的域名解析方案</p>
+<h1 id="DNS"><a href="#DNS" class="headerlink" title="DNS"></a>DNS</h1><p>DNS，Domain Name System，即域名系统，是互联网基础设施类的服务，以层次结构的命名系统将域名和IP地址相互映射，从而形成一个分布式数据库系统，最终完成域名与IP地址的相互转换。DNS将网站的域名解析为IP地址，这样通过简单易记的域名即可访问网站，而不必使用复杂的IP地址，通过互联网进行信息检索更加便捷</p>
+<h1 id="1-安装bind"><a href="#1-安装bind" class="headerlink" title="1.安装bind"></a>1.安装bind</h1><pre><code class="hljs"># sudo yum -y install bind bind-utils
+# sudo mkdir -p /var/named/log
+
+sudo useradd named -s /sbin/nologin -M
+sudo mkdir /var/named &amp;&amp; sudo chown -R named.named /var/named
+sudo yum install -y gcc gcc-c++ openssl openssl-dev
+
+tar -xzvf bind-9.18.26.tar.xz
+sudo ./configure --prefix=/usr/local/bind --sysconfdir=/etc/bind --enable-threads --enable-largefile --disable-ipv6
+sudo mkae &amp;&amp; sudo make install  
+</code></pre>
+<h1 id="2-修改主配置文件"><a href="#2-修改主配置文件" class="headerlink" title="2.修改主配置文件"></a>2.修改主配置文件</h1><pre><code class="hljs">vi /etc/named.conf
+
+
+options &#123;
+
+  # 设置DNS服务器监听端口与IP
+  listen-on port 53 &#123; 192.168.0.150; &#125;; 
+  # 设置DNS服务器IPv6监听IP
+  listen-on-v6 port 53 &#123; ::1; &#125;;
+
+  # 设置DNS服务器全局配置目录
+  directory &quot;/var/named&quot;;
+
+  # 设置DNS服务器缓存数据文件
+  dump-file &quot;/var/named/data/cache_dump.db&quot;;
+
+  # 设置DNS服务器统计数据文件
+  statistics-file &quot;/var/named/data/named_stats.txt&quot;;
+
+  # 设置DNS服务器内存使用的统计数据文件
+  memstatistics-file &quot;/var/named/data/named_mem_stats.txt&quot;;
+
+  # 设置允许查询的IP地址
+  allow-query &#123; 192.168.0.0/24; &#125;;
+
+  # DNS服务器日志配置
+  logging &#123;
+    channel default_debug &#123;
+    file &quot;/var/named/log/named.log&quot;;
+    severity dynamic;
+    &#125;;
+  &#125;;
+
+  # 根区域解析文件配置
+  zone &quot;.&quot; IN &#123;
+    type hint;
+    file &quot;named.ca&quot;;
+  &#125;;
+
+  # 设置区域文件
+  include &quot;/etc/named.rfc1912.zones&quot;;
+  include &quot;/etc/named.root.key&quot;;
+
+&#125;
+</code></pre>
+<h1 id="3-配置区域文件"><a href="#3-配置区域文件" class="headerlink" title="3.配置区域文件"></a>3.配置区域文件</h1><pre><code class="hljs">sudo vi /etc/named.rfc1912.zones
+
+
+# 正向解析区域配置
+# 设置正向解析库名称
+zone &quot;sxs0618.com&quot; IN &#123;
+  # 设置为主dns解析库
+  type master;
+  # 设置正向解析库文件名
+  file &quot;sxs0618.com.zone&quot;;
+  # 设置自动更新解析文件的客户端
+  allow-update &#123; none; &#125;;
+&#125;;
+
+# 配置反向解析区域
+  zone &quot;0.168.192.in-addr.arpa&quot; IN &#123;
+  type master;
+  file &quot;sxs0618.com.local&quot;;
+  allow-update &#123; none; &#125;;
+&#125;;
+</code></pre>
+<h1 id="4-创建正向区域解析文件"><a href="#4-创建正向区域解析文件" class="headerlink" title="4.创建正向区域解析文件"></a>4.创建正向区域解析文件</h1><pre><code class="hljs">sudo vi /var/named/sxs0618.com.zone
+
+
+$TTL    86400
+$ORIGIN sxs0618.com.
+@       IN  SOA     dns.sxs0618.com. admin.sxs0618.com. (
+  20190518; serial
+  1H      ; refresh
+  5M      ; retry
+  1W      ; expire
+  3H )    ; minimum
+         IN         NS          dns
+  dns      IN         A           192.168.0.150
+           IN         MX          10  mail. sxs0618.com.
+  www      IN         A           192.168.0.150
+  mail     IN         A           192.168.0.120
+  bbs      IN         A           192.168.0.160
+  ftp      IN         A           192.168.0.180
+</code></pre>
+<h1 id="5-创建反向区域解析文件"><a href="#5-创建反向区域解析文件" class="headerlink" title="5.创建反向区域解析文件"></a>5.创建反向区域解析文件</h1><pre><code class="hljs">sudo vi /var/named/sxs0618.com.local
+
+
+$TTL    604800
+$ORIGIN 0.168.192.in-addr.arpa.
+@       IN SOA  dns.sxs0618.com. admin.sxs0618.com. (
+                                    20190518; serial
+                                    1H      ; refresh
+                                    5M      ; retry
+                                    1W      ; expire
+                                    3H )    ; minimum
+    IN        NS            dns.sxs0618.com.
+150     IN        PTR           www.sxs0618.com.
+120     IN        PTR           mail.sxs0618.com.
+160     IN        PTR           bbs.sxs0618.com.
+180     IN        PTR           ftp.sxs0618.com.
+</code></pre>
+<h1 id="6-启动DNS服务"><a href="#6-启动DNS服务" class="headerlink" title="6.启动DNS服务"></a>6.启动DNS服务</h1><pre><code class="hljs">sudo systemctl start named.service
+sudo systemctl enable named.service
+</code></pre>
+<h1 id="7-配置主机DNS服务器"><a href="#7-配置主机DNS服务器" class="headerlink" title="7.配置主机DNS服务器"></a>7.配置主机DNS服务器</h1><pre><code class="hljs">sudo vi /etc/resolv.conf 
+
+
+nameserver 192.168.0.150
+#nameserver 8.8.8.8
+</code></pre>
+<h1 id="8-验证DNS服务器解析"><a href="#8-验证DNS服务器解析" class="headerlink" title="8.验证DNS服务器解析"></a>8.验证DNS服务器解析</h1><pre><code class="hljs">nslookup www.sxs0618.com
+nslookup 192.168.0.150
+</code></pre>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/st-jun/p/8022137.html">http://www.cnblogs.com/st-jun/p/8022137.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/5165807/2313377?source=dra">https://blog.51cto.com/5165807/2313377?source=dra</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/heqiuyu/articles/6600326.html">https://www.cnblogs.com/heqiuyu/articles/6600326.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/feng271374203/article/details/89920817">https://blog.csdn.net/feng271374203/article/details/89920817</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/Bind/">#Bind</a>
+      
+        <a href="/tags/DNS/">#DNS</a>
+      
+        <a href="/tags/%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90/">#域名解析</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Bind搭建DNS服务器</div>
+      <div>https://hfsxs.github.io/1bdfd1db799b/Bind/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年2月3日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月15日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/4a3ed7a9084a/Git/" title="Git安装与配置">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Git安装与配置</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/17ee06785d0a/ZabbixAlerts/" title="Zabbix配置邮件告警">
+                        <span class="hidden-mobile">Zabbix配置邮件告警</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+
+<div>
+<span id="timeDate"> 正在载入天数...</span>
+<span id="times"> 载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime(){
+        var grt= new Date("1/12/2025 01:15:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if(String(snum).length ==1 ){
+                snum = "0" + snum;
+        }
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
+        document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+</div>
+
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
