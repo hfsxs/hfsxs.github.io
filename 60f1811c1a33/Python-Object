@@ -1,0 +1,951 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Object Oriented Programming，即面向对象编程，简称为OOP，一种程序设计范式。不同于以函数及函数调用为核心的面相过程式编程，面向对象编程以对象为核心，将数据和操作数据的函数封装为类，从更高的层次进行系统建模，更贴近事物的自然运行模式。其思想概括为：把一组数据和处理数据的方法组成对象，把行为相同的对象归纳为类，通过封装隐藏对象的内部细节，通过继承实现类的特化和泛化，通过多态">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python面向对象">
+<meta property="og:url" content="https://hfsxs.github.io/60f1811c1a33/Python-Object">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="Object Oriented Programming，即面向对象编程，简称为OOP，一种程序设计范式。不同于以函数及函数调用为核心的面相过程式编程，面向对象编程以对象为核心，将数据和操作数据的函数封装为类，从更高的层次进行系统建模，更贴近事物的自然运行模式。其思想概括为：把一组数据和处理数据的方法组成对象，把行为相同的对象归纳为类，通过封装隐藏对象的内部细节，通过继承实现类的特化和泛化，通过多态">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-12-01T07:32:11.000Z">
+<meta property="article:modified_time" content="2025-03-15T01:37:53.156Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Python面向对象 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Python面向对象</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-12-01 15:32" pubdate>
+          2023年12月1日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          59 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python面向对象</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Object Oriented Programming，即面向对象编程，简称为OOP，一种程序设计范式。不同于以函数及函数调用为核心的面相过程式编程，面向对象编程以对象为核心，将数据和操作数据的函数封装为类，从更高的层次进行系统建模，更贴近事物的自然运行模式。其思想概括为：把一组数据和处理数据的方法组成对象，把行为相同的对象归纳为类，通过封装隐藏对象的内部细节，通过继承实现类的特化和泛化，通过多态实现基于对象类型的动态分派。C语言即为典型的面向过程的语言，C++、Python是典型的面向对象的语言</p>
+<h1 id="1-类与对象"><a href="#1-类与对象" class="headerlink" title="1.类与对象"></a>1.类与对象</h1><h2 id="1-1-类"><a href="#1-1-类" class="headerlink" title="1.1 类"></a>1.1 类</h2><p>class，即类，具有相同属性和方法的一组对象的集合，属性是用于存储对象状态的类变量，方法是用于定义对象行为和操作的类函数。类可看作为模版或蓝图，用于创建具有相似特征的多个对象</p>
+<h2 id="1-2-对象"><a href="#1-2-对象" class="headerlink" title="1.2 对象"></a>1.2 对象</h2><p>object，即对象，也称实例，是基于类这个模版创建的可直接引用的个体，是类的具象化，拥有类所定义的属性和方法。面向对象编程即是以对象为核心，以类和继承为构造机制，来认识、理解、刻画客观世界，从而设计、构建相应的软件系统。Python中一切皆对象</p>
+<hr>
+<p>总结，类是对象的抽象表现，是对象的设计蓝图，如动物类、植物类等；对象是类的具体表现，是依据类这个模版设计出的具体产物，如绿箩，由植物类所派生，具有植物通用的属性（如具有绿色叶片）和动作（如制造氧气）</p>
+<h2 id="1-3-创建类"><a href="#1-3-创建类" class="headerlink" title="1.3 创建类"></a>1.3 创建类</h2><p>创建类，即定义类，由class关键字实现，语法格式为：</p>
+<pre><code class="hljs">class 类名:
+    方法列表
+</code></pre>
+<ul>
+<li>class，用于定义类的关键字，其后为类名，最后的“:”代表类定义的起始</li>
+<li>类名，即为符合Python语法的标识符，以大写字母开头，并采用驼峰命名法，建议以能够简洁明了地体现出其功能的词汇来命名</li>
+</ul>
+<hr>
+<pre><code class="hljs">&gt;&gt;&gt; class Student:
+...     classroom = &#39;101&#39;
+...     address = &#39;BeiJing&#39; 
+...     def __init__(self,name,age):
+...         self.name = name
+...         self.age = age
+...     def introduce(self):
+...         print(f&#39;我是学生&#123;self.name&#125;,今年&#123;self.age&#125;岁.&#39;)
+</code></pre>
+<h2 id="1-4-创建对象"><a href="#1-4-创建对象" class="headerlink" title="1.4 创建对象"></a>1.4 创建对象</h2><p>创建对象，即根据类模板创建对象，也就是类的实例化，故对象也被称为实例，语法格式为：</p>
+<pre><code class="hljs">对象名 = 类名(属性参数列表) 
+</code></pre>
+<ul>
+<li>对象名，就是变量名，命名规则与普通变量一致，首字母小写，以免与类名混淆</li>
+<li>属性参数列表，由类方法__init__()定义，其中self参数自动传递不需要指定。对象创建成功后即可访问类的属性与方法，使用句点.表示法，语法为：对象名.属性名、对象名.方法名</li>
+</ul>
+<hr>
+<pre><code class="hljs"># Student类实例化对象John
+&gt;&gt;&gt; John = Student(&#39;John&#39;,15)
+
+# John对象访问Student类的属性age
+&gt;&gt;&gt; John.age
+15
+
+# John对象访问Student类的方法introduce()
+&gt;&gt;&gt; John.introduce()
+我是学生John,今年15岁.
+</code></pre>
+<h1 id="2-类成员"><a href="#2-类成员" class="headerlink" title="2.类成员"></a>2.类成员</h1><p>类，由属性与方法这两个成员构成</p>
+<h2 id="2-1-类的属性"><a href="#2-1-类的属性" class="headerlink" title="2.1 类的属性"></a>2.1 类的属性</h2><p>属性，即类的数据成员，用于存储数据，可以被类的实例访问与修改，通常由变量定义，也被称为成员变量，分为实例变量与类变量两种</p>
+<h3 id="2-1-1-实例变量"><a href="#2-1-1-实例变量" class="headerlink" title="2.1.1 实例变量"></a>2.1.1 实例变量</h3><p>实例变量，实例对象个体本身拥有的数据，如Student类学生的名字和年龄，通过实例名加圆点的方式进行调用</p>
+<pre><code class="hljs"># John对象调用实例变量age
+&gt;&gt;&gt; John.age
+15
+</code></pre>
+<h3 id="2-1-2-类变量"><a href="#2-1-2-类变量" class="headerlink" title="2.1.2 类变量"></a>2.1.2 类变量</h3><p>类变量，属于类的变量，不属于单个的具体的对象，适用于所有实例具有相同字段的场景，所有实例共有且都可访问、修改，如Student类的classroom和address即为类变量，通过类名或实例名加圆点的方式进行调用，建议使用类名.类变量的访问方式，以免与实例变量混淆</p>
+<pre><code class="hljs">&gt;&gt;&gt; Student.classroom
+&#39;101&#39;
+&gt;&gt;&gt; John.address
+&#39;BeiJing&#39;
+</code></pre>
+<h2 id="2-2-类的方法"><a href="#2-2-类的方法" class="headerlink" title="2.2 类的方法"></a>2.2 类的方法</h2><p>方法，即类的函数，用于实现类的行为，可以访问、修改类属性，与普通的函数一样也是通过def关键字定义，不同的是方法的第一个参数必须为self且不需要传递实参。类方法分为实例方法、静态方法和类方法三种</p>
+<h3 id="2-2-1-实例方法"><a href="#2-2-1-实例方法" class="headerlink" title="2.2.1 实例方法"></a>2.2.1 实例方法</h3><p>实例方法，由实例对象调用，至少有一个self参数且为第一个参数，执行实例方法时将会自动将调用该方法的实例并赋值给self。通常所说的类方法默认即为实例方法，定义时不需要使用使用特殊的关键字进行标识，如Student类所定义的方法introduce()即为实例方法</p>
+<ul>
+<li>注：self表示类的实例而不是类本身，也不是Python的关键字，而是约定成俗的命名方式，完全可以由其他词汇代替，但不建议</li>
+</ul>
+<h3 id="2-2-2-构造方法"><a href="#2-2-2-构造方法" class="headerlink" title="2.2.2 构造方法"></a>2.2.2 构造方法</h3><p>构造方法，一个特殊的实例方法，又被称为类的构造函数或初始化方法，实例化对象时将会被自动调用以初始化实例的属性。构造方法一般命名为__init__()，并传递对应的参数，其中第一个参数为self且无需传递实参</p>
+<h4 id="2-2-2-1-默认构造方法"><a href="#2-2-2-1-默认构造方法" class="headerlink" title="2.2.2.1 默认构造方法"></a>2.2.2.1 默认构造方法</h4><p>定义类时不是必须要定义构造方法，若没有显式地定义__init__() 方法，Python将会提供默认的无参数构造方法，且不进行任何初始化操作，即表示创建一个对象实例，并将其返回</p>
+<pre><code class="hljs">&gt;&gt;&gt; class Student:
+...     name = &#39;John&#39;
+...     age = 15
+... 
+&gt;&gt;&gt; obj1 = Student()
+</code></pre>
+<h4 id="2-2-2-2-无参构造方法"><a href="#2-2-2-2-无参构造方法" class="headerlink" title="2.2.2.2 无参构造方法"></a>2.2.2.2 无参构造方法</h4><p>构造方法如下情况可以没有参数：</p>
+<ul>
+<li>简单初始化，类属性的初始值都是固定的，不需要根据外部参数进行修改时，使用无参构造函数来设置属性的默认值，对类属性进行初始化</li>
+<li>不依赖外部数据，若对象的创建和初始化过程不依赖于外部的变量或状态，也没有其他需要执行的初始化操作，可使用无参构造函数</li>
+</ul>
+<hr>
+<pre><code class="hljs">&gt;&gt;&gt; class Circle:
+...     def __init__(self):
+...         self.radius = 2.0
+...     def get_area(self):
+...         return 3.14 * self.radius * self.radius
+... 
+&gt;&gt;&gt; c1 = Circle()
+&gt;&gt;&gt; c1.get_area()
+12.56
+</code></pre>
+<h4 id="2-2-2-3-有参构造方法"><a href="#2-2-2-3-有参构造方法" class="headerlink" title="2.2.2.3 有参构造方法"></a>2.2.2.3 有参构造方法</h4><p>构造方法通过接收外部参数将属性赋予特定的值对实例进行初始化，从而完成基于不同需求或条件创建具有特定属性和行为的对象</p>
+<pre><code class="hljs">&gt;&gt;&gt; class Circle:
+...     def __init__(self,radius):
+...         self.radius = radius
+...     def get_area(self):
+...         return 3.14 * self.radius * self.radius
+... 
+&gt;&gt;&gt; c1 = Circle(2.0)
+&gt;&gt;&gt; c1.get_area()
+12.56
+</code></pre>
+<h3 id="2-2-3-静态方法"><a href="#2-2-3-静态方法" class="headerlink" title="2.2.3 静态方法"></a>2.2.3 静态方法</h3><p>静态方法，由类调用，属于类，与实例无关，无默认参数，使用类名.静态方法的调用方式。将实例方法的参数self去掉，再于方法定义的上方加上@staticmethod，就成为类静态方法</p>
+<h3 id="2-2-4-类方法"><a href="#2-2-4-类方法" class="headerlink" title="2.2.4 类方法"></a>2.2.4 类方法</h3><p>类方法，由类调用，使用类名.类方法的调用方式，以@classmethod装饰，至少传入一个cls参数（代指类本身，类似self），执行类方法时Python将自动将调用该方法的类赋值给cls。通常情况下，需要先实例化一个类对象才能调用该类的方法或属性，但类方法提供了不实例化类的情况下直接创建对象的方式，实现了封装实例化的过程，并提供更方便的接口给用户，即直接通过类名调用而无需先创建类的实例</p>
+<hr>
+<pre><code class="hljs">&gt;&gt;&gt; class Deo:
+...     def __init__(self,name):
+...         self.name = name
+...     def ord(self):
+...         print(&quot;实例方法&quot;)
+...     @classmethod
+...     def class_func(cls):
+...         print(&quot;类方法&quot;)
+...     @staticmethod
+...     def static_func():
+...         print(&quot;静态方法&quot;)
+... 
+
+# 创建实例对象f
+&gt;&gt;&gt; f = Deo(&quot;John&quot;)
+# 实例对象调用实例方法
+&gt;&gt;&gt; f.ord()
+实例方法
+
+# 类调用类方法
+&gt;&gt;&gt; Deo.class_func()
+类方法
+# 实例对象调用类方法
+&gt;&gt;&gt; f.class_func()
+类方法
+
+# 类调用静态方法
+&gt;&gt;&gt; Deo.static_func()
+静态方法
+</code></pre>
+<h1 id="3-封装、继承与多态"><a href="#3-封装、继承与多态" class="headerlink" title="3.封装、继承与多态"></a>3.封装、继承与多态</h1><p>面向对象编程具有三大重要特性，即封装、继承与多态</p>
+<h2 id="3-1-封装性"><a href="#3-1-封装性" class="headerlink" title="3.1 封装性"></a>3.1 封装性</h2><p>封装，即将数据与操作数据的功能代码置于对象内部以隐藏内部细节，只保留接口以供外界调用，而不能通过任何形式修改对象内部实现。封装性使得对象的调用更为简单而无需关心其内部逻辑，代码更易维护，同时一定程度上保障了代码的安全性。Python语言的变量默认为公有，可以在类的外部进行访问。但若是不希望所有的变量和方法能被外部访问，即限制某些成员的访问，以提高程序的健壮性、可靠性及业务的逻辑性，可在成员的名字前加上两个下划线__，使其成为私有成员（private）。私有成员只能在类的内部访问，外部无法访问，若需要外部访问时，在类的内部创建外部可以访问的get和set方法即可</p>
+<pre><code class="hljs">&gt;&gt;&gt; class People:
+...     def __init__(self,name,age):
+...          self.__name = name
+...          self.__age = age
+...     def print_age(self):
+...         print(f&quot;我是&#123;self.__name&#125;,&#123;self.__age&#125;岁.&quot;)
+...     def get_name(self):
+...         return self.__name
+...     def set_name(self,name):
+...         self.__name = name
+...     def set_age(self,age):
+...         self.__age = age
+... 
+&gt;&gt;&gt; person = People(&#39;John&#39;,15)
+&gt;&gt;&gt; person.get_name()
+John
+&gt;&gt;&gt; person.set_name(&#39;Tom&#39;)
+</code></pre>
+<h2 id="3-2-继承性"><a href="#3-2-继承性" class="headerlink" title="3.2 继承性"></a>3.2 继承性</h2><p>继承，即基于已有类的基础上创建新类，新类被称为子类或派生类，被继承的类被称为父类、基类或超类。子类继承了父类中的所有属性和方法，但也还可以拥有自己的属性和方法</p>
+<p>继承机制实现了代码的复用，即将多个类实现公共功能的共用代码置入父类，而其他类只需作为子类去继承即可，避免了代码的重复性</p>
+<pre><code class="hljs">&gt;&gt;&gt; class People:
+...     def __init__(self,name,age):
+...         self.name = name
+...         self.age = age
+...     def intro(self):
+...         print(f&quot;我是&#123;self.name&#125;,&#123;self.age&#125;岁.&quot;) 
+</code></pre>
+<h3 id="3-2-1-单继承"><a href="#3-2-1-单继承" class="headerlink" title="3.2.1 单继承"></a>3.2.1 单继承</h3><pre><code class="hljs">&gt;&gt;&gt; class Student(People):
+...     pass
+...
+...
+&gt;&gt;&gt; s = Student(&#39;John&#39;,15)
+&gt;&gt;&gt; s.intro()
+我是John,15岁.
+</code></pre>
+<ul>
+<li>继承的语法是定义类的时候，类名后面的圆括号()中指定父类，若未指定父类，则表明继承object类，即python最顶级的类</li>
+<li>定义类Student，指定其父类为People，尽管Student类未定义任何方法，但仍可继承父类的intro()方法，并实例化对象s</li>
+</ul>
+<h3 id="3-2-2-多重继承"><a href="#3-2-2-多重继承" class="headerlink" title="3.2.2 多重继承"></a>3.2.2 多重继承</h3><p>多重继承，即子类继承多个父类，按照父类的顺序从左向右依次继承，具体机制为：子类调用某个方法或变量时，首先内部查找，若未找到则开始根据继承机制查找父类；根据父类定义顺序，以深度优先的方式逐一查找父类，且一旦查找到则直接调用，之后不再继续查找</p>
+<pre><code class="hljs">&gt;&gt;&gt; class Senior(Student,People):
+...     def __init__(self,name,age,grade):
+...         People.__init__(self,name,age)
+...         self.grade = grade
+...     def intros(self):
+...         print(f&quot;我是&#123;self.name&#125;,&#123;self.age&#125;岁,&#123;self.grade&#125;年级在读.&quot;)
+... 
+&gt;&gt;&gt; s = Senior(&#39;John&#39;,15,1)
+&gt;&gt;&gt; s.intros()
+我是John,15岁,1年级在读.
+&gt;&gt;&gt; s.intro()
+我是John,15岁.
+</code></pre>
+<ul>
+<li>Senior类继承了两个父类，即Student与People</li>
+<li>People.<strong>init</strong>(self,name,age)，即调用父类的初始化方法</li>
+<li>对象s调用intros()方法，内部查找即可；调用intro()方法，首先内部查找，之后按照父类的定义顺序查找Student类，再查找People类</li>
+</ul>
+<h3 id="3-2-3-方法重写"><a href="#3-2-3-方法重写" class="headerlink" title="3.2.3 方法重写"></a>3.2.3 方法重写</h3><p>方法重写，即子类对继承父类的方法进行重些以实现不同的功能，调用子类的该方法时将会执行重写后的方法</p>
+<pre><code class="hljs">&gt;&gt;&gt; class Exam(Senior,Student,People):
+...     def __init__(self,name,age,grade,score):
+...         Senior.__init__(self,name,age,grade)
+...         self.score = score
+# 重写父类Senior的intros()方法
+...     def intros(self):
+...         print(f&quot;我是&#123;self.name&#125;,&#123;self.age&#125;岁,&#123;self.grade&#125;年级在读,总分为&#123;self.score&#125;.&quot;)
+... 
+&gt;&gt;&gt; s = Exam(&#39;John&#39;,15,1,365)
+&gt;&gt;&gt; s.intros()
+我是John,15岁,1年级在读,总分为365.
+</code></pre>
+<h3 id="3-2-4-方法扩展"><a href="#3-2-4-方法扩展" class="headerlink" title="3.2.4 方法扩展"></a>3.2.4 方法扩展</h3><p>Python语言内置函数super()用于调用父类的方法，通常在子类的方法中使用，以便在对父类方法进行扩展或重写时能够保持父类的行为，特别适用于子类调用父类的初始化方法</p>
+<pre><code class="hljs">&gt;&gt;&gt; class Exam(Senior,Student,People):
+...     def __init__(self,name,age,grade,score):
+...         super().__init__(name,age,grade)
+...         self.score = score
+...     def intros(self):
+...         print(f&quot;我是&#123;self.name&#125;,&#123;self.age&#125;岁,&#123;self.grade&#125;年级在读,总分为&#123;self.score&#125;.&quot;)
+... 
+&gt;&gt;&gt; s = Exam(&#39;John&#39;,15,1,365)
+&gt;&gt;&gt; s.intros()
+我是John,15岁,1年级在读,总分为365.
+</code></pre>
+<h2 id="3-3-多态性"><a href="#3-3-多态性" class="headerlink" title="3.3 多态性"></a>3.3 多态性</h2><p>多态，即一类事物的多种形态，具体是指多个子类继承父类并重写方法后，同一方法所表现出的不同行为，也即是：一个接口，多种实现。多态性增强了程序的灵活性与扩展性，无论如何对象变化，使用同一种形式调用即可，如下所示：函数show()可通过同一方式去调用类Senior和Coll继承的并重写的父类方法intro()</p>
+<pre><code class="hljs">&gt;&gt;&gt; class Stu:
+...     def intro(self):
+...         print(&#39;我是学生.&#39;)
+... 
+&gt;&gt;&gt; class Senior(Stu):
+...     def intro(self):
+...         print(&#39;我是中学生.&#39;)
+... 
+&gt;&gt;&gt; class Coll(Stu):
+...     def intro(self):
+...         print(&#39;我是大学生.&#39;)
+... 
+&gt;&gt;&gt; def show(s):
+...     s.intro()
+... 
+&gt;&gt;&gt; a = Senior()
+&gt;&gt;&gt; b = Coll()
+&gt;&gt;&gt; show(a)
+我是中学生.
+&gt;&gt;&gt; show(b)
+我是大学生.
+</code></pre>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/Python/">#Python</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python面向对象</div>
+      <div>https://hfsxs.github.io/60f1811c1a33/Python-Object</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年12月1日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月15日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/9f7fd2780f52/RockyLinux" title="RockyLinux9配置静态IP">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">RockyLinux9配置静态IP</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/d95cdf03e79c/PrometheusRelabel" title="Prometheus监控标签重写">
+                        <span class="hidden-mobile">Prometheus监控标签重写</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+
+<div>
+<span id="timeDate"> 正在载入天数...</span>
+<span id="times"> 载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime(){
+        var grt= new Date("1/12/2025 01:15:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if(String(snum).length ==1 ){
+                snum = "0" + snum;
+        }
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
+        document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+</div>
+
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

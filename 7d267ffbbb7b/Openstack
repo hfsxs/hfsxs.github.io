@@ -1,0 +1,1690 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="OpenStack，NASA（美国国家航空航天局）和Rackspace合作开发的开源云计算管理平台项目，一套通过各种互补服务组件提供公有云和私有云基础设施即服务（IaaS）的解决方案，提供实施简单、可大规模扩展、丰富、标准统一的弹性云计算服务。OpenStack并不是一个软件，而是一系列开源项目的集合 Openstack自诞生之日起，其发展历程即充满了挑战与机遇，最终以其开放的架构、强大的兼容性与">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Openstack集群部署">
+<meta property="og:url" content="https://hfsxs.github.io/7d267ffbbb7b/Openstack">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="OpenStack，NASA（美国国家航空航天局）和Rackspace合作开发的开源云计算管理平台项目，一套通过各种互补服务组件提供公有云和私有云基础设施即服务（IaaS）的解决方案，提供实施简单、可大规模扩展、丰富、标准统一的弹性云计算服务。OpenStack并不是一个软件，而是一系列开源项目的集合 Openstack自诞生之日起，其发展历程即充满了挑战与机遇，最终以其开放的架构、强大的兼容性与">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-02-25T10:41:59.000Z">
+<meta property="article:modified_time" content="2025-03-15T08:40:56.404Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="虚拟化">
+<meta property="article:tag" content="私有云">
+<meta property="article:tag" content="Openstack">
+<meta property="article:tag" content="公有云">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Openstack集群部署 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Openstack集群部署</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-02-25 18:41" pubdate>
+          2024年2月25日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          29k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          244 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Openstack集群部署</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>OpenStack，NASA（美国国家航空航天局）和Rackspace合作开发的开源云计算管理平台项目，一套通过各种互补服务组件提供公有云和私有云基础设施即服务（IaaS）的解决方案，提供实施简单、可大规模扩展、丰富、标准统一的弹性云计算服务。OpenStack并不是一个软件，而是一系列开源项目的集合</p>
+<p>Openstack自诞生之日起，其发展历程即充满了挑战与机遇，最终以其开放的架构、强大的兼容性与扩展性、模块松耦合设计，现已发展成为仅次于Linux的开源项目，其社区拥有180多个国家的677家企业87426名会员，全球一半以上的500强企业都采用OpenStack进行云计算的构建，当之无愧的云计算的引领者</p>
+<h3 id="体系架构"><a href="#体系架构" class="headerlink" title="体系架构"></a>体系架构</h3><p>OpenStack集群是典型的C&#x2F;S架构，由控制节点、计算节点、网络节点和存储节点组成</p>
+<h4 id="1-控制节点"><a href="#1-控制节点" class="headerlink" title="1.控制节点"></a>1.控制节点</h4><p>Controller Node，控制节点，作为集群管理与调度中心，通过API服务(API Service)与其他服务组件之间进行通信和交互，从而完成云资源的管理与协调，即接收用户请求、管理资源分配、监控系统运行等，如虚拟机实例管理、网络及存储分配，为整个集群提供了基础管理服务（核心服务，如认证服务、镜像服务、计算服务、网络服务及UI等）、管理支持服务（底层服务，如数据库服务、消息队列服务和缓存服务等）和扩展管理服务（可选服务，如对象存储服务、计费服务和性能监控服务等）</p>
+<h4 id="2-计算节点"><a href="#2-计算节点" class="headerlink" title="2.计算节点"></a>2.计算节点</h4><p>Compute Node，计算节点，作为集群计算资源的提供者，通过API接收控制节点的发送来的请求并执行相应的操作，如运行虚拟机实例、处理计算任务等</p>
+<h4 id="3-网络节点"><a href="#3-网络节点" class="headerlink" title="3.网络节点"></a>3.网络节点</h4><p>Networking Node，网络节点，作为集群网络资源的提供者，负责虚拟机间的通信、网络隔离、网络安全等，如虚拟网络、子网、路由的管理与配置</p>
+<h4 id="4-存储节点"><a href="#4-存储节点" class="headerlink" title="4.存储节点"></a>4.存储节点</h4><p>Storage Node，存储节点，作为集群存储资源的提供者，负责存储数据和镜像，即通过API接收控制节点发送来的存储请求并将数据存储在相应的存储后端，支持多种存储后端，如Cinder(块存储服务)、Swift(对象存储服务)等</p>
+<h3 id="功能组件"><a href="#功能组件" class="headerlink" title="功能组件"></a>功能组件</h3><h4 id="1-Nova"><a href="#1-Nova" class="headerlink" title="1.Nova"></a>1.Nova</h4><p>计算模块，负责实例生命周期的管理，计算资源的单位，提供云计算、虚拟化服务，其本身并不支持虚拟化，而是通过管理、调度底层的虚拟化完成对Hypervisor的屏蔽，支持多种虚拟化技术，如KVM、XEN等，支持横向扩展</p>
+<h4 id="2-Neutron"><a href="#2-Neutron" class="headerlink" title="2.Neutron"></a>2.Neutron</h4><p>网络模块，为虚拟机、计算和控制节点提供网络功能，负责虚拟网络的管理，为实例创建网络的拓扑结构，是面向租户的网络管理，可以自己定义自己的网络，各个租户之间互不影响</p>
+<h4 id="3-Keystone"><a href="#3-Keystone" class="headerlink" title="3.Keystone"></a>3.Keystone</h4><p>认证模块，为所有用户、租户和角色及其余的服务组件进行认证与授权，提供身份认证服务，类似于LDAP服务，且支持多认证机制，即相当一个CA机构，提供多种方式进行身份认证，如密钥，哈希等</p>
+<h4 id="4-Glance"><a href="#4-Glance" class="headerlink" title="4.Glance"></a>4.Glance</h4><p>镜像模块，提供虚拟机镜像模板的注册与管理，将做好的操作系统拷贝为镜像模板，创建虚拟机时可直接使用，并提供镜像的上传、下载功能，支持多种格式的镜像</p>
+<h4 id="5-Horizon"><a href="#5-Horizon" class="headerlink" title="5.Horizon"></a>5.Horizon</h4><p>图形化用户管理模块，通过web控制台界面与OpenStack底层服务进行交互</p>
+<h4 id="5-Cinder"><a href="#5-Cinder" class="headerlink" title="5.Cinder"></a>5.Cinder</h4><p>块存储模块，负责为运行的虚拟机实例提供持久的块存储设备，即为虚拟机提供磁盘空间，扩展方便，按需付费，支持多种后端存储</p>
+<h4 id="6-Swift"><a href="#6-Swift" class="headerlink" title="6.Swift"></a>6.Swift</h4><p>对象存储模块，为OpenStack提供基于云的弹性存储，支持集群无单点故障</p>
+<h4 id="7-Heat"><a href="#7-Heat" class="headerlink" title="7.Heat"></a>7.Heat</h4><p>编排模块，提供编排服务或功能。使用 Heat 管理平台可以轻松地将虚拟机作为堆栈，并且根据需要可以将虚拟机扩展或收缩</p>
+<h4 id="8-Ceilometer"><a href="#8-Ceilometer" class="headerlink" title="8.Ceilometer"></a>8.Ceilometer</h4><p>计量模块，提供计量与监控功能，用于度量、监控和控制数据资源的集中来源，汇报数据，为OpenStack用户提供记账途径</p>
+<h4 id="非核心组件"><a href="#非核心组件" class="headerlink" title="非核心组件"></a>非核心组件</h4><p>基础设施组件</p>
+<ul>
+<li>Collectd、Telegraf、InfluxDB、Prometheus和Grafana，用于性能监控</li>
+<li>OpenSearch和OpenSearch仪表盘，用于搜索、分析和可视化日志信息</li>
+<li>Etcd，分布式的可靠键值存储数据库</li>
+<li>Fluentd，数据收集器，用于统一的日志层</li>
+<li>Gnocchi，时间序列存储数据库</li>
+<li>HAProxy和Keepalived，用于服务及其端点的高可用</li>
+<li>MariaDB和Galera Cluster，用于高可用的MySQL数据库</li>
+<li>Memcached，分布式内存对象缓存系统</li>
+<li>Open vSwitch，Neutron一起使用的</li>
+<li>RabbitMQ，作为服务间通信的消息传递后端</li>
+<li>Redis，内存数据结构存储</li>
+</ul>
+<p>容器化组件  </p>
+<ul>
+<li>zun，集成支持容器，创建和管理Docker</li>
+</ul>
+<h3 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h3><h4 id="1-认证鉴权"><a href="#1-认证鉴权" class="headerlink" title="1.认证鉴权"></a>1.认证鉴权</h4><p>用户登录界面dashboard或以命令行CLI通过RESTful API向keystone获取认证信息，keystone通过用户请求认证信息，并生成auth-token返回给对应的认证请求，完成用户认证授权流程</p>
+<h4 id="2-创建实例请求"><a href="#2-创建实例请求" class="headerlink" title="2.创建实例请求"></a>2.创建实例请求</h4><p>通过Horizon或Resetful API向nova-api发送创建虚拟机服务（boot instance）的请求，然后由nova-api向keystone发送认证请求，验证有效的用户及token，验证通过后与数据库通讯，并初始化新建虚拟机实例的数据库记录，同时调用rabbitmq，向nova-scheduler请求创建虚拟机的资源</p>
+<h4 id="3-实例调度"><a href="#3-实例调度" class="headerlink" title="3.实例调度"></a>3.实例调度</h4><p>nova-scheduler进程监听rabbitmq消息队列，获取到nova-api发来的创建虚拟机实例的请求，之后通过查询nova数据库计算资源的情况，并由调度算法计算符合虚拟机创建需要的主机。对于有符合虚拟机创建的主机，nova-scheduler更新数据库中虚拟机对应的物理主机信息，并基于rpc调用rabbitmq，向nova-compute发送对应的创建虚拟机请求的消息。nova-compute通过rpc调用向nova-conductor请求获取虚拟机消息（确认虚拟机实例的规格，即Flavor），</p>
+<p>虚拟机实例采用Glance提供镜像服务，然后使用Neutron为新建的虚拟机分配IP地址,并将其纳入虚拟网络中，之后在通过Cinder创建的卷为虚拟机挂载存储块,整个过程都在Ceilometer模块资源的监控下，Cinder产生的卷(Volume)和Glance提供的镜像(Image)可以通过Swift的对象存储机制进行保存</p>
+<h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul>
+<li>172.100.100.180&#x2F;192.168.100.180 controller</li>
+<li>172.100.100.181 compute001</li>
+<li>172.100.100.182 compute002</li>
+</ul>
+<h1 id="1-配置系统环境"><a href="#1-配置系统环境" class="headerlink" title="1.配置系统环境"></a>1.配置系统环境</h1><h2 id="1-1-配置hosts"><a href="#1-1-配置hosts" class="headerlink" title="1.1 配置hosts"></a>1.1 配置hosts</h2><pre><code class="hljs">vi /etc/hosts
+
+
+172.100.100.180 controller
+172.100.100.181 compute001
+172.100.100.182 compute002
+</code></pre>
+<h2 id="1-2-关闭防火墙"><a href="#1-2-关闭防火墙" class="headerlink" title="1.2 关闭防火墙"></a>1.2 关闭防火墙</h2><h2 id="1-3-关闭selinux"><a href="#1-3-关闭selinux" class="headerlink" title="1.3 关闭selinux"></a>1.3 关闭selinux</h2><h2 id="1-4-配置免密登录"><a href="#1-4-配置免密登录" class="headerlink" title="1.4 配置免密登录"></a>1.4 配置免密登录</h2><h1 id="2-安装基础服务"><a href="#2-安装基础服务" class="headerlink" title="2.安装基础服务"></a>2.安装基础服务</h1><h2 id="2-1-安装时间同步服务"><a href="#2-1-安装时间同步服务" class="headerlink" title="2.1 安装时间同步服务"></a>2.1 安装时间同步服务</h2><pre><code class="hljs">yum install -y chrony
+</code></pre>
+<h3 id="2-1-1-配置控制节点，允许其他节点连接"><a href="#2-1-1-配置控制节点，允许其他节点连接" class="headerlink" title="2.1.1 配置控制节点，允许其他节点连接"></a>2.1.1 配置控制节点，允许其他节点连接</h3><pre><code class="hljs">echo &#39;allow 172.100.100.0/24&#39; &gt;&gt; /etc/chrony.conf
+</code></pre>
+<h3 id="2-1-2-配置计算节点，连接控制节点的chrony服务器"><a href="#2-1-2-配置计算节点，连接控制节点的chrony服务器" class="headerlink" title="2.1.2 配置计算节点，连接控制节点的chrony服务器"></a>2.1.2 配置计算节点，连接控制节点的chrony服务器</h3><pre><code class="hljs">sed -i &#39;/^server/d&#39; /etc/chrony.conf 
+sed -i &#39;2aserver controller iburst&#39; /etc/chrony.conf
+</code></pre>
+<h3 id="2-1-3-启动chronyd"><a href="#2-1-3-启动chronyd" class="headerlink" title="2.1.3 启动chronyd"></a>2.1.3 启动chronyd</h3><pre><code class="hljs">systemctl start chronyd.service
+systemctl enable chronyd.service
+</code></pre>
+<h2 id="2-2-安装OpenStack库"><a href="#2-2-安装OpenStack库" class="headerlink" title="2.2 安装OpenStack库"></a>2.2 安装OpenStack库</h2><pre><code class="hljs">yum install -y openstack-release-wallaby
+yum clean all &amp;&amp; yum makecache
+add-apt-repository cloud-archive:wallaby
+apt update &amp;&amp; apt upgrade -y
+</code></pre>
+<h2 id="2-3-控制节点安装OpenStack客户端"><a href="#2-3-控制节点安装OpenStack客户端" class="headerlink" title="2.3 控制节点安装OpenStack客户端"></a>2.3 控制节点安装OpenStack客户端</h2><pre><code class="hljs">yum install -y python3-openstackclient
+apt install -y python3-openstackclient
+</code></pre>
+<h2 id="2-4-控制节点安装MariaDB"><a href="#2-4-控制节点安装MariaDB" class="headerlink" title="2.4 控制节点安装MariaDB"></a>2.4 控制节点安装MariaDB</h2><pre><code class="hljs">yum install -y mariadb mariadb-server python3-PyMySQL
+apt install -y mariadb-server python3-pymysql
+</code></pre>
+<h3 id="2-4-1-修改配置文件"><a href="#2-4-1-修改配置文件" class="headerlink" title="2.4.1 修改配置文件"></a>2.4.1 修改配置文件</h3><pre><code class="hljs">vi /etc/my.cnf.d/openstack.cnf
+
+
+[mysqld]
+
+default-storage-engine = innodb
+innodb_file_per_table = on
+max_connections = 4096
+collation-server = utf8_general_ci
+character-set-server = utf8
+</code></pre>
+<h3 id="2-4-2-启动MariaDB"><a href="#2-4-2-启动MariaDB" class="headerlink" title="2.4.2 启动MariaDB"></a>2.4.2 启动MariaDB</h3><pre><code class="hljs">systemctl start mariadb.service
+systemctl enable mariadb.service
+</code></pre>
+<h3 id="2-4-3-进行数据库安全加固，设置root密码"><a href="#2-4-3-进行数据库安全加固，设置root密码" class="headerlink" title="2.4.3 进行数据库安全加固，设置root密码"></a>2.4.3 进行数据库安全加固，设置root密码</h3><pre><code class="hljs">mysql_secure_installation
+</code></pre>
+<h2 id="2-5-控制节点安装消息队列RabbitMQ"><a href="#2-5-控制节点安装消息队列RabbitMQ" class="headerlink" title="2.5 控制节点安装消息队列RabbitMQ"></a>2.5 控制节点安装消息队列RabbitMQ</h2><pre><code class="hljs">yum install -y rabbitmq-server
+apt install -y rabbitmq-server
+</code></pre>
+<h3 id="2-5-1-启动RabbitMQ"><a href="#2-5-1-启动RabbitMQ" class="headerlink" title="2.5.1 启动RabbitMQ"></a>2.5.1 启动RabbitMQ</h3><pre><code class="hljs">systemctl start rabbitmq-server.service
+systemctl enable rabbitmq-server.service
+</code></pre>
+<h3 id="2-5-2-创建用户"><a href="#2-5-2-创建用户" class="headerlink" title="2.5.2 创建用户"></a>2.5.2 创建用户</h3><pre><code class="hljs">rabbitmqctl add_user openstack Openstack_2024
+</code></pre>
+<h3 id="2-5-3-用户授权"><a href="#2-5-3-用户授权" class="headerlink" title="2.5.3 用户授权"></a>2.5.3 用户授权</h3><pre><code class="hljs">rabbitmqctl set_permissions openstack &quot;.*&quot; &quot;.*&quot; &quot;.*&quot; 
+</code></pre>
+<h2 id="2-6-控制节点安装缓存服务器Memcached"><a href="#2-6-控制节点安装缓存服务器Memcached" class="headerlink" title="2.6 控制节点安装缓存服务器Memcached"></a>2.6 控制节点安装缓存服务器Memcached</h2><pre><code class="hljs">yum install -y memcached python3-memcached
+apt install -y memcached python3-memcache
+</code></pre>
+<h3 id="2-6-1-修改监听ip"><a href="#2-6-1-修改监听ip" class="headerlink" title="2.6.1 修改监听ip"></a>2.6.1 修改监听ip</h3><pre><code class="hljs">sed -i &#39;s/127.0.0.1/0.0.0.0/&#39; /etc/sysconfig/memcached 
+</code></pre>
+<h3 id="2-6-2-启动Memcache"><a href="#2-6-2-启动Memcache" class="headerlink" title="2.6.2 启动Memcache"></a>2.6.2 启动Memcache</h3><pre><code class="hljs">systemctl start memcached.service
+systemctl enable memcached.service
+</code></pre>
+<h1 id="3-控制节点安装身份认证服务Keystone"><a href="#3-控制节点安装身份认证服务Keystone" class="headerlink" title="3.控制节点安装身份认证服务Keystone"></a>3.控制节点安装身份认证服务Keystone</h1><pre><code class="hljs">yum install -y openstack-keystone httpd mod_wsgi
+apt install -y keystone
+</code></pre>
+<h2 id="3-1-创建keystone数据库"><a href="#3-1-创建keystone数据库" class="headerlink" title="3.1 创建keystone数据库"></a>3.1 创建keystone数据库</h2><pre><code class="hljs">mysql -u root -p
+
+MariaDB [(none)]&gt; create database keystone;
+
+MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON keystone.* TO &#39;keystone&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;Openstack_2024&#39;;
+
+MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON keystone.* TO &#39;keystone&#39;@&#39;%&#39; IDENTIFIED BY &#39;Openstack_2024&#39;;
+
+MariaDB [(none)]&gt; flush privileges;
+</code></pre>
+<h2 id="3-2-配置身份认证服务"><a href="#3-2-配置身份认证服务" class="headerlink" title="3.2 配置身份认证服务"></a>3.2 配置身份认证服务</h2><h3 id="3-2-1-备份原配置文件"><a href="#3-2-1-备份原配置文件" class="headerlink" title="3.2.1 备份原配置文件"></a>3.2.1 备份原配置文件</h3><pre><code class="hljs">sed -i.default -e &#39;/^#/d&#39; -e &#39;/^$/d&#39; /etc/keystone/keystone.conf  
+</code></pre>
+<h3 id="3-2-2-修改配置文件"><a href="#3-2-2-修改配置文件" class="headerlink" title="3.2.2 修改配置文件"></a>3.2.2 修改配置文件</h3><pre><code class="hljs">vi /etc/keystone/keystone.conf
+
+
+[database]
+connection = mysql+pymysql://keystone:Openstack_2024@controller/keystone
+
+[token]
+provider = fernet
+</code></pre>
+<h2 id="3-3-同步数据，初始化身份认证服务数据库"><a href="#3-3-同步数据，初始化身份认证服务数据库" class="headerlink" title="3.3 同步数据，初始化身份认证服务数据库"></a>3.3 同步数据，初始化身份认证服务数据库</h2><pre><code class="hljs">su -s /bin/sh -c &quot;keystone-manage db_sync&quot; keystone
+</code></pre>
+<h2 id="3-4-初始化Fernet密钥存储库"><a href="#3-4-初始化Fernet密钥存储库" class="headerlink" title="3.4 初始化Fernet密钥存储库"></a>3.4 初始化Fernet密钥存储库</h2><pre><code class="hljs">keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone
+keystone-manage credential_setup --keystone-user keystone --keystone-group keystone
+</code></pre>
+<h2 id="3-5-创建keystone管理员，引导身份认证"><a href="#3-5-创建keystone管理员，引导身份认证" class="headerlink" title="3.5 创建keystone管理员，引导身份认证"></a>3.5 创建keystone管理员，引导身份认证</h2><pre><code class="hljs">keystone-manage bootstrap --bootstrap-password Openstack_2024 \
+  --bootstrap-admin-url http://controller:5000/v3/ \
+  --bootstrap-internal-url http://controller:5000/v3/ \
+  --bootstrap-public-url http://controller:5000/v3/ \
+  --bootstrap-region-id RegionOne
+</code></pre>
+<h2 id="3-6-配置Apache-http服务器"><a href="#3-6-配置Apache-http服务器" class="headerlink" title="3.6 配置Apache http服务器"></a>3.6 配置Apache http服务器</h2><h3 id="3-6-1-配置ServerName"><a href="#3-6-1-配置ServerName" class="headerlink" title="3.6.1 配置ServerName"></a>3.6.1 配置ServerName</h3><pre><code class="hljs">sed -i &#39;/#ServerName/aServerName controller:80&#39; /etc/httpd/conf/httpd.conf 
+</code></pre>
+<h3 id="3-6-2-创建keystone配置文件"><a href="#3-6-2-创建keystone配置文件" class="headerlink" title="3.6.2 创建keystone配置文件"></a>3.6.2 创建keystone配置文件</h3><pre><code class="hljs">ln -s /usr/share/keystone/wsgi-keystone.conf /etc/httpd/conf.d/
+</code></pre>
+<h3 id="3-6-3-启动Apache"><a href="#3-6-3-启动Apache" class="headerlink" title="3.6.3 启动Apache"></a>3.6.3 启动Apache</h3><pre><code class="hljs">systemctl start httpd.service
+systemctl enable httpd.service
+</code></pre>
+<h2 id="3-7-配置管理员账号环境变量"><a href="#3-7-配置管理员账号环境变量" class="headerlink" title="3.7 配置管理员账号环境变量"></a>3.7 配置管理员账号环境变量</h2><pre><code class="hljs">export OS_USERNAME=admin
+export OS_PASSWORD=Openstack_2024
+export OS_PROJECT_NAME=admin
+export OS_USER_DOMAIN_NAME=Default
+export OS_PROJECT_DOMAIN_NAME=Default
+export OS_AUTH_URL=http://controller:5000/v3
+export OS_IDENTITY_API_VERSION=3
+</code></pre>
+<h2 id="3-8-创建域、项目、用户和角色"><a href="#3-8-创建域、项目、用户和角色" class="headerlink" title="3.8 创建域、项目、用户和角色"></a>3.8 创建域、项目、用户和角色</h2><h3 id="3-8-1-创建域，也可不创建，Keystone已存在一个default域"><a href="#3-8-1-创建域，也可不创建，Keystone已存在一个default域" class="headerlink" title="3.8.1 创建域，也可不创建，Keystone已存在一个default域"></a>3.8.1 创建域，也可不创建，Keystone已存在一个default域</h3><pre><code class="hljs"># openstack domain create --description &quot;An Example Domain&quot; example
+</code></pre>
+<h3 id="3-8-2-创建服务项目，供glance、placement、nova和neutron等组件使用"><a href="#3-8-2-创建服务项目，供glance、placement、nova和neutron等组件使用" class="headerlink" title="3.8.2 创建服务项目，供glance、placement、nova和neutron等组件使用"></a>3.8.2 创建服务项目，供glance、placement、nova和neutron等组件使用</h3><pre><code class="hljs">openstack project create --domain default --description &quot;Service Project&quot; service
+</code></pre>
+<h3 id="3-8-3-创建普通项目与用户"><a href="#3-8-3-创建普通项目与用户" class="headerlink" title="3.8.3 创建普通项目与用户"></a>3.8.3 创建普通项目与用户</h3><pre><code class="hljs"># 创建swords项目
+# openstack project create --domain default --description &quot;Swords Project&quot; swords
+# 创建sword用户
+# openstack user create --domain default --password Openstack_2024 sword
+</code></pre>
+<h3 id="3-8-4-创建角色"><a href="#3-8-4-创建角色" class="headerlink" title="3.8.4 创建角色"></a>3.8.4 创建角色</h3><pre><code class="hljs"># openstack role create user
+</code></pre>
+<h3 id="3-8-5-将用户与角色添加到项目"><a href="#3-8-5-将用户与角色添加到项目" class="headerlink" title="3.8.5 将用户与角色添加到项目"></a>3.8.5 将用户与角色添加到项目</h3><pre><code class="hljs"># openstack role add --project swords --user sword user
+</code></pre>
+<h2 id="3-9-验证Keystone服务"><a href="#3-9-验证Keystone服务" class="headerlink" title="3.9 验证Keystone服务"></a>3.9 验证Keystone服务</h2><h3 id="3-9-1-删除临时环境变量"><a href="#3-9-1-删除临时环境变量" class="headerlink" title="3.9.1 删除临时环境变量"></a>3.9.1 删除临时环境变量</h3><pre><code class="hljs">unset OS_AUTH_URL OS_PASSWORD
+</code></pre>
+<h3 id="3-9-2-验证admin用户"><a href="#3-9-2-验证admin用户" class="headerlink" title="3.9.2 验证admin用户"></a>3.9.2 验证admin用户</h3><pre><code class="hljs">openstack --os-auth-url http://controller:5000/v3 \
+  --os-project-domain-name Default --os-user-domain-name Default \
+  --os-project-name admin --os-username admin token issue
+</code></pre>
+<h3 id="3-9-3-验证sword用户"><a href="#3-9-3-验证sword用户" class="headerlink" title="3.9.3 验证sword用户"></a>3.9.3 验证sword用户</h3><pre><code class="hljs">openstack --os-auth-url http://controller:5000/v3 \
+  --os-project-domain-name Default --os-user-domain-name Default \
+  --os-project-name swords --os-username sword token issue
+</code></pre>
+<h2 id="3-10-创建openstack客户端环境变量脚本"><a href="#3-10-创建openstack客户端环境变量脚本" class="headerlink" title="3.10 创建openstack客户端环境变量脚本"></a>3.10 创建openstack客户端环境变量脚本</h2><h3 id="3-10-1-创建admin用户环境变量脚本"><a href="#3-10-1-创建admin用户环境变量脚本" class="headerlink" title="3.10.1 创建admin用户环境变量脚本"></a>3.10.1 创建admin用户环境变量脚本</h3><pre><code class="hljs">cd /root &amp;&amp; vi admin-openrc
+
+
+export OS_PROJECT_DOMAIN_NAME=Default
+export OS_USER_DOMAIN_NAME=Default
+export OS_PROJECT_NAME=admin
+export OS_USERNAME=admin
+export OS_PASSWORD=Openstack_2024
+export OS_AUTH_URL=http://controller:5000/v3
+export OS_IDENTITY_API_VERSION=3
+export OS_IMAGE_API_VERSION=2
+</code></pre>
+<h3 id="3-10-2-创建普通用户sword环境变量脚本"><a href="#3-10-2-创建普通用户sword环境变量脚本" class="headerlink" title="3.10.2 创建普通用户sword环境变量脚本"></a>3.10.2 创建普通用户sword环境变量脚本</h3><pre><code class="hljs">vi sword-openrc
+
+
+export OS_PROJECT_DOMAIN_NAME=Default
+export OS_USER_DOMAIN_NAME=Default
+export OS_PROJECT_NAME=swords
+export OS_USERNAME=sword
+export OS_PASSWORD=Openstack_2024
+export OS_AUTH_URL=http://controller:5000/v3
+export OS_IDENTITY_API_VERSION=3
+export OS_IMAGE_API_VERSION=2
+</code></pre>
+<h3 id="3-10-3-加载环境变量"><a href="#3-10-3-加载环境变量" class="headerlink" title="3.10.3 加载环境变量"></a>3.10.3 加载环境变量</h3><pre><code class="hljs">. admin-openrc
+. sword-openrc
+</code></pre>
+<h3 id="3-10-4-请求验证token"><a href="#3-10-4-请求验证token" class="headerlink" title="3.10.4 请求验证token"></a>3.10.4 请求验证token</h3><pre><code class="hljs">openstack token issue
+</code></pre>
+<h1 id="4-控制节点安装镜像服务Glance"><a href="#4-控制节点安装镜像服务Glance" class="headerlink" title="4.控制节点安装镜像服务Glance"></a>4.控制节点安装镜像服务Glance</h1><pre><code class="hljs">yum install -y openstack-glance
+apt install -y glance
+</code></pre>
+<h2 id="4-1-创建glance数据库"><a href="#4-1-创建glance数据库" class="headerlink" title="4.1 创建glance数据库"></a>4.1 创建glance数据库</h2><pre><code class="hljs">mysql -u root -p
+
+MariaDB [(none)]&gt; create database glance;
+
+MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON glance.* TO &#39;glance&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;Openstack_2024&#39;;
+
+MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON glance.* TO &#39;glance&#39;@&#39;%&#39; IDENTIFIED BY &#39;Openstack_2024&#39;;
+
+MariaDB [(none)]&gt; flush privileges;
+</code></pre>
+<h2 id="4-2-创建Glance服务凭证"><a href="#4-2-创建Glance服务凭证" class="headerlink" title="4.2 创建Glance服务凭证"></a>4.2 创建Glance服务凭证</h2><h3 id="4-2-1-获取keystone管理员凭据"><a href="#4-2-1-获取keystone管理员凭据" class="headerlink" title="4.2.1 获取keystone管理员凭据"></a>4.2.1 获取keystone管理员凭据</h3><pre><code class="hljs">. admin-openrc
+</code></pre>
+<h3 id="4-2-2-创建glance用户，并输入密码"><a href="#4-2-2-创建glance用户，并输入密码" class="headerlink" title="4.2.2 创建glance用户，并输入密码"></a>4.2.2 创建glance用户，并输入密码</h3><pre><code class="hljs">openstack user create --domain default --password-prompt glance
+</code></pre>
+<h3 id="4-2-3-将glance用户加入到service项目并授予管理员角色"><a href="#4-2-3-将glance用户加入到service项目并授予管理员角色" class="headerlink" title="4.2.3 将glance用户加入到service项目并授予管理员角色"></a>4.2.3 将glance用户加入到service项目并授予管理员角色</h3><pre><code class="hljs">openstack role add --project service --user glance admin
+</code></pre>
+<h3 id="4-2-4-创建glance服务实体"><a href="#4-2-4-创建glance服务实体" class="headerlink" title="4.2.4 创建glance服务实体"></a>4.2.4 创建glance服务实体</h3><pre><code class="hljs">openstack service create --name glance --description &quot;OpenStack Image&quot; image
+</code></pre>
+<h2 id="4-3-创建Glance服务API端点"><a href="#4-3-创建Glance服务API端点" class="headerlink" title="4.3 创建Glance服务API端点"></a>4.3 创建Glance服务API端点</h2><h3 id="4-3-1-创建公有Glance服务API端点"><a href="#4-3-1-创建公有Glance服务API端点" class="headerlink" title="4.3.1 创建公有Glance服务API端点"></a>4.3.1 创建公有Glance服务API端点</h3><pre><code class="hljs">openstack endpoint create --region RegionOne image public http://controller:9292
+</code></pre>
+<h3 id="4-3-2-创建私有Glance服务API端点"><a href="#4-3-2-创建私有Glance服务API端点" class="headerlink" title="4.3.2 创建私有Glance服务API端点"></a>4.3.2 创建私有Glance服务API端点</h3><pre><code class="hljs">openstack endpoint create --region RegionOne image internal http://controller:9292
+</code></pre>
+<h3 id="4-3-3-创建管理Glance服务API端点"><a href="#4-3-3-创建管理Glance服务API端点" class="headerlink" title="4.3.3 创建管理Glance服务API端点"></a>4.3.3 创建管理Glance服务API端点</h3><pre><code class="hljs">openstack endpoint create --region RegionOne image admin http://controller:9292 
+</code></pre>
+<h2 id="4-4-配置镜像服务"><a href="#4-4-配置镜像服务" class="headerlink" title="4.4 配置镜像服务"></a>4.4 配置镜像服务</h2><h3 id="4-4-1-备份原配置文件"><a href="#4-4-1-备份原配置文件" class="headerlink" title="4.4.1 备份原配置文件"></a>4.4.1 备份原配置文件</h3><pre><code class="hljs">sed -i.default -e &#39;/^#/d&#39; -e &#39;/^$/d&#39; /etc/glance/glance-api.conf
+</code></pre>
+<h3 id="4-4-2-修改Glance-API配置文件"><a href="#4-4-2-修改Glance-API配置文件" class="headerlink" title="4.4.2 修改Glance API配置文件"></a>4.4.2 修改Glance API配置文件</h3><pre><code class="hljs">vi /etc/glance/glance-api.conf
+
+
+[database]
+connection = mysql+pymysql://glance:Openstack_2024@controller/glance
+
+[glance_store]
+stores = file,http
+default_store = file
+filesystem_store_datadir = /var/lib/glance/images
+
+[keystone_authtoken]
+www_authenticate_uri  = http://controller:5000
+auth_url = http://controller:5000
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = Default
+user_domain_name = Default
+project_name = service
+username = glance
+password = Openstack_2024
+
+[paste_deploy]
+flavor = keystone
+</code></pre>
+<h2 id="4-5-同步数据，初始化glance数据库"><a href="#4-5-同步数据，初始化glance数据库" class="headerlink" title="4.5 同步数据，初始化glance数据库"></a>4.5 同步数据，初始化glance数据库</h2><pre><code class="hljs">su -s /bin/sh -c &quot;glance-manage db_sync&quot; glance
+</code></pre>
+<h2 id="4-6-启动glance"><a href="#4-6-启动glance" class="headerlink" title="4.6 启动glance"></a>4.6 启动glance</h2><pre><code class="hljs">systemctl start openstack-glance-api.service
+systemctl enable openstack-glance-api.service
+</code></pre>
+<h2 id="4-7-验证Glance服务"><a href="#4-7-验证Glance服务" class="headerlink" title="4.7 验证Glance服务"></a>4.7 验证Glance服务</h2><h3 id="4-7-1-下载测试镜像"><a href="#4-7-1-下载测试镜像" class="headerlink" title="4.7.1 下载测试镜像"></a>4.7.1 下载测试镜像</h3><pre><code class="hljs">wget http://download.cirros-cloud.net/0.4.0/cirros-0.4.0-x86_64-disk.img
+</code></pre>
+<h3 id="4-7-2-获取keystone管理员凭据"><a href="#4-7-2-获取keystone管理员凭据" class="headerlink" title="4.7.2 获取keystone管理员凭据"></a>4.7.2 获取keystone管理员凭据</h3><pre><code class="hljs">. admin-openrc
+</code></pre>
+<h3 id="4-7-3-创建测试镜像，将镜像文件上传镜像服务，磁盘格式设为qcow2，容器格式设为bare，设为公共镜像"><a href="#4-7-3-创建测试镜像，将镜像文件上传镜像服务，磁盘格式设为qcow2，容器格式设为bare，设为公共镜像" class="headerlink" title="4.7.3 创建测试镜像，将镜像文件上传镜像服务，磁盘格式设为qcow2，容器格式设为bare，设为公共镜像"></a>4.7.3 创建测试镜像，将镜像文件上传镜像服务，磁盘格式设为qcow2，容器格式设为bare，设为公共镜像</h3><pre><code class="hljs">openstack image create &quot;cirros&quot; \
+  --file cirros-0.4.0-x86_64-disk.img \
+  --disk-format qcow2 --container-format bare \
+  --public
+</code></pre>
+<h3 id="4-7-4-查看镜像"><a href="#4-7-4-查看镜像" class="headerlink" title="4.7.4 查看镜像"></a>4.7.4 查看镜像</h3><pre><code class="hljs">openstack image list
+</code></pre>
+<h1 id="5-控制节点安装资源配置服务Placement"><a href="#5-控制节点安装资源配置服务Placement" class="headerlink" title="5.控制节点安装资源配置服务Placement"></a>5.控制节点安装资源配置服务Placement</h1><pre><code class="hljs">yum install -y openstack-placement-api python3-osc-placement
+apt install -y placement-api
+</code></pre>
+<h2 id="5-1-创建placement数据库"><a href="#5-1-创建placement数据库" class="headerlink" title="5.1 创建placement数据库"></a>5.1 创建placement数据库</h2><pre><code class="hljs">mysql -u root -p
+
+MariaDB [(none)]&gt; create database placement;
+
+MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON placement.* TO &#39;placement&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;Openstack_2024&#39;;
+
+MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON placement.* TO &#39;placement&#39;@&#39;%&#39; IDENTIFIED BY &#39;Openstack_2024&#39;;
+
+MariaDB [(none)]&gt; flush privileges;
+</code></pre>
+<h2 id="5-2-创建Placement服务凭证"><a href="#5-2-创建Placement服务凭证" class="headerlink" title="5.2 创建Placement服务凭证"></a>5.2 创建Placement服务凭证</h2><h3 id="5-2-1-获取Keystone管理员凭据"><a href="#5-2-1-获取Keystone管理员凭据" class="headerlink" title="5.2.1 获取Keystone管理员凭据"></a>5.2.1 获取Keystone管理员凭据</h3><pre><code class="hljs">. admin-openrc
+</code></pre>
+<h3 id="5-2-2-创建placement用户"><a href="#5-2-2-创建placement用户" class="headerlink" title="5.2.2 创建placement用户"></a>5.2.2 创建placement用户</h3><pre><code class="hljs">openstack user create --domain default --password-prompt placement
+</code></pre>
+<h3 id="5-2-3-将管理员角色添加到placement用户和service项目中"><a href="#5-2-3-将管理员角色添加到placement用户和service项目中" class="headerlink" title="5.2.3 将管理员角色添加到placement用户和service项目中"></a>5.2.3 将管理员角色添加到placement用户和service项目中</h3><pre><code class="hljs">openstack role add --project service --user placement admin
+</code></pre>
+<h3 id="5-2-4-创建placement服务实体"><a href="#5-2-4-创建placement服务实体" class="headerlink" title="5.2.4 创建placement服务实体"></a>5.2.4 创建placement服务实体</h3><pre><code class="hljs">openstack service create --name placement --description &quot;Placement API&quot; placement
+</code></pre>
+<h2 id="5-3-创建Placement服务API端点"><a href="#5-3-创建Placement服务API端点" class="headerlink" title="5.3 创建Placement服务API端点"></a>5.3 创建Placement服务API端点</h2><h3 id="5-3-1-创建公有Placement服务API端点"><a href="#5-3-1-创建公有Placement服务API端点" class="headerlink" title="5.3.1 创建公有Placement服务API端点"></a>5.3.1 创建公有Placement服务API端点</h3><pre><code class="hljs">openstack endpoint create --region RegionOne placement public http://controller:8778
+</code></pre>
+<h3 id="5-3-2-创建私有Placement服务API端点"><a href="#5-3-2-创建私有Placement服务API端点" class="headerlink" title="5.3.2 创建私有Placement服务API端点"></a>5.3.2 创建私有Placement服务API端点</h3><pre><code class="hljs">openstack endpoint create --region RegionOne placement internal http://controller:8778
+</code></pre>
+<h3 id="5-3-3-创建管理Placement服务API端点"><a href="#5-3-3-创建管理Placement服务API端点" class="headerlink" title="5.3.3 创建管理Placement服务API端点"></a>5.3.3 创建管理Placement服务API端点</h3><pre><code class="hljs">openstack endpoint create --region RegionOne placement admin http://controller:8778
+</code></pre>
+<h2 id="5-4-配置Placement服务"><a href="#5-4-配置Placement服务" class="headerlink" title="5.4 配置Placement服务"></a>5.4 配置Placement服务</h2><h3 id="5-4-1-备份原配置文件"><a href="#5-4-1-备份原配置文件" class="headerlink" title="5.4.1 备份原配置文件"></a>5.4.1 备份原配置文件</h3><pre><code class="hljs">sed -i.default -e &#39;/^#/d&#39; -e &#39;/^$/d&#39; /etc/placement/placement.conf
+</code></pre>
+<h3 id="5-4-2-修改Placement配置文件"><a href="#5-4-2-修改Placement配置文件" class="headerlink" title="5.4.2 修改Placement配置文件"></a>5.4.2 修改Placement配置文件</h3><pre><code class="hljs">vi /etc/placement/placement.conf
+
+
+[api]
+auth_strategy = keystone
+
+[keystone_authtoken]
+auth_url = http://controller:5000/v3
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = Default
+user_domain_name = Default
+project_name = service
+username = placement
+password = Openstack_2024
+
+[placement_database]
+connection = mysql+pymysql://placement:Openstack_2024@controller/placement
+</code></pre>
+<h2 id="5-5-同步数据，初始化placement数据库"><a href="#5-5-同步数据，初始化placement数据库" class="headerlink" title="5.5 同步数据，初始化placement数据库"></a>5.5 同步数据，初始化placement数据库</h2><pre><code class="hljs">su -s /bin/sh -c &quot;placement-manage db sync&quot; placement
+</code></pre>
+<h2 id="5-6-重启Apache服务器，允许其他组件访问Placement-API"><a href="#5-6-重启Apache服务器，允许其他组件访问Placement-API" class="headerlink" title="5.6 重启Apache服务器，允许其他组件访问Placement API"></a>5.6 重启Apache服务器，允许其他组件访问Placement API</h2><pre><code class="hljs">systemctl restart httpd
+</code></pre>
+<h2 id="5-7-验证Placement"><a href="#5-7-验证Placement" class="headerlink" title="5.7 验证Placement"></a>5.7 验证Placement</h2><h3 id="5-7-1-获取Keystone管理员凭据"><a href="#5-7-1-获取Keystone管理员凭据" class="headerlink" title="5.7.1 获取Keystone管理员凭据"></a>5.7.1 获取Keystone管理员凭据</h3><pre><code class="hljs">. admin-openrc
+</code></pre>
+<h3 id="5-7-2-执行状态检查"><a href="#5-7-2-执行状态检查" class="headerlink" title="5.7.2 执行状态检查"></a>5.7.2 执行状态检查</h3><pre><code class="hljs">placement-status upgrade check
+</code></pre>
+<h3 id="5-7-3-查看可用资源类别及特性"><a href="#5-7-3-查看可用资源类别及特性" class="headerlink" title="5.7.3 查看可用资源类别及特性"></a>5.7.3 查看可用资源类别及特性</h3><pre><code class="hljs">openstack --os-placement-api-version 1.2 resource class list --sort-column name
+openstack --os-placement-api-version 1.6 trait list --sort-column name
+</code></pre>
+<h1 id="6-控制节点安装计算服务Nova"><a href="#6-控制节点安装计算服务Nova" class="headerlink" title="6.控制节点安装计算服务Nova"></a>6.控制节点安装计算服务Nova</h1><pre><code class="hljs">yum install -y openstack-nova-api openstack-nova-conductor openstack-nova-novncproxy openstack-nova-scheduler
+apt install -y nova-api nova-conductor nova-novncproxy nova-scheduler
+</code></pre>
+<h2 id="6-1-创建nova数据库"><a href="#6-1-创建nova数据库" class="headerlink" title="6.1 创建nova数据库"></a>6.1 创建nova数据库</h2><pre><code class="hljs">mysql -u root -p
+
+MariaDB [(none)]&gt; create database nova;
+MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON nova.* TO &#39;nova&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;Openstack_2024&#39;;
+MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON nova.* TO &#39;nova&#39;@&#39;%&#39; IDENTIFIED BY &#39;Openstack_2024&#39;;
+
+MariaDB [(none)]&gt; create database nova_api;
+MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON nova_api.* TO &#39;nova&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;Openstack_2024&#39;;
+MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON nova_api.* TO &#39;nova&#39;@&#39;%&#39; IDENTIFIED BY &#39;Openstack_2024&#39;;
+
+MariaDB [(none)]&gt; create database nova_cell0;
+MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON nova_cell0.* TO &#39;nova&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;Openstack_2024&#39;;
+MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON nova_cell0.* TO &#39;nova&#39;@&#39;%&#39; IDENTIFIED BY &#39;Openstack_2024&#39;;
+
+MariaDB [(none)]&gt; flush privileges;
+</code></pre>
+<h2 id="6-2-创建Nova服务凭证"><a href="#6-2-创建Nova服务凭证" class="headerlink" title="6.2 创建Nova服务凭证"></a>6.2 创建Nova服务凭证</h2><h3 id="6-2-1-获取Keystone管理员凭据"><a href="#6-2-1-获取Keystone管理员凭据" class="headerlink" title="6.2.1 获取Keystone管理员凭据"></a>6.2.1 获取Keystone管理员凭据</h3><pre><code class="hljs">. admin-openrc
+</code></pre>
+<h3 id="6-2-2-创建nova用户"><a href="#6-2-2-创建nova用户" class="headerlink" title="6.2.2 创建nova用户"></a>6.2.2 创建nova用户</h3><pre><code class="hljs">openstack user create --domain default --password-prompt nova
+</code></pre>
+<h3 id="6-2-3-将管理员角色添加都nova用户和service项目中"><a href="#6-2-3-将管理员角色添加都nova用户和service项目中" class="headerlink" title="6.2.3 将管理员角色添加都nova用户和service项目中"></a>6.2.3 将管理员角色添加都nova用户和service项目中</h3><pre><code class="hljs">openstack role add --project service --user nova admin
+</code></pre>
+<h3 id="6-2-4-创建nova服务实体"><a href="#6-2-4-创建nova服务实体" class="headerlink" title="6.2.4 创建nova服务实体"></a>6.2.4 创建nova服务实体</h3><pre><code class="hljs">openstack service create --name nova --description &quot;OpenStack Compute&quot; compute
+</code></pre>
+<h2 id="6-3-创建Nova服务API端点"><a href="#6-3-创建Nova服务API端点" class="headerlink" title="6.3 创建Nova服务API端点"></a>6.3 创建Nova服务API端点</h2><h3 id="6-3-1-创建公有Nova服务API端点"><a href="#6-3-1-创建公有Nova服务API端点" class="headerlink" title="6.3.1 创建公有Nova服务API端点"></a>6.3.1 创建公有Nova服务API端点</h3><pre><code class="hljs">openstack endpoint create --region RegionOne compute public http://controller:8774/v2.1
+</code></pre>
+<h3 id="6-3-2-创建私有Nova服务API端点"><a href="#6-3-2-创建私有Nova服务API端点" class="headerlink" title="6.3.2 创建私有Nova服务API端点"></a>6.3.2 创建私有Nova服务API端点</h3><pre><code class="hljs">openstack endpoint create --region RegionOne compute internal http://controller:8774/v2.1
+</code></pre>
+<h3 id="6-3-3-创建管理Nova服务API端点"><a href="#6-3-3-创建管理Nova服务API端点" class="headerlink" title="6.3.3 创建管理Nova服务API端点"></a>6.3.3 创建管理Nova服务API端点</h3><pre><code class="hljs">openstack endpoint create --region RegionOne compute admin http://controller:8774/v2.1
+</code></pre>
+<h2 id="6-4-配置Nova服务"><a href="#6-4-配置Nova服务" class="headerlink" title="6.4 配置Nova服务"></a>6.4 配置Nova服务</h2><h3 id="6-4-1-备份原配置文件"><a href="#6-4-1-备份原配置文件" class="headerlink" title="6.4.1 备份原配置文件"></a>6.4.1 备份原配置文件</h3><pre><code class="hljs">sed -i.default -e &#39;/^#/d&#39; -e &#39;/^$/d&#39; /etc/nova/nova.conf
+</code></pre>
+<h3 id="6-4-2-修改配置文件"><a href="#6-4-2-修改配置文件" class="headerlink" title="6.4.2 修改配置文件"></a>6.4.2 修改配置文件</h3><pre><code class="hljs">vi /etc/nova/nova.conf
+
+
+[DEFAULT]
+transport_url = rabbit://openstack:Openstack_2024@controller:5672/
+my_ip = 172.100.100.180
+
+[api]
+auth_strategy = keystone
+
+[api_database]
+connection = mysql+pymysql://nova:Openstack_2024@controller/nova_api
+
+[database]
+connection = mysql+pymysql://nova:Openstack_2024@controller/nova
+
+[glance]
+api_servers = http://controller:9292
+
+[keystone_authtoken]
+auth_url = http://controller:5000
+www_authenticate_uri = http://controller:5000/
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = Default
+user_domain_name = Default
+project_name = service
+username = nova
+password = Openstack_2024
+
+[oslo_concurrency]
+lock_path = /var/lib/nova/tmp
+
+[placement]
+region_name = RegionOne
+project_domain_name = Default
+project_name = service
+auth_type = password
+user_domain_name = Default
+auth_url = http://controller:5000/v3
+username = placement
+password = Openstack_2024
+
+[service_user]
+send_service_user_token = true
+auth_url = https://controller/identity
+auth_strategy = keystone
+auth_type = password
+project_domain_name = Default
+project_name = service
+user_domain_name = Default
+username = nova
+password = Openstack_2024
+
+[vnc]
+enabled = true
+server_listen = $my_ip
+server_proxyclient_address = $my_ip
+</code></pre>
+<h2 id="6-5-同步数据，初始化nova数据库"><a href="#6-5-同步数据，初始化nova数据库" class="headerlink" title="6.5 同步数据，初始化nova数据库"></a>6.5 同步数据，初始化nova数据库</h2><h3 id="6-5-1-初始化nova-api数据库"><a href="#6-5-1-初始化nova-api数据库" class="headerlink" title="6.5.1 初始化nova-api数据库"></a>6.5.1 初始化nova-api数据库</h3><pre><code class="hljs">su -s /bin/sh -c &quot;nova-manage api_db sync&quot; nova
+</code></pre>
+<h3 id="6-5-2-初始化cell0数据库"><a href="#6-5-2-初始化cell0数据库" class="headerlink" title="6.5.2 初始化cell0数据库"></a>6.5.2 初始化cell0数据库</h3><pre><code class="hljs">su -s /bin/sh -c &quot;nova-manage cell_v2 map_cell0&quot; nova
+</code></pre>
+<h3 id="6-5-3-初始化cell1原件"><a href="#6-5-3-初始化cell1原件" class="headerlink" title="6.5.3 初始化cell1原件"></a>6.5.3 初始化cell1原件</h3><pre><code class="hljs">su -s /bin/sh -c &quot;nova-manage cell_v2 create_cell --name=cell1 --verbose&quot; nova
+</code></pre>
+<h3 id="6-5-4-初始化nova数据库"><a href="#6-5-4-初始化nova数据库" class="headerlink" title="6.5.4 初始化nova数据库"></a>6.5.4 初始化nova数据库</h3><pre><code class="hljs">su -s /bin/sh -c &quot;nova-manage db sync&quot; nova
+</code></pre>
+<h3 id="6-5-5-验证novacell0、cell1的注册"><a href="#6-5-5-验证novacell0、cell1的注册" class="headerlink" title="6.5.5 验证novacell0、cell1的注册"></a>6.5.5 验证novacell0、cell1的注册</h3><pre><code class="hljs">su -s /bin/sh -c &quot;nova-manage cell_v2 list_cells&quot; nova
+</code></pre>
+<h2 id="6-6-启动nova"><a href="#6-6-启动nova" class="headerlink" title="6.6 启动nova"></a>6.6 启动nova</h2><pre><code class="hljs">systemctl start openstack-nova-api.service
+systemctl enable openstack-nova-api.service
+systemctl start openstack-nova-scheduler.service
+systemctl enable openstack-nova-scheduler.service
+systemctl start openstack-nova-conductor.service
+systemctl enable openstack-nova-conductor.service
+systemctl start openstack-nova-novncproxy.service
+systemctl enable openstack-nova-novncproxy.service
+</code></pre>
+<h1 id="7-计算节点安装计算服务Nova"><a href="#7-计算节点安装计算服务Nova" class="headerlink" title="7.计算节点安装计算服务Nova"></a>7.计算节点安装计算服务Nova</h1><pre><code class="hljs">yum install -y openstack-nova-compute
+apt install -y nova-compute
+</code></pre>
+<h2 id="7-1-配置nova服务"><a href="#7-1-配置nova服务" class="headerlink" title="7.1 配置nova服务"></a>7.1 配置nova服务</h2><h3 id="7-1-1-备份原配置文件"><a href="#7-1-1-备份原配置文件" class="headerlink" title="7.1.1 备份原配置文件"></a>7.1.1 备份原配置文件</h3><pre><code class="hljs">sed -i.default -e &#39;/^#/d&#39; -e &#39;/^$/d&#39; /etc/nova/nova.conf
+</code></pre>
+<h3 id="7-1-2-修改配置文件"><a href="#7-1-2-修改配置文件" class="headerlink" title="7.1.2 修改配置文件"></a>7.1.2 修改配置文件</h3><pre><code class="hljs">vi /etc/nova/nova.conf
+
+
+[DEFAULT]
+transport_url = rabbit://openstack:Openstack_2024@controller
+my_ip = 172.100.100.181
+
+[api]
+auth_strategy = keystone
+
+[glance]
+api_servers = http://controller:9292
+
+[keystone_authtoken]
+auth_url = http://controller:5000/
+www_authenticate_uri = http://controller:5000/
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = Default
+user_domain_name = Default
+project_name = service
+username = nova
+password = Openstack_2024
+
+[libvirt]
+virt_type = qemu
+
+[oslo_concurrency]
+lock_path = /var/lib/nova/tmp
+
+[placement]
+region_name = RegionOne
+project_domain_name = Default
+project_name = service
+auth_type = password
+user_domain_name = Default
+auth_url = http://controller:5000/v3
+username = placement
+password = Openstack_2024
+
+[scheduler]
+discover_hosts_in_cells_interval = 300
+
+[service_user]
+send_service_user_token = true
+auth_url = https://controller/identity
+auth_strategy = keystone
+auth_type = password
+project_domain_name = Default
+project_name = service
+user_domain_name = Default
+username = nova
+password = Openstack_2024
+
+[vnc]
+enabled = true
+server_listen = 0.0.0.0
+server_proxyclient_address = $my_ip
+novncproxy_base_url = http://controller:6080/vnc_auto.html
+</code></pre>
+<h2 id="7-2-启动nova"><a href="#7-2-启动nova" class="headerlink" title="7.2 启动nova"></a>7.2 启动nova</h2><pre><code class="hljs">systemctl start libvirtd.service
+systemctl enable libvirtd.service
+systemctl start openstack-nova-compute.service
+systemctl enable openstack-nova-compute.service
+</code></pre>
+<h2 id="7-3-在控制节点上添加计算节点，即添加到单元数据库"><a href="#7-3-在控制节点上添加计算节点，即添加到单元数据库" class="headerlink" title="7.3 在控制节点上添加计算节点，即添加到单元数据库"></a>7.3 在控制节点上添加计算节点，即添加到单元数据库</h2><h3 id="7-3-1-获取keystone管理员凭据"><a href="#7-3-1-获取keystone管理员凭据" class="headerlink" title="7.3.1 获取keystone管理员凭据"></a>7.3.1 获取keystone管理员凭据</h3><pre><code class="hljs">. admin-openrc
+</code></pre>
+<h3 id="7-3-2-验证cell数据库的计算主机节点"><a href="#7-3-2-验证cell数据库的计算主机节点" class="headerlink" title="7.3.2 验证cell数据库的计算主机节点"></a>7.3.2 验证cell数据库的计算主机节点</h3><pre><code class="hljs">openstack compute service list --service nova-compute
+</code></pre>
+<h3 id="7-3-3-计算节点同步到单元数据库"><a href="#7-3-3-计算节点同步到单元数据库" class="headerlink" title="7.3.3 计算节点同步到单元数据库"></a>7.3.3 计算节点同步到单元数据库</h3><pre><code class="hljs">su -s /bin/sh -c &quot;nova-manage cell_v2 discover_hosts --verbose&quot; nova
+</code></pre>
+<h3 id="7-3-4-重启nova服务"><a href="#7-3-4-重启nova服务" class="headerlink" title="7.3.4 重启nova服务"></a>7.3.4 重启nova服务</h3><pre><code class="hljs">systemctl restart openstack-nova-api.service
+systemctl restart openstack-nova-scheduler.service
+systemctl restart openstack-nova-conductor.service
+systemctl restart openstack-nova-novncproxy.service
+</code></pre>
+<h2 id="7-4-验证计算服务"><a href="#7-4-验证计算服务" class="headerlink" title="7.4 验证计算服务"></a>7.4 验证计算服务</h2><h3 id="7-4-1-获取keystone管理员凭据"><a href="#7-4-1-获取keystone管理员凭据" class="headerlink" title="7.4.1 获取keystone管理员凭据"></a>7.4.1 获取keystone管理员凭据</h3><pre><code class="hljs">. admin-openrc
+</code></pre>
+<h3 id="7-4-2-查看服务组件，验证进程的成功启动和注册"><a href="#7-4-2-查看服务组件，验证进程的成功启动和注册" class="headerlink" title="7.4.2 查看服务组件，验证进程的成功启动和注册"></a>7.4.2 查看服务组件，验证进程的成功启动和注册</h3><pre><code class="hljs">openstack compute service list
+</code></pre>
+<h3 id="7-4-3-查看身份服务中的API端点，验证与身份服务的连接性"><a href="#7-4-3-查看身份服务中的API端点，验证与身份服务的连接性" class="headerlink" title="7.4.3 查看身份服务中的API端点，验证与身份服务的连接性"></a>7.4.3 查看身份服务中的API端点，验证与身份服务的连接性</h3><pre><code class="hljs">openstack catalog list
+</code></pre>
+<h3 id="7-4-4-查看单元格和展示位置API是否正常运行"><a href="#7-4-4-查看单元格和展示位置API是否正常运行" class="headerlink" title="7.4.4 查看单元格和展示位置API是否正常运行"></a>7.4.4 查看单元格和展示位置API是否正常运行</h3><pre><code class="hljs">nova-status upgrade check
+</code></pre>
+<h1 id="8-控制节点安装网络服务Neutron"><a href="#8-控制节点安装网络服务Neutron" class="headerlink" title="8.控制节点安装网络服务Neutron"></a>8.控制节点安装网络服务Neutron</h1><pre><code class="hljs">yum install -y openstack-neutron openstack-neutron-ml2 openstack-neutron-linuxbridge ebtables
+apt install -y neutron-server neutron-plugin-ml2 neutron-linuxbridge-agent neutron-dhcp-agent \
+neutron-metadata-agent neutron-l3-agent 
+</code></pre>
+<h2 id="8-1-创建neutron数据库"><a href="#8-1-创建neutron数据库" class="headerlink" title="8.1 创建neutron数据库"></a>8.1 创建neutron数据库</h2><pre><code class="hljs">mysql -u root -p
+
+MariaDB [(none)]&gt; create database neutron;
+
+MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON neutron.* TO &#39;neutron&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;Openstack_2024&#39;;
+MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON neutron.* TO &#39;neutron&#39;@&#39;%&#39; IDENTIFIED BY &#39;Openstack_2024&#39;;
+
+MariaDB [(none)]&gt; flush privileges;
+</code></pre>
+<h2 id="8-2-创建Neutron服务凭证"><a href="#8-2-创建Neutron服务凭证" class="headerlink" title="8.2 创建Neutron服务凭证"></a>8.2 创建Neutron服务凭证</h2><h3 id="8-2-1-获取keystone管理员凭据"><a href="#8-2-1-获取keystone管理员凭据" class="headerlink" title="8.2.1 获取keystone管理员凭据"></a>8.2.1 获取keystone管理员凭据</h3><pre><code class="hljs">. admin-openrc
+</code></pre>
+<h3 id="8-2-2-创建neutron用户"><a href="#8-2-2-创建neutron用户" class="headerlink" title="8.2.2 创建neutron用户"></a>8.2.2 创建neutron用户</h3><pre><code class="hljs">openstack user create --domain default --password-prompt neutron
+</code></pre>
+<h3 id="8-2-3-设置neutron用户角色及所属项目"><a href="#8-2-3-设置neutron用户角色及所属项目" class="headerlink" title="8.2.3 设置neutron用户角色及所属项目"></a>8.2.3 设置neutron用户角色及所属项目</h3><pre><code class="hljs">openstack role add --project service --user neutron admin
+</code></pre>
+<h3 id="8-2-4-创建neutron实体"><a href="#8-2-4-创建neutron实体" class="headerlink" title="8.2.4 创建neutron实体"></a>8.2.4 创建neutron实体</h3><pre><code class="hljs">openstack service create --name neutron --description &quot;OpenStack Networking&quot; network
+</code></pre>
+<h2 id="8-3-创建Neutron服务API端点"><a href="#8-3-创建Neutron服务API端点" class="headerlink" title="8.3 创建Neutron服务API端点"></a>8.3 创建Neutron服务API端点</h2><h3 id="8-3-1-创建Neutron公有服务API端点"><a href="#8-3-1-创建Neutron公有服务API端点" class="headerlink" title="8.3.1 创建Neutron公有服务API端点"></a>8.3.1 创建Neutron公有服务API端点</h3><pre><code class="hljs">openstack endpoint create --region RegionOne network public http://controller:9696
+</code></pre>
+<h3 id="8-3-2-创建Neutron私有服务API端点"><a href="#8-3-2-创建Neutron私有服务API端点" class="headerlink" title="8.3.2 创建Neutron私有服务API端点"></a>8.3.2 创建Neutron私有服务API端点</h3><pre><code class="hljs">openstack endpoint create --region RegionOne network internal http://controller:9696
+</code></pre>
+<h3 id="8-3-3-创建Neutron管理员服务API端点"><a href="#8-3-3-创建Neutron管理员服务API端点" class="headerlink" title="8.3.3 创建Neutron管理员服务API端点"></a>8.3.3 创建Neutron管理员服务API端点</h3><pre><code class="hljs">openstack endpoint create --region RegionOne network admin http://controller:9696
+</code></pre>
+<h2 id="8-4-配置neutron服务"><a href="#8-4-配置neutron服务" class="headerlink" title="8.4 配置neutron服务"></a>8.4 配置neutron服务</h2><h3 id="8-4-1-备份原文件"><a href="#8-4-1-备份原文件" class="headerlink" title="8.4.1 备份原文件"></a>8.4.1 备份原文件</h3><pre><code class="hljs">sed -i.default -e &#39;/^#/d&#39; -e &#39;/^$/d&#39; /etc/neutron/neutron.conf
+</code></pre>
+<h3 id="8-4-2-修改配置文件"><a href="#8-4-2-修改配置文件" class="headerlink" title="8.4.2 修改配置文件"></a>8.4.2 修改配置文件</h3><pre><code class="hljs">vi /etc/neutron/neutron.conf
+
+
+[DEFAULT]
+core_plugin = ml2
+service_plugins = router
+allow_overlapping_ips = true
+transport_url = rabbit://openstack:Openstack_2024@controller
+auth_strategy = keystone
+notify_nova_on_port_status_changes = true
+notify_nova_on_port_data_changes = true
+
+[database]
+connection = mysql+pymysql://neutron:Openstack_2024@controller/neutron
+
+[keystone_authtoken]
+www_authenticate_uri = http://controller:5000
+auth_url = http://controller:5000
+memcached_servers =controller:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = neutron
+password = Openstack_2024
+
+[nova]
+auth_url = http://controller:5000
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+region_name = RegionOne
+project_name = service
+username = nova
+password = Openstack_2024
+
+[oslo_concurrency]
+lock_path = /var/lib/neutron/tmp
+</code></pre>
+<h2 id="8-5-配置网络选项"><a href="#8-5-配置网络选项" class="headerlink" title="8.5 配置网络选项"></a>8.5 配置网络选项</h2><h3 id="8-5-1-配置L2网络模块插件"><a href="#8-5-1-配置L2网络模块插件" class="headerlink" title="8.5.1 配置L2网络模块插件"></a>8.5.1 配置L2网络模块插件</h3><pre><code class="hljs">sed -i.default -e &#39;/^#/d&#39; -e &#39;/^$/d&#39; /etc/neutron/plugins/ml2/ml2_conf.ini
+
+vi /etc/neutron/plugins/ml2/ml2_conf.ini
+
+
+[ml2]
+type_drivers = flat,vlan,vxlan
+tenant_network_types = vxlan
+mechanism_drivers = linuxbridge,l2population
+extension_drivers = port_security
+
+[ml2_type_flat]
+flat_networks = provider
+
+[securitygroup]
+enable_ipset = true
+</code></pre>
+<h3 id="8-5-2-配置Linux网桥代理"><a href="#8-5-2-配置Linux网桥代理" class="headerlink" title="8.5.2 配置Linux网桥代理"></a>8.5.2 配置Linux网桥代理</h3><pre><code class="hljs">sed -i.default -e &#39;/^#/d&#39; -e &#39;/^$/d&#39; /etc/neutron/plugins/ml2/linuxbridge_agent.ini
+
+vi /etc/neutron/plugins/ml2/linuxbridge_agent.ini
+
+
+[linux_bridge]
+physical_interface_mappings = provider:ens33
+
+[vxlan]
+enable_vxlan = true
+local_ip = 192.168.100.180
+l2_population = true
+
+[securitygroup]
+enable_security_group = true
+firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
+</code></pre>
+<h3 id="8-5-3-配置L3代理"><a href="#8-5-3-配置L3代理" class="headerlink" title="8.5.3 配置L3代理"></a>8.5.3 配置L3代理</h3><pre><code class="hljs">sed -i.default -e &#39;/^#/d&#39; -e &#39;/^$/d&#39; /etc/neutron/l3_agent.ini
+
+vi /etc/neutron/l3_agent.ini
+
+
+[DEFAULT]
+interface_driver = linuxbridge
+</code></pre>
+<h3 id="8-5-4-配置DHCP代理"><a href="#8-5-4-配置DHCP代理" class="headerlink" title="8.5.4 配置DHCP代理"></a>8.5.4 配置DHCP代理</h3><pre><code class="hljs">sed -i.default -e &#39;/^#/d&#39; -e &#39;/^$/d&#39; /etc/neutron/dhcp_agent.ini
+
+vi /etc/neutron/dhcp_agent.ini
+
+
+[DEFAULT]
+interface_driver = linuxbridge
+dhcp_driver = neutron.agent.linux.dhcp.Dnsmasq
+enable_isolated_metadata = true
+</code></pre>
+<h3 id="8-5-5-配置元数据代理"><a href="#8-5-5-配置元数据代理" class="headerlink" title="8.5.5 配置元数据代理"></a>8.5.5 配置元数据代理</h3><pre><code class="hljs">sed -i.default -e &#39;/^#/d&#39; -e &#39;/^$/d&#39; /etc/neutron/metadata_agent.ini
+
+vi /etc/neutron/metadata_agent.ini
+
+
+[DEFAULT]
+nova_metadata_host = controller
+metadata_proxy_shared_secret = Openstack_2024
+</code></pre>
+<h3 id="8-5-6-配置计算服务neutron模块"><a href="#8-5-6-配置计算服务neutron模块" class="headerlink" title="8.5.6 配置计算服务neutron模块"></a>8.5.6 配置计算服务neutron模块</h3><pre><code class="hljs">vi /etc/nova/nova.conf
+
+
+[neutron]
+auth_url = http://controller:5000
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+region_name = RegionOne
+project_name = service
+username = neutron
+password = Openstack_2024
+service_metadata_proxy = true
+metadata_proxy_shared_secret = Openstack_2024
+</code></pre>
+<h3 id="8-5-7-配置内核支持网桥过滤器"><a href="#8-5-7-配置内核支持网桥过滤器" class="headerlink" title="8.5.7 配置内核支持网桥过滤器"></a>8.5.7 配置内核支持网桥过滤器</h3><pre><code class="hljs">vi /etc/sysctl.conf
+
+
+net.bridge.bridge-nf-call-iptables = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+</code></pre>
+<h3 id="8-5-8-加载内核模块生效配置"><a href="#8-5-8-加载内核模块生效配置" class="headerlink" title="8.5.8 加载内核模块生效配置"></a>8.5.8 加载内核模块生效配置</h3><pre><code class="hljs">modprobe br_netfilter &amp;&amp; sysctl -p
+</code></pre>
+<h3 id="8-5-9-创建网络服务初始化脚本的软连接"><a href="#8-5-9-创建网络服务初始化脚本的软连接" class="headerlink" title="8.5.9 创建网络服务初始化脚本的软连接"></a>8.5.9 创建网络服务初始化脚本的软连接</h3><pre><code class="hljs">ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini
+</code></pre>
+<h2 id="8-6-同步数据，初始化neutron数据库"><a href="#8-6-同步数据，初始化neutron数据库" class="headerlink" title="8.6 同步数据，初始化neutron数据库"></a>8.6 同步数据，初始化neutron数据库</h2><pre><code class="hljs">su -s /bin/sh -c &quot;neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head&quot; neutron
+</code></pre>
+<h2 id="8-7-重启Compute-API服务"><a href="#8-7-重启Compute-API服务" class="headerlink" title="8.7 重启Compute API服务"></a>8.7 重启Compute API服务</h2><pre><code class="hljs">systemctl restart openstack-nova-api.service
+</code></pre>
+<h3 id="8-8-启动neutron"><a href="#8-8-启动neutron" class="headerlink" title="8.8 启动neutron"></a>8.8 启动neutron</h3><pre><code class="hljs">systemctl start neutron-server.service
+systemctl enable neutron-server.service
+systemctl start neutron-linuxbridge-agent.service
+systemctl enable neutron-linuxbridge-agent.service
+systemctl start neutron-dhcp-agent.service
+systemctl enable neutron-dhcp-agent.service
+systemctl start neutron-metadata-agent.service
+systemctl enable neutron-metadata-agent.service
+systemctl enable neutron-l3-agent.service
+systemctl start neutron-l3-agent.service
+</code></pre>
+<h1 id="9-计算节点安装网络服务neutron"><a href="#9-计算节点安装网络服务neutron" class="headerlink" title="9.计算节点安装网络服务neutron"></a>9.计算节点安装网络服务neutron</h1><pre><code class="hljs">yum install -y openstack-neutron-linuxbridge ebtables ipset
+apt install -y neutron-linuxbridge-agent
+</code></pre>
+<h2 id="9-1-配置neutron服务"><a href="#9-1-配置neutron服务" class="headerlink" title="9.1 配置neutron服务"></a>9.1 配置neutron服务</h2><h3 id="9-1-1-备份原配置文件"><a href="#9-1-1-备份原配置文件" class="headerlink" title="9.1.1 备份原配置文件"></a>9.1.1 备份原配置文件</h3><pre><code class="hljs">sed -i.default -e &#39;/^#/d&#39; -e &#39;/^$/d&#39; /etc/neutron/neutron.conf
+</code></pre>
+<h3 id="9-1-2-修改配置文件"><a href="#9-1-2-修改配置文件" class="headerlink" title="9.1.2 修改配置文件"></a>9.1.2 修改配置文件</h3><pre><code class="hljs">vi /etc/neutron/neutron.conf
+
+
+[DEFAULT]
+auth_strategy = keystone
+transport_url = rabbit://openstack:Openstack_2024@controller
+
+[keystone_authtoken]
+www_authenticate_uri = http://controller:5000
+auth_url = http://controller:5000
+memcached_servers =controller:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = neutron
+password = Openstack_2024
+
+[oslo_concurrency]
+lock_path = /var/lib/neutron/tmp
+</code></pre>
+<h2 id="9-2-配置Linux桥代理"><a href="#9-2-配置Linux桥代理" class="headerlink" title="9.2 配置Linux桥代理"></a>9.2 配置Linux桥代理</h2><h3 id="9-2-1-备份原文件"><a href="#9-2-1-备份原文件" class="headerlink" title="9.2.1 备份原文件"></a>9.2.1 备份原文件</h3><pre><code class="hljs">sed -i.default -e &#39;/^#/d&#39; -e &#39;/^$/d&#39; /etc/neutron/plugins/ml2/linuxbridge_agent.ini
+</code></pre>
+<h3 id="9-2-2-修改配置文件"><a href="#9-2-2-修改配置文件" class="headerlink" title="9.2.2 修改配置文件"></a>9.2.2 修改配置文件</h3><pre><code class="hljs">vi /etc/neutron/plugins/ml2/linuxbridge_agent.ini
+
+
+[linux_bridge]
+physical_interface_mappings = provider:ens33
+
+[vxlan]
+enable_vxlan = true
+local_ip = 172.100.100.181
+l2_population = true
+
+[securitygroup]
+enable_security_group = true
+firewall_driver = neutron.agent.linux.iptables_firewall.IptablesFirewallDriver
+</code></pre>
+<h2 id="9-3-配置内核支持网桥过滤器"><a href="#9-3-配置内核支持网桥过滤器" class="headerlink" title="9.3 配置内核支持网桥过滤器"></a>9.3 配置内核支持网桥过滤器</h2><h3 id="9-3-1-创建配置文件"><a href="#9-3-1-创建配置文件" class="headerlink" title="9.3.1 创建配置文件"></a>9.3.1 创建配置文件</h3><pre><code class="hljs">vi /etc/sysctl.conf
+
+
+net.bridge.bridge-nf-call-iptables = 1
+net.bridge.bridge-nf-call-ip6tables = 1
+</code></pre>
+<h3 id="9-3-2-加载内核模块"><a href="#9-3-2-加载内核模块" class="headerlink" title="9.3.2 加载内核模块"></a>9.3.2 加载内核模块</h3><pre><code class="hljs">modprobe br_netfilter &amp;&amp; sysctl -p
+</code></pre>
+<h2 id="9-4-配置计算服务neutron模块"><a href="#9-4-配置计算服务neutron模块" class="headerlink" title="9.4 配置计算服务neutron模块"></a>9.4 配置计算服务neutron模块</h2><pre><code class="hljs">vi /etc/nova/nova.conf
+
+
+[neutron]
+auth_url = http://controller:5000
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+region_name = RegionOne
+project_name = service
+username = neutron
+password = Openstack_2024
+</code></pre>
+<h2 id="9-5-重启Nova-Compute服务"><a href="#9-5-重启Nova-Compute服务" class="headerlink" title="9.5 重启Nova Compute服务"></a>9.5 重启Nova Compute服务</h2><pre><code class="hljs">systemctl restart openstack-nova-compute.service
+</code></pre>
+<h2 id="9-6-启动Linux网桥代理"><a href="#9-6-启动Linux网桥代理" class="headerlink" title="9.6 启动Linux网桥代理"></a>9.6 启动Linux网桥代理</h2><pre><code class="hljs">systemctl start neutron-linuxbridge-agent.service
+systemctl enable neutron-linuxbridge-agent.service
+</code></pre>
+<h2 id="9-7-控制节点验证neutron"><a href="#9-7-控制节点验证neutron" class="headerlink" title="9.7 控制节点验证neutron"></a>9.7 控制节点验证neutron</h2><h3 id="9-7-1-获取keystone管理员凭据"><a href="#9-7-1-获取keystone管理员凭据" class="headerlink" title="9.7.1 获取keystone管理员凭据"></a>9.7.1 获取keystone管理员凭据</h3><pre><code class="hljs">. admin-openrc
+</code></pre>
+<h3 id="9-7-2-查看neutron-server进程"><a href="#9-7-2-查看neutron-server进程" class="headerlink" title="9.7.2 查看neutron-server进程"></a>9.7.2 查看neutron-server进程</h3><pre><code class="hljs">openstack extension list --network
+</code></pre>
+<h3 id="9-7-3-查看neutron发起的代理"><a href="#9-7-3-查看neutron发起的代理" class="headerlink" title="9.7.3 查看neutron发起的代理"></a>9.7.3 查看neutron发起的代理</h3><pre><code class="hljs">openstack network agent list
+</code></pre>
+<h1 id="10-控制节点安装块存储服务Cinder"><a href="#10-控制节点安装块存储服务Cinder" class="headerlink" title="10.控制节点安装块存储服务Cinder"></a>10.控制节点安装块存储服务Cinder</h1><pre><code class="hljs">yum install -y openstack-cinder
+apt install -y cinder-api cinder-scheduler
+</code></pre>
+<h2 id="10-1-创建cinder数据库"><a href="#10-1-创建cinder数据库" class="headerlink" title="10.1 创建cinder数据库"></a>10.1 创建cinder数据库</h2><pre><code class="hljs">mysql -u root -p
+
+MariaDB [(none)]&gt; create database cinder;
+
+MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON cinder.* TO &#39;cinder&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;Openstack_2024&#39;;
+MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON cinder.* TO &#39;cinder&#39;@&#39;%&#39; IDENTIFIED BY &#39;Openstack_2024&#39;;
+
+MariaDB [(none)]&gt; flush privileges;
+</code></pre>
+<h2 id="10-2-创建Cinder服务凭证"><a href="#10-2-创建Cinder服务凭证" class="headerlink" title="10.2 创建Cinder服务凭证"></a>10.2 创建Cinder服务凭证</h2><h3 id="10-2-1-获取keystone管理员凭据"><a href="#10-2-1-获取keystone管理员凭据" class="headerlink" title="10.2.1 获取keystone管理员凭据"></a>10.2.1 获取keystone管理员凭据</h3><pre><code class="hljs">. admin-openrc
+</code></pre>
+<h3 id="10-2-2-创建cinder用户"><a href="#10-2-2-创建cinder用户" class="headerlink" title="10.2.2 创建cinder用户"></a>10.2.2 创建cinder用户</h3><pre><code class="hljs">openstack user create --domain default --password-prompt cinder
+</code></pre>
+<h3 id="10-2-3-设置cinder用户角色及所属项目"><a href="#10-2-3-设置cinder用户角色及所属项目" class="headerlink" title="10.2.3 设置cinder用户角色及所属项目"></a>10.2.3 设置cinder用户角色及所属项目</h3><pre><code class="hljs">openstack role add --project service --user cinder admin
+</code></pre>
+<h3 id="10-2-4-创建cinder实体"><a href="#10-2-4-创建cinder实体" class="headerlink" title="10.2.4 创建cinder实体"></a>10.2.4 创建cinder实体</h3><pre><code class="hljs">openstack service create --name cinderv2 --description &quot;OpenStack Block Storage&quot; volumev2
+openstack service create --name cinderv3 --description &quot;OpenStack Block Storage&quot; volumev3
+</code></pre>
+<h2 id="10-3-创建Cinder服务API端点"><a href="#10-3-创建Cinder服务API端点" class="headerlink" title="10.3 创建Cinder服务API端点"></a>10.3 创建Cinder服务API端点</h2><h3 id="10-3-1-创建Cinder公有服务API端点"><a href="#10-3-1-创建Cinder公有服务API端点" class="headerlink" title="10.3.1 创建Cinder公有服务API端点"></a>10.3.1 创建Cinder公有服务API端点</h3><pre><code class="hljs">openstack endpoint create --region RegionOne volumev2 public http://controller:8776/v2/%\(tenant_id\)s
+openstack endpoint create --region RegionOne volumev3 public http://controller:8776/v3/%\(tenant_id\)s
+</code></pre>
+<h3 id="10-3-2-创建Cinder私有服务API端点"><a href="#10-3-2-创建Cinder私有服务API端点" class="headerlink" title="10.3.2 创建Cinder私有服务API端点"></a>10.3.2 创建Cinder私有服务API端点</h3><pre><code class="hljs">openstack endpoint create --region RegionOne volumev2 internal http://controller:8776/v2/%\(tenant_id\)s
+openstack endpoint create --region RegionOne volumev3 internal http://controller:8776/v3/%\(tenant_id\)s
+</code></pre>
+<h3 id="10-3-3-创建Cinder管理员服务API端点"><a href="#10-3-3-创建Cinder管理员服务API端点" class="headerlink" title="10.3.3 创建Cinder管理员服务API端点"></a>10.3.3 创建Cinder管理员服务API端点</h3><pre><code class="hljs">openstack endpoint create --region RegionOne volumev2 admin http://controller:8776/v2/%\(tenant_id\)s
+openstack endpoint create --region RegionOne volumev3 admin http://controller:8776/v3/%\(tenant_id\)s
+</code></pre>
+<h2 id="10-4-配置cinder服务"><a href="#10-4-配置cinder服务" class="headerlink" title="10.4 配置cinder服务"></a>10.4 配置cinder服务</h2><h3 id="10-4-1-备份原文件"><a href="#10-4-1-备份原文件" class="headerlink" title="10.4.1 备份原文件"></a>10.4.1 备份原文件</h3><pre><code class="hljs">sed -i.default -e &#39;/^#/d&#39; -e &#39;/^$/d&#39; /etc/cinder/cinder.conf 
+</code></pre>
+<h3 id="10-4-2-修改配置文件"><a href="#10-4-2-修改配置文件" class="headerlink" title="10.4.2 修改配置文件"></a>10.4.2 修改配置文件</h3><pre><code class="hljs">vi /etc/cinder/cinder.conf
+
+
+[DEFAULT]
+auth_strategy = keystone
+my_ip = 172.100.100.180
+transport_url = rabbit://openstack:Openstack_2024@controller
+
+[database]
+connection = mysql+pymysql://cinder:Openstack_2024@controller/cinder
+
+[keystone_authtoken]
+www_authenticate_uri = http://controller:5000
+auth_url = http://controller:5000
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = cinder
+password = Openstack_2024
+
+[oslo_concurrency]
+lock_path = /var/lib/cinder/tmp
+</code></pre>
+<h2 id="10-5-初始化cinder数据库"><a href="#10-5-初始化cinder数据库" class="headerlink" title="10.5 初始化cinder数据库"></a>10.5 初始化cinder数据库</h2><pre><code class="hljs">su -s /bin/sh -c &quot;cinder-manage db sync&quot; cinder
+</code></pre>
+<h2 id="10-6-配置计算服务cinder模块"><a href="#10-6-配置计算服务cinder模块" class="headerlink" title="10.6 配置计算服务cinder模块"></a>10.6 配置计算服务cinder模块</h2><pre><code class="hljs">vi /etc/nova/nova.conf
+
+
+[cinder]
+os_region_name = RegionOne
+</code></pre>
+<h2 id="10-7-重启nova-api服务"><a href="#10-7-重启nova-api服务" class="headerlink" title="10.7 重启nova-api服务"></a>10.7 重启nova-api服务</h2><pre><code class="hljs">systemctl restart openstack-nova-api.service
+</code></pre>
+<h2 id="10-8-启动Cinder服务"><a href="#10-8-启动Cinder服务" class="headerlink" title="10.8 启动Cinder服务"></a>10.8 启动Cinder服务</h2><pre><code class="hljs">systemctl start openstack-cinder-api.service
+systemctl enable openstack-cinder-api.service
+systemctl start openstack-cinder-scheduler.service
+systemctl enable openstack-cinder-scheduler.service
+</code></pre>
+<h1 id="11-存储节点安装块存储服务Cinder"><a href="#11-存储节点安装块存储服务Cinder" class="headerlink" title="11.存储节点安装块存储服务Cinder"></a>11.存储节点安装块存储服务Cinder</h1><pre><code class="hljs">yum install -y openstack-cinder targetcli python-keystone
+apt install -y lvm2 thin-provisioning-tools 
+</code></pre>
+<h2 id="11-1-配置LVM"><a href="#11-1-配置LVM" class="headerlink" title="11.1 配置LVM"></a>11.1 配置LVM</h2><h3 id="11-1-1-安装LVM"><a href="#11-1-1-安装LVM" class="headerlink" title="11.1.1 安装LVM"></a>11.1.1 安装LVM</h3><pre><code class="hljs">yum install -y lvm2 device-mapper-persistent-data
+apt install -y tgt cinder-volume
+</code></pre>
+<h3 id="11-1-2-启动LVM元数据服务"><a href="#11-1-2-启动LVM元数据服务" class="headerlink" title="11.1.2 启动LVM元数据服务"></a>11.1.2 启动LVM元数据服务</h3><pre><code class="hljs">systemctl start lvm2-lvmetad.service
+systemctl enable lvm2-lvmetad.service
+</code></pre>
+<h3 id="11-1-3-添加新盘，创建LVM"><a href="#11-1-3-添加新盘，创建LVM" class="headerlink" title="11.1.3 添加新盘，创建LVM"></a>11.1.3 添加新盘，创建LVM</h3><pre><code class="hljs">pvcreate /dev/sdb
+</code></pre>
+<h3 id="11-1-4-创建块存储LVM卷组"><a href="#11-1-4-创建块存储LVM卷组" class="headerlink" title="11.1.4 创建块存储LVM卷组"></a>11.1.4 创建块存储LVM卷组</h3><pre><code class="hljs">vgcreate cinder-volumes /dev/sdb
+</code></pre>
+<h3 id="11-1-5-配置块存储卷组的访问权限，使LVM卷扫描工具只扫描包含cinder-volume卷组的设备"><a href="#11-1-5-配置块存储卷组的访问权限，使LVM卷扫描工具只扫描包含cinder-volume卷组的设备" class="headerlink" title="11.1.5 配置块存储卷组的访问权限，使LVM卷扫描工具只扫描包含cinder-volume卷组的设备"></a>11.1.5 配置块存储卷组的访问权限，使LVM卷扫描工具只扫描包含cinder-volume卷组的设备</h3><pre><code class="hljs">vi /etc/lvm/lvm.conf
+
+
+devices &#123;
+
+filter = [ &quot;a/vdb/&quot;, &quot;r/.*/&quot;]
+
+&#125;
+</code></pre>
+<h3 id="11-1-6-配置target"><a href="#11-1-6-配置target" class="headerlink" title="11.1.6 配置target"></a>11.1.6 配置target</h3><pre><code class="hljs">vi /etc/tgt/targets.conf
+
+
+include /var/lib/cinder/volumes/*
+</code></pre>
+<h2 id="11-2-配置Cinder服务"><a href="#11-2-配置Cinder服务" class="headerlink" title="11.2 配置Cinder服务"></a>11.2 配置Cinder服务</h2><h3 id="11-2-1-备份原文件"><a href="#11-2-1-备份原文件" class="headerlink" title="11.2.1 备份原文件"></a>11.2.1 备份原文件</h3><pre><code class="hljs">sed -i.default -e &#39;/^#/d&#39; -e &#39;/^$/d&#39; /etc/cinder/cinder.conf 
+</code></pre>
+<h3 id="11-2-2-修改配置文件"><a href="#11-2-2-修改配置文件" class="headerlink" title="11.2.2 修改配置文件"></a>11.2.2 修改配置文件</h3><pre><code class="hljs">vi /etc/cinder/cinder.conf
+
+
+[DEFAULT]
+transport_url = rabbit://openstack:Openstack_2024@controller
+auth_strategy = keystone
+my_ip = 172.100.100.180
+enabled_backends = lvm
+glance_api_servers = http://controller:9292
+
+[database]
+connection = mysql+pymysql://cinder:Openstack_2024@controller/cinder
+
+[oslo_concurrency]
+lock_path = /var/lib/cinder/tmp
+
+[lvm]
+volume_driver = cinder.volume.drivers.lvm.LVMVolumeDriver
+volume_group = cinder-volumes
+iscsi_protocol = iscsi
+iscsi_helper = lioadm
+target_helper = tgtadm
+
+[keystone_authtoken]
+auth_uri = http://controller:5000
+www_authenticate_uri = http://controller:5000
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = cinder
+password = Openstack_2024
+</code></pre>
+<h2 id="11-3-启动块存储卷服务"><a href="#11-3-启动块存储卷服务" class="headerlink" title="11.3 启动块存储卷服务"></a>11.3 启动块存储卷服务</h2><pre><code class="hljs">systemctl start openstack-cinder-volume.service
+systemctl enable openstack-cinder-volume.service
+systemctl start target.service
+systemctl enable target.service
+</code></pre>
+<h2 id="11-4-验证Cinder服务"><a href="#11-4-验证Cinder服务" class="headerlink" title="11.4 验证Cinder服务"></a>11.4 验证Cinder服务</h2><h3 id="11-4-1-获取keystone管理员凭据"><a href="#11-4-1-获取keystone管理员凭据" class="headerlink" title="11.4.1 获取keystone管理员凭据"></a>11.4.1 获取keystone管理员凭据</h3><pre><code class="hljs">. admin-openrc
+</code></pre>
+<h3 id="11-4-2-查看已经启动的服务组件"><a href="#11-4-2-查看已经启动的服务组件" class="headerlink" title="11.4.2 查看已经启动的服务组件"></a>11.4.2 查看已经启动的服务组件</h3><pre><code class="hljs">openstack volume service list
+</code></pre>
+<h1 id="12-控制节点安装UI服务Horizon"><a href="#12-控制节点安装UI服务Horizon" class="headerlink" title="12.控制节点安装UI服务Horizon"></a>12.控制节点安装UI服务Horizon</h1><pre><code class="hljs">yum install -y openstack-dashboard
+apt install -y openstack-dashboard
+</code></pre>
+<h2 id="12-1-配置UI服务"><a href="#12-1-配置UI服务" class="headerlink" title="12.1 配置UI服务"></a>12.1 配置UI服务</h2><h3 id="12-1-1-备份原配置文件"><a href="#12-1-1-备份原配置文件" class="headerlink" title="12.1.1 备份原配置文件"></a>12.1.1 备份原配置文件</h3><pre><code class="hljs">cp /etc/openstack-dashboard/local_settings /etc/openstack-dashboard/local_settings.bak
+</code></pre>
+<h3 id="12-1-2-修改配置文件"><a href="#12-1-2-修改配置文件" class="headerlink" title="12.1.2 修改配置文件"></a>12.1.2 修改配置文件</h3><pre><code class="hljs">vi /etc/openstack-dashboard/local_settings
+
+
+OPENSTACK_HOST=&quot;192.168.1.100&#39;
+OPENSTACK_KEYSTONE_URL=&quot;http://%s:5000/v3 % OPENSTACK_HOST&quot;
+OPENSTACK_KEYSTONE_DEFAULT_ROLE=&quot;user&quot;
+ALLOWED_HOSTS = [&#39;*&#39;,]
+
+SESSION_ENGINE=&#39;django.contrib.sessions.backends.cache&#39;
+CACHE=&#123;
+    &#39;default&#39;:&#123;
+        &#39;BACKEND&#39;:&#39;django.core.cache.backends.memcached.MemcachedCache&#39;,
+        &#39;LOCALTION&#39;:&#39;controller:11211&#39;,
+    &#125;
+&#125;
+
+OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT=True
+
+OPENSTACK_KEYSTONE_DEFAULT_DOMAIN=&quot;default&quot;
+
+TIME_ZONE=&quot;Asia/Shanghai&quot;
+</code></pre>
+<h2 id="12-2-配置Apache服务器"><a href="#12-2-配置Apache服务器" class="headerlink" title="12.2 配置Apache服务器"></a>12.2 配置Apache服务器</h2><pre><code class="hljs">echo &#39;WSGIApplicationGroup %&#123;GLOBAL&#125;&#39; &gt;&gt; /etc/httpd/conf.d/openstack-dashboard.conf
+</code></pre>
+<h2 id="12-3-重启服务"><a href="#12-3-重启服务" class="headerlink" title="12.3 重启服务"></a>12.3 重启服务</h2><pre><code class="hljs">systemctl restart memcached.service
+systemctl restart httpd.service
+</code></pre>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/hu_zhe_kan/article/details/101698228">https://blog.csdn.net/hu_zhe_kan/article/details/101698228</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45724795/article/details/104759381">https://blog.csdn.net/weixin_45724795/article/details/104759381</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35550345/article/details/87855549">https://blog.csdn.net/qq_35550345/article/details/87855549</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/dylloveyou/article/details/80698420">https://blog.csdn.net/dylloveyou/article/details/80698420</a></li>
+<li><a target="_blank" rel="noopener" href="https://openeuler.gitee.io/openstack/install/openEuler-22.03-LTS-SP1/OpenStack-wallaby">https://openeuler.gitee.io/openstack/install/openEuler-22.03-LTS-SP1/OpenStack-wallaby</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
+      
+        <a href="/tags/%E7%A7%81%E6%9C%89%E4%BA%91/">#私有云</a>
+      
+        <a href="/tags/Openstack/">#Openstack</a>
+      
+        <a href="/tags/%E5%85%AC%E6%9C%89%E4%BA%91/">#公有云</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Openstack集群部署</div>
+      <div>https://hfsxs.github.io/7d267ffbbb7b/Openstack</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年2月25日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月15日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/4b89ab97a750/MySQL-Optimization" title="MySQL数据库性能调优">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">MySQL数据库性能调优</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/1b7d2b41bb32/KubernetesOptimization" title="Kubernetes集群性能优化策略">
+                        <span class="hidden-mobile">Kubernetes集群性能优化策略</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+
+<div>
+<span id="timeDate"> 正在载入天数...</span>
+<span id="times"> 载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime(){
+        var grt= new Date("1/12/2025 01:15:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if(String(snum).length ==1 ){
+                snum = "0" + snum;
+        }
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
+        document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+</div>
+
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

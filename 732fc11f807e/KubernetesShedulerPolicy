@@ -1,0 +1,1514 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Sheduler，即调度器，负责整个集群的资源调度。默认情况下，Pod被调度到哪个节点运行是由Scheduler组件经过相应的算法计算所得，这个过程不受人工控制，由集群自动完成。但业务实际运行时，自动调度的结果可能并不能满足需求，如需要控制某些Pod到达某些特定的节点上。当然，这样人为控制调度策略将会额外增加资源分配时的计算开销，且复杂的调度规则也将加大管理及维护的成本，具体的配置还是要根据实际情">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes集群调度策略详解">
+<meta property="og:url" content="https://hfsxs.github.io/732fc11f807e/KubernetesShedulerPolicy">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="Sheduler，即调度器，负责整个集群的资源调度。默认情况下，Pod被调度到哪个节点运行是由Scheduler组件经过相应的算法计算所得，这个过程不受人工控制，由集群自动完成。但业务实际运行时，自动调度的结果可能并不能满足需求，如需要控制某些Pod到达某些特定的节点上。当然，这样人为控制调度策略将会额外增加资源分配时的计算开销，且复杂的调度规则也将加大管理及维护的成本，具体的配置还是要根据实际情">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-03-14T01:16:23.000Z">
+<meta property="article:modified_time" content="2025-03-15T13:20:57.535Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="容器云">
+<meta property="article:tag" content="云原生">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Kubernetes集群调度策略详解 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Kubernetes集群调度策略详解</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-14 09:16" pubdate>
+          2023年3月14日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          14k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          116 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kubernetes集群调度策略详解</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Sheduler，即调度器，负责整个集群的资源调度。默认情况下，Pod被调度到哪个节点运行是由Scheduler组件经过相应的算法计算所得，这个过程不受人工控制，由集群自动完成。但业务实际运行时，自动调度的结果可能并不能满足需求，如需要控制某些Pod到达某些特定的节点上。当然，这样人为控制调度策略将会额外增加资源分配时的计算开销，且复杂的调度规则也将加大管理及维护的成本，具体的配置还是要根据实际情况进行详尽的规划</p>
+<p>kubernetes集群调度方式分为四种：</p>
+<ul>
+<li>自动调度，运行在哪个节点上完全由Scheduler经过一系列的算法自动计算得出</li>
+<li>定向调度，NodeName、NodeSelector</li>
+<li>亲和性&#x2F;反亲和性调度，NodeAffinity、PodAffinity、PodAntiAffinity</li>
+<li>污点&#x2F;容忍调度，Taints&#x2F;Toleration</li>
+</ul>
+<hr>
+<h1 id="1-自动调度"><a href="#1-自动调度" class="headerlink" title="1.自动调度"></a>1.自动调度</h1><p>自动调度是Scheduler默认调度方式，经由一些列算法确定将Pod调度到哪些节点</p>
+<pre><code class="hljs">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-nginx
+spec:
+  selector:
+    matchLabels:
+      app: test
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      containers:
+        - name: nginx
+          image: registry.sword.org/nginx
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: nginx
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+      imagePullSecrets:
+        - name: regcred
+</code></pre>
+<h1 id="2-定向调度"><a href="#2-定向调度" class="headerlink" title="2.定向调度"></a>2.定向调度</h1><p>定向调度，即将Pod调度到指定的节点，带有强制性，也就是说即使所要调度的目标节点不存在或不可调度也要进行调度，调度的结果自然是失败的。定向调度有两种实现方式，即NodeName和NodeSelector</p>
+<h2 id="2-1-NodeName"><a href="#2-1-NodeName" class="headerlink" title="2.1 NodeName"></a>2.1 NodeName</h2><p>NodeName，用于强制约束将Pod调度到指定Name的节点，即跳过Scheduler的调度逻辑直接将Pod调度到指定名称的节点。如匹配的节点不存在，则Pod运行失败</p>
+<pre><code class="hljs">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-nginx
+spec:
+  selector:
+    matchLabels:
+      app: test
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      containers:
+        - name: nginx
+          image: registry.sword.org/nginx
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: nginx
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+      imagePullSecrets:
+        - name: regcred
+      nodeName: worker03
+</code></pre>
+<h2 id="2-2-NodeSelector"><a href="#2-2-NodeSelector" class="headerlink" title="2.2 NodeSelector"></a>2.2 NodeSelector</h2><p>NodeSelector，用于通过kubernetes的label-selector机制将Pod调度到添加了指定标签的节点，即由scheduler使用MatchNodeSelector调度策略匹配指定label的节点进行Pod调度，匹配规则具有强制性。如匹配的节点不存在，则Pod运行失败</p>
+<h3 id="2-2-1-节点新增标签"><a href="#2-2-1-节点新增标签" class="headerlink" title="2.2.1 节点新增标签"></a>2.2.1 节点新增标签</h3><pre><code class="hljs">kubectl label nodes worker01 worker=01
+kubectl label nodes worker02 worker=02
+kubectl label nodes worker03 worker=03
+kubectl label nodes worker02 app=jellyfin
+kubectl label nodes worker03 app=database
+</code></pre>
+<h3 id="2-2-2-验证NodeSelector调度算法"><a href="#2-2-2-验证NodeSelector调度算法" class="headerlink" title="2.2.2 验证NodeSelector调度算法"></a>2.2.2 验证NodeSelector调度算法</h3><pre><code class="hljs">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin-deployment
+spec:
+  selector:
+    matchLabels:
+      app: jellyfin-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jellyfin-server
+    spec:
+      containers:
+        - name: jellyfin
+          image: registry.cn-hangzhou.aliyuncs.com/geekers/jellyfin:v10.8.5
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: tcp-jellyfin
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512M
+            requests:
+              cpu: 300m
+              memory: 500M
+          volumeMounts:
+          - mountPath: /etc/localtime
+            name: localtime
+          - mountPath: /media/cloud
+            name: nfs-sword
+          - mountPath: /config
+            name: jellyfin-config
+          - mountPath: /cache
+            name: jellyfin-cache
+      volumes:
+      - hostPath:
+          path: /etc/localtime
+        name: localtime
+      - name: nfs-sword
+        persistentVolumeClaim:
+          claimName: nfs-sword
+      - name: jellyfin-config
+        persistentVolumeClaim:
+          claimName: jellyfin-ceph-config
+      - name: jellyfin-cache
+        persistentVolumeClaim:
+          claimName: jellyfin-ceph-cache
+      imagePullSecrets:
+        - name: regcred 
+      nodeSelector:
+        app: jellyfin
+</code></pre>
+<h3 id="2-2-3-删除节点标签，验证NodeSelector调度算法"><a href="#2-2-3-删除节点标签，验证NodeSelector调度算法" class="headerlink" title="2.2.3 删除节点标签，验证NodeSelector调度算法"></a>2.2.3 删除节点标签，验证NodeSelector调度算法</h3><pre><code class="hljs"># 查看节点标签
+kubectl get nodes worker02 --show-labels
+# 删除节点的app标签
+kubectl label nodes worker02 app-
+# 删除任一pod，重新调度
+kubectl delete pod jellyfin-deployment-545d877bbc-c65pz
+</code></pre>
+<h1 id="3-亲和性调度"><a href="#3-亲和性调度" class="headerlink" title="3.亲和性调度"></a>3.亲和性调度</h1><p>亲和性调度，即Affinity，是基于NodeSelector调度策略的扩展，通过配置节点标签的匹配规则优先选择满足条件的Node进行调度，若匹配失败，则再调度到不满足条件的节点上，从而使得调度更加灵活。Affinity分为三类，即nodeAffinity、podAffinity、podAntiAffinity：</p>
+<ul>
+<li>nodeAffinity，node亲和性，即以node为目标决定pod可以调度到哪些Node上</li>
+<li>podAffinity，pod亲和性，即以正在运行的pod为参照目标，实现新创建的pod跟参照pod部署在同一区域</li>
+<li>podAntiAffinity，pod反亲和性，即以正在运行的pod为参照目标，实现新创建的pod不跟参照pod部署在同一区域</li>
+</ul>
+<h2 id="3-1-使用场景"><a href="#3-1-使用场景" class="headerlink" title="3.1 使用场景"></a>3.1 使用场景</h2><ul>
+<li>亲和性，若两个应用频繁交互，则有必要利用亲和性调度策略将两者尽可能调度到同一节点，以减少因网络通信带来的性能损耗</li>
+<li>反亲和性，若应用涉及多副本部署，则有必要采用反亲和性调度策略将各个应用实例打散分布到各个不同的节点，以提高服务的高可用性</li>
+</ul>
+<h2 id="3-2-标签匹配表达式"><a href="#3-2-标签匹配表达式" class="headerlink" title="3.2 标签匹配表达式"></a>3.2 标签匹配表达式</h2><p>亲和性调度算法依据标签匹配表达式列出符合要求的节点列表，从而更灵活地完成调度，表达式可用的关系运算符有In、NotIn、Exists、 DoesNotExist、Gt、Lt，用法如下：</p>
+<h3 id="3-2-1-Exists"><a href="#3-2-1-Exists" class="headerlink" title="3.2.1 Exists"></a>3.2.1 Exists</h3><pre><code class="hljs">- matchExpressions:
+  # 匹配存在标签key为test的节点 
+  - key: test
+    operator: Exists
+</code></pre>
+<h3 id="3-2-2-In"><a href="#3-2-2-In" class="headerlink" title="3.2.2 In"></a>3.2.2 In</h3><pre><code class="hljs">- matchExpressions:
+  # 匹配标签key为test，且value是&quot;01&quot;或&quot;02&quot;的节点 
+  - key: test
+    operator: In
+    values: 
+    - [&quot;01&quot;,&quot;02&quot;]
+</code></pre>
+<h3 id="3-2-3-Gt"><a href="#3-2-3-Gt" class="headerlink" title="3.2.3 Gt"></a>3.2.3 Gt</h3><pre><code class="hljs">- matchExpressions:
+  # 匹配标签key为test，且value大于&quot;01&quot;的节点 
+  - key: test
+    operator: Gt
+    values: 
+    - &quot;01&quot;
+</code></pre>
+<hr>
+<ul>
+<li>注：其余运算符的运算逻辑基本为上面三个的反例</li>
+</ul>
+<h2 id="3-3-nodeAffinity"><a href="#3-3-nodeAffinity" class="headerlink" title="3.3 nodeAffinity"></a>3.3 nodeAffinity</h2><h3 id="3-3-1-硬亲和性策略"><a href="#3-3-1-硬亲和性策略" class="headerlink" title="3.3.1 硬亲和性策略"></a>3.3.1 硬亲和性策略</h3><pre><code class="hljs">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+spec:
+  selector:
+    matchLabels:
+      app: redis-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: redis-server
+    spec:
+      containers:
+        - name: redis
+          image: registry.sword.org/redis
+          imagePullPolicy: IfNotPresent
+          command: [ &quot;/usr/bin/redis-server&quot; ]
+          args: [&quot;--requirepass&quot;,&quot;$(requirepass)&quot;]
+          envFrom:
+          - configMapRef:
+              name: redis-conf
+          env:
+            - name: requirepass
+              valueFrom:
+                secretKeyRef:
+                  name: redis-auth
+                  key: requirepass
+          ports:
+            - containerPort: 6379
+              name: redis-tcp
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100M
+            requests:
+              cpu: 50m
+              memory: 64M
+      imagePullSecrets:
+        - name: regcred
+      # 设置亲和性 
+      affinity:
+        # 设置node亲和性
+        nodeAffinity:
+          # 设置硬亲和性策略，即必须满足的匹配规则
+          requiredDuringSchedulingIgnoredDuringExecution:
+            # 设置节点选择列表
+            nodeSelectorTerms:
+            # 设置标签匹配表达式
+            - matchExpressions:
+              - key: app
+                # 设置标签匹配规则，即匹配标签key为app且value值不为jellyfin的节点
+                operator: NotIn
+                values: 
+                - jellyfin
+</code></pre>
+<h3 id="3-3-2-软亲和性策略"><a href="#3-3-2-软亲和性策略" class="headerlink" title="3.3.2 软亲和性策略"></a>3.3.2 软亲和性策略</h3><pre><code class="hljs">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea-deployment
+  namespace: devops
+spec:
+  selector:
+    matchLabels:
+      app: gitea
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: gitea
+    spec:
+      containers:
+        - name: gitea
+          image: gitea/gitea
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+              name: gitea-http
+            - containerPort: 22
+              name: gitea-ssh  
+          resources:
+            limits:
+              cpu: 300m
+              memory: 256M
+            requests:
+              cpu: 200m
+              memory: 200M
+          volumeMounts:
+          - mountPath: /data
+            name: gitea-data
+          - name: localtime
+            mountPath: /etc/localtime
+      volumes:
+      - name: gitea-data
+        persistentVolumeClaim:
+          claimName: gitea-data
+      - name: localtime
+        hostPath:
+          path: /etc/localtime
+      imagePullSecrets:
+        - name: regcred
+      # 设置亲和性 
+      affinity:
+        # 设置node亲和性
+        nodeAffinity:
+          # 设置软亲和性策略，即优先调度到满足指定规则的节点，若无满足规则的节点再调度到其他节点
+          preferredDuringSchedulingIgnoredDuringExecution:
+          # 设置策略权重，取值范围为1-100
+          - weight: 1
+            # 设置节点选择器
+            preference: 
+              # 设置标签匹配表达式
+              matchExpressions:
+              - key: worker
+                # 设置标签匹配规则，即匹配标签key为worker且value值大于01的节点
+                operator: Gt
+                values: 
+                - &quot;01&quot;
+</code></pre>
+<h3 id="3-3-3-注意事项"><a href="#3-3-3-注意事项" class="headerlink" title="3.3.3 注意事项"></a>3.3.3 注意事项</h3><ul>
+<li>若同时定义了nodeSelector和nodeAffinity，则须两个条件都得到满足才能调度到指定的Node</li>
+<li>若nodeAffinity指定了多个nodeSelectorTerms，则只需其中一个能够匹配成功即可</li>
+<li>若nodeSelectorTerms有多个matchExpressions，则节点须全部满足才能匹配成功</li>
+<li>若Pod所在的节点在Pod运行期间标签发生了改变，不再符合该Pod节点的亲和性需求，则将忽略此变化，不再重新调度</li>
+</ul>
+<h2 id="3-4-podAffinity"><a href="#3-4-podAffinity" class="headerlink" title="3.4 podAffinity"></a>3.4 podAffinity</h2><pre><code class="hljs"># 查看Pod标签
+kubectl get pod redis --show-labels
+</code></pre>
+<h3 id="3-4-1-硬亲和性策略"><a href="#3-4-1-硬亲和性策略" class="headerlink" title="3.4.1 硬亲和性策略"></a>3.4.1 硬亲和性策略</h3><pre><code class="hljs">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cloudreve-deployment
+spec:
+  selector:
+    matchLabels:
+      app: cloudreve-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: cloudreve-server
+    spec:
+      containers:
+        - name: cloudreve
+          image: registry.sword.org/cloudreve
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5212
+              name: cloudreve-tcp
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 512M
+            requests:
+              cpu: 100m
+              memory: 300M
+          volumeMounts:
+          - mountPath: /cloudreve/conf.ini
+            name: cloudreve-conf
+            subPath: conf.ini
+          - mountPath: /home/sword
+            name: nfs-sword
+      volumes:
+      - configMap:
+          name: cloudreve-conf
+        name: cloudreve-conf
+      - name: nfs-sword
+        persistentVolumeClaim:
+          claimName: nfs-sword
+      imagePullSecrets:
+        - name: regcred
+      # 设置亲和性 
+      affinity:
+        # 设置pod亲和性
+        podAffinity:
+          # 设置硬亲和性策略，即必须满足的匹配规则
+          requiredDuringSchedulingIgnoredDuringExecution:
+            # 设置Pod标签选择器
+          - labelSelector:
+            # 设置Pod标签匹配表达式
+              matchExpressions:
+              - key: app
+                # 设置Pod标签匹配规则，即匹配标签key为app且value值为redis-server的Pod作为调度目标
+                operator: In
+                values: 
+                - &quot;redis-server&quot;
+              - key: app
+                # 设置Pod标签匹配规则，即匹配标签key为app且value值不为jellyfin的Pod作为调度目标
+                operator: NotIn
+                values: 
+                - &quot;jellyfin-server&quot;
+            # 设置调度作用域
+            topologyKey: kubernetes.io/hostname
+        # 设置node亲和性
+        nodeAffinity:
+          # 设置软亲和性策略，即优先调度到满足指定规则的节点，若无满足规则的节点再调度到其他节点
+          preferredDuringSchedulingIgnoredDuringExecution:
+          # 设置策略权重，取值范围为1-100
+          - weight: 1
+            # 设置节点选择器
+            preference: 
+              # 设置标签匹配表达式
+              matchExpressions:
+              - key: app
+                # 设置标签匹配规则，即匹配标签key为app且value值为database的节点
+                operator: In
+                values: 
+                - &quot;database&quot;
+</code></pre>
+<h3 id="3-4-2-软亲和性策略"><a href="#3-4-2-软亲和性策略" class="headerlink" title="3.4.2 软亲和性策略"></a>3.4.2 软亲和性策略</h3><pre><code class="hljs">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hexo-deployment
+  namespace: devops
+spec:
+  selector:
+    matchLabels:
+      app: hexo-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hexo-server
+    spec:
+      containers:
+        - name: hexo
+          image: registry.sword.org/nginx
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: hexo-nginx
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100M
+            requests:
+              cpu: 100m
+              memory: 64M
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx.conf
+      imagePullSecrets:
+        - name: regcred
+      # 设置亲和性 
+      affinity:
+        # 设置Pod亲和性
+        podAffinity:
+          # 设置软亲和性策略，即优以满足指定规则的Pod为目标进行调度，若无满足规则的Pod则按照集群自动调度
+          preferredDuringSchedulingIgnoredDuringExecution:
+            # 设置策略权重值，范围为1-100
+            - weight: 1
+              # 设置标签列表
+              podAffinityTerm:
+                # 设置Pod标签选择器
+                labelSelector:
+                  # 设置Pod标签匹配表达式
+                  matchExpressions:
+                    - key: app
+                      # 设置Pod标签匹配规则，即匹配标签key为app且value值为jenkins的Pod作为调度目标
+                      operator: In
+                      values: 
+                      - jenkins
+                # 设置调度作用域，以节点区分区域
+                topologyKey: kubernetes.io/hostname
+        # 设置node亲和性
+        nodeAffinity:
+          # 设置硬亲和性策略，即必须满足的匹配规则
+          requiredDuringSchedulingIgnoredDuringExecution:
+            # 设置节点选择列表
+            nodeSelectorTerms:
+            # 设置标签匹配表达式
+            - matchExpressions:
+              - key: app
+                # 设置标签匹配规则，即匹配没有标签key为app的节点
+                operator: DoesNotExist
+</code></pre>
+<h2 id="3-5-PodAntiAffinity"><a href="#3-5-PodAntiAffinity" class="headerlink" title="3.5 PodAntiAffinity"></a>3.5 PodAntiAffinity</h2><h3 id="3-5-1-硬反亲和性策略"><a href="#3-5-1-硬反亲和性策略" class="headerlink" title="3.5.1 硬反亲和性策略"></a>3.5.1 硬反亲和性策略</h3><pre><code class="hljs">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+spec:
+  selector:
+    matchLabels:
+      app: nginx-server
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: nginx-server
+    spec:
+      containers:
+        - name: nginx
+          image: registry.sword.org/nginx
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: nginx
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          volumeMounts:
+            - name: nginx-conf
+              mountPath: /etc/nginx/nginx.conf
+              subPath: nginx.conf
+            - name: nginx-logs
+              mountPath: /var/log/nginx
+            - name: nfs-sword
+              mountPath: /home/sword
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: nginx-conf
+        - name: nginx-logs
+          hostPath:
+            path: /var/log/nginx
+        - name: nfs-sword
+          persistentVolumeClaim:
+            claimName: nfs-sword
+      imagePullSecrets:
+        - name: regcred
+      # 设置亲和性 
+      affinity:
+        # 设置pod反亲和性
+        podAntiAffinity:
+          # 设置硬反亲和策略，即必须满足的匹配规则
+          requiredDuringSchedulingIgnoredDuringExecution:
+            # 设置Pod标签选择器
+          - labelSelector:
+            # 设置Pod标签匹配表达式
+              matchExpressions:
+              - key: app
+                # 设置Pod标签匹配规则，即匹配标签key为app且value值为nginx-servers的Pod作为反向
+                # 调度目标，也即是使得副本Pod之间互斥，相互之间不在同一节点上，将之打散以保障其可用性
+                operator: In
+                values: 
+                - nginx-server
+            # 设置调度作用域
+            topologyKey: kubernetes.io/hostname
+        # 设置Pod亲和性
+        podAffinity:
+          # 设置软亲和性策略，即优以满足指定规则的Pod为目标进行调度，若无满足规则的Pod则按照集群自动调度
+          preferredDuringSchedulingIgnoredDuringExecution:
+            # 设置策略权重值，范围为1-100
+            - weight: 1
+              # 设置标签列表
+              podAffinityTerm:
+                # 设置Pod标签选择器
+                labelSelector:
+                  # 设置Pod标签匹配表达式
+                  matchExpressions:
+                    - key: app
+                      # 设置Pod标签匹配规则，即匹配标签key为test且value值为00的pod作为调度目标
+                      operator: NotIn
+                      values: 
+                      - [&quot;jellyfin&quot;,&quot;cloudreve&quot;]
+                    - key: app
+                      # 设置Pod标签匹配规则，即匹配标签key为test且value值为00的pod作为调度目标
+                      operator: In
+                      values: 
+                      - redis 
+                # 设置调度作用域，以节点区分区域
+                topologyKey: kubernetes.io/hostname
+</code></pre>
+<h3 id="3-5-2-软亲和性策略"><a href="#3-5-2-软亲和性策略" class="headerlink" title="3.5.2 软亲和性策略"></a>3.5.2 软亲和性策略</h3><pre><code class="hljs">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webos-deployment  
+spec:
+  selector:
+    matchLabels:
+      app: webos-server
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: webos-server
+    spec:
+      containers:
+        - name: webos
+          image: registry.cn-hangzhou.aliyuncs.com/geekers/webos
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8088
+              protocol: TCP
+          resources:
+              limits:
+                cpu: 500m
+                memory: 300Mi
+              requests:
+                cpu: 300m
+                memory: 200Mi
+          volumeMounts:
+            - name: webos-root
+              mountPath: /webos/api/rootPath
+            - name: webos-apps
+              mountPath: /webos/web/apps
+            - name: webos-data
+              mountPath: /home/webos
+      volumes:
+        - name: webos-root
+          persistentVolumeClaim:
+            claimName: webos-root
+        - name: webos-apps
+          persistentVolumeClaim:
+            claimName: webos-apps
+        - name: webos-data
+          persistentVolumeClaim:
+            claimName: webos-data
+      imagePullSecrets:
+        - name: regcred
+      # 设置亲和性 
+      affinity:
+        # 设置Pod反亲和性
+        podAntiAffinity:
+          # 设置软亲和性策略，即优以满足指定规则的Pod为目标进行反向调度
+          preferredDuringSchedulingIgnoredDuringExecution:
+            # 设置策略权重值，范围为1-100
+            - weight: 1
+              # 设置标签列表
+              podAffinityTerm:
+                # 设置Pod标签选择器
+                labelSelector:
+                  # 设置Pod标签匹配表达式
+                  matchExpressions:
+                    - key: app
+                      # 设置Pod标签匹配规则，即匹配标签key为app且value值为jellyfin的pod作为调度目标
+                      operator: In
+                      values: 
+                      - &quot;jellyfin-server&quot;
+                # 设置调度作用域
+                topologyKey: kubernetes.io/hostname
+        podAffinity:
+          # 设置软亲和性策略，即优以满足指定规则的Pod为目标进行调度，若无满足规则的Pod则按照集群自动调度
+          preferredDuringSchedulingIgnoredDuringExecution:
+            # 设置策略权重值，范围为1-100
+            - weight: 1
+              # 设置标签列表
+              podAffinityTerm:
+                # 设置Pod标签选择器
+                labelSelector:
+                  # 设置Pod标签匹配表达式
+                  matchExpressions:
+                    - key: app
+                      # 设置Pod标签匹配规则，即匹配标签key为test且value值为00的pod作为调度目标
+                      operator: In
+                      values: 
+                      - &quot;cloud-server&quot;
+                # 设置调度作用域，以节点区分区域
+                topologyKey: kubernetes.io/hostname
+        # 设置node亲和性
+        nodeAffinity:
+          # 设置软亲和性策略，即优先调度到满足指定规则的节点，若无满足规则的节点再调度到其他节点
+          preferredDuringSchedulingIgnoredDuringExecution:
+          # 设置策略权重，取值范围为1-100
+          - weight: 1
+            # 设置节点选择器
+            preference: 
+              # 设置标签匹配表达式
+              matchExpressions:
+              - key: app
+                # 设置标签匹配规则，即匹配具有标签key为app的节点
+                operator: Exists
+</code></pre>
+<h1 id="4-污点和容忍调度"><a href="#4-污点和容忍调度" class="headerlink" title="4.污点和容忍调度"></a>4.污点和容忍调度</h1><p>Kubernetes作为容器化云平台已经实现了资源的容器隔离，但目前容器隔离还不能做到宿主机资源100%的隔离，且平台层面对业务线占用资源的限制和隔离也大大增加了跨部门协同合作的沟通成本。污点和容忍配合的调度策略可妥善的解决此问题，即是通过对节点配置Taints和Tolerations，将资源需求不同的业务线Pod调度到各自独立的节点组，从而避免同一业务线的Pod被分配到不合适的节点，从而实现了不同业务线的物理隔离</p>
+<ul>
+<li>污点，即Taints，节点避免被调度的属性，即不允许将Pod调度到配置了污点的节点，甚至还能将已经存在的Pod驱逐出去</li>
+<li>容忍，即Tolerations，Pod对污点忽略的属性，即允许Pod被调度到有污点的节点</li>
+</ul>
+<h2 id="4-1-污点配置"><a href="#4-1-污点配置" class="headerlink" title="4.1 污点配置"></a>4.1 污点配置</h2><p>污点的格式为:key&#x3D;value:effect, 其中，key和value是污点的标签；effect描述污点的作用，支持三种选项：</p>
+<ul>
+<li>NoSchedule，不会将Pod调度到具有该污点的Node上，但不影响当前Node上已存在的Pod</li>
+<li>PreferNoSchedule，尽量避免将Pod调度到具有该污点的Node上，除非没有其他节点可调度</li>
+<li>NoExecute，不会将Pod调度到具有该污点的Node上，且还会将Node上已存在的Pod驱离</li>
+</ul>
+<h3 id="4-1-1-设置污点"><a href="#4-1-1-设置污点" class="headerlink" title="4.1.1 设置污点"></a>4.1.1 设置污点</h3><pre><code class="hljs">kubectl taint nodes master01 master=master01:NoExecute
+kubectl taint nodes worker01 worker=worker01:PreferNoSchedule
+</code></pre>
+<ul>
+<li>注：kubeadm引导的集群master节点已经被打上key为node-role.kubernetes.io&#x2F;master且effect为NoSchedule的污点</li>
+</ul>
+<h3 id="4-1-2-删除污点"><a href="#4-1-2-删除污点" class="headerlink" title="4.1.2 删除污点"></a>4.1.2 删除污点</h3><pre><code class="hljs">kubectl taint nodes node01 key1=value1:NoSchedule-
+</code></pre>
+<h2 id="4-2-容忍配置"><a href="#4-2-容忍配置" class="headerlink" title="4.2 容忍配置"></a>4.2 容忍配置</h2><p>Pod容忍属性匹配污点的原则是key、effect相同，且满足运算符为Exists或Equal时value相等，此外还存在两种特例：</p>
+<ul>
+<li>若容忍的key为空且运算符为Exists，将会匹配所有的key、value和effect，即容忍所有污点</li>
+<li>若一个key和一个空的effect匹配此key的所有effect</li>
+</ul>
+<h3 id="4-2-1-容忍所有污点"><a href="#4-2-1-容忍所有污点" class="headerlink" title="4.2.1 容忍所有污点"></a>4.2.1 容忍所有污点</h3><pre><code class="hljs">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-nginx
+spec:
+  selector:
+    matchLabels:
+      app: test
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      containers:
+        - name: nginx
+          image: registry.sword.org/nginx
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: nginx
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100M
+            requests:
+              cpu: 50m
+              memory: 50M
+      imagePullSecrets:
+        - name: regcred
+      tolerations:
+      - operator: &quot;Exists&quot;
+</code></pre>
+<h3 id="4-2-2-容忍标签所有的污点"><a href="#4-2-2-容忍标签所有的污点" class="headerlink" title="4.2.2 容忍标签所有的污点"></a>4.2.2 容忍标签所有的污点</h3><pre><code class="hljs">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-nginx
+spec:
+  selector:
+    matchLabels:
+      app: test
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      containers:
+        - name: nginx
+          image: registry.sword.org/nginx
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: nginx
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100M
+            requests:
+              cpu: 50m
+              memory: 50M
+      imagePullSecrets:
+        - name: regcred
+      tolerations:
+      - key: &quot;worker&quot;
+        operator: &quot;Exists&quot; 
+</code></pre>
+<h3 id="4-2-3-精确匹配容忍的污点"><a href="#4-2-3-精确匹配容忍的污点" class="headerlink" title="4.2.3 精确匹配容忍的污点"></a>4.2.3 精确匹配容忍的污点</h3><pre><code class="hljs">apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test-nginx
+spec:
+  selector:
+    matchLabels:
+      app: test
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: test
+    spec:
+      containers:
+        - name: nginx
+          image: registry.sword.org/nginx
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+              name: nginx
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100M
+            requests:
+              cpu: 50m
+              memory: 50M
+      imagePullSecrets:
+        - name: regcred
+      tolerations:
+      - key: &quot;master&quot;
+        operator: &quot;Equal&quot; 
+        value: &quot;master01&quot;
+        effect: &quot;NoExecute&quot;
+</code></pre>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/4e9c81607f95">https://www.jianshu.com/p/4e9c81607f95</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_52397471/article/details/129093055">https://blog.csdn.net/qq_52397471/article/details/129093055</a></li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1815807?from=15425">https://cloud.tencent.com/developer/article/1815807?from=15425</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/Kubernetes/">#Kubernetes</a>
+      
+        <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+      
+        <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kubernetes集群调度策略详解</div>
+      <div>https://hfsxs.github.io/732fc11f807e/KubernetesShedulerPolicy</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月14日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月15日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/52e73ea7e0f0/Kafka-Kubernetes" title="Kafka集群基于Kubernetes的部署">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kafka集群基于Kubernetes的部署</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/46051bd81b28/Python-Module" title="Python模块与包">
+                        <span class="hidden-mobile">Python模块与包</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+
+<div>
+<span id="timeDate"> 正在载入天数...</span>
+<span id="times"> 载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime(){
+        var grt= new Date("1/12/2025 01:15:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if(String(snum).length ==1 ){
+                snum = "0" + snum;
+        }
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
+        document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+</div>
+
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

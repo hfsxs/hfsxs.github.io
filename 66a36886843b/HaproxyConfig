@@ -1,0 +1,899 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="# 进程级全局配置，系统相关 global   # 设置全局日志的设备级别   log    127.0.0.1 local2   # 设置haproxy运行路径   chroot    &#x2F;usr&#x2F;local&#x2F;haproxy   # 设置pid文件路径   pidfile    &#x2F;var&#x2F;run&#x2F;haproxy.pid   # 设置进程运行用户   user    sword   # 设置运行进程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Haproxy配置文件详解">
+<meta property="og:url" content="https://hfsxs.github.io/66a36886843b/HaproxyConfig">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="# 进程级全局配置，系统相关 global   # 设置全局日志的设备级别   log    127.0.0.1 local2   # 设置haproxy运行路径   chroot    &#x2F;usr&#x2F;local&#x2F;haproxy   # 设置pid文件路径   pidfile    &#x2F;var&#x2F;run&#x2F;haproxy.pid   # 设置进程运行用户   user    sword   # 设置运行进程">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-02-05T04:12:16.000Z">
+<meta property="article:modified_time" content="2025-03-15T13:34:04.714Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="负载均衡">
+<meta property="article:tag" content="Haproxy">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Haproxy配置文件详解 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Haproxy配置文件详解</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2020-02-05 12:12" pubdate>
+          2020年2月5日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          39 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Haproxy配置文件详解</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <pre><code class="hljs"># 进程级全局配置，系统相关
+global
+  # 设置全局日志的设备级别
+  log    127.0.0.1 local2
+  # 设置haproxy运行路径
+  chroot    /usr/local/haproxy
+  # 设置pid文件路径
+  pidfile    /var/run/haproxy.pid
+  # 设置进程运行用户
+  user    sword
+  # 设置运行进程用户所属组
+  group    sword
+  # 设置haproxy服务为后台运行
+  daemon
+  # 设置haproxy进程数，默认为1，建议设为CPU核心数
+  nbproc    2
+  # 设置每个进程最大连接数，决定了前端frontend总的连接数
+  maxconn    1024
+  # 设置当前节点名称，用于HA集群中多个haproxy节点共享同一IP
+  node    haproxy001
+  # 设置统计数据接口    
+  stats socket    /var/lib/haproxy/stats
+
+# 默认全局设置，可被frontend，backend，listen等组件引用
+defaults
+
+  # 设置全局日志配置的引用
+  log    global
+  # 设置实运行模式，tcp为4层，用于SSL、SSH、SMTP等应用；http为7层，默认模式；health，已废弃
+  mode    http
+  # 设置日志类别，记录http请求、session信息
+  option    httplog
+  # 设置每次请求完毕后自动关闭http通道
+  option    httpclose
+  # 设置获取客户端真实IP，即后端服务器从Http Header中获得客户端IP 
+  option    forwardfor except 127.0.0.0/8              
+  # 设置日志不记录空连接，可剔除健康检查日志，用于上游服务器存在负载均衡器场景
+  #option    dontlognull
+  # 设置后端服务器挂掉强制转向其他健康的服务器
+  option    redispatch
+  # 设置服务器负载高时自动结束当前队列处理较久的连接
+  option    abortonclose
+  # 设置连接重用策略，默认为never，表示禁用
+  http-reuse    safe
+  # 设置后端服务器最大重试次数
+  retries    3
+
+  # 设置客户端保持连接的超时时长，高并发场景建议设置为较小值以尽快释放
+  timeout client    10s
+  # 设置客户端发送完整请求的最大时长，由于haproxy机制是每次请求或响应全部发送完成再进行转发，为防止洪水攻击建议设为较小值
+  timeout http-request    2s
+  # 设置客户端保持长连接的时长，优先级&gt; timeout http-request &gt; timeout client，适用于后端为静态web或静态缓存服务器
+  # timeout http-keep-alive 10s
+  # 设置客户请求在等待队列的超时时长
+  timeout queue    10s
+  # 设置后端服务器连接超时时长
+  timeout connect    1s
+  # 设置后端服务器健康检测超时时长
+  timeout check    2s
+  # 设置后端服务器连接的保持时长，高并发场景建议设置为较小值
+  timeout server    3s
+
+  # 设置负载均衡算法，roundrobin，动态权重轮询，默认算法，权重运行时可调整，每个后端服务器最大连接数4128；static-rr，静态权重轮询，权重值运行时调整不生效，后端服务器连接数不限；leastconn，最少连接数，适用于长连接的会话，LDAP、SQL、FTP等，不适合HTTP协议；source，根据请求源IP进行hash运算，将同一IP请求送往同一服务器,实现会话保持功能；first，根据服务器在列表中的位置自上而下进行调度，即前面服务器的连接数达到上限或不可用，新请求才会分配给下一服务；uri，根据请求的URI进行hash运算，用于代理缓存以提高命中率，适用于HTTP后端缓存服务器；url_param，根据请求的URl参数进行hash运算，可将同一个用户ID的请求送往同一特定服务器；hdr(name)，根据HTTP请求头匹配HTTP请求；rdp-cookie(name)，根据据cookie(name)锁定并哈希每一次TCP请求
+  # balance            roundrobin                           
+
+# 监控、统计页面配置，用于监控后端服务器状态
+# 设置监控组名称，与frontend、backend共同组成完整代理，作用于TCP流量
+listen monitor
+
+  # 设置监控组工作模式
+  mode    http
+  # 设置监控组端口
+  bind    :18088
+  # 设置启用默认统计报告
+  stats    enable
+  # 设置隐藏版本号
+  stats    hide-version
+  # 设置统计页面自动刷新时间间隔 
+  stats    refresh 10       　　　　
+  # 设置监控页面url，即监控访问网址
+  stats uri    /status
+  # 设置监控页面密码框提示文本
+  stats realm    Haproxy Manager
+  # 设置监控页面用户和密码  
+  stats auth    admin:admin
+  # 设置监控组是否启用后端服务器管理功能，用于手工启用/禁用后端服务器
+  stats admin if    TRUE 
+
+# 设置接收客户端请求的前端虚拟节点，即对外提供服务的接口
+frontend    http-server
+
+  # 设置前端节点模式
+  mode    http
+  # 设置前端节点监听端口
+  bind    0.0.0.0:8088
+
+  # acl请求策略配置，用于基于请求报文的首部、响应报文的内容或其它的环境状态信息制定转发决策，从而实现动静分离功能，区分大小写
+
+  # 配置静态资源组请求策略，即匹配以/static /images等开头的访问路径，-i表示忽略大小写  
+  # acl url_static path_beg  -i /static /images /img /javascript /stylesheets
+  # 配置静态资源请求策略，即匹配以.jpg .gif等结尾的访问路径，-i即忽略大小写
+  # acl url_static path_end  -i .jpg .gif .png .css .js .html
+  # 配置主机类型静态资源策略，即匹配以.img .ftp等开头的主机访问信息，-i即忽略大小写
+  # acl host_static hdr_beg(host)  -i img. video. download. ftp. imags. videos.
+
+  # 配置php动态资源请求策略
+  # acl url_php path_end -i .php
+
+  # 配置java动态资源请求策略
+  # acl url_jsp path_end -i .jsp .do
+
+  # acl策略请求的匹配规则配置，即分配后端服务器的策略
+
+  # url_static或host_static策略匹配
+  # use_backend web-servers if url_static or host_static
+
+  # php请求策略匹配
+  use_backend php-servers if url_php
+
+  # 匹配java请求策略转发匹配
+  use_backend tomcat-servers if url_jsp
+
+
+  # 后端服务器组配置
+
+  # 设置默认后端服务器，即处理所有没有被规则匹配到的请求
+  default_backend    web-servers
+  
+  # 设置后端服务器组web-servers
+  backend web-servers
+     
+    # 设置负载均衡算法
+    balance    first
+    # 设置启用http-keep-alive事务类型，适用于静态后端服务器
+    option    http-keep-alive
+    # 设置后端服务器组的实例，check，健康检查；inter，健康检查时间间隔；maxconn，后端服务器最大连接数；rise，2次健康检查正常则判定次数；fall，健康检查失败判定次数；weight，权重；maxqueue，后端服务器请求最大等待队列数
+    server nginx-server 192.168.0.100:80 check port 80 inter 2000 rise 2 fall 3
+    server httpd-server 192.168.0.200:80 check port 80 inter 2000 rise 2 fall 3
+    server tomcat-backup 192.168.0.180:8080 check port 8080 inter 2000 rise 2 fall 3 backup
+
+  backend tomcat-servers
+
+    # 设置工作方式
+    mode    http
+    # 设置启用http-server-close，适用于动态后端服务器
+    option    http-server-close
+    # 设置健康检查访问路径
+    option    httpchk /index.html             　　　　 
+
+
+    server tomcat-master 192.168.0.100:8080 check port 8080 inter 2000 rise 2 fall 3 weight 3 maxconn 300 maxqueue 10
+    server tomcat-slaver 192.168.0.200:8080 check port 8080 inter 2000 rise 2 fall 3 weight 1 maxconn 300 maxqueue 10
+    # 设置不参与负载的服务器
+    # server tomcat-servers 127.0.0.1:8080 weight 0
+    # 设置容灾服务器，即其他所有负载宕机之后再提供服务
+    # server tomcat-backup 192.168.0.180:8080 check port 8080 inter 2000 rise 2 fall 1 backup
+
+  backend php-servers
+
+    # 设置会话保持，不建议haproxy配置session共享，可于后端服务器配置
+
+    # source方式，将同一IP请求送往同一服务器，若服务不可用，则session消失，不适于小型网络和代理服务器
+    # balance    source
+    # server httpd-master 192.168.0.200:80 check port 80 inter 2000 rise 2 fall 3
+    # server httpd-slaver 192.168.0.100:80 check port 80 inter 2000 rise 2 fall 3
+    # server nginx-server 192.168.0.180:80 check port 80 inter 2000 rise 2 fall 3 backup
+
+    # cookie方式，将服务器端返回给客户端的cookie中插入后端服务器的cookie id，若客户端禁用则无法实现
+    # cookie SERVERID insert indirect nocache
+
+    # server httpd-master 192.168.0.200:80 check port 80 cookie httpd-server inter 2000 rise 2 fall 3
+    # server httpd-slaver 192.168.0.100:80 check port 80 cookie httpd-server inter 2000 rise 2 fall 3
+    # server nginx-server 192.168.0.180:80 check port 80 cookie nginx-server inter 2000 rise 2 fall 3 backup
+</code></pre>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="http://www.cnblogs.com/moss_tan_jun/p/6616472.html">http://www.cnblogs.com/moss_tan_jun/p/6616472.html</a></li>
+<li><a target="_blank" rel="noopener" href="http://blog.51cto.com/jinyudong/1910320">http://blog.51cto.com/jinyudong/1910320</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/li123128/article/details/79510249">https://blog.csdn.net/li123128/article/details/79510249</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.ttlsa.com/linux/haproxy-study-tutorial">http://www.ttlsa.com/linux/haproxy-study-tutorial</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%B7%A5%E4%BD%9C/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">#负载均衡</a>
+      
+        <a href="/tags/Haproxy/">#Haproxy</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Haproxy配置文件详解</div>
+      <div>https://hfsxs.github.io/66a36886843b/HaproxyConfig</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2020年2月5日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月15日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/25af2178f9a2/Keepalived" title="Keepalived编译安装">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Keepalived编译安装</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/7830cf8fc8fd/Haproxy" title="Haproxy搭建负载均衡集群">
+                        <span class="hidden-mobile">Haproxy搭建负载均衡集群</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+
+<div>
+<span id="timeDate"> 正在载入天数...</span>
+<span id="times"> 载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime(){
+        var grt= new Date("1/12/2025 01:15:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if(String(snum).length ==1 ){
+                snum = "0" + snum;
+        }
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
+        document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+</div>
+
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
