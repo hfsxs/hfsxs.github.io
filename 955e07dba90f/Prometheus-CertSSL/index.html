@@ -16,15 +16,16 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="509-Certificate-Exporter，Golang编写的轻量级SSL&#x2F;TLS证书监控工具，核心在于其高效的证书解析和导出机制 Kubernetes集群大量用到了证书, 比如 ca证书、以及 kubelet、apiserver、proxy、etcd等组件，还有 kubeconfig 文件。 如果证书过期，轻则无法登录 Kubernetes 集群，重则整个集群异常 定期检查指定的">
+    <meta name="description" content="509-Certificate-Exporter，Golang编写的轻量级SSL&#x2F;TLS证书监控工具，其核心是内置的crypto&#x2F;tls库所实现的高效的证书解析和导出机制，即快速安全地与远程服务器建立连接并解析SSL&#x2F;TLS证书的关键信息，如有效期、颁发者、SHA摘要、主题等多种证书属性，最后将这些信息转化为Prometheus可读取的指标并通过Exporter接口暴">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Prometheus监控Kubernetes集群证书">
 <meta property="og:url" content="https://hfsxs.github.io/955e07dba90f/Prometheus-CertSSL/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="509-Certificate-Exporter，Golang编写的轻量级SSL&#x2F;TLS证书监控工具，核心在于其高效的证书解析和导出机制 Kubernetes集群大量用到了证书, 比如 ca证书、以及 kubelet、apiserver、proxy、etcd等组件，还有 kubeconfig 文件。 如果证书过期，轻则无法登录 Kubernetes 集群，重则整个集群异常 定期检查指定的">
+<meta property="og:description" content="509-Certificate-Exporter，Golang编写的轻量级SSL&#x2F;TLS证书监控工具，其核心是内置的crypto&#x2F;tls库所实现的高效的证书解析和导出机制，即快速安全地与远程服务器建立连接并解析SSL&#x2F;TLS证书的关键信息，如有效期、颁发者、SHA摘要、主题等多种证书属性，最后将这些信息转化为Prometheus可读取的指标并通过Exporter接口暴">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/certificate.jpg">
 <meta property="article:published_time" content="2025-03-12T15:03:42.000Z">
-<meta property="article:modified_time" content="2025-03-15T15:47:20.092Z">
+<meta property="article:modified_time" content="2025-03-16T01:43:00.434Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -33,6 +34,7 @@
 <meta property="article:tag" content="Prometheus">
 <meta property="article:tag" content="监控告警">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hfsxs.github.io/img/wiki/prometheus/certificate.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -241,7 +243,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.4k 字
+          1.7k 字
         
       </span>
     
@@ -252,7 +254,7 @@
         
         
         
-          12 分钟
+          15 分钟
         
       </span>
     
@@ -295,13 +297,8 @@
             
               <div class="markdown-body">
                 
-                <p>509-Certificate-Exporter，Golang编写的轻量级SSL&#x2F;TLS证书监控工具，核心在于其高效的证书解析和导出机制</p>
-<p>Kubernetes集群大量用到了证书, 比如 ca证书、以及 kubelet、apiserver、proxy、etcd等组件，还有 kubeconfig 文件。</p>
-<p>如果证书过期，轻则无法登录 Kubernetes 集群，重则整个集群异常</p>
-<p>定期检查指定的HTTPS端点，提取X509证书的各种属性，如有效期、颁发者、主题等，并将这些信息暴露为Prometheus可读取的指标</p>
-<p>使用Golang的内置crypto&#x2F;tls库，项目可以快速安全地与远程服务器建立连接，获取SSL&#x2F;TLS证书。然后，它使用x509库解析这些证书，提取关键信息。最后，通过PrometheusExporter接口，将这些信息转化为Prometheus友好的时间序列数据</p>
-<p>全面指标：收集包括有效期、颁发者、SHA摘要等在内的多种证书属性，便于全面了解证书状态。</p>
-<p>监控企业内部或外部网站的SSL&#x2F;TLS证书状态，确保安全合规<br>避免因证书过期导致的服务中断，提供自动化的证书健康检查</p>
+                <p>509-Certificate-Exporter，Golang编写的轻量级SSL&#x2F;TLS证书监控工具，其核心是内置的crypto&#x2F;tls库所实现的高效的证书解析和导出机制，即快速安全地与远程服务器建立连接并解析SSL&#x2F;TLS证书的关键信息，如有效期、颁发者、SHA摘要、主题等多种证书属性，最后将这些信息转化为Prometheus可读取的指标并通过Exporter接口暴露出来</p>
+<p>509-Certificate-Exporter特别适用于使用大量证书的Kubernetes集群, 如CA证书、kubelet、apiserver、proxy、etcd等组件的认证证书以及kubeconfig文件等，全面监控集群内部或外部网站的SSL&#x2F;TLS证书状态，确保安全合规，以及避免因证书过期所导致的集群异常</p>
 <h1 id="1-下载安装包"><a href="#1-下载安装包" class="headerlink" title="1.下载安装包"></a>1.下载安装包</h1><pre><code class="hljs">git clone https://github.com/enix/x509-certificate-exporter.git
 </code></pre>
 <h1 id="2-编译x509-certificate-exporter"><a href="#2-编译x509-certificate-exporter" class="headerlink" title="2.编译x509-certificate-exporter"></a>2.编译x509-certificate-exporter</h1><pre><code class="hljs">cd x509-certificate-exporter
@@ -331,6 +328,31 @@ WantedBy=multi-user.target
 sudo systemctl start certificate_exporter.service
 sudo systemctl enable certificate_exporter.service
 </code></pre>
+<h1 id="5-配置Prometheus"><a href="#5-配置Prometheus" class="headerlink" title="5.配置Prometheus"></a>5.配置Prometheus</h1><h2 id="5-1-配置监控实例"><a href="#5-1-配置监控实例" class="headerlink" title="5.1 配置监控实例"></a>5.1 配置监控实例</h2><pre><code class="hljs">sudo vi /usr/local/prometheus/prometheus.yml
+
+
+global:
+  scrape_interval: 15s 
+  evaluation_interval: 15s 
+  scrape_timeout: 10s 
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets:
+        - localhost:9090
+
+  - job_name: x509-certificate-exporter
+    static_configs:
+      - targets:
+        - 172.16.100.180:9793
+        - 172.16.100.181:9793
+        - 172.16.100.182:9793
+</code></pre>
+<h2 id="5-2-重载Prometheus"><a href="#5-2-重载Prometheus" class="headerlink" title="5.2 重载Prometheus"></a>5.2 重载Prometheus</h2><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload
+</code></pre>
+<h1 id="6-Grafana导入监控模版"><a href="#6-Grafana导入监控模版" class="headerlink" title="6.Grafana导入监控模版"></a>6.Grafana导入监控模版</h1><p>Dashboards —&gt; New —&gt; Import —&gt; 模版ID：13922</p>
+<p><img src="/img/wiki/prometheus/certificate.jpg" srcset="/img/loading.gif" lazyload alt="certificate"></p>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/22623efffc95">https://www.jianshu.com/p/22623efffc95</a></li>
@@ -410,7 +432,7 @@ sudo systemctl enable certificate_exporter.service
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月15日</div>
+          <div>2025年3月16日</div>
         </div>
       
       <div class="license-meta-item">
