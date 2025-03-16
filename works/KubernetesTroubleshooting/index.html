@@ -1,0 +1,848 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="1.worker节点重启后一直notready状态故障背景某个worker节点服务器重启，重启后处于notready状态 故障现象集群master节点正常，docker运行正常，机器负载正常，kubelet反复启动 故障原因刚接触kubernets不太熟悉，排查半天不得要领，直到查看kubelet日志发现有报错：”Failed to run kubelet” err&#x3D;”failed to">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes集群故障处理">
+<meta property="og:url" content="https://hfsxs.github.io/works/KubernetesTroubleshooting/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="1.worker节点重启后一直notready状态故障背景某个worker节点服务器重启，重启后处于notready状态 故障现象集群master节点正常，docker运行正常，机器负载正常，kubelet反复启动 故障原因刚接触kubernets不太熟悉，排查半天不得要领，直到查看kubelet日志发现有报错：”Failed to run kubelet” err&#x3D;”failed to">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-01-30T04:25:53.000Z">
+<meta property="article:modified_time" content="2025-03-15T13:16:19.557Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="容器云">
+<meta property="article:tag" content="云原生">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Kubernetes集群故障处理 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Kubernetes集群故障处理</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-01-30 12:25" pubdate>
+          2023年1月30日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          43 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kubernetes集群故障处理</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="1-worker节点重启后一直notready状态"><a href="#1-worker节点重启后一直notready状态" class="headerlink" title="1.worker节点重启后一直notready状态"></a>1.worker节点重启后一直notready状态</h1><h2 id="故障背景"><a href="#故障背景" class="headerlink" title="故障背景"></a>故障背景</h2><p>某个worker节点服务器重启，重启后处于notready状态</p>
+<h2 id="故障现象"><a href="#故障现象" class="headerlink" title="故障现象"></a>故障现象</h2><p>集群master节点正常，docker运行正常，机器负载正常，kubelet反复启动</p>
+<h2 id="故障原因"><a href="#故障原因" class="headerlink" title="故障原因"></a>故障原因</h2><p>刚接触kubernets不太熟悉，排查半天不得要领，直到查看kubelet日志发现有报错：”Failed to run kubelet” err&#x3D;”failed to run Kubelet: misconfiguration: kubelet cgroup driver: “systemd” is different from docker cgroup driver:”cgroupfs”“，百度后是由docker默认的cgroup驱动cgroupfs与kubernets默认的驱动systemd不一致所导致，将docker驱动配置为systemd，两者保持一致即可</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="1-配置docker的cgroup驱动为systemd"><a href="#1-配置docker的cgroup驱动为systemd" class="headerlink" title="1.配置docker的cgroup驱动为systemd"></a>1.配置docker的cgroup驱动为systemd</h3><pre><code class="hljs">sudo vi /etc/docker/daemon.json
+
+
+&#123;
+  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],
+  &quot;registry-mirrors&quot;: [&quot;https://10.254.100.200&quot;]
+&#125;
+</code></pre>
+<h3 id="2-重启docker"><a href="#2-重启docker" class="headerlink" title="2.重启docker"></a>2.重启docker</h3><pre><code class="hljs">sudo systemctl restart docker.service
+</code></pre>
+<hr>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://bbs.deepin.org/zh/post/198565">https://bbs.deepin.org/zh/post/198565</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_45034687/article/details/129022342">https://blog.csdn.net/qq_45034687/article/details/129022342</a></li>
+</ul>
+<h1 id="2-POD启动失败"><a href="#2-POD启动失败" class="headerlink" title="2.POD启动失败"></a>2.POD启动失败</h1><h2 id="故障背景-1"><a href="#故障背景-1" class="headerlink" title="故障背景"></a>故障背景</h2><p>客户要求集群新加一批机器，node节点添加正常，下午集中监控告警一批POD反复重启</p>
+<h2 id="故障现象-1"><a href="#故障现象-1" class="headerlink" title="故障现象"></a>故障现象</h2><p>1.重启的POD状态为CrashLoopBackOff，退出码为139，且都是同一镜像拉起的容器<br>2.只有调度到新加入的机器才会出现异常，且手动起容器也不行，容器也无日志。其他机器运行正常</p>
+<h2 id="故障原因-1"><a href="#故障原因-1" class="headerlink" title="故障原因"></a>故障原因</h2><p>问题比较奇怪，镜像一直能正常拉起容器，证明镜像没问题，但在新机器就不行，推翻了这个结论。一开始感觉无从下手，有用的信息就只有退出码，程序也不复杂，其实就是一个java程序。百度139的退出码，可能是代码问题，或是基础镜像问题，在其他机器上能正常运行即可排除代码问题。接下来排查基础镜像，发现镜像基于centos6构建，尝试将基础镜像换成centos7构建后即正常运行</p>
+<h2 id="根因探究"><a href="#根因探究" class="headerlink" title="根因探究"></a>根因探究</h2><p>根本原因其实是基础镜像低于2.14版本的glibc所采用的vsyscall内核调用机制由于风险过多，新的内核已经弃用，以可模拟兼容vsyscall的vDSO机制代替，由此产生报错</p>
+<h2 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a>解决方案</h2><p>将基础镜像换成centos7重新构建即可</p>
+<hr>
+<h2 id="参考文档-1"><a href="#参考文档-1" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.qedev.com/linux/340487.html">https://www.qedev.com/linux/340487.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/hakula007/article/details/125786395">https://blog.csdn.net/hakula007/article/details/125786395</a></li>
+<li><a target="_blank" rel="noopener" href="https://help.aliyun.com/document_detail/154067.html?spm=a2c6h.12873639.0.0.5b1224a46IyNve">https://help.aliyun.com/document_detail/154067.html?spm=a2c6h.12873639.0.0.5b1224a46IyNve</a></li>
+</ul>
+<h1 id="3-文件上传失败报错"><a href="#3-文件上传失败报错" class="headerlink" title="3.文件上传失败报错"></a>3.文件上传失败报错</h1><h2 id="故障背景-2"><a href="#故障背景-2" class="headerlink" title="故障背景"></a>故障背景</h2><p>转码业务的源数据来源于客户的媒资系统，通过FTP定时扫描获取，客户手动上传需求较少，前期规划与测试可满足平常的业务需求</p>
+<h2 id="故障现象-2"><a href="#故障现象-2" class="headerlink" title="故障现象"></a>故障现象</h2><p>手动上传视频文件失败，测试发现报错信息为：413 Request Entity Too Large</p>
+<h2 id="故障原因-2"><a href="#故障原因-2" class="headerlink" title="故障原因"></a>故障原因</h2><p>初步判断为前端代理nginx的client_max_body_size参数设置过小导致，更改为更大的值后还是报错。因为nginx的后端代理地址为ingress地址，原因即为nginx-ingress-controller配置文件client_max_body_size参数设置过小导致，调大即可</p>
+<h2 id="解决方案-2"><a href="#解决方案-2" class="headerlink" title="解决方案"></a>解决方案</h2><pre><code class="hljs">kubectl -n ingress-nginx edit configmaps ingress-nginx-controller
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-custom-configuration
+  namespace: kube-system
+  labels:
+    k8s-app: nginx-ingress-controller
+data:
+  proxy-body-size: &quot;4096m&quot;
+</code></pre>
+<hr>
+<h2 id="参考文档-2"><a href="#参考文档-2" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/28963911">https://zhuanlan.zhihu.com/p/28963911</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/seablogs/articles/16054315.html">https://www.cnblogs.com/seablogs/articles/16054315.html</a></li>
+</ul>
+<h1 id="4-集群初始化失败报错"><a href="#4-集群初始化失败报错" class="headerlink" title="4.集群初始化失败报错"></a>4.集群初始化失败报错</h1><h2 id="故障背景-3"><a href="#故障背景-3" class="headerlink" title="故障背景"></a>故障背景</h2><p>客户业务集群构建于centos7，自己私有服务器上用Ubuntu18.04搭建1.20版集群</p>
+<h2 id="故障现象-3"><a href="#故障现象-3" class="headerlink" title="故障现象"></a>故障现象</h2><p>kubeadm初始化失败报错，具体信息为：Failed to create pod sandbox: open &#x2F;run&#x2F;systemd&#x2F;resolve&#x2F;resolv.conf: no such file or directory</p>
+<h2 id="故障原因-3"><a href="#故障原因-3" class="headerlink" title="故障原因"></a>故障原因</h2><p>debian系的DNS配置文件由systemd-resolved服务管理，该服务没有开机自启，导致&#x2F;etc&#x2F;resolv.conf未生成，连不上网络</p>
+<h2 id="解决方案-3"><a href="#解决方案-3" class="headerlink" title="解决方案"></a>解决方案</h2><pre><code class="hljs">sudo mkdir -p /run/systemd/resolve
+sudo ln -s /etc/resolv.conf /run/systemd/resolve/resolv.conf
+</code></pre>
+<hr>
+<h2 id="参考文档-3"><a href="#参考文档-3" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes/kubeadm/issues/1124">https://github.com/kubernetes/kubeadm/issues/1124</a></li>
+</ul>
+<h1 id="5-PVC不可用"><a href="#5-PVC不可用" class="headerlink" title="5.PVC不可用"></a>5.PVC不可用</h1><h2 id="故障背景-4"><a href="#故障背景-4" class="headerlink" title="故障背景"></a>故障背景</h2><p>集群版本为V1.20.12，创建StorageClass正常未报错</p>
+<h2 id="故障现象-4"><a href="#故障现象-4" class="headerlink" title="故障现象"></a>故障现象</h2><p>StorageClass创建的PVC一直处于Pending状态，具体信息为：waiting for a volume to be created,either by external provisioner “nfs-client” or manually created by system administrator，意思是SC的供应器未就绪，处于不可用状态。查看供应器日志，发现报错信息：Subsets:[]v1.EndpointSubset(nil)’ due to:‘selfLink was empty, can’t make reference’. Will not report event:‘Normal’ ‘LeaderElection’ ‘nfs-client-provisioner-5c4d67788-xwq2j_4cc3307a-bd8a-11ed-938e-5efc4b2ec335 became<br>leader’</p>
+<h2 id="故障原因-4"><a href="#故障原因-4" class="headerlink" title="故障原因"></a>故障原因</h2><p>1.20版本的BUG导致，selfLink was empty在v1.20之前都存在，v1.20之后将会被删除</p>
+<h2 id="解决方案-4"><a href="#解决方案-4" class="headerlink" title="解决方案"></a>解决方案</h2><pre><code class="hljs">sudo vi /etc/kubernetes/manifests/kube-apiserver.yaml
+
+
+# 每个master节点apiserver配置文件添加该参数，之后kubeadm部署的集群会自动加载部署pod
+- --feature-gates=RemoveSelfLink=false
+</code></pre>
+<hr>
+<h2 id="参考文档-4"><a href="#参考文档-4" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/issues/25">https://github.com/kubernetes-sigs/nfs-subdir-external-provisioner/issues/25</a></li>
+</ul>
+<h1 id="6-service创建失败"><a href="#6-service创建失败" class="headerlink" title="6.service创建失败"></a>6.service创建失败</h1><h2 id="故障背景-5"><a href="#故障背景-5" class="headerlink" title="故障背景"></a>故障背景</h2><p>创建service时失败报错</p>
+<h2 id="故障现象-5"><a href="#故障现象-5" class="headerlink" title="故障现象"></a>故障现象</h2><p>创建service时报错，Invalid value: 38096: provided port is not in the valid range. The range of valid ports is 30000-32767</p>
+<h2 id="故障原因-5"><a href="#故障原因-5" class="headerlink" title="故障原因"></a>故障原因</h2><p>kubernetes集群service默认端口是在30000-32767，给service指定的端口超出这个范围，导致报错</p>
+<h2 id="解决方案-5"><a href="#解决方案-5" class="headerlink" title="解决方案"></a>解决方案</h2><pre><code class="hljs">sudo vi /etc/kubernetes/manifests/kube-apiserver.yaml
+
+
+- --service-node-port-range=1-65535
+</code></pre>
+<ul>
+<li>注：高可用集群的每个apiserver都需要进行修改</li>
+</ul>
+<hr>
+<h2 id="参考文档-5"><a href="#参考文档-5" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45290734/article/details/120197991">https://blog.csdn.net/weixin_45290734/article/details/120197991</a></li>
+</ul>
+<h1 id="7-服务器断电重启后docker启动失败报错"><a href="#7-服务器断电重启后docker启动失败报错" class="headerlink" title="7.服务器断电重启后docker启动失败报错"></a>7.服务器断电重启后docker启动失败报错</h1><h2 id="故障背景-6"><a href="#故障背景-6" class="headerlink" title="故障背景"></a>故障背景</h2><p>上次新加的几台机器与其他机器不在同一机房，一次机房断电，随后重启服务器</p>
+<h2 id="故障现象-6"><a href="#故障现象-6" class="headerlink" title="故障现象"></a>故障现象</h2><p>服务器重启后发现所有节点的docker都无法启动，报错信息为：cgroups: cgroup mountpoint does not exist: unknown</p>
+<h2 id="故障原因-6"><a href="#故障原因-6" class="headerlink" title="故障原因"></a>故障原因</h2><p>从报错信息看，是由cgroup挂载点不存在所导致。百度上找到临时解决方案，即新建挂载点目录再重新挂载。原来以为是bug，随后找到一篇github上的帖子，说像是第三方打包或OS的问题，官方无能为力。目前只能以临时方案解决，个人猜测是docker版本问题，因为为了保持集群节点的一致性，docker统一为19版本，可能新版本操作系统有某些限制。测试环境试验最新版本没有这个问题</p>
+<h2 id="解决方案-6"><a href="#解决方案-6" class="headerlink" title="解决方案"></a>解决方案</h2><pre><code class="hljs">sudo mkdir /sys/fs/cgroup/systemd
+sudo mount -t cgroup -o none,name=systemd cgroup /sys/fs/cgroup/system
+</code></pre>
+<hr>
+<h2 id="参考文档-6"><a href="#参考文档-6" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/moby/moby/issues/36016">https://github.com/moby/moby/issues/36016</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_41481443/article/details/130729906">https://blog.csdn.net/weixin_41481443/article/details/130729906</a></li>
+</ul>
+<h1 id="8-docker监控容器启动失败"><a href="#8-docker监控容器启动失败" class="headerlink" title="8.docker监控容器启动失败"></a>8.docker监控容器启动失败</h1><h2 id="故障背景-7"><a href="#故障背景-7" class="headerlink" title="故障背景"></a>故障背景</h2><p>Centos7维护周期将尽，考虑以RockyLinux9.2进行代替，配置Prometheus监控时docker容器启动失败</p>
+<h2 id="故障现象-7"><a href="#故障现象-7" class="headerlink" title="故障现象"></a>故障现象</h2><p>docker运行cadvisor容器时报错：cadvisor.go:146 Failed to create a Container Manager: mountpoint for cpu not found</p>
+<h2 id="故障原因-7"><a href="#故障原因-7" class="headerlink" title="故障原因"></a>故障原因</h2><p>cadvisor镜像版本太旧，需要升级为v0.46.0以上版本</p>
+<h2 id="解决方案-7"><a href="#解决方案-7" class="headerlink" title="解决方案"></a>解决方案</h2><p>拉取v0.46.0以后版本的cadvisor镜像，重新启动</p>
+<hr>
+<h2 id="参考文档-7"><a href="#参考文档-7" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/google/cadvisor/issues/1943">https://github.com/google/cadvisor/issues/1943</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/wuxingge/article/details/133071181">https://blog.csdn.net/wuxingge/article/details/133071181</a></li>
+</ul>
+<h1 id="9-集群不可访问"><a href="#9-集群不可访问" class="headerlink" title="9.集群不可访问"></a>9.集群不可访问</h1><h2 id="故障背景-8"><a href="#故障背景-8" class="headerlink" title="故障背景"></a>故障背景</h2><p>Ubuntu18.04搭建本地kubernetes集群，服务器重启之后集群不可访问</p>
+<h2 id="故障现象-8"><a href="#故障现象-8" class="headerlink" title="故障现象"></a>故障现象</h2><p>集群所有节点均不可用，etcd集群未启动，kubelet组件报错：Failed to create pod sandbox: open &#x2F;run&#x2F;systemd&#x2F;resolve&#x2F;resolv.conf: no such file or directory</p>
+<h2 id="故障原因-8"><a href="#故障原因-8" class="headerlink" title="故障原因"></a>故障原因</h2><p>kubelet组件的报错报错信息很明显指向DNS解析，Ubuntu的&#x2F;etc&#x2F;resolv.conf是一个软连接，由系统服务器systemd-resolved生成。systemd-resolved是systemd附带的解析DNS的代理，将本地的DNS请求转发到外部的DNS服务器，也即是DNS解析的过程在本地又新增了一层，影响效率，也不利于管理，建议关闭，手动设置resolv.conf</p>
+<h2 id="解决方案-8"><a href="#解决方案-8" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="1-禁用systemd-resolved"><a href="#1-禁用systemd-resolved" class="headerlink" title="1.禁用systemd-resolved"></a>1.禁用systemd-resolved</h3><pre><code class="hljs">sudo systemctl stop systemd-resolved
+sudo systemctl disable systemd-resolved
+</code></pre>
+<h3 id="2-创建resolv-conf文件"><a href="#2-创建resolv-conf文件" class="headerlink" title="2.创建resolv.conf文件"></a>2.创建resolv.conf文件</h3><pre><code class="hljs">sudo rm -rf /etc/resolv.conf
+sudo vi /etc/resolv.conf
+
+
+nameserver 8.8.8.8
+</code></pre>
+<h3 id="3-锁定resolv-conf文件"><a href="#3-锁定resolv-conf文件" class="headerlink" title="3.锁定resolv.conf文件"></a>3.锁定resolv.conf文件</h3><pre><code class="hljs">sudo chattr +i /etc/resolv.conf
+</code></pre>
+<hr>
+<h2 id="参考文档-8"><a href="#参考文档-8" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/czlong/p/15802384.html">https://www.cnblogs.com/czlong/p/15802384.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xzlive/p/17139520.html">https://www.cnblogs.com/xzlive/p/17139520.html</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/works/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/Kubernetes/">#Kubernetes</a>
+      
+        <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+      
+        <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kubernetes集群故障处理</div>
+      <div>https://hfsxs.github.io/works/KubernetesTroubleshooting/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年1月30日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月15日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/works/Prometheus/" title="Prometheus监控系统部署">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Prometheus监控系统部署</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/works/PythonOperator/" title="Python运算符">
+                        <span class="hidden-mobile">Python运算符</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+
+<div>
+<span id="timeDate"> 正在载入天数...</span>
+<span id="times"> 载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime(){
+        var grt= new Date("1/12/2025 01:15:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if(String(snum).length ==1 ){
+                snum = "0" + snum;
+        }
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
+        document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+</div>
+
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

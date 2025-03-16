@@ -1,0 +1,1006 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Ceph，由C++开发的高性能、高可靠性、可扩展的开源分布式存储系统，提供块存储、文件存储和对象存储服务，以满足不同场景的应用需求，是架设于廉价通用的商用硬件之上的统一企业级存储方案，其规模可轻易地扩展至PB级乃至于EB级，其核心数据分布算法CRUSH摒弃了传统的集中式存储元数据寻址方式，规避了数据库查找这种中心化架构存在的单点故障、性能瓶颈以及不易扩展的缺陷 发展历程 2004年，Ceph项目起">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ceph分布式存储集群部署">
+<meta property="og:url" content="https://hfsxs.github.io/works/Ceph/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="Ceph，由C++开发的高性能、高可靠性、可扩展的开源分布式存储系统，提供块存储、文件存储和对象存储服务，以满足不同场景的应用需求，是架设于廉价通用的商用硬件之上的统一企业级存储方案，其规模可轻易地扩展至PB级乃至于EB级，其核心数据分布算法CRUSH摒弃了传统的集中式存储元数据寻址方式，规避了数据库查找这种中心化架构存在的单点故障、性能瓶颈以及不易扩展的缺陷 发展历程 2004年，Ceph项目起">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-07-05T02:50:31.000Z">
+<meta property="article:modified_time" content="2025-03-15T13:46:03.969Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Ceph">
+<meta property="article:tag" content="存储">
+<meta property="article:tag" content="分布式存储">
+<meta property="article:tag" content="云存储">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Ceph分布式存储集群部署 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Ceph分布式存储集群部署</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-07-05 10:50" pubdate>
+          2023年7月5日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          93 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Ceph分布式存储集群部署</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Ceph，由C++开发的高性能、高可靠性、可扩展的开源分布式存储系统，提供块存储、文件存储和对象存储服务，以满足不同场景的应用需求，是架设于廉价通用的商用硬件之上的统一企业级存储方案，其规模可轻易地扩展至PB级乃至于EB级，其核心数据分布算法CRUSH摒弃了传统的集中式存储元数据寻址方式，规避了数据库查找这种中心化架构存在的单点故障、性能瓶颈以及不易扩展的缺陷</p>
+<h1 id="发展历程"><a href="#发展历程" class="headerlink" title="发展历程"></a>发展历程</h1><ul>
+<li>2004年，Ceph项目起源于加州大学Sage Weil博士的研究课题，设计初衷是致力于避免单节点故障的分布式文件系统</li>
+<li>2006年，Sage在OSDI学术会议上发表了关于Ceph的论文，并提供了项目的下载链接，随后贡献给了开源社区</li>
+<li>2008年，Ceph发布第一个版本，版本号为0.1</li>
+<li>2010年，Ceph被正式集成于Linux内核</li>
+<li>2011年，Sage Weil创建Inktank公司，主导Ceph的开发和社区维护</li>
+<li>2014年，Inktank公司被ReaHat收购，Ceph从此进入商用领域</li>
+</ul>
+<p>此后，乘着Openstack与云原生的东风，Ceph作为底层存储的基石得以迅速发展，目前已得到众多云计算厂商的广泛支持与应用，如RedHat、OpenStack都将其作为虚拟机镜像及云盘的后端存储</p>
+<h1 id="逻辑架构"><a href="#逻辑架构" class="headerlink" title="逻辑架构"></a>逻辑架构</h1><p>Ceph存储系统自下而上分为三层，即基础存储系统层RADOS、基础库层Librados和应用接口层</p>
+<h2 id="1-RADOS"><a href="#1-RADOS" class="headerlink" title="1.RADOS"></a>1.RADOS</h2><p>RADOS，Reliable,Autonomic,Distributed,Object Store，即可靠、自动化、分布式的对象存储，实质上就是一套完整的对象存储系统，是真实数据存放的最底层</p>
+<h2 id="2-Librados"><a href="#2-Librados" class="headerlink" title="2.Librados"></a>2.Librados</h2><p>底层RADOS存储集群的抽象和封装，提供访问接口，也即是屏蔽底层逻辑，便于用户基于RADOS进行应用开发及深度定制，支持C&#x2F;C++&#x2F;JAVA&#x2F;python&#x2F;ruby&#x2F;php&#x2F;go等编程语言客户端</p>
+<h2 id="3-应用接口"><a href="#3-应用接口" class="headerlink" title="3.应用接口"></a>3.应用接口</h2><p>负责基于Librados库提供抽象层次更高的、更便于应用或客户端使用的、即插即用的应用接口，由三部分构成，即RADOS GWRADOS Gateway 、RBD Reliable Block Device和Ceph FS Ceph File System</p>
+<ul>
+<li><p>RADOS GW，Amazon S3和Swift兼容的RESTful API的网关接口，以供相应的对象存储应用开发使用，提供对象存储服务，功能不如Librados强大，不能深入到最底层的RADOS</p>
+</li>
+<li><p>RBD，提供标准的块设备接口，具备自动精简配置、数据快照、数据克隆及动态调整空间的功能，数据分散存储于OSD节点，常用于在虚拟化的场景下为虚拟机创建数据卷，目前已被Red Hat集成到KVM&#x2F;QEMU</p>
+</li>
+<li><p>Ceph FS，POSIX兼容的分布式文件系统，用户可直接通过客户端挂载使用，内核态程序，通过内核net模块与Rados交互，无需调用用户空间的Librados库</p>
+</li>
+</ul>
+<h1 id="功能组件"><a href="#功能组件" class="headerlink" title="功能组件"></a>功能组件</h1><h2 id="1-Monitors"><a href="#1-Monitors" class="headerlink" title="1.Monitors"></a>1.Monitors</h2><p>Ceph Monitors，ceph-mon，即Ceph监视器进程，核心组件，用于维护集群状态的映射、客户端的连接验证及日志的维护，包括监视器映射、管理器映射、OSD映射、MDS映射和CRUSH映射，这些映射是Ceph守护进程相互协调所需的关键集群状态，描述了对象、块存储的物理位置，以及⼀个将设备聚合到物理位置的桶列表，保障了集群数据的一致性，至少三个监视器才可保障集群的高可用性</p>
+<h2 id="2-Managers"><a href="#2-Managers" class="headerlink" title="2.Managers"></a>2.Managers</h2><p>Ceph Managers，ceph-mgr，即Ceph管理器进程，核心组件，用于跟踪、收集集群状态和运行指标，如存储利用率、当前性能指标和系统负载，至少两个管理器才可保障集群的高可用性</p>
+<h2 id="3-OSD"><a href="#3-OSD" class="headerlink" title="3.OSD"></a>3.OSD</h2><p>Ceph OSD，Object Storage Daemon，ceph-osd，即对象存储守护进程，核心组件，以对象的方式管理物理硬盘的数据，如数据的存储、复制、恢复、再平衡等，且各个进程之间通过心跳检测的方式向监视器和管理器提供监视信息，至少三个OSD才可保障集群的高可用性。OSD的构建建议采用SSD磁盘，且以xfs文件系统格式化分区</p>
+<h2 id="4-MDS"><a href="#4-MDS" class="headerlink" title="4.MDS"></a>4.MDS</h2><p>Ceph MDS，Metadata server，ceph-mds，即元数据服务器，负责为存储于OSD节点的Ceph文件存储服务的元数据提供计算、缓存与同步服务，类似于元数据的代理缓存服务器</p>
+<ul>
+<li>注：Ceph块存储和Ceph对象存储服务不需要MDS</li>
+</ul>
+<h1 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h1><p>Ceph集群将多台存储服务器的磁盘合并为一个整体，形成一个大容量的虚拟磁盘设备。文件写入这个分区中时，Ceph将文件切分为多个固定大小（默认为4M）的Objects，并以其为最小单元将之随机均匀地存储到集群各节点的物理磁盘。Object的分布CRUSH经过运算所得，存取操作由每个物理磁盘的对应OSD来完成</p>
+<p>Ceph集群为了保障数据的安全，设计了两种数据备份机制，即多副本和纠删码（1）多副本方法，让每个object保存到多个不同节点的OSDs中。ceph默认使用了3副本方法，则表示object保存到了3个不同的OSDs，从而实现数据安全，但是这样会让有效的存储空间降到三分之一。即使使用2副本的方法，也只有50%的空间利用率。但是Ceph的多副本的方法能获得最好的性能。（2）纠删码方法，则是将数据分割成k份，再根据这k份数据计算出m份同样大小的纠删码数据，将数据保存到k+m个不同的OSDs上。若某一份数据丢失，则可以根据仍然存在的&gt;&#x3D;k份数据计算出丢失的数据，从而获得完整的数据。只要不超过m份数据丢失，则数据依然可以根据通过解码方法计算出完整的数据。对于纠删码的简单理解：1+2+3+4&#x3D;10，根据前面4份数据，算出了第5份数据的值；当某一份数据丢失时，1+x+3+4&#x3D;10，则可以根据纠删码的数据算出丢失的数据x&#x3D;2，从而获得完整的数据。纠删码方式存储数据的好处是能获得更高的空间利用率。例如，k&#x3D;4，m&#x3D;1的空间利用率为80%，k&#x3D;8，m&#x3D;2的空间利用率也为80%。但是前者是解一元方程，后者是解二元方程，其计算量更大，但是允许故障的OSDs更多。因此，纠删码方法存储数据会消耗较大的计算量，建议给服务器配置更多的CPU线程。特别是当某个OSDs出故障情况下，对整个OSD的数据重建会消耗极大的计算资源和网络负荷。因为该OSD中数据可能和其他所有的OSDs都有联系，对该OSD数据进行重建，需要读取其他OSDs的数据并进行计算恢复。而多副本的方法，则只需要复制相应的数据即可。此外，将一个object存储到多个OSDs，描述其存放位置的术语为放置组（PG &#x2F; Placement Group），即一个object数据是保存到一个PG中的。而PG如何映射到不同节点上的多个OSDs中，保证数据可靠性，则是 使用CRUSH算法进行。</p>
+<h1 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h1><p>文件上传，先将文件切片成N个object（如果开启了cephFS，可以使用MDS缓存）<br>2:切片后的文件object会存入到Ceph中<br>3:文件存储前，会经过CRUSH算法，计算当前文件存储归结于哪个PG<br>4:PG是逻辑概念上对文件存储范围划分的索引<br>5:根据PG索引将文件存储到指定服务器的OSD中</p>
+<hr>
+<h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul>
+<li>172.100.100.150&#x2F;192.168.100.150 node01</li>
+<li>172.100.100.160&#x2F;192.168.100.160 node02</li>
+<li>172.100.100.180&#x2F;192.168.100.180 node03</li>
+</ul>
+<hr>
+<h1 id="1-系统环境配置"><a href="#1-系统环境配置" class="headerlink" title="1.系统环境配置"></a>1.系统环境配置</h1><h2 id="1-1-配置hosts"><a href="#1-1-配置hosts" class="headerlink" title="1.1 配置hosts"></a>1.1 配置hosts</h2><pre><code class="hljs">sudo vi /etc/hosts
+
+
+172.100.100.150/192.168.100.150 node01
+172.100.100.160/192.168.100.160 node02
+172.100.100.180/192.168.100.180 node03
+</code></pre>
+<h2 id="1-2-关闭防火墙"><a href="#1-2-关闭防火墙" class="headerlink" title="1.2 关闭防火墙"></a>1.2 关闭防火墙</h2><h2 id="1-3-禁用selinux"><a href="#1-3-禁用selinux" class="headerlink" title="1.3 禁用selinux"></a>1.3 禁用selinux</h2><h2 id="1-4-配置系统内核参数"><a href="#1-4-配置系统内核参数" class="headerlink" title="1.4 配置系统内核参数"></a>1.4 配置系统内核参数</h2><pre><code class="hljs">sudo vi /etc/sysctl.conf
+
+
+fs.file-max = 10000000000
+fs.nr_open = 1000000000
+</code></pre>
+<h2 id="1-5-配置用户进程数限制"><a href="#1-5-配置用户进程数限制" class="headerlink" title="1.5 配置用户进程数限制"></a>1.5 配置用户进程数限制</h2><pre><code class="hljs">sudo vi /etc/security/limits.conf
+
+
+* soft nproc 102400
+* hard nproc 104800
+* soft nofile 102400
+* hard nofile 104800
+</code></pre>
+<h2 id="1-6-配置集群免密登录"><a href="#1-6-配置集群免密登录" class="headerlink" title="1.6 配置集群免密登录"></a>1.6 配置集群免密登录</h2><h1 id="2-配置网络"><a href="#2-配置网络" class="headerlink" title="2.配置网络"></a>2.配置网络</h1><h2 id="2-1-新增集群通信网卡"><a href="#2-1-新增集群通信网卡" class="headerlink" title="2.1 新增集群通信网卡"></a>2.1 新增集群通信网卡</h2><pre><code class="hljs"># 新增网卡
+sudo virsh attach-interface node01 --type network --source default --model virtio
+# 加载到虚拟机配置文件
+sudo virsh attach-interface node01 --type network --source default --model virtio  --config
+
+sudo virsh attach-interface node02 --type network --source default --model virtio
+sudo virsh attach-interface node02 --type network --source default --model virtio  --config
+
+sudo virsh attach-interface node03 --type network --source default --model virtio
+sudo virsh attach-interface node03 --type network --source default --model virtio  --config
+</code></pre>
+<h2 id="2-2-配置集群通信网卡IP"><a href="#2-2-配置集群通信网卡IP" class="headerlink" title="2.2 配置集群通信网卡IP"></a>2.2 配置集群通信网卡IP</h2><pre><code class="hljs">sudo vi /etc/netplan/01-netcfg.yaml
+
+
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    ens2:
+      dhcp4: no
+      addresses:
+        - 192.168.100.150/24
+      gateway4: 192.168.100.1
+      nameservers:
+          addresses: [192.168.100.1,8.8.8.8]
+    ens6:
+      dhcp4: no
+      addresses:
+        - 172.100.100.150/24
+      gateway4: 172.100.100.1
+      nameservers:
+          addresses: [172.100.100.1,8.8.8.8]
+</code></pre>
+<h2 id="2-3-应用网卡配置"><a href="#2-3-应用网卡配置" class="headerlink" title="2.3 应用网卡配置"></a>2.3 应用网卡配置</h2><pre><code class="hljs">sudo netplan apply
+</code></pre>
+<h1 id="3-配置集群磁盘"><a href="#3-配置集群磁盘" class="headerlink" title="3.配置集群磁盘"></a>3.配置集群磁盘</h1><h2 id="3-1-新增磁盘"><a href="#3-1-新增磁盘" class="headerlink" title="3.1 新增磁盘"></a>3.1 新增磁盘</h2><pre><code class="hljs">sudo qemu-img create -f qcow2 /home/kvm/ceph/node01-ceph-01.qcow2 30G
+sudo virsh attach-disk node01 /home/kvm/ceph/node01-ceph-01.qcow2 vdb --live --cache=none --subdriver=qcow2 --config
+
+sudo qemu-img create -f qcow2 /home/kvm/ceph/node02-ceph-01.qcow2 30G
+sudo virsh attach-disk node02 /home/kvm/ceph/node02-ceph-01.qcow2 vdb --live --cache=none --subdriver=qcow2 --config
+
+sudo qemu-img create -f qcow2 /home/kvm/ceph/node01-ceph-03.qcow2 30G
+sudo virsh attach-disk node03 /home/kvm/ceph/node01-ceph-03.qcow2 vdb --live --cache=none --subdriver=qcow2 --config
+</code></pre>
+<h2 id="3-2-验证磁盘"><a href="#3-2-验证磁盘" class="headerlink" title="3.2 验证磁盘"></a>3.2 验证磁盘</h2><pre><code class="hljs">sudo lsblk
+</code></pre>
+<h1 id="4-安装ceph"><a href="#4-安装ceph" class="headerlink" title="4.安装ceph"></a>4.安装ceph</h1><pre><code class="hljs">sudo apt install -y apt-transport-https ca-certificates curl software-properties-common wget
+wget -q -O- &#39;https://mirrors.tuna.tsinghua.edu.cn/ceph/keys/release.asc&#39; | sudo apt-key add -
+echo deb https://mirrors.tuna.tsinghua.edu.cn/ceph/debian-pacific/ $(lsb_release -sc) main | sudo tee /etc/apt/sources.list.d/ceph.list
+sudo apt install -y ceph
+</code></pre>
+<h1 id="5-部署mon"><a href="#5-部署mon" class="headerlink" title="5.部署mon"></a>5.部署mon</h1><h2 id="5-1-创建集群配置文件"><a href="#5-1-创建集群配置文件" class="headerlink" title="5.1 创建集群配置文件"></a>5.1 创建集群配置文件</h2><pre><code class="hljs">sudo vi /etc/ceph/ceph.conf
+
+
+[global]
+# 设置集群ID，可用uuidgen命令生成
+fsid = c649ba53-2f1a-431c-8fd4-eb4b423527d5
+mon initial members = node01
+mon host = 192.168.100.150
+# 设置集群管理网络的网段
+public network = 192.168.100.0/24
+# 设置集群通信网络的网段
+cluster network = 172.100.100.0/24
+auth cluster required = cephx
+auth service required = cephx
+auth client required = cephx
+osd journal size = 1024
+# 设置osd副本数，默认为3
+osd pool default size = 3
+# 设置osd最小副本数                    
+osd pool default min size = 2                 
+osd pool default pg num = 16               
+osd pool default pgp num = 16
+osd crush chooseleaf type = 1
+</code></pre>
+<h2 id="5-2-创建集群mon密钥环"><a href="#5-2-创建集群mon密钥环" class="headerlink" title="5.2 创建集群mon密钥环"></a>5.2 创建集群mon密钥环</h2><pre><code class="hljs">sudo ceph-authtool --create-keyring /tmp/ceph.mon.keyring --gen-key -n mon. --cap mon &#39;allow *&#39;
+</code></pre>
+<h2 id="5-3-创建集群管理密钥环"><a href="#5-3-创建集群管理密钥环" class="headerlink" title="5.3 创建集群管理密钥环"></a>5.3 创建集群管理密钥环</h2><pre><code class="hljs">sudo ceph-authtool --create-keyring /etc/ceph/ceph.client.admin.keyring --gen-key -n client.admin --cap mon &#39;allow *&#39; --cap osd &#39;allow *&#39; --cap mds &#39;allow *&#39; --cap mgr &#39;allow *&#39;
+sudo chmod +r /etc/ceph/ceph.client.admin.keyring
+</code></pre>
+<h2 id="5-4-创建osd引导密钥环"><a href="#5-4-创建osd引导密钥环" class="headerlink" title="5.4 创建osd引导密钥环"></a>5.4 创建osd引导密钥环</h2><pre><code class="hljs">sudo ceph-authtool --create-keyring /var/lib/ceph/bootstrap-osd/ceph.keyring --gen-key -n client.bootstrap-osd --cap mon &#39;profile bootstrap-osd&#39; --cap mgr &#39;allow r&#39;
+</code></pre>
+<h2 id="5-5-mon密钥环导入到管理密钥环、osd引导密钥环"><a href="#5-5-mon密钥环导入到管理密钥环、osd引导密钥环" class="headerlink" title="5.5 mon密钥环导入到管理密钥环、osd引导密钥环"></a>5.5 mon密钥环导入到管理密钥环、osd引导密钥环</h2><pre><code class="hljs">sudo ceph-authtool /tmp/ceph.mon.keyring --import-keyring /etc/ceph/ceph.client.admin.keyring
+sudo ceph-authtool /tmp/ceph.mon.keyring --import-keyring /var/lib/ceph/bootstrap-osd/ceph.keyring
+sudo chown ceph:ceph /tmp/ceph.mon.keyring
+</code></pre>
+<h2 id="5-6-创建ceph监视图"><a href="#5-6-创建ceph监视图" class="headerlink" title="5.6 创建ceph监视图"></a>5.6 创建ceph监视图</h2><pre><code class="hljs">monmaptool --create --add node01 192.168.100.150 --fsid c649ba53-2f1a-431c-8fd4-eb4b423527d5 /tmp/monmap
+</code></pre>
+<h2 id="5-7-初始化mon"><a href="#5-7-初始化mon" class="headerlink" title="5.7 初始化mon"></a>5.7 初始化mon</h2><pre><code class="hljs"># 创建mon目录，默认命名格式为ceph-hostname
+sudo -u ceph mkdir /var/lib/ceph/mon/ceph-node01
+sudo -u ceph ceph-mon --mkfs -i node01 --monmap /tmp/monmap --keyring /tmp/ceph.mon.keyring
+# 防止重新安装，创建空的done文件
+sudo -u ceph touch /var/lib/ceph/mon/ceph-node01/done
+</code></pre>
+<h2 id="5-8-启动监视器服务，查看状态"><a href="#5-8-启动监视器服务，查看状态" class="headerlink" title="5.8 启动监视器服务，查看状态"></a>5.8 启动监视器服务，查看状态</h2><pre><code class="hljs">sudo systemctl start ceph-mon@node01
+sudo systemctl enable ceph-mon@node01
+</code></pre>
+<h2 id="5-9-其余节点部署监视器"><a href="#5-9-其余节点部署监视器" class="headerlink" title="5.9 其余节点部署监视器"></a>5.9 其余节点部署监视器</h2><h3 id="5-9-1-将配置文件发往其余节点"><a href="#5-9-1-将配置文件发往其余节点" class="headerlink" title="5.9.1 将配置文件发往其余节点"></a>5.9.1 将配置文件发往其余节点</h3><pre><code class="hljs">scp -r /etc/ceph node02:/etc
+scp -r /etc/ceph node02:/etc
+</code></pre>
+<h3 id="5-9-2-node02部署mon"><a href="#5-9-2-node02部署mon" class="headerlink" title="5.9.2 node02部署mon"></a>5.9.2 node02部署mon</h3><pre><code class="hljs">ssh node02 sudo -u ceph mkdir /var/lib/ceph/mon/ceph-node02
+# 获取监视器密钥环
+ssh node02 ceph auth get mon. -o /tmp/ceph.mon.keyring
+# 获取监视器运行图
+ssh node02 ceph mon getmap -o /tmp/ceph.mon.map
+ssh node02 sudo chown ceph.ceph /tmp/ceph.mon.keyring
+ssh node02 sudo -u ceph ceph-mon --mkfs -i node02 --monmap /tmp/ceph.mon.map --keyring /tmp/ceph.mon.keyring
+ssh node02 sudo -u ceph touch /var/lib/ceph/mon/ceph-node02/done
+ssh node02 sudo systemctl start ceph-mon@node02
+ssh node02 sudo systemctl enable ceph-mon@node02
+</code></pre>
+<h3 id="5-9-3-node03部署mon"><a href="#5-9-3-node03部署mon" class="headerlink" title="5.9.3 node03部署mon"></a>5.9.3 node03部署mon</h3><pre><code class="hljs">ssh node03 sudo -u ceph mkdir /var/lib/ceph/mon/ceph-node03
+ssh node03 ceph auth get mon. -o /tmp/ceph.mon.keyring
+ssh node03 ceph mon getmap -o /tmp/ceph.mon.map
+ssh node03 sudo chown ceph.ceph /tmp/ceph.mon.keyring
+ssh node03 sudo -u ceph ceph-mon --mkfs -i node03 --monmap /tmp/ceph.mon.map --keyring /tmp/ceph.mon.keyring
+ssh node03 sudo -u ceph touch /var/lib/ceph/mon/ceph-node03/done
+ssh node03 sudo systemctl start ceph-mon@node03
+ssh node03 sudo systemctl enable ceph-mon@node03
+</code></pre>
+<h3 id="5-9-4-验证服务状态"><a href="#5-9-4-验证服务状态" class="headerlink" title="5.9.4 验证服务状态"></a>5.9.4 验证服务状态</h3><pre><code class="hljs">ceph mon stat
+</code></pre>
+<h1 id="6-部署osd"><a href="#6-部署osd" class="headerlink" title="6.部署osd"></a>6.部署osd</h1><h2 id="6-1-导出集群osd引导密钥环"><a href="#6-1-导出集群osd引导密钥环" class="headerlink" title="6.1 导出集群osd引导密钥环"></a>6.1 导出集群osd引导密钥环</h2><pre><code class="hljs">sudo ceph auth get client.bootstrap-osd -o /var/lib/ceph/bootstrap-osd/ceph.keyring
+</code></pre>
+<h2 id="6-2-初始化osd"><a href="#6-2-初始化osd" class="headerlink" title="6.2 初始化osd"></a>6.2 初始化osd</h2><pre><code class="hljs">sudo ceph-volume lvm create --data /dev/vdb
+sudo ceph-volume lvm create --data /dev/vdc
+sudo ceph-volume lvm create --data /dev/vdd
+</code></pre>
+<h2 id="6-3-启动osd"><a href="#6-3-启动osd" class="headerlink" title="6.3 启动osd"></a>6.3 启动osd</h2><pre><code class="hljs">sudo systemctl start ceph-osd@0
+sudo systemctl enable ceph-osd@0
+sudo systemctl start ceph-osd@1
+sudo systemctl enable ceph-osd@1
+sudo systemctl start ceph-osd@2
+sudo systemctl enable ceph-osd@2
+</code></pre>
+<ul>
+<li>注：osd编号从0开始自动增加，可逐个节点逐个盘的创建，守护进程也是用该ID作为标识</li>
+</ul>
+<h2 id="6-4-集群其余节点部署osd"><a href="#6-4-集群其余节点部署osd" class="headerlink" title="6.4 集群其余节点部署osd"></a>6.4 集群其余节点部署osd</h2><h3 id="6-4-1-node02部署osd"><a href="#6-4-1-node02部署osd" class="headerlink" title="6.4.1 node02部署osd"></a>6.4.1 node02部署osd</h3><pre><code class="hljs">ssh node02 sudo ceph auth get client.bootstrap-osd -o /var/lib/ceph/bootstrap-osd/ceph.keyring
+ssh node02 sudo ceph-volume lvm create --data /dev/vdb
+ssh node02 sudo ceph-volume lvm create --data /dev/vdc
+ssh node02 sudo ceph-volume lvm create --data /dev/vdd
+ssh node02 sudo systemctl start ceph-osd@3
+ssh node02 sudo systemctl enable ceph-osd@3
+ssh node02 sudo systemctl start ceph-osd@4
+ssh node02 sudo systemctl enable ceph-osd@4
+ssh node02 sudo systemctl start ceph-osd@5
+ssh node02 sudo systemctl enable ceph-osd@5
+</code></pre>
+<h3 id="6-4-2-node03部署osd"><a href="#6-4-2-node03部署osd" class="headerlink" title="6.4.2 node03部署osd"></a>6.4.2 node03部署osd</h3><pre><code class="hljs">ssh node03 sudo ceph auth get client.bootstrap-osd -o /var/lib/ceph/bootstrap-osd/ceph.keyring
+ssh node03 sudo ceph-volume lvm create --data /dev/vdb
+ssh node03 sudo ceph-volume lvm create --data /dev/vdc
+ssh node03 sudo ceph-volume lvm create --data /dev/vdd
+ssh node03 sudo systemctl start ceph-osd@6
+ssh node03 sudo systemctl enable ceph-osd@6
+ssh node03 sudo systemctl start ceph-osd@7
+ssh node03 sudo systemctl enable ceph-osd@7
+ssh node03 sudo systemctl start ceph-osd@8
+ssh node03 sudo systemctl enable ceph-osd@8
+</code></pre>
+<h2 id="6-5-验证服务状态"><a href="#6-5-验证服务状态" class="headerlink" title="6.5 验证服务状态"></a>6.5 验证服务状态</h2><pre><code class="hljs">ceph osd stat
+# 查看osd目录树及osd所属服务器与状态
+ceph osd tree
+</code></pre>
+<h1 id="7-部署mgr"><a href="#7-部署mgr" class="headerlink" title="7.部署mgr"></a>7.部署mgr</h1><h2 id="7-1-创建mgr密钥环"><a href="#7-1-创建mgr密钥环" class="headerlink" title="7.1 创建mgr密钥环"></a>7.1 创建mgr密钥环</h2><pre><code class="hljs">ceph auth get-or-create mgr.node01 mon &#39;allow profile mgr&#39; osd &#39;allow *&#39; mds &#39;allow *&#39;
+</code></pre>
+<h2 id="7-2-创建mgr节点目录"><a href="#7-2-创建mgr节点目录" class="headerlink" title="7.2 创建mgr节点目录"></a>7.2 创建mgr节点目录</h2><pre><code class="hljs"># 节点目录默认名称为集群名称+节点名称
+sudo -u ceph mkdir /var/lib/ceph/mgr/ceph-node01
+</code></pre>
+<h2 id="7-3-获取mgr密钥环，导出到节点目录下，默认为keyring"><a href="#7-3-获取mgr密钥环，导出到节点目录下，默认为keyring" class="headerlink" title="7.3 获取mgr密钥环，导出到节点目录下，默认为keyring"></a>7.3 获取mgr密钥环，导出到节点目录下，默认为keyring</h2><pre><code class="hljs">sudo -u ceph ceph auth get mgr.node01 -o /var/lib/ceph/mgr/ceph-node01/keyring
+</code></pre>
+<h2 id="7-4-启动mgr"><a href="#7-4-启动mgr" class="headerlink" title="7.4 启动mgr"></a>7.4 启动mgr</h2><pre><code class="hljs">sudo systemctl start ceph-mgr@node01
+sudo systemctl enable ceph-mgr@node01
+</code></pre>
+<h2 id="7-5-部署热备mgr"><a href="#7-5-部署热备mgr" class="headerlink" title="7.5 部署热备mgr"></a>7.5 部署热备mgr</h2><pre><code class="hljs">ssh node02 ceph auth get-or-create mgr.node02 mon &#39;allow profile mgr&#39; osd &#39;allow *&#39; mds &#39;allow *&#39;
+ssh node02 sudo -u ceph mkdir /var/lib/ceph/mgr/ceph-node02
+ssh node02 sudo -u ceph ceph auth get mgr.node02 -o /var/lib/ceph/mgr/ceph-node02/keyring
+ssh node02 sudo systemctl start ceph-mgr@node02
+ssh node02 sudo systemctl enable ceph-mgr@node02
+</code></pre>
+<h1 id="8-部署dashboard"><a href="#8-部署dashboard" class="headerlink" title="8.部署dashboard"></a>8.部署dashboard</h1><h2 id="8-1-启用dashboard"><a href="#8-1-启用dashboard" class="headerlink" title="8.1 启用dashboard"></a>8.1 启用dashboard</h2><pre><code class="hljs">ceph mgr module enable dashboard
+</code></pre>
+<h2 id="8-2-启用自签名证书"><a href="#8-2-启用自签名证书" class="headerlink" title="8.2 启用自签名证书"></a>8.2 启用自签名证书</h2><pre><code class="hljs">ceph dashboard create-self-signed-cert
+</code></pre>
+<h2 id="8-3-创建自签名SSL证书"><a href="#8-3-创建自签名SSL证书" class="headerlink" title="8.3 创建自签名SSL证书"></a>8.3 创建自签名SSL证书</h2><pre><code class="hljs">openssl req -new -nodes -x509 \
+-subj &quot;/O=OPS/CN=ceph-mgr-dashboard&quot; -days 3650 \
+-keyout dashboard.key -out dashboard.crt -extensions v3_ca
+</code></pre>
+<h2 id="8-4-导入证书文件和私钥文件"><a href="#8-4-导入证书文件和私钥文件" class="headerlink" title="8.4 导入证书文件和私钥文件"></a>8.4 导入证书文件和私钥文件</h2><pre><code class="hljs">ceph dashboard set-ssl-certificate -i dashboard.crt
+</code></pre>
+<h2 id="8-5-设置访问地址及端口"><a href="#8-5-设置访问地址及端口" class="headerlink" title="8.5 设置访问地址及端口"></a>8.5 设置访问地址及端口</h2><pre><code class="hljs">ceph config set mgr mgr/dashboard/server_addr 192.168.100.150
+ceph config set mgr mgr/dashboard/server_port 8080
+ceph config set mgr mgr/dashboard/ssl_server_port 8443
+</code></pre>
+<h2 id="8-6-设置用户及密码"><a href="#8-6-设置用户及密码" class="headerlink" title="8.6 设置用户及密码"></a>8.6 设置用户及密码</h2><pre><code class="hljs">echo &quot;admin@ceph&quot; &gt; dashboard_passwd.txt
+ceph dashboard ac-user-create admin administrator -i dashboard_passwd.txt
+</code></pre>
+<h2 id="8-7-禁用SSL认证"><a href="#8-7-禁用SSL认证" class="headerlink" title="8.7 禁用SSL认证"></a>8.7 禁用SSL认证</h2><pre><code class="hljs"># 也可禁用SSL认证，使用8080端口进行http访问
+# ceph config set mgr mgr/dashboard/ssl false
+# 重启mgr
+# sudo systemctl restart ceph-mgr@node01
+</code></pre>
+<h2 id="8-8-登录web页面，验证dashboard"><a href="#8-8-登录web页面，验证dashboard" class="headerlink" title="8.8 登录web页面，验证dashboard"></a>8.8 登录web页面，验证dashboard</h2><h1 id="9-验证集群状态"><a href="#9-验证集群状态" class="headerlink" title="9.验证集群状态"></a>9.验证集群状态</h1><pre><code class="hljs"># 集群禁止非安全模式
+ceph config set mon auth_allow_insecure_global_id_reclaim false
+# 开启mon组件msgr2消息传递协议
+ceph mon enable-msgr2
+
+# 查看ceph集群整体状态
+ceph -s
+# 查看ceph集群健康状态
+ceph health detail
+# 查看ceph集群的存储空间
+ceph df
+# 查看ceph的实时运行状态
+ceph -w
+</code></pre>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/punchlinux/p/17053624.html">https://www.cnblogs.com/punchlinux/p/17053624.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/jkjgj/article/details/128785139">https://blog.csdn.net/jkjgj/article/details/128785139</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43860781/article/details/109053152">https://blog.csdn.net/weixin_43860781/article/details/109053152</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/works/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/Ceph/">#Ceph</a>
+      
+        <a href="/tags/%E5%AD%98%E5%82%A8/">#存储</a>
+      
+        <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/">#分布式存储</a>
+      
+        <a href="/tags/%E4%BA%91%E5%AD%98%E5%82%A8/">#云存储</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Ceph分布式存储集群部署</div>
+      <div>https://hfsxs.github.io/works/Ceph/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年7月5日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月15日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/works/ZabbixDiscover/" title="Zabbix监控自动发现详解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Zabbix监控自动发现详解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/works/JenkinsPipeline/" title="Jenkins工作流Pipeline语法">
+                        <span class="hidden-mobile">Jenkins工作流Pipeline语法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+
+<div>
+<span id="timeDate"> 正在载入天数...</span>
+<span id="times"> 载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime(){
+        var grt= new Date("1/12/2025 01:15:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if(String(snum).length ==1 ){
+                snum = "0" + snum;
+        }
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
+        document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+</div>
+
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,1093 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="变量，即程序用于存储计算数据的内存单元，包含变量的标识、名称和数据。变量名即为存储单元的命名，通过给变量名赋值可以随时改变变量的值。Python变量使用前需进行赋值，赋值之后变量才会被创建并存储于内存，且赋值不需要类型声明 计算机程序的计算数据为适应不同的场景，将数据划分为不同的具备各自特点的类型，以便于高效的处理与展示数据，即数据类型即决定变量类型 1.数字类型数字类型用于存储数学意义上的数值，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python数据类型">
+<meta property="og:url" content="https://hfsxs.github.io/works/PythonVariables/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="变量，即程序用于存储计算数据的内存单元，包含变量的标识、名称和数据。变量名即为存储单元的命名，通过给变量名赋值可以随时改变变量的值。Python变量使用前需进行赋值，赋值之后变量才会被创建并存储于内存，且赋值不需要类型声明 计算机程序的计算数据为适应不同的场景，将数据划分为不同的具备各自特点的类型，以便于高效的处理与展示数据，即数据类型即决定变量类型 1.数字类型数字类型用于存储数学意义上的数值，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-01-10T08:55:51.000Z">
+<meta property="article:modified_time" content="2025-03-15T14:47:45.319Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Python">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Python数据类型 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Python数据类型</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-01-10 16:55" pubdate>
+          2023年1月10日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          89 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Python数据类型</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>变量，即程序用于存储计算数据的内存单元，包含变量的标识、名称和数据。变量名即为存储单元的命名，通过给变量名赋值可以随时改变变量的值。Python变量使用前需进行赋值，赋值之后变量才会被创建并存储于内存，且赋值不需要类型声明</p>
+<p>计算机程序的计算数据为适应不同的场景，将数据划分为不同的具备各自特点的类型，以便于高效的处理与展示数据，即数据类型即决定变量类型</p>
+<h1 id="1-数字类型"><a href="#1-数字类型" class="headerlink" title="1.数字类型"></a>1.数字类型</h1><p>数字类型用于存储数学意义上的数值，是不可改变数据类型，即改变数字类型的数据将会重新分配全新的对象。Python支持四种不同的数字类型，即有符号整型int、长整型long（也可代表八进制和十六进制）、浮点型float和复数complex</p>
+<pre><code class="hljs">&gt;&gt;&gt; print(100)
+100
+&gt;&gt;&gt; print(0.24)
+0.24
+&gt;&gt;&gt; print(-100)
+-100
+</code></pre>
+<h2 id="1-1-数字类型转换"><a href="#1-1-数字类型转换" class="headerlink" title="1.1 数字类型转换"></a>1.1 数字类型转换</h2><p>int()函数将变量x转化为整数，即只保留变量的整数部分，变量x可以是整数、浮点数或整数字符串<br>float()函数将变量x转化为浮点数，变量x可以是整数、浮点数或者数字字符串</p>
+<pre><code class="hljs">&gt;&gt;&gt; x = 100
+&gt;&gt;&gt; int(x)
+100
+&gt;&gt;&gt; float(x)
+100.0
+&gt;&gt;&gt; y = 0.24
+&gt;&gt;&gt; float(y)
+0.24
+&gt;&gt;&gt; int(y)
+0
+# 八进制数，以0o开头
+&gt;&gt;&gt; print(0o12)
+10
+# 十六进制数，以0x开头
+&gt;&gt;&gt; print(0xff00)
+65280
+</code></pre>
+<h1 id="2-布尔类型"><a href="#2-布尔类型" class="headerlink" title="2.布尔类型"></a>2.布尔类型</h1><p>布尔类型，逻辑运算的计算结果，通常用于判断条件是否成立。Python布尔类型只有两个值，即True与False，首字母一定是大写</p>
+<pre><code class="hljs">&gt;&gt;&gt; print(1 &gt; 2)
+False
+&gt;&gt;&gt; print(-1 &lt; 2+6)
+True
+</code></pre>
+<ul>
+<li>注：None，即空值，Python程序特殊值，是空类型，不是布尔类型，也不能理解为0，因为0是整数类型</li>
+</ul>
+<h1 id="3-字符串类型"><a href="#3-字符串类型" class="headerlink" title="3.字符串类型"></a>3.字符串类型</h1><p>String，即字符串，由数字、字母、下划线等一串字符组成，表示为文本类型的数据，使用单引号’’或双引号””创建，三引号’’’则表示多行字符串。若字符串本身包含单引号或双引号，则用\标识，如‘I&#39;m &quot;OK\ “!’，字符串内容为I’m “OK”!</p>
+<h2 id="3-1-字符串定义"><a href="#3-1-字符串定义" class="headerlink" title="3.1 字符串定义"></a>3.1 字符串定义</h2><pre><code class="hljs"># 空字符串
+&gt;&gt;&gt; var = &#39;&#39;
+&gt;&gt;&gt; var = &quot;Hello Python!&quot;
+&gt;&gt;&gt; print(var)
+Hello Python!
+&gt;&gt;&gt; var = &#39;Hello &quot;Python&quot;!&#39;
+Hello &quot;Python&quot;!
+# len()函数获取字符串的长度
+&gt;&gt;&gt; print(len(var))
+15
+</code></pre>
+<h2 id="3-2-字符串运算"><a href="#3-2-字符串运算" class="headerlink" title="3.2 字符串运算"></a>3.2 字符串运算</h2><h3 id="3-2-1-字符串拼接"><a href="#3-2-1-字符串拼接" class="headerlink" title="3.2.1 字符串拼接"></a>3.2.1 字符串拼接</h3><p>字符串拼接，即字符串之间的加法运算，运算符为+，运算结果的数据类型还是字符串，作用类似于火车车厢的拼接</p>
+<pre><code class="hljs">&gt;&gt;&gt; str1 = &quot;Hello&quot;
+&gt;&gt;&gt; str2 = &quot;!&quot;
+&gt;&gt;&gt; print(str1+str2)
+Hello!
+&gt;&gt;&gt; print(str2+str1)
+!Hello
+</code></pre>
+<h3 id="3-2-2-字符串连接"><a href="#3-2-2-字符串连接" class="headerlink" title="3.2.2 字符串连接"></a>3.2.2 字符串连接</h3><p>字符串连接，即是字符串的重复，运算符为*，运算结果的数据类型还是字符串，作用相当于字符串的复制</p>
+<pre><code class="hljs">&gt;&gt;&gt; str = &quot;哈哈&quot;
+&gt;&gt;&gt; print(str*2)
+哈哈哈哈
+</code></pre>
+<h3 id="3-2-3-成员运算"><a href="#3-2-3-成员运算" class="headerlink" title="3.2.3 成员运算"></a>3.2.3 成员运算</h3><p>成员运算，即是判断某个字符或字符串是否是其成员，运算结果的数据类型是布尔型</p>
+<pre><code class="hljs">&gt;&gt;&gt; print(&quot;H&quot; in str)
+False
+&gt;&gt;&gt; str = &quot;Hello !&quot;
+&gt;&gt;&gt; print(&quot;H&quot; in str)
+True
+&gt;&gt;&gt; print(&quot;H&quot; not in str)
+False
+&gt;&gt;&gt; print(&quot;e&quot; not in str)
+False
+&gt;&gt;&gt; print(&quot;*&quot; not in str)
+True
+</code></pre>
+<h2 id="3-3-字符串索引"><a href="#3-3-字符串索引" class="headerlink" title="3.3 字符串索引"></a>3.3 字符串索引</h2><p>字符串是序列不可变的数据类型，每个字符都是序列的成员，都有属于自己的编号，类似于房间编号，即为索引，通过索引可以取出字符串的成员，取值顺序有两种：</p>
+<ul>
+<li>正索引，从左到右索引，默认从0开始，最大范围为字符串长度减1</li>
+<li>负索引，从右到左索引，默认从-1开始，最大范围为字符串开头</li>
+</ul>
+<hr>
+<p>字符串索引取值由三部分构成，即字符串变量名或字符串本身、英文中括号、索引</p>
+<pre><code class="hljs">&gt;&gt;&gt; str = &quot;Hello!&quot;
+&gt;&gt;&gt; print(str)
+Hello!
+&gt;&gt;&gt; print(str[1])
+e
+&gt;&gt;&gt; print(str[-3])
+l
+</code></pre>
+<h2 id="3-4-字符串切片"><a href="#3-4-字符串切片" class="headerlink" title="3.4 字符串切片"></a>3.4 字符串切片</h2><p>字符串切片，即是截取字符串的部分成员重新组成一个字符串，也即是获取其子串，语法格式为：字符串[star:end:step]，其中star为开始索引，默认为0；end为结束索引，默认字符串的长度，为空也表示字符串的长度；step为步长，可为正整数或负整数，默认为1，表示依次取值，为2表示跳过一个字符取值，为负整数则表示负索引顺序，依此类推</p>
+<pre><code class="hljs">&gt;&gt;&gt; str = &quot;Kubernetes&quot;
+&gt;&gt;&gt; print(str[1:6])
+ubern
+&gt;&gt;&gt; print(str[1:6:1])
+ubern
+&gt;&gt;&gt; print(str[1:6:2])
+uen
+&gt;&gt;&gt; print(str[-1:-8:-2])
+stne
+&gt;&gt;&gt; print(str[-8:-2])
+bernet
+&gt;&gt;&gt; print(str[3:-2])
+ernet
+&gt;&gt;&gt; print(str[:-2])
+Kubernet
+&gt;&gt;&gt; print(str[3::-2])
+eu
+</code></pre>
+<ul>
+<li>注：截取的字符串包含开始索引的字符但不包含结束索引的字符，即左闭右开</li>
+</ul>
+<h2 id="3-5-转义字符"><a href="#3-5-转义字符" class="headerlink" title="3.5 转义字符"></a>3.5 转义字符</h2><p>转义字符，用于表示具有特殊含义或无法常规用普通字符表达的特殊字符，如换行符、制表符等，由反斜杠+特殊字符组成</p>
+<pre><code class="hljs"># 反斜杠\
+&gt;&gt;&gt; print(&quot;\\&quot;)
+\
+print(&quot;\\User\\admin&quot;)
+\User\admin
+# 单引号
+&gt;&gt;&gt; print(&quot;\&#39;&quot;)
+&#39;
+# 双引号
+&gt;&gt;&gt; print(&quot;\&quot;&quot;)
+&quot;
+# 响铃
+&gt;&gt;&gt; print(&quot;\a&quot;)
+&gt;&gt;&gt; print(&quot;Error\a&quot;)
+Error
+# 制表符，即tab键
+&gt;&gt;&gt; print(&quot;123\t45&quot;)
+123	45
+# 退格符
+&gt;&gt;&gt; print(&quot;123\b45&quot;)
+# 换行符
+&gt;&gt;&gt; print(&quot;123\n456&quot;)
+123
+456
+# 回车符，光标移动到初始位置，回车符之前的内容将被覆盖
+&gt;&gt;&gt; print(&quot;123\r45&quot;)
+453
+# 行尾续行符
+&gt;&gt;&gt; str = &#39;123&#39; \
+...       &#39; 45&#39;
+&gt;&gt;&gt; print(str)
+123 45
+</code></pre>
+<h1 id="4-列表类型"><a href="#4-列表类型" class="headerlink" title="4.列表类型"></a>4.列表类型</h1><p>List，即列表，是可有序可重复的数据集，支持字符、数字、字符串以及嵌套列表，使用方括号[]创建，是Python中使用最频繁的数据类型。Python列表数据结构是表现为一个可变长度的顺序存储架构，每一个位置存放的都是对象的指针</p>
+<h2 id="4-1-列表定义"><a href="#4-1-列表定义" class="headerlink" title="4.1 列表定义"></a>4.1 列表定义</h2><pre><code class="hljs"># 空列表
+&gt;&gt;&gt; list = []
+&gt;&gt;&gt; stu = [&#39;John&#39;,&#39;Bob&#39;,&#39;LiLei&#39;]
+</code></pre>
+<h2 id="4-2-列表运算"><a href="#4-2-列表运算" class="headerlink" title="4.2 列表运算"></a>4.2 列表运算</h2><h3 id="4-2-1-列表连接"><a href="#4-2-1-列表连接" class="headerlink" title="4.2.1 列表连接"></a>4.2.1 列表连接</h3><p>列表连接，即是列表的合并，运算符为+</p>
+<pre><code class="hljs">&gt;&gt;&gt; list1 = [&#39;1&#39;,&#39;2&#39;,&#39;3&#39;]
+&gt;&gt;&gt; list2 = [&#39;01&#39;,&#39;02&#39;,&#39;03&#39;]
+&gt;&gt;&gt; print(list1+list2)
+[&#39;1&#39;, &#39;2&#39;, &#39;3&#39;, &#39;01&#39;, &#39;02&#39;, &#39;03&#39;]
+</code></pre>
+<h3 id="4-2-2-列表乘法"><a href="#4-2-2-列表乘法" class="headerlink" title="4.2.2 列表乘法"></a>4.2.2 列表乘法</h3><p>列表乘法，即是列表的复制，运算符为*</p>
+<pre><code class="hljs">&gt;&gt;&gt; print(list2*2)
+[&#39;01&#39;, &#39;02&#39;, &#39;03&#39;, &#39;01&#39;, &#39;02&#39;, &#39;03&#39;]
+&gt;&gt;&gt; print(list2*3)
+[&#39;01&#39;, &#39;02&#39;, &#39;03&#39;, &#39;01&#39;, &#39;02&#39;, &#39;03&#39;, &#39;01&#39;, &#39;02&#39;, &#39;03&#39;]
+</code></pre>
+<h3 id="4-2-3-成员运算"><a href="#4-2-3-成员运算" class="headerlink" title="4.2.3 成员运算"></a>4.2.3 成员运算</h3><p>元素运算，即是判断某个元素是否在列表中</p>
+<pre><code class="hljs">&gt;&gt;&gt; print(&#39;01&#39; in list2)
+True
+&gt;&gt;&gt; print(&#39;1&#39; in list2)
+False
+&gt;&gt;&gt; print(&#39;1&#39; not in list2)
+True
+&gt;&gt;&gt; print(&#39;01&#39; not in list2)
+False
+</code></pre>
+<h2 id="4-3-列表索引"><a href="#4-3-列表索引" class="headerlink" title="4.3 列表索引"></a>4.3 列表索引</h2><p>列表的每个元素都有各自的编号，也即列表的索引，通过索引可以取出列表的元素，跟字符串一样</p>
+<pre><code class="hljs">&gt;&gt;&gt; list = [&#39;a&#39;,&#39;b&#39;,&#39;3&#39;]
+&gt;&gt;&gt; print(list[1])
+b
+&gt;&gt;&gt; test = list[-1]
+&gt;&gt;&gt; print(test)
+3
+# 创建嵌套列表，即列表的某个元素或某几个元素的数据类型为列表
+&gt;&gt;&gt; list = [&#39;Lilei&#39;,[&#39;no&#39;,&#39;001&#39;],[&#39;age&#39;,&#39;18&#39;]]
+# 嵌套列表2次索引取值语法为：列表[索引][索引]，
+&gt;&gt;&gt; print(list[2][1])
+18
+</code></pre>
+<h2 id="4-4-列表切片"><a href="#4-4-列表切片" class="headerlink" title="4.4 列表切片"></a>4.4 列表切片</h2><p>列表切片的语法与字符串切片一致，也是通过索引</p>
+<pre><code class="hljs">&gt;&gt;&gt; list = [&quot;Lilei&quot;,[&quot;No&quot;,&quot;001&quot;],&quot;F&quot;,&quot;18&quot;,[&quot;170CM&quot;,&quot;60KG&quot;]]
+&gt;&gt;&gt; print(list[1:4])
+[[&#39;No&#39;, &#39;001&#39;], &#39;F&#39;, &#39;18&#39;]
+&gt;&gt;&gt; print(list[1:5])
+[[&#39;No&#39;, &#39;001&#39;], &#39;F&#39;, &#39;18&#39;, [&#39;170CM&#39;, &#39;60KG&#39;]]
+&gt;&gt;&gt; print(list[-2::2])
+[&#39;18&#39;]
+&gt;&gt;&gt; print(list[:3:22])
+[&#39;Lilei&#39;]
+&gt;&gt;&gt; print(list[:3:-2])
+[[&#39;170CM&#39;, &#39;60KG&#39;]]
+</code></pre>
+<h2 id="4-5-列表遍历"><a href="#4-5-列表遍历" class="headerlink" title="4.5 列表遍历"></a>4.5 列表遍历</h2><pre><code class="hljs">&gt;&gt;&gt; list = [&#39;node01&#39;,&#39;node02&#39;,&#39;node03&#39;]
+&gt;&gt;&gt; for i in list:
+...     print(i)
+... 
+node01
+node02
+node03
+</code></pre>
+<h1 id="5-元组类型"><a href="#5-元组类型" class="headerlink" title="5.元组类型"></a>5.元组类型</h1><p>Tuple，即元组，是有序不可变的数据集，相当于只读列表，使用圆括号()创建，相比于列表，由于创建时间和占用空间更小所以处理速度更快，更适合多线程环境，代码也更安全</p>
+<h2 id="5-1-元组定义"><a href="#5-1-元组定义" class="headerlink" title="5.1 元组定义"></a>5.1 元组定义</h2><pre><code class="hljs">&gt;&gt;&gt; tuple = (&quot;node01&quot;,&quot;node02&quot;,&quot;nopde03&quot;)
+&gt;&gt;&gt; print(tuple)
+(&#39;node01&#39;, &#39;node02&#39;, &#39;nopde03&#39;)
+</code></pre>
+<h2 id="5-2-元组运算"><a href="#5-2-元组运算" class="headerlink" title="5.2 元组运算"></a>5.2 元组运算</h2><h3 id="5-2-1-元组连接"><a href="#5-2-1-元组连接" class="headerlink" title="5.2.1 元组连接"></a>5.2.1 元组连接</h3><p>元组连接，即是元组的合并，运算符为+</p>
+<pre><code class="hljs">&gt;&gt;&gt; tuple1 = (&quot;master01&quot;,&quot;master02&quot;,&quot;master03&quot;)
+&gt;&gt;&gt; tuple2 = (&quot;node01&quot;,&quot;node02&quot;,&quot;node03&quot;)
+&gt;&gt;&gt; tuple3 = tuple
+&gt;&gt;&gt; print(tuple1+tuple2)
+(&#39;master01&#39;, &#39;master02&#39;, &#39;master03&#39;, &#39;node01&#39;, &#39;node02&#39;, &#39;node03&#39;)
+&gt;&gt;&gt; print(tuple2+tuple1)
+(&#39;node01&#39;, &#39;node02&#39;, &#39;node03&#39;, &#39;master01&#39;, &#39;master02&#39;, &#39;master03&#39;)
+</code></pre>
+<h3 id="5-2-2-元组乘法"><a href="#5-2-2-元组乘法" class="headerlink" title="5.2.2 元组乘法"></a>5.2.2 元组乘法</h3><p>元组乘法，即是元组的复制，运算符为*</p>
+<pre><code class="hljs"># 定义单元素元组时需要加上一个逗号，否则()就将表示改变运算优先级的圆括号，而不是元组类型
+&gt;&gt;&gt; tuple = (&quot;master&quot;,)
+&gt;&gt;&gt; print(tuple*3)
+(&#39;master&#39;, &#39;master&#39;, &#39;master&#39;)
+</code></pre>
+<h3 id="5-2-3-成员运算"><a href="#5-2-3-成员运算" class="headerlink" title="5.2.3 成员运算"></a>5.2.3 成员运算</h3><pre><code class="hljs">&gt;&gt;&gt; tuple = (&quot;node01&quot;,&quot;node02&quot;,&quot;node03&quot;)
+&gt;&gt;&gt; print(&quot;node03&quot; in tuple)
+True
+&gt;&gt;&gt; print(&quot;node00&quot; in tuple)
+False
+&gt;&gt;&gt; print(&quot;node00&quot; not in tuple)
+True
+&gt;&gt;&gt; print(&quot;node01&quot; not in tuple)
+False
+</code></pre>
+<h2 id="5-3-元组索引"><a href="#5-3-元组索引" class="headerlink" title="5.3 元组索引"></a>5.3 元组索引</h2><p>元组的索引用法与列表一致</p>
+<pre><code class="hljs">&gt;&gt;&gt; print(tuple[2])
+node03
+&gt;&gt;&gt; print(tuple[-2])
+node02
+</code></pre>
+<h2 id="5-4-元组切片"><a href="#5-4-元组切片" class="headerlink" title="5.4 元组切片"></a>5.4 元组切片</h2><p>元组的切片用法与列表一致</p>
+<pre><code class="hljs">&gt;&gt;&gt; tuple = (&quot;Lilei&quot;,[&quot;No&quot;,&quot;001&quot;],&quot;F&quot;,&quot;18&quot;,[&quot;170CM&quot;,&quot;60KG&quot;])
+&gt;&gt;&gt; print(tuple[1:4])
+([&#39;No&#39;, &#39;001&#39;], &#39;F&#39;, &#39;18&#39;)
+&gt;&gt;&gt; print(tuple[1:5])
+([&#39;No&#39;, &#39;001&#39;], &#39;F&#39;, &#39;18&#39;, [&#39;170CM&#39;, &#39;60KG&#39;])
+&gt;&gt;&gt; print(tuple[-2:2])
+()
+&gt;&gt;&gt; print(tuple[:3:2])
+(&#39;Lilei&#39;, &#39;F&#39;)
+&gt;&gt;&gt; print(tuple[:3:-2])
+([&#39;170CM&#39;, &#39;60KG&#39;],)
+</code></pre>
+<h2 id="5-5-元组遍历"><a href="#5-5-元组遍历" class="headerlink" title="5.5 元组遍历"></a>5.5 元组遍历</h2><pre><code class="hljs">&gt;&gt;&gt; tuple = (&#39;node01&#39;,&#39;node02&#39;,&#39;node03&#39;)
+&gt;&gt;&gt; for i in tuple:
+...     print(i)
+... 
+node01
+node02
+node03
+</code></pre>
+<h1 id="6-集合类型"><a href="#6-集合类型" class="headerlink" title="6.集合类型"></a>6.集合类型</h1><p>Set，即集合，是无序不重复且可变的数据集，使用花括号{}创建，个元素以逗号,分隔，是数学概念集合的Python实现。由于集合的底层存储是基于哈希方式的实现，所以具有查找速度快的优势，且其数据元素不可重复，特别适用于需要大量查找和去重的应用场景，如爬虫不重复的链接地址</p>
+<h2 id="6-1-集合定义"><a href="#6-1-集合定义" class="headerlink" title="6.1 集合定义"></a>6.1 集合定义</h2><pre><code class="hljs">&gt;&gt;&gt; set = &#123;&quot;node01&quot;,&quot;node01&quot;,&quot;node01&quot;&#125;
+&gt;&gt;&gt; print(set)
+&#123;&#39;node01&#39;&#125;
+&gt;&gt;&gt; set = &#123;&quot;node01&quot;,&quot;node02&quot;,&quot;node03&quot;&#125;
+&gt;&gt;&gt; print(set)
+&#123;&#39;node03&#39;, &#39;node02&#39;, &#39;node01&#39;&#125;
+&gt;&gt;&gt; len(set)
+3
+</code></pre>
+<h2 id="6-2-集合运算"><a href="#6-2-集合运算" class="headerlink" title="6.2 集合运算"></a>6.2 集合运算</h2><h3 id="6-2-1-交集运算"><a href="#6-2-1-交集运算" class="headerlink" title="6.2.1 交集运算"></a>6.2.1 交集运算</h3><pre><code class="hljs">&gt;&gt;&gt; set1 = &#123;1,2,3&#125;
+&gt;&gt;&gt; set2 = &#123;2,3,4&#125;
+&gt;&gt;&gt; set1 &amp; set2
+&#123;2, 3&#125;
+</code></pre>
+<h3 id="6-2-1-并集运算"><a href="#6-2-1-并集运算" class="headerlink" title="6.2.1 并集运算"></a>6.2.1 并集运算</h3><pre><code class="hljs">&gt;&gt;&gt; set1 | set2
+&#123;1, 2, 3, 4&#125;
+</code></pre>
+<h3 id="6-2-3-差集运算"><a href="#6-2-3-差集运算" class="headerlink" title="6.2.3 差集运算"></a>6.2.3 差集运算</h3><pre><code class="hljs">&gt;&gt;&gt; set1 - set2
+&#123;1&#125;
+&gt;&gt;&gt; set2 - set1
+&#123;4&#125;
+</code></pre>
+<h3 id="6-2-4-成员运算"><a href="#6-2-4-成员运算" class="headerlink" title="6.2.4 成员运算"></a>6.2.4 成员运算</h3><pre><code class="hljs">&gt;&gt;&gt; set = &#123;&quot;master&quot;,&quot;node01&quot;,&quot;node02&quot;&#125;
+&gt;&gt;&gt; print(&quot;node03&quot; in set)
+False
+&gt;&gt;&gt; print(&quot;node03&quot; not in set)
+True
+&gt;&gt;&gt; print(&quot;node02&quot; not in set)
+False
+&gt;&gt;&gt; print(&quot;node02&quot; in set)
+True
+</code></pre>
+<h3 id="6-2-5-比较运算"><a href="#6-2-5-比较运算" class="headerlink" title="6.2.5 比较运算"></a>6.2.5 比较运算</h3><p>集合的比较运算就是数学中集合的包含关系的体现，&#x3D;&#x3D;表示相等，!&#x3D;表示不等，&lt;&#x3D;表示子集，&lt;表示真子集</p>
+<pre><code class="hljs">&gt;&gt;&gt; set1 = &#123;1,2,3,4,5,6&#125;
+&gt;&gt;&gt; set2 = &#123;1,2,3,4,5&#125;
+&gt;&gt;&gt; set3 = set1
+&gt;&gt;&gt; print(set1==set2,set1==set3,set2!=set1)
+False True True
+&gt;&gt;&gt; print(set2&lt;set1,set3&lt;=set2,set1&lt;set3)
+True False False
+</code></pre>
+<h2 id="6-3-集合遍历"><a href="#6-3-集合遍历" class="headerlink" title="6.3 集合遍历"></a>6.3 集合遍历</h2><p>集合是无序数据类型，所以没有索引，不能通过引用索引来访问集合的元素，只能进行循环遍历</p>
+<pre><code class="hljs">set = &#123;&quot;master&quot;,&quot;node01&quot;,&quot;node02&quot;&#125;
+&gt;&gt;&gt; for x in set:
+...     print(x)
+... 
+master
+node01
+node02
+</code></pre>
+<h1 id="7-字典类型"><a href="#7-字典类型" class="headerlink" title="7.字典类型"></a>7.字典类型</h1><p>Dict，即字典，是有序可变的键值对数据集，由索引(key)和它对应的值value组成，通过唯一的Key进行存取（重复Key则会被覆盖），使用花括号{}创建，元素以逗号,隔开，元素的k&#x2F;v由冒号:连接，是典型的映射类数据。字典可精确描述不定长、可变、散列的数据类型，底层存储基于hash散列算法实现，具有非常快的查取和插入速度，根据key的值计算value的地址，可用于关键字存储、提取值</p>
+<h2 id="7-1-字典定义"><a href="#7-1-字典定义" class="headerlink" title="7.1 字典定义"></a>7.1 字典定义</h2><pre><code class="hljs">&gt;&gt;&gt; dict = &#123;&#125;
+&gt;&gt;&gt; print(dict)
+&#123;&#125;
+&gt;&gt;&gt; dict = &#123;&quot;name&quot;:&quot;LiLei&quot;,&quot;no&quot;:&quot;001&quot;,&quot;age&quot;:&quot;15&quot;&#125;
+&gt;&gt;&gt; print(dict)
+&#123;&#39;name&#39;: &#39;LiLei&#39;, &#39;no&#39;: &#39;001&#39;, &#39;age&#39;: &#39;15&#39;&#125;
+&gt;&gt;&gt; len(dict)
+3
+</code></pre>
+<h2 id="7-2-字典访问"><a href="#7-2-字典访问" class="headerlink" title="7.2 字典访问"></a>7.2 字典访问</h2><p>通过方括号内引用字典元素的key来访问字典的元素</p>
+<pre><code class="hljs">&gt;&gt;&gt; name = dict[&quot;name&quot;]
+&gt;&gt;&gt; print(name)
+LiLei
+</code></pre>
+<h2 id="7-3-字典修改"><a href="#7-3-字典修改" class="headerlink" title="7.3 字典修改"></a>7.3 字典修改</h2><h3 id="7-3-1-元素添加"><a href="#7-3-1-元素添加" class="headerlink" title="7.3.1 元素添加"></a>7.3.1 元素添加</h3><pre><code class="hljs">&gt;&gt;&gt; dict[&quot;sex&quot;] = &quot;F&quot;
+&gt;&gt;&gt; print(dict)
+&#123;&#39;name&#39;: &#39;LiLei&#39;, &#39;no&#39;: &#39;001&#39;, &#39;age&#39;: &#39;15&#39;, &#39;sex&#39;: &#39;F&#39;&#125;
+</code></pre>
+<h3 id="7-3-2-元素修改"><a href="#7-3-2-元素修改" class="headerlink" title="7.3.2 元素修改"></a>7.3.2 元素修改</h3><pre><code class="hljs">&gt;&gt;&gt; print(dict)
+&#123;&#39;name&#39;: &#39;LiLei&#39;, &#39;no&#39;: &#39;001&#39;, &#39;age&#39;: &#39;15&#39;, &#39;sex&#39;: &#39;F&#39;&#125;
+&gt;&gt;&gt; dict[&quot;age&quot;] = 16
+&gt;&gt;&gt; print(dict)
+&#123;&#39;name&#39;: &#39;LiLei&#39;, &#39;no&#39;: &#39;001&#39;, &#39;age&#39;: 16, &#39;sex&#39;: &#39;F&#39;&#125;
+</code></pre>
+<h3 id="7-3-3-元素删除"><a href="#7-3-3-元素删除" class="headerlink" title="7.3.3 元素删除"></a>7.3.3 元素删除</h3><p>字典的元素删除使用del关键字</p>
+<pre><code class="hljs">&gt;&gt;&gt; dict = &#123;&quot;name&quot;:&quot;Lilei&quot;,&quot;no&quot;:&quot;15&quot;,&quot;age&quot;:&quot;15&quot;&#125;
+&gt;&gt;&gt; print(dict)
+&#123;&#39;name&#39;: &#39;Lilei&#39;, &#39;no&#39;: &#39;15&#39;, &#39;age&#39;: &#39;15&#39;&#125;
+&gt;&gt;&gt; del dict[&quot;age&quot;]
+&gt;&gt;&gt; print(dict)
+&#123;&#39;name&#39;: &#39;Lilei&#39;, &#39;no&#39;: &#39;15&#39;&#125;
+</code></pre>
+<h2 id="7-4-字典遍历"><a href="#7-4-字典遍历" class="headerlink" title="7.4 字典遍历"></a>7.4 字典遍历</h2><p>字典遍历可通过key、value、key&#x2F;value进行循环</p>
+<h3 id="7-4-1-key循环遍历"><a href="#7-4-1-key循环遍历" class="headerlink" title="7.4.1 key循环遍历"></a>7.4.1 key循环遍历</h3><p>默认情况下是循环key，也可指定循环key</p>
+<pre><code class="hljs">&gt;&gt;&gt; for item in dict:
+...     print(item)  
+... 
+name
+no
+age
+
+&gt;&gt;&gt; for item in dict.keys():
+...     print(item)
+...      
+name
+no
+age
+</code></pre>
+<h3 id="7-4-2-value循环遍历"><a href="#7-4-2-value循环遍历" class="headerlink" title="7.4.2 value循环遍历"></a>7.4.2 value循环遍历</h3><blockquote>
+<blockquote>
+<blockquote>
+<p>for item in dict.values():<br>…     print(item)<br>…<br>Lilei<br>15<br>15</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h4 id="7-4-3-key-x2F-value循环遍历"><a href="#7-4-3-key-x2F-value循环遍历" class="headerlink" title="7.4.3 key&#x2F;value循环遍历"></a>7.4.3 key&#x2F;value循环遍历</h4><pre><code class="hljs">&gt;&gt;&gt; for key,value in dict.items():
+...     print(key,value)
+... 
+name Lilei
+no 15
+age 15
+</code></pre>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/works/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/Python/">#Python</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Python数据类型</div>
+      <div>https://hfsxs.github.io/works/PythonVariables/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年1月10日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月15日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/works/PythonOperator/" title="Python运算符">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Python运算符</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/works/Python/" title="Python基础语法">
+                        <span class="hidden-mobile">Python基础语法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+
+<div>
+<span id="timeDate"> 正在载入天数...</span>
+<span id="times"> 载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime(){
+        var grt= new Date("1/12/2025 01:15:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if(String(snum).length ==1 ){
+                snum = "0" + snum;
+        }
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
+        document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+</div>
+
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
