@@ -24,7 +24,7 @@
 <meta property="og:description" content="1.Prometheus监控规则vi &#x2F;usr&#x2F;local&#x2F;prometheus&#x2F;rules&#x2F;prometheus.yaml   groups: - name: prometheus   rules:   - alert: PrometheusAllTargetsMissing     expr: count by (job) (up) &#x3D;&#x3D; 0     for: 2m     labels:">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-08-17T00:57:51.000Z">
-<meta property="article:modified_time" content="2025-03-16T02:59:29.123Z">
+<meta property="article:modified_time" content="2025-03-16T14:44:25.672Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -239,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          41k 字
+          42k 字
         
       </span>
     
@@ -250,7 +250,7 @@
         
         
         
-          345 分钟
+          347 分钟
         
       </span>
     
@@ -671,8 +671,8 @@ groups:
       severity: Info
       cluster: MysqlServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例已重启!&#39;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例1分钟前已重启，当前状态为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例已重启!&#39;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例1分钟前已重启，当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: MysqlConnectionError
     expr: rate(mysql_global_status_connection_errors_total[5m]) &gt; 0
     for: 5m
@@ -680,8 +680,8 @@ groups:
       severity: Warning
       cluster: MysqlServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例存在错误连接!&#39;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例5分钟内存在错误连接，连接数为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例存在错误连接!&#39;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例5分钟内存在错误连接，错误连接数为&#123;&#123; $value &#125;&#125;&quot;
   - alert: MysqlTooManyConnections
     expr: max_over_time(mysql_global_status_threads_connected[1m]) / mysql_global_variables_max_connections * 100 &gt; 80
     for: 2m
@@ -689,8 +689,8 @@ groups:
       severity: Warning
       cluster: MysqlServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例当前连接数过高，请及时处理!&#39;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例当前连接数超过最大连接数的80%，当前连接数为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例当前连接数过高，请及时处理!&#39;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例当前连接数超过最大连接数的80%，当前连接数为&#123;&#123; $value &#125;&#125;&quot;
   - alert: MysqlHighThreadsRunning
     expr: max_over_time(mysql_global_status_threads_running[1m]) / mysql_global_variables_max_connections * 100 &gt; 60
     for: 2m
@@ -698,8 +698,8 @@ groups:
       severity: Warning
       cluster: MysqlServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例当前并发连接数过高，请及时处理!&#39;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例并发连接数超过最大连接数的60%，当前并发连接数为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例当前并发连接数过高，请及时处理!&#39;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例并发连接数超过最大连接数的60%，当前并发连接数为&#123;&#123; $value &#125;&#125;&quot;
   - alert: MysqlSlaveIoThreadNotRunning
     expr: ( mysql_slave_status_slave_io_running and ON (instance) mysql_slave_status_master_server_id &gt; 0 ) == 0
     for: 0m
@@ -707,8 +707,8 @@ groups:
       severity: Critical
       cluster: MysqlServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例从库IO线程未启动，请及时处理!&#39;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例从库IO线程未启动，当前状态为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例从库IO线程未启动，请及时处理!&#39;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例从库IO线程未启动，当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: MysqlSlaveSqlThreadNotRunning
     expr: ( mysql_slave_status_slave_sql_running and ON (instance) mysql_slave_status_master_server_id &gt; 0) == 0
     for: 0m
@@ -716,8 +716,8 @@ groups:
       severity: Critical
       cluster: MysqlServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例从库SQL线程未启动，请及时处理!&#39;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例从库SQL线程未启动，当前状态为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例从库SQL线程未启动，请及时处理!&#39;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例从库SQL线程未启动，当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: MysqlSlaveReplicationLag
     expr: ( (mysql_slave_status_seconds_behind_master - mysql_slave_status_sql_delay) and ON (instance) mysql_slave_status_master_server_id &gt; 0 ) &gt; 30
     for: 1m
@@ -725,8 +725,8 @@ groups:
       severity: Critical
       cluster: MysqlServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例从库滞后于主库，请及时处理!&#39;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例从库滞后于主库，当前延迟时长为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例从库数据延迟，请及时处理!&#39;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例从库数据延迟，当前延迟时长为&#123;&#123; $value &#125;&#125;&quot;
   - alert: MysqlSlowQueries
     expr: rate(mysql_global_status_slow_queries[5m]) &gt; 0
     for: 2m
@@ -734,8 +734,8 @@ groups:
       severity: Warning
       cluster: MysqlServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例存在慢查询，请及时处理!&#39;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例存在慢查询，当前状态为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例存在慢查询，请及时处理!&#39;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例存在慢查询，当前状态为&#123;&#123; $value &#125;&#125;&quot;
   - alert: MysqlInnodbLogWaits
     expr: rate(mysql_global_status_innodb_log_waits[15m]) &gt; 10
     for: 0m
@@ -743,8 +743,8 @@ groups:
       severity: Warning
       cluster: MysqlServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例存在事务日志写入等待，请及时处理!&#39;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;Mysql数据库实例存在事务日志写入等待，当前等待写入的日志数为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例存在事务日志写入等待，请及时处理!&#39;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Mysql数据库实例存在事务日志写入等待，当前等待写入的日志数为&#123;&#123; $value &#125;&#125;&quot;
 </code></pre>
 <h1 id="5-Redis监控规则"><a href="#5-Redis监控规则" class="headerlink" title="5.Redis监控规则"></a>5.Redis监控规则</h1><pre><code class="hljs">vi /usr/local/prometheus/rules/redis.yaml
 
@@ -768,8 +768,8 @@ groups:
       severity: Critical
       cluster: RedisServer
     annotations:
-      summary: &quot;Redis集群主节点缺失&quot;
-      description: &quot;Redis集群主节点缺失&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; Redis实例主节点缺失！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Redis实例主节点缺失！&quot;
   - alert: RedisTooManyMasters
     expr: count(redis_instance_info&#123;role=&quot;master&quot;&#125;) &gt; 1
     for: 2m
@@ -777,8 +777,8 @@ groups:
       severity: Critical
       cluster: RedisServer
     annotations:
-      summary: &quot;Redis集群主节点过多！&quot;
-      description: &quot;Redis集群主节点过多&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; Redis实例主节点过多！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Redis实例主节点过多&quot;
   - alert: RedisReplicationBroken
     expr: delta(redis_connected_slaves[1m]) &lt; 0
     for: 0m
@@ -786,8 +786,8 @@ groups:
       severity: Critical
       cluster: RedisServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Redis集群复制中断，请及时处理!&#39;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;Redis实例失联,从节点丢失&quot;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125; Redis实例从节点失联，请及时处理!&#39;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Redis实例复制中断，从节点丢失&quot;
   - alert: RedisClusterFlapping
     expr: changes(redis_connected_slaves[1m]) &gt; 1
     for: 2m
@@ -795,8 +795,8 @@ groups:
       severity: Critical
       cluster: RedisServer
     annotations:
-      summary: &#39;Redis集群发生扰动!&#39;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;Redis实例从节点与主节点失联并建立重新连接,集群扰动&quot;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125; Redis集群复制重建，请及时处理！&#39;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Redis实例从节点与主节点失联并重新建立连接，发生集群扰动&quot;
   - alert: RedisMissingBackup
     expr: time() - redis_rdb_last_save_timestamp_seconds &gt; 60 * 60 * 24
     for: 0m
@@ -804,8 +804,8 @@ groups:
       severity: Critical
       cluster: RedisServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Redis实例备份缺失,请及时处理!&#39;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;Redis实例超过24小时备份缺失&quot;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125; Redis实例备份缺失，请及时处理!&#39;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Redis实例超过24小时备份缺失&quot;
   - alert: RedisOutOfConfiguredMaxmemory
     expr: redis_memory_used_bytes / redis_memory_max_bytes * 100 &gt; 80
     for: 2m
@@ -813,8 +813,8 @@ groups:
       severity: Warning
       cluster: RedisServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Redis实例内存超限，请及时处理!&#39;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;Redis实例内存占用超过最大限制量80%, 当前值为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125; Redis实例内存超限，请及时处理!&#39;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Redis实例内存占用超过最大限制量的80%, 当前内存占用为&#123;&#123; $value &#125;&#125;&quot;
   - alert: RedisTooManyConnections
     expr: redis_connected_clients / redis_config_maxclients * 100 &gt; 80
     for: 2m
@@ -822,8 +822,8 @@ groups:
       severity: Warning
       cluster: RedisServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Redis实例连接数过高，请及时处理!&#39;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;Redis实例连接数超过最大连接数的80%, 当前连接数为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125; Redis实例连接数过多，请及时处理!&#39;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Redis实例连接数超过最大连接数的80%, 当前连接数为&#123;&#123; $value &#125;&#125;&quot;
   - alert: RedisNotEnoughConnections
     expr: redis_connected_clients &lt; 5
     for: 2m
@@ -831,8 +831,8 @@ groups:
       severity: Warning
       cluster: RedisServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Redis实例连接数过少!&#39;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;Redis实例连接数过少,当前连接数为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125; Redis实例连接数过少!&#39;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Redis实例连接数过少,当前连接数为&#123;&#123; $value &#125;&#125;&quot;
   - alert: RedisRejectedConnections
     expr: increase(redis_rejected_connections_total[1m]) &gt; 0
     for: 0m
@@ -840,8 +840,8 @@ groups:
       severity: Critical
       cluster: RedisServer
     annotations:
-      summary: &#39;&#123;&#123; $labels.instance &#125;&#125;Redis实例1分钟内存在被拒绝的连接!&#39;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125;Redis实例被拒绝的连接数为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &#39;&#123;&#123; $labels.instance &#125;&#125; Redis实例1分钟内存在被拒绝的连接!&#39;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Redis实例被拒绝的连接数为&#123;&#123; $value &#125;&#125;&quot;
 </code></pre>
 <h1 id="6-Elasticsearch监控规则"><a href="#6-Elasticsearch监控规则" class="headerlink" title="6.Elasticsearch监控规则"></a>6.Elasticsearch监控规则</h1><pre><code class="hljs">vi /usr/local/prometheus/rules/elasticsearch.yaml
 
