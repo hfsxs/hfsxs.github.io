@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/certificate.jpg">
 <meta property="article:published_time" content="2025-03-12T15:03:42.000Z">
-<meta property="article:modified_time" content="2025-03-16T01:43:00.434Z">
+<meta property="article:modified_time" content="2025-03-16T14:58:12.240Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -298,7 +298,7 @@
               <div class="markdown-body">
                 
                 <p>509-Certificate-Exporter，Golang编写的轻量级SSL&#x2F;TLS证书监控工具，其核心是内置的crypto&#x2F;tls库所实现的高效的证书解析和导出机制，即快速安全地与远程服务器建立连接并解析SSL&#x2F;TLS证书的关键信息，如有效期、颁发者、SHA摘要、主题等多种证书属性，最后将这些信息转化为Prometheus可读取的指标并通过Exporter接口暴露出来</p>
-<p>509-Certificate-Exporter特别适用于使用大量证书的Kubernetes集群, 如CA证书、kubelet、apiserver、proxy、etcd等组件的认证证书以及kubeconfig文件等，全面监控集群内部或外部网站的SSL&#x2F;TLS证书状态，确保安全合规，以及避免因证书过期所导致的集群异常</p>
+<p>509-Certificate-Exporter特别适用于使用大量证书的Kubernetes集群, 如CA证书、kubelet、apiserver、proxy、etcd等组件的认证证书以及kubeconfig文件等，全面监控集群内部或外部网站的SSL&#x2F;TLS证书状态，确保安全合规，从而避免因证书过期导致的集群异常</p>
 <h1 id="1-下载安装包"><a href="#1-下载安装包" class="headerlink" title="1.下载安装包"></a>1.下载安装包</h1><pre><code class="hljs">git clone https://github.com/enix/x509-certificate-exporter.git
 </code></pre>
 <h1 id="2-编译x509-certificate-exporter"><a href="#2-编译x509-certificate-exporter" class="headerlink" title="2.编译x509-certificate-exporter"></a>2.编译x509-certificate-exporter</h1><pre><code class="hljs">cd x509-certificate-exporter
