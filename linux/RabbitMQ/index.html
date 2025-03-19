@@ -1,0 +1,786 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="RabbitMQ，由Erlang语言开发的轻量级开源消息队列系统。RabbitMQ最初起源于金融系统，基于AMQP（高级消息队列协议，应用层协议的一个开放标准，为面向消息的中间件设计，基于此协议的客户端与消息中间件可传递消息，并不受产品、开发语言等条件的限制）传递消息，也可通过插件扩展的方式支持STOMP、MQTT、RabbitMQ Stream协议，广泛应用于分布式系统中存储、转发消息，在易用性">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RabbitMQ配置高可用集群">
+<meta property="og:url" content="https://hfsxs.github.io/linux/RabbitMQ/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="RabbitMQ，由Erlang语言开发的轻量级开源消息队列系统。RabbitMQ最初起源于金融系统，基于AMQP（高级消息队列协议，应用层协议的一个开放标准，为面向消息的中间件设计，基于此协议的客户端与消息中间件可传递消息，并不受产品、开发语言等条件的限制）传递消息，也可通过插件扩展的方式支持STOMP、MQTT、RabbitMQ Stream协议，广泛应用于分布式系统中存储、转发消息，在易用性">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/rabbitmq/rabbitmq01.jpg">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/rabbitmq/rabbitmq02.jpg">
+<meta property="article:published_time" content="2025-02-12T02:38:23.000Z">
+<meta property="article:modified_time" content="2025-03-15T08:32:51.030Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="MQ">
+<meta property="article:tag" content="中间件">
+<meta property="article:tag" content="RabbitMQ">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hfsxs.github.io/img/wiki/rabbitmq/rabbitmq01.jpg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>RabbitMQ配置高可用集群 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">RabbitMQ配置高可用集群</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-12 10:38" pubdate>
+          2025年2月12日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          31 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">RabbitMQ配置高可用集群</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>RabbitMQ，由Erlang语言开发的轻量级开源消息队列系统。RabbitMQ最初起源于金融系统，基于AMQP（高级消息队列协议，应用层协议的一个开放标准，为面向消息的中间件设计，基于此协议的客户端与消息中间件可传递消息，并不受产品、开发语言等条件的限制）传递消息，也可通过插件扩展的方式支持STOMP、MQTT、RabbitMQ Stream协议，广泛应用于分布式系统中存储、转发消息，在易用性、扩展性、高可用性等方面表现不俗</p>
+<h1 id="体系架构"><a href="#体系架构" class="headerlink" title="体系架构"></a>体系架构</h1><p><img src="/img/wiki/rabbitmq/rabbitmq01.jpg" srcset="/img/loading.gif" lazyload alt="rabbitmq"></p>
+<h2 id="1-Message"><a href="#1-Message" class="headerlink" title="1.Message"></a>1.Message</h2><p>消息，由消息头和消息体组成，消息头则由一系列可选属性组成，包括routing-key（路由键）、priority（相对于其他消息的优先权）、delivery-mode（指出该消息可能需要持久性存储）等</p>
+<h2 id="2-Publisher"><a href="#2-Publisher" class="headerlink" title="2.Publisher"></a>2.Publisher</h2><p>消息的生产者，也是一个向交换器发布消息的客户端应用程序</p>
+<h2 id="3-Exchange"><a href="#3-Exchange" class="headerlink" title="3.Exchange"></a>3.Exchange</h2><p>交换机，用于接收生产者发送的消息并将这些消息路由给服务器中的队列，相当于消息的中转站</p>
+<h2 id="4-Binding"><a href="#4-Binding" class="headerlink" title="4.Binding"></a>4.Binding</h2><p>绑定，用于联结消息队列和交换器，即基于路由键将交换器和消息队列连接起来的路由规则，这样就可以将交换器理解成一个由绑定构成的路由表</p>
+<h2 id="5-Queue"><a href="#5-Queue" class="headerlink" title="5.Queue"></a>5.Queue</h2><p>消息队列，用于保存消息直到发送给消费者，即消息的容器，也是消息的终点。一个消息可投入一个或多个队列，其后将一直在队列里，等待消费者连接到这个队列并将其取走</p>
+<h2 id="6-Connection"><a href="#6-Connection" class="headerlink" title="6.Connection"></a>6.Connection</h2><p>网络连接，类似于TCP连接</p>
+<h2 id="7-Channel"><a href="#7-Channel" class="headerlink" title="7.Channel"></a>7.Channel</h2><p>信道，多路复用连接中的一条独立的双向数据流通道，是建立在真实的TCP连接内的虚拟连接，AMQP命令都通过其发出，如发布消息、订阅队列及接收消息。因为对于操作系统来说建立和销毁TCP都是非常昂贵的开销，所以引入了信道的概念，以复用一条TCP连接</p>
+<h2 id="8-Consumer"><a href="#8-Consumer" class="headerlink" title="8.Consumer"></a>8.Consumer</h2><p>消息的消费者，表示一个从消息队列中取得消息的客户端应用程序</p>
+<h2 id="9-Virtual-Host"><a href="#9-Virtual-Host" class="headerlink" title="9.Virtual Host"></a>9.Virtual Host</h2><p>虚拟主机，共享相同的身份认证和加密环境的独立服务器域，虚拟概念，表示一批交换器、消息队列和相关对象，可以看作拥有自己队列、交换器、绑定和权限机制的迷你版的RabbitMQ服务器，即权限控制组。连接RabbitMQ服务器时虚拟主机必须被指定，默认为 &#x2F;</p>
+<h2 id="10-Broker"><a href="#10-Broker" class="headerlink" title="10.Broker"></a>10.Broker</h2><p>消息队列服务器实体，即RabbitMQ实例</p>
+<h1 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h1><p><img src="/img/wiki/rabbitmq/rabbitmq02.jpg" srcset="/img/loading.gif" lazyload alt="rabbitmq02"></p>
+<h2 id="1-建立消息信道"><a href="#1-建立消息信道" class="headerlink" title="1.建立消息信道"></a>1.建立消息信道</h2><p>Producer与RabbitMQ物理节点Broker建立连接，并通过虚拟主机创建信道，且一个连接可以创建多个信道</p>
+<h2 id="2-发送消息"><a href="#2-发送消息" class="headerlink" title="2.发送消息"></a>2.发送消息</h2><p>Producer发送消息到Broker，并根据Routing Key决定接收的Exchange</p>
+<h2 id="3-路由转发"><a href="#3-路由转发" class="headerlink" title="3.路由转发"></a>3.路由转发</h2><p>Exchange收到消息后依据已经定义的Binding规则和ExchangeType，将消息路由到匹配的Queue</p>
+<h2 id="4-消息接收"><a href="#4-消息接收" class="headerlink" title="4.消息接收"></a>4.消息接收</h2><p>Consumer监听相应的Queue，通过建立的消息Channel，接收和处理消息</p>
+<h2 id="5-消息确认"><a href="#5-消息确认" class="headerlink" title="5.消息确认"></a>5.消息确认</h2><p>Consumer完成消息处理之后，将会发送确认（ACK）信息给对应的Queue。Queue收到ACK通知就将认为消息处理成<br>功，并将消息从Queue中移除。若对应的Channel断开后，Queue没有收到消息的ACK信息，该消息将被发送给另外的<br>Channel</p>
+<h1 id="1-安装erlang"><a href="#1-安装erlang" class="headerlink" title="1.安装erlang"></a>1.安装erlang</h1><pre><code class="hljs">https://packagecloud.io/rabbitmq/erlang
+</code></pre>
+<h1 id="2-安装rabbitmq"><a href="#2-安装rabbitmq" class="headerlink" title="2.安装rabbitmq"></a>2.安装rabbitmq</h1><pre><code class="hljs">wget https://github.com/rabbitmq/rabbitmq-server/releases/download/v3.8.25/rabbitmq-server-3.8.25-1.el7.noarch.rpm
+rpm -ivh rabbitmq-server-3.8.25-1.el7.noarch.rpm
+</code></pre>
+<h1 id="3-启动Rabbitmq"><a href="#3-启动Rabbitmq" class="headerlink" title="3.启动Rabbitmq"></a>3.启动Rabbitmq</h1><h1 id="4-配置默认集群"><a href="#4-配置默认集群" class="headerlink" title="4.配置默认集群"></a>4.配置默认集群</h1><p>默认集群，即Rabbitmq内建集群，具体机制是将交换机、队列、虚拟主机等元数据信息在各个节点同步，而基于性能和存储空间的考虑，队列的消息数据只存储于队列的创建者节点，其余节点根据队列的元数据信息再路由到创建者节点进行读写。也即是说，一旦队列创建者节点宕机，则消息数据将会丢失，直到其恢复，并不具备真正的高可用性</p>
+<p>Rabbitmq集群分为两种类型，即内存类型和磁盘类型：RAM Node，内存节点，消息存储于内存，优点是处理速度快，缺点是节点宕机将丢失数据，适用于实时的不需要消息持久化或对性能要求极高的场景；Disk Node，默认类型，数据存储于磁盘，能处理大量数据，且在节点故障后可从磁盘恢复，具备数据持久化和灾难恢复的能力。单节点只允许磁盘类型的节点，以防止重启RabbitMQ丢失数据。集群磁盘节点宕机仍然可以保持运行，但无法进行其他操作，如创建队列、交换器、绑定，添加用户、更改权限、添加和删除集群结点等，一直到其恢复正常，所以生产环境建议至少部署两个磁盘节点</p>
+<p>Rabbitmq集群的主从概念作用于队列，而不是节点，队列的创建者即为其Master节点，其余为slave节点，若Master节点宕机，则最先加入的slave将会被选举为新Master节点。对于读写操作而言，无论客户端请求到达哪个节点，最终都是操作Master节点。请求到达Master节点则直接将消息返回给客户端，并由Master节点会通过GM（Guaranteed Multicast）协议将队列的最新状态广播到其余节点。这一过程将由GM保证广播消息的原子性，即要么都更新成功，要么都不更新；若请求到达slave节点，则将请求先重定向到Master节点进行进一步处理</p>
+<h2 id="4-1-Slave节点关闭Rabbitmq"><a href="#4-1-Slave节点关闭Rabbitmq" class="headerlink" title="4.1 Slave节点关闭Rabbitmq"></a>4.1 Slave节点关闭Rabbitmq</h2><pre><code class="hljs">rabbitmqctl stop_app
+</code></pre>
+<h2 id="4-2-Slave节点同步Master节点集群通信密钥文件"><a href="#4-2-Slave节点同步Master节点集群通信密钥文件" class="headerlink" title="4.2 Slave节点同步Master节点集群通信密钥文件"></a>4.2 Slave节点同步Master节点集群通信密钥文件</h2><pre><code class="hljs">scp master:/var/lib/rabbitmq/.erlang.cookie /var/lib/rabbitmq
+</code></pre>
+<h2 id="4-3-Slave节点重置"><a href="#4-3-Slave节点重置" class="headerlink" title="4.3 Slave节点重置"></a>4.3 Slave节点重置</h2><pre><code class="hljs">rabbitmqctl reset
+</code></pre>
+<h2 id="4-4-Slave节点加入集群"><a href="#4-4-Slave节点加入集群" class="headerlink" title="4.4 Slave节点加入集群"></a>4.4 Slave节点加入集群</h2><pre><code class="hljs">rabbitmqctl join_cluster rabbit@master
+</code></pre>
+<ul>
+<li>注：参数–ram表示内存节点，也可通过命令进行设置：rabbitmqctl set_node_type_ram node01</li>
+</ul>
+<h2 id="4-5-启动Rabbitmq"><a href="#4-5-启动Rabbitmq" class="headerlink" title="4.5 启动Rabbitmq"></a>4.5 启动Rabbitmq</h2><pre><code class="hljs">rabbitmqctl start_app
+</code></pre>
+<h2 id="4-6-验证集群状态"><a href="#4-6-验证集群状态" class="headerlink" title="4.6 验证集群状态"></a>4.6 验证集群状态</h2><pre><code class="hljs">rabbitmqctl cluster_status
+</code></pre>
+<h2 id="4-7-创建管理员用户"><a href="#4-7-创建管理员用户" class="headerlink" title="4.7 创建管理员用户"></a>4.7 创建管理员用户</h2><pre><code class="hljs"># 创建用户
+rabbitmqctl add_user admin 123456
+# 设置用户权限
+rabbitmqctl set_permissions admin &quot;.*&quot; &quot;.*&quot; &quot;.*&quot;
+# 设置用户角色
+rabbitmqctl set_user_tags admin administrator
+</code></pre>
+<h2 id="4-8-集群节点启用Web控制台插件"><a href="#4-8-集群节点启用Web控制台插件" class="headerlink" title="4.8 集群节点启用Web控制台插件"></a>4.8 集群节点启用Web控制台插件</h2><pre><code class="hljs">rabbitmq-plugins enable rabbitmq_management
+</code></pre>
+<h2 id="4-9-登录Web验证集群状态"><a href="#4-9-登录Web验证集群状态" class="headerlink" title="4.9 登录Web验证集群状态"></a>4.9 登录Web验证集群状态</h2><pre><code class="hljs">http://ip:15672
+</code></pre>
+<h1 id="5-配置镜像集群"><a href="#5-配置镜像集群" class="headerlink" title="5.配置镜像集群"></a>5.配置镜像集群</h1><p>镜像集群，Rabbitmq内建集群的进阶版，即将队列镜像（同步）到集群其余节点，类似于分片式的多副本冗余。若集群节点宕机，队列将自动地切换到其余节点以保证服务的可用性，消息数据也不会丢失。也即是说，镜像集群的所有节点都将存储消息数据，以保障数据的安全性，缺点是资源耗费较大，数据存在冗余，性能也将受到影响</p>
+<p>镜像集群由rabbitmqctl命令进行配置，具体命令为rabbitmqctl set_policy [-p Vhost] Name_Policy Pattern Definition [Priority]：-p Vhost，指定vhost；Name_Policy的名称，策略名称；Pattern，匹配队列的正则表达式；Definition，镜像定义，由三个参数定义，ha-mode用于设置镜像队列模式（all，表示在集群中所有节点进行镜像；exactly，表示在指定个数的节点进行镜像，节点的个数由ha-params指定；nodes，表示在指定的节点进行镜像，节点名称通过ha-params指定）、ha-params配合ha-mode参数使用以及设置队列同步方式的ha-sync-mode参数（可取值为automatic和manualha-sync-mode）；priority，策略的优先级</p>
+<pre><code class="hljs">rabbitmqctl set_policy ha-all &quot;^&quot; &#39;&#123;&quot;ha-mode&quot;:&quot;all&quot;&#125;&#39; 
+</code></pre>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/79ca08116d57">https://www.jianshu.com/p/79ca08116d57</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_46112274/article/details/143652840">https://blog.csdn.net/qq_46112274/article/details/143652840</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Z1366566161664/article/details/129175045">https://blog.csdn.net/Z1366566161664/article/details/129175045</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/MQ/">#MQ</a>
+      
+        <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">#中间件</a>
+      
+        <a href="/tags/RabbitMQ/">#RabbitMQ</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>RabbitMQ配置高可用集群</div>
+      <div>https://hfsxs.github.io/linux/RabbitMQ/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月12日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月15日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/linux/KubernetesCertExpiration/" title="Kubernetes集群证书过期解决方案">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kubernetes集群证书过期解决方案</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/linux/Prometheus-Alertsnitch/" title="Prometheus监控告警数据持久化">
+                        <span class="hidden-mobile">Prometheus监控告警数据持久化</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+
+<div>
+<span id="timeDate"> 正在载入天数...</span>
+<span id="times"> 载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime(){
+        var grt= new Date("1/12/2025 01:15:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if(String(snum).length ==1 ){
+                snum = "0" + snum;
+        }
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
+        document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+</div>
+
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

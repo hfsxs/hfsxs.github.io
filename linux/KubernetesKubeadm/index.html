@@ -1,0 +1,1078 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="kubeadm，用于快速构建kubernetes集群的工具，通过kubeadm init及kubeadm join两个命令迅速启动和运行一个可用的集群。kubeadm大大简化了二进制部署方式令人望而生畏的繁琐步骤，降低了部署门槛，对初学者十分友好。当然，二进制部署方式能详细了解集群的架构及工作原理，也利于后期的维护与排障，适用于对kubernetes有深入了解的情况  高可用方案Kubernete">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes基于kubeadm工具构建高可用集群">
+<meta property="og:url" content="https://hfsxs.github.io/linux/KubernetesKubeadm/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="kubeadm，用于快速构建kubernetes集群的工具，通过kubeadm init及kubeadm join两个命令迅速启动和运行一个可用的集群。kubeadm大大简化了二进制部署方式令人望而生畏的繁琐步骤，降低了部署门槛，对初学者十分友好。当然，二进制部署方式能详细了解集群的架构及工作原理，也利于后期的维护与排障，适用于对kubernetes有深入了解的情况  高可用方案Kubernete">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-12T07:26:56.000Z">
+<meta property="article:modified_time" content="2025-03-15T13:22:53.725Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="容器云">
+<meta property="article:tag" content="云原生">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Kubernetes基于kubeadm工具构建高可用集群 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Kubernetes基于kubeadm工具构建高可用集群</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2021-11-12 15:26" pubdate>
+          2021年11月12日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          69 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Kubernetes基于kubeadm工具构建高可用集群</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>kubeadm，用于快速构建kubernetes集群的工具，通过kubeadm init及kubeadm join两个命令迅速启动和运行一个可用的集群。kubeadm大大简化了二进制部署方式令人望而生畏的繁琐步骤，降低了部署门槛，对初学者十分友好。当然，二进制部署方式能详细了解集群的架构及工作原理，也利于后期的维护与排障，适用于对kubernetes有深入了解的情况</p>
+<hr>
+<h1 id="高可用方案"><a href="#高可用方案" class="headerlink" title="高可用方案"></a>高可用方案</h1><p>Kubernetes集群的高可用是生产环境的业务系统必不可少的考量，其核心指标是集群内任意一台服务器的宕机都不能影响整个集群的正常工作，具体策略为给Kubernetes集群Master节点的关键组件都提供高可用的功能，从而消除整个集群的单点故障</p>
+<ul>
+<li><p>Etcd数据库，Kubernetes集群唯一带状态的服务，是整个集群的数据中心，分布式架构自带高可用功能，不存在单点故障，推荐的部署方案是3或5个奇数个节点组成冗余的etcd集群</p>
+</li>
+<li><p>kube-apiserver，API Server是整个集群的访问入口，整个集群高可用的关键，通过启动多个实例并配合负载均衡器实现高可用，如Nginx&#x2F;Haproxy、Keepalived等</p>
+</li>
+<li><p>Kube-controller-manager，集群内部的管理控制中心，整个集群只有一个活跃的实例，可同时启动多个实例，然后开启领导者选举功能实现高可用，即–leader-elect&#x3D;true</p>
+</li>
+<li><p>kube-scheduler，集群节点调度中心，将POD调度到合适节点运行，一个集群只能有一个活跃的实例，可同时启动多个实例，然后开启领导者选举功能实现高可用，默认开启</p>
+</li>
+<li><p>kube-dns，集群Service监控及发现中心，用于解析Service与ClusterIP的映射，通过Deployment方式部署，并用anti-affinity将之部署到不同的Node节点</p>
+</li>
+</ul>
+<h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul>
+<li>172.16.100.100  master01</li>
+<li>172.16.100.120  master02</li>
+<li>172.16.100.160  master03</li>
+<li>172.16.100.180  worker01</li>
+<li>172.16.100.200  worker02</li>
+<li>172.16.100.150  VIP</li>
+</ul>
+<h1 id="1-系统环境配置"><a href="#1-系统环境配置" class="headerlink" title="1.系统环境配置"></a>1.系统环境配置</h1><h2 id="1-1-配置hosts"><a href="#1-1-配置hosts" class="headerlink" title="1.1 配置hosts"></a>1.1 配置hosts</h2><pre><code class="hljs">sudo vi /etc/hosts
+
+
+172.16.100.100  master01
+172.16.100.120  master02
+172.16.100.160  master03
+172.16.100.180  worker01
+172.16.100.200  worker02
+</code></pre>
+<h2 id="1-2-关闭防火墙"><a href="#1-2-关闭防火墙" class="headerlink" title="1.2 关闭防火墙"></a>1.2 关闭防火墙</h2><h2 id="1-3-禁用selinux"><a href="#1-3-禁用selinux" class="headerlink" title="1.3 禁用selinux"></a>1.3 禁用selinux</h2><h2 id="1-4-关闭swap"><a href="#1-4-关闭swap" class="headerlink" title="1.4 关闭swap"></a>1.4 关闭swap</h2><pre><code class="hljs">sudo swapoff -a &amp;&amp; sudo sed -ri &#39;s/.*swap.*/#&amp;/&#39; /etc/fstab
+</code></pre>
+<h2 id="1-5-配置系统内核参数"><a href="#1-5-配置系统内核参数" class="headerlink" title="1.5 配置系统内核参数"></a>1.5 配置系统内核参数</h2><h3 id="1-5-1-开启路由转发"><a href="#1-5-1-开启路由转发" class="headerlink" title="1.5.1 开启路由转发"></a>1.5.1 开启路由转发</h3><pre><code class="hljs">sudo vi /etc/sysctl.d/k8s.conf
+
+
+net.ipv4.ip_forward=1
+net.bridge.bridge-nf-call-iptables=1
+net.bridge.bridge-nf-call-ip6tables=1
+</code></pre>
+<h3 id="1-5-2-加载内核参数配置"><a href="#1-5-2-加载内核参数配置" class="headerlink" title="1.5.2 加载内核参数配置"></a>1.5.2 加载内核参数配置</h3><pre><code class="hljs">sudo sysctl -p
+</code></pre>
+<h2 id="1-6-配置集群免密登录"><a href="#1-6-配置集群免密登录" class="headerlink" title="1.6 配置集群免密登录"></a>1.6 配置集群免密登录</h2><h1 id="2-集群部署docker"><a href="#2-集群部署docker" class="headerlink" title="2.集群部署docker"></a>2.集群部署docker</h1><h2 id="2-1-安装docker"><a href="#2-1-安装docker" class="headerlink" title="2.1 安装docker"></a>2.1 安装docker</h2><pre><code class="hljs"># 配置阿里云YUM源
+wget https://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo \
+-O /etc/yum.repos.d/docker-ce.repo
+# 安装docker
+sudo yum install -y docker-ce
+</code></pre>
+<h3 id="2-2-配置镜像加速及cgroup驱动"><a href="#2-2-配置镜像加速及cgroup驱动" class="headerlink" title="2.2 配置镜像加速及cgroup驱动"></a>2.2 配置镜像加速及cgroup驱动</h3><pre><code class="hljs">sudo mkdir -p /etc/docker &amp;&amp; sudo vi /etc/docker/daemon.json
+
+
+&#123;
+  &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],
+  &quot;registry-mirrors&quot;: [&quot;https://hub-mirror.c.163.com&quot;]
+&#125;
+</code></pre>
+<h2 id="2-3-启动docker"><a href="#2-3-启动docker" class="headerlink" title="2.3 启动docker"></a>2.3 启动docker</h2><pre><code class="hljs">sudo systemctl start docker
+sudo systemctl enable docker
+</code></pre>
+<h1 id="3-Master节点部署Haproxy、Keepalived"><a href="#3-Master节点部署Haproxy、Keepalived" class="headerlink" title="3.Master节点部署Haproxy、Keepalived"></a>3.Master节点部署Haproxy、Keepalived</h1><pre><code class="hljs">sudo yum install -y haproxy keepalived
+</code></pre>
+<h2 id="3-1-创建Haproxy配置文件"><a href="#3-1-创建Haproxy配置文件" class="headerlink" title="3.1 创建Haproxy配置文件"></a>3.1 创建Haproxy配置文件</h2><pre><code class="hljs">sudo vi /etc/haproxy/haproxy.cfg
+
+
+global
+  log    127.0.0.1 local2
+  # chroot    /usr/local/haproxy
+  pidfile    /var/run/haproxy.pid
+  user    sword
+  group    sword
+  daemon
+  nbproc    1
+  maxconn   1024
+  # node    haproxy-001
+  stats socket    /var/lib/haproxy/stats
+
+defaults
+  log    global
+  mode    http
+  option    httplog
+  option    httpclose
+  option    forwardfor except 127.0.0.0/8              
+  option    dontlognull
+  option    redispatch
+  option    abortonclose
+  http-reuse    safe
+  retries    3
+
+  timeout client    10s
+  timeout http-request    2s
+  timeout http-keep-alive 10s
+  timeout queue    10s
+  timeout connect    1s
+  timeout check    2s
+  timeout server    3s
+
+listen monitor
+  mode    http
+  bind    :1443
+  stats    enable
+  stats    hide-version
+  stats    refresh 10       　　　　
+  stats uri    /status
+  stats realm    Haproxy Manager
+  stats auth    admin:admin
+  stats admin if    TRUE 
+
+frontend    master
+  mode    tcp
+  option   tcplog
+  bind    0.0.0.0:8443
+  default_backend    api-servers 
+
+  backend api-servers
+
+    mode    tcp
+    balance    roundrobin
+    stick-table type ip size 200k expire 30m
+    stick on src
+    server master01 172.16.100.100:6443 check port 6443 inter 2000 rise 2 fall 3
+    server master02 172.16.100.120:6443 check port 6443 inter 2000 rise 2 fall 3
+    server master03 172.16.100.160:6443 check port 6443 inter 2000 rise 2 fall 3
+</code></pre>
+<h2 id="3-2-创建Keepalived配置文件"><a href="#3-2-创建Keepalived配置文件" class="headerlink" title="3.2 创建Keepalived配置文件"></a>3.2 创建Keepalived配置文件</h2><h3 id="3-2-1-master01节点配置文件"><a href="#3-2-1-master01节点配置文件" class="headerlink" title="3.2.1 master01节点配置文件"></a>3.2.1 master01节点配置文件</h3><pre><code class="hljs">sudo vi /etc/keepalived/keepalived.conf
+
+
+global_defs &#123;
+  notification_email
+  &#123;
+    admin@sword.com
+  &#125;
+  notification_email_from
+  smtp_server 127.0.0.1
+  smtp_connect_timeout 30
+  router_id master01
+&#125;
+
+vrrp_script check_haproxy &#123;
+  script &quot;/etc/keepalived/haproxy_check.sh&quot;
+  interval 2
+  weight -10
+&#125;
+
+vrrp_instance Haproxy &#123;
+  state BACKUP
+  interface eth0
+  virtual_router_id 51
+  priority 100
+  advert_int 1
+  authentication &#123;
+    auth_type PASS
+    auth_pass 123456
+  &#125;
+  virtual_ipaddress &#123;
+    172.16.100.150/24
+  &#125;
+  track_script &#123;
+    check_haproxy
+  &#125;
+&#125;
+</code></pre>
+<h3 id="3-2-2-master02节点配置文件"><a href="#3-2-2-master02节点配置文件" class="headerlink" title="3.2.2 master02节点配置文件"></a>3.2.2 master02节点配置文件</h3><pre><code class="hljs">sudo vi /etc/keepalived/keepalived.conf
+
+
+global_defs &#123;
+  notification_email
+  &#123;
+    admin@sword.com
+  &#125;
+  notification_email_from
+  smtp_server 127.0.0.1
+  smtp_connect_timeout 30
+  router_id master02
+&#125;
+
+vrrp_script check_haproxy &#123;
+  script &quot;/etc/keepalived/haproxy_check.sh&quot;
+  interval 2
+  weight -10
+&#125;
+
+vrrp_instance Haproxy &#123;
+  state BACKUP
+  interface eth0
+  virtual_router_id 51
+  priority 80
+  advert_int 1
+  authentication &#123;
+    auth_type PASS
+    auth_pass 123456
+  &#125;
+  virtual_ipaddress &#123;
+    172.16.100.150/24
+  &#125;
+  track_script &#123;
+    check_haproxy
+  &#125;
+&#125;
+</code></pre>
+<h3 id="3-2-3-master03节点配置文件"><a href="#3-2-3-master03节点配置文件" class="headerlink" title="3.2.3 master03节点配置文件"></a>3.2.3 master03节点配置文件</h3><pre><code class="hljs">sudo vi /etc/keepalived/keepalived.conf
+
+
+global_defs &#123;
+  notification_email
+  &#123;
+    admin@sword.com
+  &#125;
+  notification_email_from
+  smtp_server 127.0.0.1
+  smtp_connect_timeout 30
+  router_id master03
+&#125;
+
+vrrp_script check_haproxy &#123;
+  script &quot;/etc/keepalived/haproxy_check.sh&quot;
+  interval 2
+  weight -10
+&#125;
+
+vrrp_instance Haproxy &#123;
+  state BACKUP
+  interface eth0
+  virtual_router_id 51
+  priority 60
+  advert_int 1
+  authentication &#123;
+    auth_type PASS
+    auth_pass 123456
+  &#125;
+  virtual_ipaddress &#123;
+    172.16.100.150/24
+  &#125;
+  track_script &#123;
+    check_haproxy
+  &#125;
+&#125;
+</code></pre>
+<h2 id="3-3-创建Haproxy监控脚本"><a href="#3-3-创建Haproxy监控脚本" class="headerlink" title="3.3 创建Haproxy监控脚本"></a>3.3 创建Haproxy监控脚本</h2><pre><code class="hljs">sudo vi /etc/keepalived/haproxy_check.sh
+
+
+#!/bin/bash
+
+pid=`ps -ef|grep haproxy|grep -v grep|wc -l`
+port=`netstat -anp|grep :8443|grep LISTEN|wc -l`
+
+if [[ $pid -gt 1 &amp;&amp; $port -gt 0 ]]
+  then
+    exit 0
+  else
+    pkill keepalived
+fi
+</code></pre>
+<h2 id="3-4-启动Haproxy、Keepalived"><a href="#3-4-启动Haproxy、Keepalived" class="headerlink" title="3.4 启动Haproxy、Keepalived"></a>3.4 启动Haproxy、Keepalived</h2><pre><code class="hljs">sudo systemctl start haproxy
+sudo systemctl enable haproxy
+sudo systemctl start keepalived
+sudo systemctl enable keepalived
+</code></pre>
+<h1 id="4-Master节点部署kubeadm、kubelet、kubectl"><a href="#4-Master节点部署kubeadm、kubelet、kubectl" class="headerlink" title="4.Master节点部署kubeadm、kubelet、kubectl"></a>4.Master节点部署kubeadm、kubelet、kubectl</h1><h2 id="4-1-配置阿里云YUM源"><a href="#4-1-配置阿里云YUM源" class="headerlink" title="4.1 配置阿里云YUM源"></a>4.1 配置阿里云YUM源</h2><pre><code class="hljs">sudo vi /etc/yum.repos.d/kubernetes.repo
+
+
+[kubernetes]
+
+name=Kubernetes
+baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=0
+repo_gpgcheck=0
+gpgkey=https://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg https://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg
+</code></pre>
+<h2 id="4-2-安装kubeadm、kubelet、kubectl"><a href="#4-2-安装kubeadm、kubelet、kubectl" class="headerlink" title="4.2 安装kubeadm、kubelet、kubectl"></a>4.2 安装kubeadm、kubelet、kubectl</h2><pre><code class="hljs">sudo yum install -y ipvsadm kubelet-1.20.12 kubeadm-1.20.12 kubectl-1.20.12
+sudo systemctl enable kubelet
+</code></pre>
+<h1 id="5-Master节点部署Kubernetes"><a href="#5-Master节点部署Kubernetes" class="headerlink" title="5. Master节点部署Kubernetes"></a>5. Master节点部署Kubernetes</h1><h2 id="5-1-master01节点初始化集群"><a href="#5-1-master01节点初始化集群" class="headerlink" title="5.1 master01节点初始化集群"></a>5.1 master01节点初始化集群</h2><pre><code class="hljs">kubeadm init \
+--kubernetes-version &quot;1.20.12&quot; \
+--control-plane-endpoint &quot;172.16.100.100:8443&quot; \
+--apiserver-cert-extra-sans &quot;172.16.100.100,192.168.100.150,master&quot; \
+--pod-network-cidr &quot;172.30.0.0/16&quot; \
+--service-cidr &quot;10.254.0.0/16&quot; \
+--token &quot;dcwrhm.6wi8mn63s10gxrcf&quot; \
+--token-ttl &quot;0&quot; \
+--image-repository registry.aliyuncs.com/google_containers \
+--upload-certs
+</code></pre>
+<ul>
+<li>kubernetes-version，设置kubernetes版本</li>
+<li>control-plane-endpoint，设置控制节点IP地址</li>
+<li>apiserver-cert-extra-sans，设置API Server服务的附加认证证书，值为IP和DNS，可用于指定外网地址</li>
+<li>pod-network-cidr，设置Pod网段，与CNI网络组件定义的网段一致</li>
+<li>service-cidr，设置service网段</li>
+<li>image-repository，设置默认镜像拉取仓库</li>
+<li>token-tt，设置引导令牌有效期时长默认为24小时，为0表示永不过期，令牌保存于kube-system命名空间名为bootstrap-token-<token-id>的secret</li>
+</ul>
+<hr>
+<ul>
+<li>注：集群初始化成功将自动生成token及添加其余Master、Node节点的命令，按照给出的命令在其余节点执行即可将之加入集群</li>
+</ul>
+<h2 id="5-2-配置kubectl集群认证令牌"><a href="#5-2-配置kubectl集群认证令牌" class="headerlink" title="5.2 配置kubectl集群认证令牌"></a>5.2 配置kubectl集群认证令牌</h2><pre><code class="hljs">mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+echo &quot;source &lt;(kubectl completion bash)&quot; &gt;&gt; /root/.bash_profile
+source /root/.bash_profile
+</code></pre>
+<h2 id="5-3-其余Master节点初始化集群"><a href="#5-3-其余Master节点初始化集群" class="headerlink" title="5.3 其余Master节点初始化集群"></a>5.3 其余Master节点初始化集群</h2><h3 id="5-3-1-Master节点初始化集群"><a href="#5-3-1-Master节点初始化集群" class="headerlink" title="5.3.1 Master节点初始化集群"></a>5.3.1 Master节点初始化集群</h3><pre><code class="hljs">kubeadm join 172.16.100.100:8443 --token dcwrhm.6wi8mn63s10gxrcf \
+--discovery-token-ca-cert-hash sha256:231ea9ea085b6eccaac00cfb27b85748d2cc403cd2194434b163896d375126ea \
+--control-plane --certificate-key e9f4c8e66fd5b9629be14a92fac1230972f46427636be616cbae8573abc6bd5c
+</code></pre>
+<h3 id="5-3-2-配置kubectl集群认证令牌"><a href="#5-3-2-配置kubectl集群认证令牌" class="headerlink" title="5.3.2  配置kubectl集群认证令牌"></a>5.3.2  配置kubectl集群认证令牌</h3><pre><code class="hljs">mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+</code></pre>
+<h1 id="6-部署Node"><a href="#6-部署Node" class="headerlink" title="6.部署Node"></a>6.部署Node</h1><pre><code class="hljs">kubeadm join 172.16.100.100:8443 --token dcwrhm.6wi8mn63s10gxrcf \
+--discovery-token-ca-cert-hash sha256:231ea9ea085b6eccaac00cfb27b85748d2cc403cd2194434b163896d375126ea 
+</code></pre>
+<ul>
+<li>注：token过期之后可重新创建，命令为：kubeadm token create –print-join-command</li>
+</ul>
+<h1 id="7-部署集群网络插件calico"><a href="#7-部署集群网络插件calico" class="headerlink" title="7.部署集群网络插件calico"></a>7.部署集群网络插件calico</h1><h2 id="7-1-下载calico资源文件"><a href="#7-1-下载calico资源文件" class="headerlink" title="7.1 下载calico资源文件"></a>7.1 下载calico资源文件</h2><pre><code class="hljs">curl https://docs.projectcalico.org/v3.20/manifests/calico.yaml -O
+</code></pre>
+<h2 id="7-2-配置pod网络IP段"><a href="#7-2-配置pod网络IP段" class="headerlink" title="7.2 配置pod网络IP段"></a>7.2 配置pod网络IP段</h2><pre><code class="hljs">vi calico.yaml
+
+
+- name: CALICO_IPV4POOL_CIDR
+  value: &quot;172.30.0.0/16&quot;
+</code></pre>
+<ul>
+<li>注：CALICO_IPV4POOL_CIDR的值与初始化Master时–pod-network-cidr指定的值保持一致</li>
+</ul>
+<h2 id="7-3-部署集群网络插件calico"><a href="#7-3-部署集群网络插件calico" class="headerlink" title="7.3 部署集群网络插件calico"></a>7.3 部署集群网络插件calico</h2><pre><code class="hljs">kubectl apply -f calico.yaml
+</code></pre>
+<h1 id="8-查看集群状态"><a href="#8-查看集群状态" class="headerlink" title="8.查看集群状态"></a>8.查看集群状态</h1><h2 id="8-1-查看集群组件状态"><a href="#8-1-查看集群组件状态" class="headerlink" title="8.1 查看集群组件状态"></a>8.1 查看集群组件状态</h2><pre><code class="hljs">kubectl get cs
+</code></pre>
+<h2 id="8-2-查看集群网络组件"><a href="#8-2-查看集群网络组件" class="headerlink" title="8.2 查看集群网络组件"></a>8.2 查看集群网络组件</h2><pre><code class="hljs">kubectl -n kube-system get pods -o wide
+</code></pre>
+<h2 id="8-3-查看集群节点状态"><a href="#8-3-查看集群节点状态" class="headerlink" title="8.3 查看集群节点状态"></a>8.3 查看集群节点状态</h2><pre><code class="hljs">kubectl get nodes -o wide
+</code></pre>
+<h2 id="8-4-配置kube-proxy代理模式为ipvs"><a href="#8-4-配置kube-proxy代理模式为ipvs" class="headerlink" title="8.4 配置kube-proxy代理模式为ipvs"></a>8.4 配置kube-proxy代理模式为ipvs</h2><h3 id="8-4-1-修改configmap"><a href="#8-4-1-修改configmap" class="headerlink" title="8.4.1 修改configmap"></a>8.4.1 修改configmap</h3><pre><code class="hljs">kubectl edit cm kube-proxy -n kube-system
+
+
+mode: &quot;ipvs&quot;
+</code></pre>
+<h3 id="8-4-2-重启kube-proxy"><a href="#8-4-2-重启kube-proxy" class="headerlink" title="8.4.2 重启kube-proxy"></a>8.4.2 重启kube-proxy</h3><pre><code class="hljs">kubectl -n kube-system get pod | grep kube-proxy | awk &#39;&#123;print $1&#125;&#39; | xargs kubectl -n kube-system delete pod
+</code></pre>
+<h1 id="9-部署可视化管理UI"><a href="#9-部署可视化管理UI" class="headerlink" title="9.部署可视化管理UI"></a>9.部署可视化管理UI</h1><h2 id="9-1-部署kuboard"><a href="#9-1-部署kuboard" class="headerlink" title="9.1 部署kuboard"></a>9.1 部署kuboard</h2><pre><code class="hljs">kubectl apply -f https://kuboard.cn/install-script/kuboard.yaml
+</code></pre>
+<h2 id="9-2-获取登陆token"><a href="#9-2-获取登陆token" class="headerlink" title="9.2 获取登陆token"></a>9.2 获取登陆token</h2><pre><code class="hljs">echo $(kubectl -n kube-system get secret $(kubectl -n kube-system get secret | grep kuboard-user | awk &#39;&#123;print $1&#125;&#39;) -o go-template=&#39;&#123;&#123;.data.token&#125;&#125;&#39; | base64 -d)
+</code></pre>
+<h2 id="9-3-访问Kuboard"><a href="#9-3-访问Kuboard" class="headerlink" title="9.3 访问Kuboard"></a>9.3 访问Kuboard</h2><p><a target="_blank" rel="noopener" href="http://worker节点ip:32567/">http://worker节点IP:32567</a></p>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/64bb556a2006">https://www.jianshu.com/p/64bb556a2006</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yx-book/p/14855450.html">https://www.cnblogs.com/yx-book/p/14855450.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44379843/article/details/125400358">https://blog.csdn.net/weixin_44379843/article/details/125400358</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/mengshicheng1992/article/details/115659507">https://blog.csdn.net/mengshicheng1992/article/details/115659507</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u014320421/article/details/118325544">https://blog.csdn.net/u014320421/article/details/118325544</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/Kubernetes/">#Kubernetes</a>
+      
+        <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+      
+        <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Kubernetes基于kubeadm工具构建高可用集群</div>
+      <div>https://hfsxs.github.io/linux/KubernetesKubeadm/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2021年11月12日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年3月15日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/linux/KubernetesCNI/" title="Kubernetes集群网络模型详解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Kubernetes集群网络模型详解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/linux/KubernetesStorage/" title="kubernetes存储持久化详解">
+                        <span class="hidden-mobile">kubernetes存储持久化详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+
+<div>
+<span id="timeDate"> 正在载入天数...</span>
+<span id="times"> 载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime(){
+        var grt= new Date("1/12/2025 01:15:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if(String(snum).length ==1 ){
+                snum = "0" + snum;
+        }
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
+        document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+</div>
+
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
