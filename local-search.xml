@@ -373,19 +373,6 @@
   
   
   <entry>
-    <title></title>
-    <link href="/uncategorized/cm8bq524y00gg83f8h01wfd2l/"/>
-    <url>/uncategorized/cm8bq524y00gg83f8h01wfd2l/</url>
-    
-    <content type="html"><![CDATA[<h2 id="—iid-RedisReplicationtitle-Redis部署主从复制集群categories-工作tags-Linux-Redis-NoSQL-缓存-中间件-云计算date-2020-02-04-21-36-26"><a href="#—iid-RedisReplicationtitle-Redis部署主从复制集群categories-工作tags-Linux-Redis-NoSQL-缓存-中间件-云计算date-2020-02-04-21-36-26" class="headerlink" title="—iid: RedisReplicationtitle: Redis部署主从复制集群categories:  - 工作tags:  - Linux  - Redis  - NoSQL  - 缓存  - 中间件  - 云计算date: 2020-02-04 21:36:26"></a>—i<br>id: RedisReplication<br>title: Redis部署主从复制集群<br>categories:<br>  - 工作<br>tags:<br>  - Linux<br>  - Redis<br>  - NoSQL<br>  - 缓存<br>  - 中间件<br>  - 云计算<br>date: 2020-02-04 21:36:26</h2><p>Redis主从复制是指将一台Redis服务器（主节点）的数据复制到其他的Redis服务器（从节点），该过程是单向进行，即只能从主节点复制到从节点。主节点宕机后即可将业务切换到从节点，尽可能的消弱影响</p><hr><h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul><li>172.16.100.100  master</li><li>172.16.100.200  slaver</li></ul><hr><h1 id="1-部署redis"><a href="#1-部署redis" class="headerlink" title="1.部署redis"></a>1.部署redis</h1><h1 id="2-配置主节点"><a href="#2-配置主节点" class="headerlink" title="2.配置主节点"></a>2.配置主节点</h1><pre><code class="hljs">sudo vi /etc/redis/redis.conf# 设置监听IPbind 0.0.0.0</code></pre><h1 id="3-配置从节点"><a href="#3-配置从节点" class="headerlink" title="3.配置从节点"></a>3.配置从节点</h1><pre><code class="hljs">sudo vi /etc/redis/redis.conf# 设置主节点IP及端口replicaof 172.16.100.100 6379# 设置主节点访问密码# masterauth &quot;redis&quot;# 设置权重值，为0则表示不参与master选举# replica-priority 100</code></pre><h1 id="3-启动主、从redis节点，验证主从功能"><a href="#3-启动主、从redis节点，验证主从功能" class="headerlink" title="3.启动主、从redis节点，验证主从功能"></a>3.启动主、从redis节点，验证主从功能</h1><pre><code class="hljs">redis-cli -a &quot;redis&quot; -h 172.16.100.200 -p 6379 info replication</code></pre><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://blog.csdn.net/shianla/article/details/137613665">https://blog.csdn.net/shianla/article/details/137613665</a></li><li><a href="https://blog.csdn.net/qq_36838700/article/details/140637913">https://blog.csdn.net/qq_36838700/article/details/140637913</a></li><li><a href="https://blog.csdn.net/weixin_43412762/article/details/134946683">https://blog.csdn.net/weixin_43412762/article/details/134946683</a></li></ul>]]></content>
-    
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>Prometheus监控域名和站点的可用性</title>
     <link href="/linux/Prometheus-URL/"/>
     <url>/linux/Prometheus-URL/</url>
@@ -5532,6 +5519,41 @@
     <url>/linux/RedisSentinel/</url>
     
     <content type="html"><![CDATA[<h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul><li>172.16.100.100  master</li><li>172.16.100.120  node01</li><li>172.16.100.200  node02</li></ul><hr><p>Redis主从复制集群解决了单点故障，但故障转移还是需要人工干预，手动进行主从切换，并不能第一时间恢复业务。有鉴于此，Redis引入了哨兵模式，即为集群的每个节点部署一个独立的监控服务，以监控主从复制的状态，并在主节点故障后通过投票机制自动进行主从切换</p><h1 id="1-安装redis"><a href="#1-安装redis" class="headerlink" title="1.安装redis"></a>1.安装redis</h1><h1 id="2-配置主节点"><a href="#2-配置主节点" class="headerlink" title="2.配置主节点"></a>2.配置主节点</h1><h2 id="2-1-修改redis配置文件"><a href="#2-1-修改redis配置文件" class="headerlink" title="2.1 修改redis配置文件"></a>2.1 修改redis配置文件</h2><pre><code class="hljs">vi /etc/redis/redis.conf# 设置从节点连接主节点的认证密码masterauth &quot;redis&quot;# 设置从节点权重，主节点失效后权重值最小者将被选为新主节点，为0则表示不参与选举slave-priority 100</code></pre><h2 id="2-2-配置sentinel节点"><a href="#2-2-配置sentinel节点" class="headerlink" title="2.2 配置sentinel节点"></a>2.2 配置sentinel节点</h2><pre><code class="hljs">vi /etc/redis/sentinel.conf# 设置监听IPbind 172.16.100.100# 设置监听端口port 6380# 设置sentinel服务为后台运行daemonize yes# 设置sentinel服务将数据保存到硬盘上的文件名dbfilename dump_sentinel.rdb# 设置sentinel服务硬盘数据文件存储路径dir /usr/local/redis/data# 设置sentinel服务pid文件路径pidfile  /usr/local/redis/data/sentinel.pid# 设置sentinel服务日志路径logfile &quot;/usr/local/redis/logs/sentinel.log&quot;# 设置sentinel所监听的主节点IP及主从切换策略，1表示判断主节点失效至少需要1个Sentinel节点同意sentinel monitor master 172.16.100.100 6379 1# 设置主节点连接密码sentinel auth-pass master redis# 设置监听超时时长，即以ping命令判断Redis数据节点和其余Sentinel节点是否可达，如果超过30000毫秒且没有回复，则判定不可达sentinel down-after-milliseconds master 30000# 当Sentinel节点集合对主节点故障判定达成一致时，Sentinel领导者节点做故障转移操作，选出新主节点，原来的从节点会向新的主节点发起复制操作，限制每次向新的主节点发起复制操作的从节点个数为1sentinel parallel-syncs master 1# 故障转移超时时间为180000毫秒sentinel failover-timeout master 180000</code></pre><h2 id="2-3-启动主节点sentinel"><a href="#2-3-启动主节点sentinel" class="headerlink" title="2.3 启动主节点sentinel"></a>2.3 启动主节点sentinel</h2><pre><code class="hljs">/usr/local/redis/bin/redis-sentinel /etc/redis/sentinel.conf</code></pre><h1 id="3-配置从节点"><a href="#3-配置从节点" class="headerlink" title="3.配置从节点"></a>3.配置从节点</h1><h2 id="3-1-修改redis配置文件"><a href="#3-1-修改redis配置文件" class="headerlink" title="3.1 修改redis配置文件"></a>3.1 修改redis配置文件</h2><pre><code class="hljs">vi /etc/redis/redis.conf# 配置主服务器slaveof 192.168.0.180 6379# 配置主服务器访问密码masterauth &quot;redis&quot;</code></pre><h2 id="3-2-配置sentinel节点"><a href="#3-2-配置sentinel节点" class="headerlink" title="3.2 配置sentinel节点"></a>3.2 配置sentinel节点</h2><pre><code class="hljs">vi /etc/redis/sentinel.confbind 172.16.100.120port 6381daemonize yesdbfilename dump_sentinel.rdbdir /usr/local/redis/datapidfile  /usr/local/redis/data/sentinel.pidlogfile &quot;/usr/local/redis/logs/sentinel.log&quot;sentinel monitor slaver001 192.168.0.100 6379 1sentinel auth-pass slaver001 redissentinel down-after-milliseconds slaver001 30000sentinel parallel-syncs slaver001 1sentinel failover-timeout slaver001 180000</code></pre><h1 id="4-依次启动主从节点redis、sentinel"><a href="#4-依次启动主从节点redis、sentinel" class="headerlink" title="4.依次启动主从节点redis、sentinel"></a>4.依次启动主从节点redis、sentinel</h1><pre><code class="hljs"># 启动redis节点service redis start# 启动sentinel节点/usr/local/redis/bin/redis-sentinel /usr/local/redis/conf/sentinel.conf</code></pre><h1 id="5-查看主服务器的主从信息"><a href="#5-查看主服务器的主从信息" class="headerlink" title="5.查看主服务器的主从信息"></a>5.查看主服务器的主从信息</h1><pre><code class="hljs">redis-cli -a &quot;redis&quot; -h 172.16.100.180 -p 6379 info replication# 连接任意sentinel服务查看当前主redis服务信息redis-cli -a &quot;redis&quot; -h 192.168.0.150 -p 6380 info sentinelredis-cli -a &quot;redis&quot; -h 192.168.0.100 -p 6381 info sentinelredis-cli -a &quot;redis&quot; -h 192.168.0.200 -p 6382 info sentinel</code></pre><h1 id="6-测试集群故障切换"><a href="#6-测试集群故障切换" class="headerlink" title="6.测试集群故障切换"></a>6.测试集群故障切换</h1><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://www.51cto.com/article/651799.html">https://www.51cto.com/article/651799.html</a></li><li><a href="https://blog.csdn.net/benxiaohai529/article/details/52848414">https://blog.csdn.net/benxiaohai529/article/details/52848414</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>Redis</tag>
+      
+      <tag>中间件</tag>
+      
+      <tag>NoSQL</tag>
+      
+      <tag>缓存</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Redis部署主从复制集群</title>
+    <link href="/linux/RedisReplication/"/>
+    <url>/linux/RedisReplication/</url>
+    
+    <content type="html"><![CDATA[<p>Redis主从复制是指将一台Redis服务器（主节点）的数据复制到其他的Redis服务器（从节点），该过程是单向进行，即只能从主节点复制到从节点。主节点宕机后即可将业务切换到从节点，尽可能的消弱影响</p><hr><h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul><li>172.16.100.100  master</li><li>172.16.100.200  slaver</li></ul><hr><h1 id="1-部署redis"><a href="#1-部署redis" class="headerlink" title="1.部署redis"></a>1.部署redis</h1><h1 id="2-配置主节点"><a href="#2-配置主节点" class="headerlink" title="2.配置主节点"></a>2.配置主节点</h1><pre><code class="hljs">sudo vi /etc/redis/redis.conf# 设置监听IPbind 0.0.0.0</code></pre><h1 id="3-配置从节点"><a href="#3-配置从节点" class="headerlink" title="3.配置从节点"></a>3.配置从节点</h1><pre><code class="hljs">sudo vi /etc/redis/redis.conf# 设置主节点IP及端口replicaof 172.16.100.100 6379# 设置主节点访问密码# masterauth &quot;redis&quot;# 设置权重值，为0则表示不参与master选举# replica-priority 100</code></pre><h1 id="3-启动主、从redis节点，验证主从功能"><a href="#3-启动主、从redis节点，验证主从功能" class="headerlink" title="3.启动主、从redis节点，验证主从功能"></a>3.启动主、从redis节点，验证主从功能</h1><pre><code class="hljs">redis-cli -a &quot;redis&quot; -h 172.16.100.200 -p 6379 info replication</code></pre><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://blog.csdn.net/shianla/article/details/137613665">https://blog.csdn.net/shianla/article/details/137613665</a></li><li><a href="https://blog.csdn.net/qq_36838700/article/details/140637913">https://blog.csdn.net/qq_36838700/article/details/140637913</a></li><li><a href="https://blog.csdn.net/weixin_43412762/article/details/134946683">https://blog.csdn.net/weixin_43412762/article/details/134946683</a></li></ul>]]></content>
     
     
     <categories>

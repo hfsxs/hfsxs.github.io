@@ -240,73 +240,6 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/linux/KVM-Network/" target="_self">
-          KVM网络模式详解
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/KVM-Network/" target="_self">
-        <div>
-          kvm虚拟机的网络连接模式有两种，即NAT和Bridge模式  1.NATNAT是KVM默认的网络连接方式，此模式下宿主机配置有虚拟网桥virbr0作为虚拟交换机，并绑定到虚拟网卡virbr0-nic。虚拟机的虚拟网卡vnet0连接virbr0交换机，通过virbr0-nic网卡将数据包转发到宿主机。此时的宿主机已经配置了iptables，成为配置了SNAT规则具备路由功能的路由器，从而将数据包发
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-03-07 14:27" pubdate>
-              2022-03-07
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/KVM/">#KVM</a>
-            
-              <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
         <a href="/linux/KubernetesServiceDiscover/" target="_self">
           Kubernetes集群服务发现
         </a>
@@ -893,6 +826,75 @@
             <i class="iconfont icon-date"></i>
             <time datetime="2021-09-11 21:56" pubdate>
               2021-09-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/Kubernetes/">#Kubernetes</a>
+            
+              <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+            
+              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/linux/KubernetesController/" target="_self">
+          Kubernetes集群控制器详解
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/KubernetesController/" target="_self">
+        <div>
+          Controller，即控制器，用于驱动Kubernetes集群资源对象当前状态（status）逼近用户提交的期望状态，通过API Server提供的（List &amp; Watch）接口实时地循环监控资源对象的状态，以便于发现故障并执行自动化修复流程。Controller由主节点的Controller Manager组件负责管理，不同的资源对象由各自的控制器进行管理，如Deployment C
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-08-16 20:40" pubdate>
+              2021-08-16
             </time>
           </div>
         

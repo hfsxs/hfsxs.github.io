@@ -16,23 +16,29 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="—iid: RedisReplicationtitle: Redis部署主从复制集群categories:  - 工作tags:  - Linux  - Redis  - NoSQL  - 缓存  - 中间件  - 云计算date: 2020-02-04 21:36:26Redis主从复制是指将一台Redis服务器（主节点）的数据复制到其他的Redis服务器（从节点），该过程是单向进行，即只能从主">
+    <meta name="description" content="Redis主从复制是指将一台Redis服务器（主节点）的数据复制到其他的Redis服务器（从节点），该过程是单向进行，即只能从主节点复制到从节点。主节点宕机后即可将业务切换到从节点，尽可能的消弱影响  集群架构 172.16.100.100  master 172.16.100.200  slaver   1.部署redis2.配置主节点sudo vi &#x2F;etc&#x2F;redis&#x2F;redis.conf">
 <meta property="og:type" content="article">
-<meta property="og:title" content="扬帆">
-<meta property="og:url" content="https://hfsxs.github.io/uncategorized/cm8bq524y00gg83f8h01wfd2l/index.html">
+<meta property="og:title" content="Redis部署主从复制集群">
+<meta property="og:url" content="https://hfsxs.github.io/linux/RedisReplication/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="—iid: RedisReplicationtitle: Redis部署主从复制集群categories:  - 工作tags:  - Linux  - Redis  - NoSQL  - 缓存  - 中间件  - 云计算date: 2020-02-04 21:36:26Redis主从复制是指将一台Redis服务器（主节点）的数据复制到其他的Redis服务器（从节点），该过程是单向进行，即只能从主">
+<meta property="og:description" content="Redis主从复制是指将一台Redis服务器（主节点）的数据复制到其他的Redis服务器（从节点），该过程是单向进行，即只能从主节点复制到从节点。主节点宕机后即可将业务切换到从节点，尽可能的消弱影响  集群架构 172.16.100.100  master 172.16.100.200  slaver   1.部署redis2.配置主节点sudo vi &#x2F;etc&#x2F;redis&#x2F;redis.conf">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-11-07T14:17:00.696Z">
-<meta property="article:modified_time" content="2025-03-15T14:02:57.017Z">
+<meta property="article:published_time" content="2020-02-04T13:36:26.000Z">
+<meta property="article:modified_time" content="2025-03-19T02:38:36.113Z">
 <meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Redis">
+<meta property="article:tag" content="中间件">
+<meta property="article:tag" content="NoSQL">
+<meta property="article:tag" content="缓存">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>扬帆</title>
+  <title>Redis部署主从复制集群 - 扬帆</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -212,7 +218,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle"></span>
+            <span id="subtitle">Redis部署主从复制集群</span>
           
         </div>
 
@@ -223,8 +229,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-11-07 22:17" pubdate>
-          2024年11月7日 晚上
+        <time datetime="2020-02-04 21:36" pubdate>
+          2020年2月4日 晚上
         </time>
       </span>
     
@@ -235,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          735 字
+          624 字
         
       </span>
     
@@ -246,7 +252,7 @@
         
         
         
-          7 分钟
+          6 分钟
         
       </span>
     
@@ -284,12 +290,12 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none"></h1>
+            <h1 style="display: none">Redis部署主从复制集群</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="—iid-RedisReplicationtitle-Redis部署主从复制集群categories-工作tags-Linux-Redis-NoSQL-缓存-中间件-云计算date-2020-02-04-21-36-26"><a href="#—iid-RedisReplicationtitle-Redis部署主从复制集群categories-工作tags-Linux-Redis-NoSQL-缓存-中间件-云计算date-2020-02-04-21-36-26" class="headerlink" title="—iid: RedisReplicationtitle: Redis部署主从复制集群categories:  - 工作tags:  - Linux  - Redis  - NoSQL  - 缓存  - 中间件  - 云计算date: 2020-02-04 21:36:26"></a>—i<br>id: RedisReplication<br>title: Redis部署主从复制集群<br>categories:<br>  - 工作<br>tags:<br>  - Linux<br>  - Redis<br>  - NoSQL<br>  - 缓存<br>  - 中间件<br>  - 云计算<br>date: 2020-02-04 21:36:26</h2><p>Redis主从复制是指将一台Redis服务器（主节点）的数据复制到其他的Redis服务器（从节点），该过程是单向进行，即只能从主节点复制到从节点。主节点宕机后即可将业务切换到从节点，尽可能的消弱影响</p>
+                <p>Redis主从复制是指将一台Redis服务器（主节点）的数据复制到其他的Redis服务器（从节点），该过程是单向进行，即只能从主节点复制到从节点。主节点宕机后即可将业务切换到从节点，尽可能的消弱影响</p>
 <hr>
 <h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul>
 <li>172.16.100.100  master</li>
@@ -330,6 +336,44 @@ replicaof 172.16.100.100 6379
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/Redis/">#Redis</a>
+      
+        <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">#中间件</a>
+      
+        <a href="/tags/NoSQL/">#NoSQL</a>
+      
+        <a href="/tags/%E7%BC%93%E5%AD%98/">#缓存</a>
+      
+    </div>
   
 </div>
 
@@ -339,8 +383,8 @@ replicaof 172.16.100.100 6379
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div></div>
-      <div>https://hfsxs.github.io/uncategorized/cm8bq524y00gg83f8h01wfd2l/</div>
+      <div>Redis部署主从复制集群</div>
+      <div>https://hfsxs.github.io/linux/RedisReplication/</div>
     </div>
     <div class="license-meta">
       
@@ -352,13 +396,13 @@ replicaof 172.16.100.100 6379
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年11月7日</div>
+          <div>2020年2月4日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月15日</div>
+          <div>2025年3月19日</div>
         </div>
       
       <div class="license-meta-item">
@@ -387,9 +431,9 @@ replicaof 172.16.100.100 6379
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/linux/Prometheus-IngressController/" title="Prometheus监控Ingress-Controller">
+                      <a href="/linux/RedisSentinel/" title="Redis部署哨兵模式集群">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Prometheus监控Ingress-Controller</span>
+                        <span class="hidden-mobile">Redis部署哨兵模式集群</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -397,8 +441,8 @@ replicaof 172.16.100.100 6379
                   <article class="post-next col-6">
                     
                     
-                      <a href="/linux/Prometheus-URL/" title="Prometheus监控域名和站点的可用性">
-                        <span class="hidden-mobile">Prometheus监控域名和站点的可用性</span>
+                      <a href="/linux/Redis/" title="Redis编译安装">
+                        <span class="hidden-mobile">Redis编译安装</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
