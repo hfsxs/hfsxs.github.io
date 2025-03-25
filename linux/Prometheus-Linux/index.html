@@ -16,16 +16,16 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="实例，Instance，即Exporters暴露的HTTP方式的API，用于Prometheus周期性地采集监控样本数据。分布于不同节点的实例组构成任务，即Job，如node_exporter系统监控实例所组成的服务器资源监控任务、mysql_exporter监控实例所组成的数据库资源监控任务等 1.下载安装包wget https:&#x2F;&#x2F;github.com&#x2F;prometheus&#x2F;node_expo">
+    <meta name="description" content="1.下载安装包wget https:&#x2F;&#x2F;github.com&#x2F;prometheus&#x2F;node_exporter&#x2F;releases&#x2F;download&#x2F;v1.6.1&#x2F;node_exporter-1.6.1.linux-amd64.tar.gz  2.安装node-exportertar -xzvf node_exporter-1.6.1.linux-amd64.tar.gz sudo mv node_">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Prometheus监控Linux系统">
 <meta property="og:url" content="https://hfsxs.github.io/linux/Prometheus-Linux/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="实例，Instance，即Exporters暴露的HTTP方式的API，用于Prometheus周期性地采集监控样本数据。分布于不同节点的实例组构成任务，即Job，如node_exporter系统监控实例所组成的服务器资源监控任务、mysql_exporter监控实例所组成的数据库资源监控任务等 1.下载安装包wget https:&#x2F;&#x2F;github.com&#x2F;prometheus&#x2F;node_expo">
+<meta property="og:description" content="1.下载安装包wget https:&#x2F;&#x2F;github.com&#x2F;prometheus&#x2F;node_exporter&#x2F;releases&#x2F;download&#x2F;v1.6.1&#x2F;node_exporter-1.6.1.linux-amd64.tar.gz  2.安装node-exportertar -xzvf node_exporter-1.6.1.linux-amd64.tar.gz sudo mv node_">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/linux.jpg">
 <meta property="article:published_time" content="2023-08-01T04:16:28.000Z">
-<meta property="article:modified_time" content="2025-03-12T08:18:22.300Z">
+<meta property="article:modified_time" content="2025-03-21T09:31:11.683Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -241,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.2k 字
+          1.1k 字
         
       </span>
     
@@ -252,7 +252,7 @@
         
         
         
-          11 分钟
+          10 分钟
         
       </span>
     
@@ -295,8 +295,7 @@
             
               <div class="markdown-body">
                 
-                <p>实例，Instance，即Exporters暴露的HTTP方式的API，用于Prometheus周期性地采集监控样本数据。分布于不同节点的实例组构成任务，即Job，如node_exporter系统监控实例所组成的服务器资源监控任务、mysql_exporter监控实例所组成的数据库资源监控任务等</p>
-<h1 id="1-下载安装包"><a href="#1-下载安装包" class="headerlink" title="1.下载安装包"></a>1.下载安装包</h1><pre><code class="hljs">wget https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz
+                <h1 id="1-下载安装包"><a href="#1-下载安装包" class="headerlink" title="1.下载安装包"></a>1.下载安装包</h1><pre><code class="hljs">wget https://github.com/prometheus/node_exporter/releases/download/v1.6.1/node_exporter-1.6.1.linux-amd64.tar.gz
 </code></pre>
 <h1 id="2-安装node-exporter"><a href="#2-安装node-exporter" class="headerlink" title="2.安装node-exporter"></a>2.安装node-exporter</h1><pre><code class="hljs">tar -xzvf node_exporter-1.6.1.linux-amd64.tar.gz
 sudo mv node_exporter-1.6.1.linux-amd64 /usr/local/bin/node_exporter
@@ -318,7 +317,7 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 </code></pre>
-<h1 id="4-启动node-exporter"><a href="#4-启动node-exporter" class="headerlink" title="4.启动node-exporter"></a>4.启动node-exporter</h1><pre><code class="hljs">sudo systemctl daemon-reload
+<h1 id="4-自定义监控项"><a href="#4-自定义监控项" class="headerlink" title="4.自定义监控项"></a>4.自定义监控项</h1><h1 id="4-启动node-exporter"><a href="#4-启动node-exporter" class="headerlink" title="4.启动node-exporter"></a>4.启动node-exporter</h1><pre><code class="hljs">sudo systemctl daemon-reload
 sudo systemctl start node_exporter.service
 sudo systemctl enable node_exporter.service
 </code></pre>
@@ -347,6 +346,7 @@ scrape_configs:
 <p><img src="/img/wiki/prometheus/linux.jpg" srcset="/img/loading.gif" lazyload alt="linux"></p>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/gered/p/16567438.html">https://www.cnblogs.com/gered/p/16567438.html</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43883625/article/details/129757960">https://blog.csdn.net/weixin_43883625/article/details/129757960</a></li>
 </ul>
 
@@ -419,7 +419,7 @@ scrape_configs:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月12日</div>
+          <div>2025年3月21日</div>
         </div>
       
       <div class="license-meta-item">

@@ -16,18 +16,18 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Prometheus是基于Go语言构建的由SoundCloud开发的开源监控告警系统，基本原理是通过HTTP协议周期性拉取被监控组件的状态，任意组件只要提供对应的HTTP接口即可接入，而不再需要任何SDK或其他集成过程 系统架构1.Prometheusprometheus server，Prometheus监控系统的核心部分，负责实现监控数据的收集、存储及数据查询 2.Exportersexpor">
+    <meta name="description" content="Prometheus是基于Go语言构建的由SoundCloud开发的开源监控告警系统，基本原理是通过HTTP协议周期性拉取被监控组件的状态，任意组件只要提供对应的HTTP接口即可接入，而不再需要任何SDK或其他集成过程 系统架构1.PrometheusPrometheus Server，Prometheus监控系统的核心部分，负责实现监控数据的收集、存储及数据查询 2.ExportersExpor">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Prometheus监控系统部署">
 <meta property="og:url" content="https://hfsxs.github.io/linux/Prometheus/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="Prometheus是基于Go语言构建的由SoundCloud开发的开源监控告警系统，基本原理是通过HTTP协议周期性拉取被监控组件的状态，任意组件只要提供对应的HTTP接口即可接入，而不再需要任何SDK或其他集成过程 系统架构1.Prometheusprometheus server，Prometheus监控系统的核心部分，负责实现监控数据的收集、存储及数据查询 2.Exportersexpor">
+<meta property="og:description" content="Prometheus是基于Go语言构建的由SoundCloud开发的开源监控告警系统，基本原理是通过HTTP协议周期性拉取被监控组件的状态，任意组件只要提供对应的HTTP接口即可接入，而不再需要任何SDK或其他集成过程 系统架构1.PrometheusPrometheus Server，Prometheus监控系统的核心部分，负责实现监控数据的收集、存储及数据查询 2.ExportersExpor">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/prometheus01.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/prometheus02.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/prometheus03.jpg">
 <meta property="article:published_time" content="2023-02-01T01:42:31.000Z">
-<meta property="article:modified_time" content="2025-03-14T06:52:07.256Z">
+<meta property="article:modified_time" content="2025-03-24T05:43:58.526Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -244,7 +244,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.3k 字
+          3.4k 字
         
       </span>
     
@@ -255,7 +255,7 @@
         
         
         
-          28 分钟
+          29 分钟
         
       </span>
     
@@ -299,10 +299,10 @@
               <div class="markdown-body">
                 
                 <p>Prometheus是基于Go语言构建的由SoundCloud开发的开源监控告警系统，基本原理是通过HTTP协议周期性拉取被监控组件的状态，任意组件只要提供对应的HTTP接口即可接入，而不再需要任何SDK或其他集成过程</p>
-<h1 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h1><h2 id="1-Prometheus"><a href="#1-Prometheus" class="headerlink" title="1.Prometheus"></a>1.Prometheus</h2><p>prometheus server，Prometheus监控系统的核心部分，负责实现监控数据的收集、存储及数据查询</p>
-<h2 id="2-Exporters"><a href="#2-Exporters" class="headerlink" title="2.Exporters"></a>2.Exporters</h2><p>exporter，即监控数据采集端，通过http服务的形式保留一个url地址，prometheus server周期性地访问exporter提供的endpoint端点，以获取需要采集的监控数据，可分为两大类：</p>
+<h1 id="系统架构"><a href="#系统架构" class="headerlink" title="系统架构"></a>系统架构</h1><h2 id="1-Prometheus"><a href="#1-Prometheus" class="headerlink" title="1.Prometheus"></a>1.Prometheus</h2><p>Prometheus Server，Prometheus监控系统的核心部分，负责实现监控数据的收集、存储及数据查询</p>
+<h2 id="2-Exporters"><a href="#2-Exporters" class="headerlink" title="2.Exporters"></a>2.Exporters</h2><p>Exporter，监控数据采集端，即通过通过http方式暴露的API，Prometheus Server周期性地访问Exporter提供的Endpoint端点，以获取需要采集的监控数据。一个Exporter即是一个监控实例Instance，分布于不同节点的实例组即构成任务Job，如node_exporter系统监控实例所组成的服务器资源监控任务、mysql_exporter监控实例所组成的数据库资源监控任务等。Exporter分为两大类：</p>
 <ul>
-<li>直接采集，直接内置了对Prometheus监控的支持，如cAdvisor,Kubernetes等</li>
+<li>直接采集，直接内置了对Prometheus监控的支持，如cAdvisor、Kubernetes等</li>
 <li>间接采集，原有监控目标不支持prometheus，需要通过prometheus提供的客户端库编写监控采集程序，如Mysql Exporter、JMX Exporter等</li>
 </ul>
 <h2 id="3-AlertManager"><a href="#3-AlertManager" class="headerlink" title="3.AlertManager"></a>3.AlertManager</h2><p>告警管理，处理prometheus基于PromQL创建的告警规则所生成的告警信息，可集成邮件、Slack或webhook自定义报警</p>
@@ -450,7 +450,7 @@ sudo systemctl enable prometheus.service
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月14日</div>
+          <div>2025年3月24日</div>
         </div>
       
       <div class="license-meta-item">
