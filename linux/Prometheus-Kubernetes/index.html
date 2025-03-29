@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/kubernetes.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/kubernetes-alerts.jpg">
 <meta property="article:published_time" content="2024-05-10T06:59:01.000Z">
-<meta property="article:modified_time" content="2025-03-29T03:02:23.962Z">
+<meta property="article:modified_time" content="2025-03-29T03:07:53.662Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -374,7 +374,15 @@ eyJhbGciOiJSUzI1NiIsImtpZCI6InFhd0Q4b2VONWZaTV9fcXBUa1J6dGZZaE83WDhCNG44Uno0QWh3
 </code></pre>
 <ul>
 <li><p>注：Kubernetes集群1.23及之前的版本ServiceAccount会自动创建Secret，但之后的版本需自行创建secret，绑定SA。Secret的YAML文件为：</p>
-<p>  apiVersion: v1<br>  kind: Secret<br>  type: kubernetes.io&#x2F;service-account-token<br>  metadata:<br>name: prometheus<br>namespace: kube-system<br>annotations:<br>  kubernetes.io&#x2F;service-account.name: “prometheus”</p>
+<pre><code class="hljs">apiVersion: v1
+kind: Secret
+type: kubernetes.io/service-account-token
+metadata:
+  name: prometheus
+  namespace: kube-system
+  annotations:
+    kubernetes.io/service-account.name: &quot;prometheus&quot;
+</code></pre>
 </li>
 </ul>
 <h2 id="1-4-将访问凭证发送到Prometheus服务器"><a href="#1-4-将访问凭证发送到Prometheus服务器" class="headerlink" title="1.4 将访问凭证发送到Prometheus服务器"></a>1.4 将访问凭证发送到Prometheus服务器</h2><pre><code class="hljs">scp token.kubernetes node01:/usr/local/prometheus
