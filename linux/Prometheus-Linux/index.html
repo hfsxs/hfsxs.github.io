@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/linux.jpg">
 <meta property="article:published_time" content="2023-08-01T04:16:28.000Z">
-<meta property="article:modified_time" content="2025-04-02T02:16:46.948Z">
+<meta property="article:modified_time" content="2025-04-02T08:31:08.839Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -242,7 +242,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.2k 字
+          2.3k 字
         
       </span>
     
@@ -253,7 +253,7 @@
         
         
         
-          19 分钟
+          20 分钟
         
       </span>
     
@@ -334,7 +334,11 @@ echo &quot;node_login_users $(who |wc -l)&quot; &gt; /tmp/system.collected/login
 # 监控系统进程数，监控项为node_processes
 echo &quot;node_processes $(ps -ef |wc -l)&quot; &gt; /tmp/system.collected/processes.prom
 </code></pre>
-<h3 id="3-3-2-创建定时任务"><a href="#3-3-2-创建定时任务" class="headerlink" title="3.3.2 创建定时任务"></a>3.3.2 创建定时任务</h3><h3 id="3-3-3-配置textfile采集器"><a href="#3-3-3-配置textfile采集器" class="headerlink" title="3.3.3 配置textfile采集器"></a>3.3.3 配置textfile采集器</h3><pre><code class="hljs">/usr/local/bin/node_exporter --collector.textfile.directory=/tmp/system.collected
+<h3 id="3-3-2-创建定时任务"><a href="#3-3-2-创建定时任务" class="headerlink" title="3.3.2 创建定时任务"></a>3.3.2 创建定时任务</h3><pre><code class="hljs">crontab -l
+
+*/5 * * * * sh /usr/local/prometheus/script/collected.sh
+</code></pre>
+<h3 id="3-3-3-配置textfile采集器"><a href="#3-3-3-配置textfile采集器" class="headerlink" title="3.3.3 配置textfile采集器"></a>3.3.3 配置textfile采集器</h3><pre><code class="hljs">/usr/local/bin/node_exporter --collector.textfile.directory=/tmp/system.collected
 </code></pre>
 <h1 id="4-启动node-exporter"><a href="#4-启动node-exporter" class="headerlink" title="4.启动node-exporter"></a>4.启动node-exporter</h1><pre><code class="hljs">sudo systemctl daemon-reload
 sudo systemctl start node_exporter.service
