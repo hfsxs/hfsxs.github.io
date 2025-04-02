@@ -24,12 +24,13 @@
 <meta property="og:description" content="Docker，由go语言基于是Linux容器（LXC）等技术开发的开源应用容器引擎，致力于实现轻量级的操作系统虚拟化解决方案，是当前最热门的容器化技术之一。相比于传统的虚拟化技术，容器是在操作系统层面上实现的虚拟化，直接复用本地主机的操作系统，而传统的虚拟化方式则是在硬件层面实现  docker与虚拟机 两者都是虚拟化资源管理技术，是将计算机的各种实体资源，如服务器、网络、内存等抽象转化后呈现出来">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-03-18T07:55:57.000Z">
-<meta property="article:modified_time" content="2025-03-15T13:42:40.975Z">
+<meta property="article:modified_time" content="2025-03-30T14:18:43.476Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
 <meta property="article:tag" content="Docker">
 <meta property="article:tag" content="容器">
+<meta property="article:tag" content="云原生">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -239,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.1k 字
+          3.2k 字
         
       </span>
     
@@ -250,7 +251,7 @@
         
         
         
-          26 分钟
+          27 分钟
         
       </span>
     
@@ -336,13 +337,15 @@
 <li>仓库，repository，镜像的集中存放地，分为公共仓库和私有仓库，多个仓库组成仓库注册服务器</li>
 </ul>
 <hr>
-<h1 id="1-安装docker"><a href="#1-安装docker" class="headerlink" title="1.安装docker"></a>1.安装docker</h1><pre><code class="hljs"># sudo apt-get update &amp;&amp; sudo apt-get install -y docker.io  
+<h1 id="1-下载安装包"><a href="#1-下载安装包" class="headerlink" title="1.下载安装包"></a>1.下载安装包</h1><pre><code class="hljs">wget https://download.docker.com/linux/static/stable/x86_64/docker-19.03.12.tgz
+</code></pre>
+<h1 id="2-安装docker"><a href="#2-安装docker" class="headerlink" title="2.安装docker"></a>2.安装docker</h1><pre><code class="hljs"># sudo apt-get update &amp;&amp; sudo apt-get install -y docker.io  
 # curl -fsSL https://get.docker.com -o get-docker.sh &amp;&amp; sh get-docker.sh  
 
-tar -xvf docker-19.03.1.tgz  
+tar -xvf docker-19.03.12.tgz  
 sudo cp docker/* /usr/bin 
 </code></pre>
-<h1 id="2-配置docker仓库加速器"><a href="#2-配置docker仓库加速器" class="headerlink" title="2.配置docker仓库加速器"></a>2.配置docker仓库加速器</h1><pre><code class="hljs">sudo mkdir -p /etc/docker
+<h1 id="3-配置仓库加速"><a href="#3-配置仓库加速" class="headerlink" title="3.配置仓库加速"></a>3.配置仓库加速</h1><pre><code class="hljs">sudo mkdir -p /etc/docker
 sudo vi /etc/docker/daemon.json  
 
 
@@ -353,7 +356,7 @@ sudo vi /etc/docker/daemon.json
   ]  
 &#125;  
 </code></pre>
-<h1 id="3-创建docker服务启动脚本"><a href="#3-创建docker服务启动脚本" class="headerlink" title="3.创建docker服务启动脚本"></a>3.创建docker服务启动脚本</h1><pre><code class="hljs">sudo vi /lib/systemd/system/docker.service  
+<h1 id="4-创建启动脚本"><a href="#4-创建启动脚本" class="headerlink" title="4.创建启动脚本"></a>4.创建启动脚本</h1><pre><code class="hljs">sudo vi /lib/systemd/system/docker.service  
 
 
 [Unit]
@@ -379,11 +382,11 @@ StartLimitInterval=60s
 [Install]  
 WantedBy=multi-user.target  
 </code></pre>
-<h1 id="4-启动docker"><a href="#4-启动docker" class="headerlink" title="4.启动docker"></a>4.启动docker</h1><pre><code class="hljs">sudo systemctl daemon-reload  
-sudo systemctl start docker  
-sudo systemctl enable docker  
+<h1 id="5-启动Docker"><a href="#5-启动Docker" class="headerlink" title="5.启动Docker"></a>5.启动Docker</h1><pre><code class="hljs">sudo systemctl daemon-reload 
+sudo systemctl start docker.service
+sudo systemctl enable docker.service 
 </code></pre>
-<h1 id="5-拉取镜像"><a href="#5-拉取镜像" class="headerlink" title="5.拉取镜像"></a>5.拉取镜像</h1><pre><code class="hljs"># 官方公共镜像仓库中搜索nginx镜像  
+<h1 id="6-拉取镜像"><a href="#6-拉取镜像" class="headerlink" title="6.拉取镜像"></a>6.拉取镜像</h1><pre><code class="hljs"># 官方公共镜像仓库中搜索nginx镜像  
 sudo docker search nginx  
 
 # 拉取nginx镜像到本地  
@@ -392,13 +395,13 @@ sudo docker pull nginx
 # 查看本地镜像  
 sudo docker images
 </code></pre>
-<h1 id="6-创建容器"><a href="#6-创建容器" class="headerlink" title="6.创建容器"></a>6.创建容器</h1><pre><code class="hljs"># 创建nginx容器实例，使之后台运行，暴露80端口  
+<h1 id="7-创建容器"><a href="#7-创建容器" class="headerlink" title="7.创建容器"></a>7.创建容器</h1><pre><code class="hljs"># 创建nginx容器实例，使之后台运行，暴露80端口  
 sudo docker run --name nginx -p 80:80 -d nginx  
 
-# 查看所有容器实例  
+# 查看所有容器实例
 sudo docker ps -a  
 
-# 查看nginx实例日志  
+# 查看nginx实例日志
 sudo docker logs nginx
 </code></pre>
 
@@ -442,6 +445,8 @@ sudo docker logs nginx
       
         <a href="/tags/%E5%AE%B9%E5%99%A8/">#容器</a>
       
+        <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+      
     </div>
   
 </div>
@@ -471,7 +476,7 @@ sudo docker logs nginx
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月15日</div>
+          <div>2025年3月30日</div>
         </div>
       
       <div class="license-meta-item">

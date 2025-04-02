@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/kubernetes.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/kubernetes-alerts.jpg">
 <meta property="article:published_time" content="2024-05-10T06:59:01.000Z">
-<meta property="article:modified_time" content="2025-03-29T03:07:53.662Z">
+<meta property="article:modified_time" content="2025-03-29T06:38:48.303Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -373,7 +373,7 @@ vi token.kubernetes
 eyJhbGciOiJSUzI1NiIsImtpZCI6InFhd0Q4b2VONWZaTV9fcXBUa1J6dGZZaE83WDhCNG44Uno0QWh3UnpkdTAifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJwcm9tZXRoZXVzLXRva2VuLWxuNXpiIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6InByb21ldGhldXMiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiI5NjZlMjdhYy04MWZjLTQ0MTQtODVkOS0xMmJiOWQ0YTI3N2YiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZS1zeXN0ZW06cHJvbWV0aGV1cyJ9.dWeO5OpjI4EewpDeicF6i-DwaYWPL8pwsmXEc8ZZm-OM15KjwZXzFpYIhnkvXPpA38HZOBpNg7gfQewTNZbQdhTrBCLX9UQgGYLzkEnxoxy8VAC0QHGs8tGsSC2dQVhVkwL_Xkgtse9V7ArNHDgfoG_78W3TNjEoDExRtrkUi0pEAFazWWnL9sGm-P1bF6S5iw0mFIydpz8ul4csMvHVYW51iegRHHoLdtdL4o5ys5QIvFGpfJal2JRayRn4IbtlvY-k7b4wSPEBrfZlX0v1_hpk7jPcYek7w9G665A_PeoqSN_OvgyCY9A_FZNDpFek2uH4Jm2gu5vPwSxJp1SJQA
 </code></pre>
 <ul>
-<li><p>注：Kubernetes集群1.23及之前的版本ServiceAccount会自动创建Secret，但之后的版本需自行创建secret，绑定SA。Secret的YAML文件为：</p>
+<li><p>注：Kubernetes集群1.23及之前的版本ServiceAccount会自动创建Secret，但之后的版本需自行创建secret，绑定SA，YAML文件为：</p>
 <pre><code class="hljs">apiVersion: v1
 kind: Secret
 type: kubernetes.io/service-account-token

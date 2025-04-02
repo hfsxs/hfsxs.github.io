@@ -16,28 +16,28 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Repository，即镜像仓库，用于镜像的集中存放与管理。一般的，仓库和仓库注册服务器（Registry）不做区分。实际上，仓库注册服务器是管理仓库的具体服务器，其中往往存放着多个仓库，每个仓库中又包含了多个镜像，每个镜像有不同的标签（tag）仓库可以被认为是一个具体的项目或目录，如仓库地址hub.docker&#x2F;nginx，hub.docker是注册服务器地址，nginx是仓库名  仓">
+    <meta name="description" content="Containerd，工业标准的轻量级开源容器运行时，简洁、健壮、便携，作为操作系统的守护进程管理容器的核心功能，如镜像管理、容器完整的生命周期（启动、监控与销毁）及其存储和网络管理等。Containerd并不是直接面向终端用户的工具，而是为大规模系统（如kubernetes、Swarm、Mesos等）设计的通用的容器基础设施组件，以提供更加轻量级、稳定可靠、独立且可嵌入的容器运行时环境，从而在此">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Docker镜像仓库管理">
-<meta property="og:url" content="https://hfsxs.github.io/linux/DockerRepository/index.html">
+<meta property="og:title" content="Containerd的安装与配置">
+<meta property="og:url" content="https://hfsxs.github.io/linux/Containerd/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="Repository，即镜像仓库，用于镜像的集中存放与管理。一般的，仓库和仓库注册服务器（Registry）不做区分。实际上，仓库注册服务器是管理仓库的具体服务器，其中往往存放着多个仓库，每个仓库中又包含了多个镜像，每个镜像有不同的标签（tag）仓库可以被认为是一个具体的项目或目录，如仓库地址hub.docker&#x2F;nginx，hub.docker是注册服务器地址，nginx是仓库名  仓">
+<meta property="og:description" content="Containerd，工业标准的轻量级开源容器运行时，简洁、健壮、便携，作为操作系统的守护进程管理容器的核心功能，如镜像管理、容器完整的生命周期（启动、监控与销毁）及其存储和网络管理等。Containerd并不是直接面向终端用户的工具，而是为大规模系统（如kubernetes、Swarm、Mesos等）设计的通用的容器基础设施组件，以提供更加轻量级、稳定可靠、独立且可嵌入的容器运行时环境，从而在此">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-04-03T15:15:31.000Z">
-<meta property="article:modified_time" content="2025-03-30T14:18:55.158Z">
+<meta property="article:published_time" content="2025-03-30T15:12:18.000Z">
+<meta property="article:modified_time" content="2025-04-02T07:21:30.260Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
-<meta property="article:tag" content="Docker">
 <meta property="article:tag" content="容器">
 <meta property="article:tag" content="云原生">
+<meta property="article:tag" content="Containerd">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Docker镜像仓库管理 - 扬帆</title>
+  <title>Containerd的安装与配置 - 扬帆</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -217,7 +217,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Docker镜像仓库管理</span>
+            <span id="subtitle">Containerd的安装与配置</span>
           
         </div>
 
@@ -228,8 +228,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2020-04-03 23:15" pubdate>
-          2020年4月3日 晚上
+        <time datetime="2025-03-30 23:12" pubdate>
+          2025年3月30日 晚上
         </time>
       </span>
     
@@ -240,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.2k 字
+          4.7k 字
         
       </span>
     
@@ -251,7 +251,7 @@
         
         
         
-          36 分钟
+          39 分钟
         
       </span>
     
@@ -289,179 +289,122 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Docker镜像仓库管理</h1>
+            <h1 style="display: none">Containerd的安装与配置</h1>
             
             
               <div class="markdown-body">
                 
-                <p>Repository，即镜像仓库，用于镜像的集中存放与管理。一般的，仓库和仓库注册服务器（Registry）不做区分。实际上，仓库注册服务器是管理仓库的具体服务器，其中往往存放着多个仓库，每个仓库中又包含了多个镜像，每个镜像有不同的标签（tag）仓库可以被认为是一个具体的项目或目录，如仓库地址hub.docker&#x2F;nginx，hub.docker是注册服务器地址，nginx是仓库名</p>
-<hr>
-<h1 id="仓库分类"><a href="#仓库分类" class="headerlink" title="仓库分类"></a>仓库分类</h1><ul>
-<li><p>公共仓库，即Public Registry，最大的公共仓库是Docker Hub，由docker官方维护，存放了数量庞大的镜像供用户下载，通过docker login命令，输入用户名、密码和邮箱来完成注册和登录，本地用户目录的.dockercfg中将保存用户的认证信息</p>
-</li>
-<li><p>私有仓库，即Private Registry，是本地服务器所建的镜像仓库。私有仓库的创建有两种方式，即docker-registry和harbor，前者是官方提供的工具，安装了docker之后直接pull即可；后者是开源工具，Github可下载</p>
-</li>
-</ul>
-<h1 id="registry搭建私有仓库"><a href="#registry搭建私有仓库" class="headerlink" title="registry搭建私有仓库"></a>registry搭建私有仓库</h1><h2 id="1-拉取官方镜像"><a href="#1-拉取官方镜像" class="headerlink" title="1.拉取官方镜像"></a>1.拉取官方镜像</h2><pre><code class="hljs">docker pull registry
+                <p>Containerd，工业标准的轻量级开源容器运行时，简洁、健壮、便携，作为操作系统的守护进程管理容器的核心功能，如镜像管理、容器完整的生命周期（启动、监控与销毁）及其存储和网络管理等。Containerd并不是直接面向终端用户的工具，而是为大规模系统（如kubernetes、Swarm、Mesos等）设计的通用的容器基础设施组件，以提供更加轻量级、稳定可靠、独立且可嵌入的容器运行时环境，从而在此基础上构建更高级别的容器化解决方案</p>
+<h1 id="体系架构"><a href="#体系架构" class="headerlink" title="体系架构"></a>体系架构</h1><p>Containerd是典型的C&#x2F;S架构，即服务端通过GRPC协议提供稳定的API，而客户端通过调用服务端的API进行高级操作。Containerd的设计大体上被分为三层，即Storage、Metadata和Runtime</p>
+<h2 id="1-storage"><a href="#1-storage" class="headerlink" title="1.storage"></a>1.storage</h2><h3 id="1-1-Content"><a href="#1-1-Content" class="headerlink" title="1.1 Content"></a>1.1 Content</h3><p>Content，内容，存储容器镜像的实际数据，包括文件系统层和元数据，即用于创建和管理容器的基础文件系统</p>
+<h3 id="1-2-Snapshot"><a href="#1-2-Snapshot" class="headerlink" title="1.2 Snapshot"></a>1.2 Snapshot</h3><p>Snapshot，快照，存储容器的快照数据，每个容器都可以有一个或多个快照，且共享文件功能，以提高效率</p>
+<h3 id="1-3-Diff"><a href="#1-3-Diff" class="headerlink" title="1.3 Diff"></a>1.3 Diff</h3><p>Diff，差异，存储容器文件系统层之间的差异，即当容器运行时需要修改文件系统时，会在已有的文件系统层上创建一个差异层，以保存变更</p>
+<h2 id="2-Metadata"><a href="#2-Metadata" class="headerlink" title="2.Metadata"></a>2.Metadata</h2><h3 id="2-1-Images"><a href="#2-1-Images" class="headerlink" title="2.1 Images"></a>2.1 Images</h3><p>Images，镜像，存储容器镜像的元数据，如镜像的标签、大小、创建时间等信息，负责镜像的管理和操作</p>
+<h3 id="2-2-Containers"><a href="#2-2-Containers" class="headerlink" title="2.2 Containers"></a>2.2 Containers</h3><p>Containers，容器，存储容器的元数据，如容器的状态、配置信息、网络设置等，负责管理容器的生命周期</p>
+<h2 id="3-Runtime"><a href="#3-Runtime" class="headerlink" title="3.Runtime"></a>3.Runtime</h2><h3 id="3-1-Tasks"><a href="#3-1-Tasks" class="headerlink" title="3.1 Tasks"></a>3.1 Tasks</h3><p>Tasks，任务，包含容器内的进程组，负责管理容器内的所有进程，并与Shim协同工作，维护容器的状态</p>
+<h3 id="3-2-Events"><a href="#3-2-Events" class="headerlink" title="3.2 Events"></a>3.2 Events</h3><p>Events，事件，存储容器的各种事件，如容器的创建、启动、停止等，用于容器的运行状况监控与日志记录</p>
+<h1 id="Containerd-VS-Dcoker"><a href="#Containerd-VS-Dcoker" class="headerlink" title="Containerd VS Dcoker"></a>Containerd VS Dcoker</h1><p>事实上，Containerd起源于Docker，并且是其基础组件之一。起初，Docker公司在容器市场风头强劲，并拒绝了谷歌公司协作开发的邀请。这迫使谷歌转向自身更有经验的技术市场，即大规模容器编排应用场景，将内部系统Brog开源，最终诞生了Kubernetes。并且，以此为中心带领RedHat、IBM等成立了CNCF（Cloud Native Computing Fundation）基金会，即云原生计算基金会，逐渐形成了现今风靡全球的云原生技术生态。与此同时，Docker公司推出意在一统Docker生态的Docker Swarm，也能实现大规模容器编排，与Kubernetes打擂。但经过近一年左右时间的市场验证，始终无法独立抗衡kubernetes，最后被迫宣布原生支持Kubernetes。至此，大规模容器编排应用市场败局已定，但Docker不甘失败，将Docker核心依赖Containerd捐给了CNCF，依此说明Docker依旧是一个PaaS平台。随着Kubernetes在全球技术市场的广泛应用，标准化容器运行时接口（CRI，Container Runntime Interface）应运而生，早期专为适配Docker接口而开发的shim被抛弃。2020年，CNCF基金会宣布Kubernetes 1.20版本将不再仅支持Docker容器管理工具，并于1.24版本开始弃用Docker作为容器运行时，更加轻量级的Containerd取而代之</p>
+<h2 id="1-架构"><a href="#1-架构" class="headerlink" title="1.架构"></a>1.架构</h2><p>Docker是一个完整的容器平台，包括镜像仓库、构建工具、管理工具等，而Containerd是一个轻量级的容器运行时，只负责容器的生命周期管理</p>
+<h2 id="2-社区"><a href="#2-社区" class="headerlink" title="2.社区"></a>2.社区</h2><p>Docker是一个独立的开源项目，拥有庞大的社区和生态系统，而Containerd是一个CNCF项目，社区相对较小，但是与CNCF的其他项目有良好的协作</p>
+<h2 id="3-功能"><a href="#3-功能" class="headerlink" title="3.功能"></a>3.功能</h2><p>Docker提供了更多的高级功能，如Swarm集群管理、Docker Compose应用编排等，而Containerd专注于容器的生命周期管理，不包括这些高级功能</p>
+<h2 id="4-兼容性"><a href="#4-兼容性" class="headerlink" title="4.兼容性"></a>4.兼容性</h2><p>Docker和Containerd都支持OCI规范的容器和镜像格式，但是Docker在镜像格式方面有自己的扩展，导致Docker和Containerd在某些细节上不兼容。另外，Docker提供了更多的CLI命令和API接口，而Containerd则更注重与其他组件的整合</p>
+<h2 id="5-性能"><a href="#5-性能" class="headerlink" title="5.性能"></a>5.性能</h2><p>Containerd的架构更简洁，功能上更为纯粹，因此更为轻量级，启动和运行速度更快，资源占用较少，性能表现更为优异</p>
+<h1 id="1-下载安装包"><a href="#1-下载安装包" class="headerlink" title="1.下载安装包"></a>1.下载安装包</h1><pre><code class="hljs">wget https://github.com/containerd/containerd/releases/download/v1.6.36/containerd-1.6.36-linux-amd64.tar.gz
 </code></pre>
-<h2 id="2-创建并启动registry容器"><a href="#2-创建并启动registry容器" class="headerlink" title="2.创建并启动registry容器"></a>2.创建并启动registry容器</h2><pre><code class="hljs">docker run -p 5000:5000 -d --restart=always \
--v /var/lib/docker/images:/var/lib/registry \
---name sword-registry registry
+<h1 id="2-安装Containerd"><a href="#2-安装Containerd" class="headerlink" title="2.安装Containerd"></a>2.安装Containerd</h1><pre><code class="hljs">tar -xzvf /usr/local containerd-1.6.36-linux-amd64.tar.gz
+sudo cp bin/* /usr/local/bin
 </code></pre>
-<h2 id="3-http方式测试镜像仓库"><a href="#3-http方式测试镜像仓库" class="headerlink" title="3.http方式测试镜像仓库"></a>3.http方式测试镜像仓库</h2><h3 id="3-1-配置docker镜像仓库拉取策略"><a href="#3-1-配置docker镜像仓库拉取策略" class="headerlink" title="3.1 配置docker镜像仓库拉取策略"></a>3.1 配置docker镜像仓库拉取策略</h3><pre><code class="hljs">sudo vi /etc/docker/daemon.json
+<h1 id="3-创建启动脚本"><a href="#3-创建启动脚本" class="headerlink" title="3.创建启动脚本"></a>3.创建启动脚本</h1><pre><code class="hljs">sudo vi /lib/systemd/system/containerd.service
 
 
-&#123;
- &quot;insecure-registries&quot;:[&quot;172.16.100.100:5000&quot;]
-&#125;
+[Unit]
+Description=containerd container runtime
+Documentation=https://containerd.io
+After=network.target local-fs.target
 
-# 重启docker程序
-systemctl restart docker
-</code></pre>
-<h3 id="3-2-镜像推送私有仓库"><a href="#3-2-镜像推送私有仓库" class="headerlink" title="3.2 镜像推送私有仓库"></a>3.2 镜像推送私有仓库</h3><pre><code class="hljs"># 更改nginx镜像标签
-docker tag nginx:latest 172.16.100.100:5000/nginx:v1.0.0
-# 推送到私有仓库
-docker push 172.16.100.100:5000/nginx:v1.0.0
-</code></pre>
-<h3 id="3-3-查看私有仓库存放的镜像"><a href="#3-3-查看私有仓库存放的镜像" class="headerlink" title="3.3 查看私有仓库存放的镜像"></a>3.3 查看私有仓库存放的镜像</h3><pre><code class="hljs"># 显示所有镜像
-curl http://172.16.100.100:5000/v2/_catalog
-# 显示nginx镜像的标签
-curl http://172.16.100.100:5000/v2/nginx/tags/list
-</code></pre>
-<h3 id="3-4-从私有仓库拉取镜像"><a href="#3-4-从私有仓库拉取镜像" class="headerlink" title="3.4 从私有仓库拉取镜像"></a>3.4 从私有仓库拉取镜像</h3><pre><code class="hljs"># 删除本地nginx镜像
-docker rmi 172.16.100.100:5000/nginx:v1.0.0
-# 从私有仓库拉取nginx镜像
-docker pull 172.16.100.100:5000/nginx
-</code></pre>
-<hr>
-<ul>
-<li>注：docker连接仓库默认通过安全的https协议连接，http连接用于测试场景</li>
-</ul>
-<h2 id="4-创建SSL自签名证书"><a href="#4-创建SSL自签名证书" class="headerlink" title="4.创建SSL自签名证书"></a>4.创建SSL自签名证书</h2><h3 id="4-1-创建RSA密钥"><a href="#4-1-创建RSA密钥" class="headerlink" title="4.1 创建RSA密钥"></a>4.1 创建RSA密钥</h3><pre><code class="hljs">openssl genrsa -des3 -out registry.key 2048
-</code></pre>
-<h3 id="4-2-创建CSR，即证书签名请求文件"><a href="#4-2-创建CSR，即证书签名请求文件" class="headerlink" title="4.2 创建CSR，即证书签名请求文件"></a>4.2 创建CSR，即证书签名请求文件</h3><pre><code class="hljs">openssl req -new -key registry.key \
--subj &quot;/C=CN/ST=HeNan/L=ShangQiu/O=Sword/OU=Opt/CN=registry.sword.org&quot; \
--out registry.csr
-</code></pre>
-<h3 id="4-3-生成自签名证书"><a href="#4-3-生成自签名证书" class="headerlink" title="4.3 生成自签名证书"></a>4.3 生成自签名证书</h3><pre><code class="hljs">openssl x509 -req -days 3650 -in registry.csr -signkey registry.key -out registry.crt
+[Service]
+#uncomment to enable the experimental sbservice (sandboxed) version of containerd/cri integration
+#Environment=&quot;ENABLE_CRI_SANDBOXES=sandboxed&quot;
+ExecStartPre=-/sbin/modprobe overlay
+ExecStart=/usr/local/bin/containerd
 
-# 退掉密码
-mv registry.key registry.bak.key
-openssl rsa -in registry.bak.key -out registry.key
+Type=notify
+Delegate=yes
+KillMode=process
+Restart=always
+RestartSec=5
+# Having non-zero Limit*s causes performance problems due to accounting overhead
+# in the kernel. We recommend using cgroups to do container-local accounting.
+LimitNPROC=infinity
+LimitCORE=infinity
+LimitNOFILE=infinity
+# Comment TasksMax if your systemd version does not supports it.
+# Only systemd 226 and above support this version.
+TasksMax=infinity
+OOMScoreAdjust=-999
+
+[Install]
+WantedBy=multi-user.target
 </code></pre>
-<h2 id="5-配置nginx反向代理"><a href="#5-配置nginx反向代理" class="headerlink" title="5.配置nginx反向代理"></a>5.配置nginx反向代理</h2><pre><code class="hljs">sudo vi /etc/nginx/conf.d/registry.conf
+<h1 id="4-创建配置文件"><a href="#4-创建配置文件" class="headerlink" title="4.创建配置文件"></a>4.创建配置文件</h1><pre><code class="hljs">sudo mkdir -p /etc/containerd
+sudo containerd config default &gt; /etc/containerd/config.toml
+</code></pre>
+<h2 id="4-1-配置国内镜像源"><a href="#4-1-配置国内镜像源" class="headerlink" title="4.1 配置国内镜像源"></a>4.1 配置国内镜像源</h2><h3 id="4-1-1-创建认证目录"><a href="#4-1-1-创建认证目录" class="headerlink" title="4.1.1 创建认证目录"></a>4.1.1 创建认证目录</h3><pre><code class="hljs">sudo mkdir -p /etc/containerd/certs.d
+</code></pre>
+<h3 id="4-1-2-配置认证目录"><a href="#4-1-2-配置认证目录" class="headerlink" title="4.1.2 配置认证目录"></a>4.1.2 配置认证目录</h3><pre><code class="hljs">sudo vi /etc/containerd/certs.d/docker.io/hosts.toml
 
 
-server &#123;
-
-    listen       443 ssl;
-    server_name  localhost;
-
-    charset utf-8;
-
-    ssl_certificate      /etc/nginx/ssl/registry.crt;
-    ssl_certificate_key  /etc/nginx/ssl/registry.key;
-
-    ssl_session_cache    shared:SSL:1m;
-    ssl_session_timeout  5m;
-
-    ssl_ciphers  ECDHE-RSA-AES128-GCM-SHA256:HIGH:!aNULL:!MD5:!RC4:!DHE;
-    ssl_prefer_server_ciphers  on;
-    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-
-    location / &#123;
-
-        # auth_basic &quot;Nginx Server Auth&quot;;
-        # auth_basic_user_file /etc/nginx/conf.d/.auth_list;
-        # limit_rate   1024k;
-
-        access_log  /var/log/nginx/registry_access.log  main;
-        error_log  /var/log/nginx/registry_error.log;
-
-        proxy_pass http://127.0.0.1:5000;
-
-        &#125;
-&#125;
+config_path = &quot;/etc/containerd/certs.d&quot;
 </code></pre>
-<h2 id="6-操作系统信任SSL证书"><a href="#6-操作系统信任SSL证书" class="headerlink" title="6.操作系统信任SSL证书"></a>6.操作系统信任SSL证书</h2><pre><code class="hljs"># Debian/Ubuntu
-sudo cp /etc/nginx/ssl/registry.crt /etc/ssl/certs
-# CentOS
-sudo cp /etc/nginx/ssl/registry.crt /etc/pki/tls/certs
-</code></pre>
-<h2 id="7-启动nginx，重启docker"><a href="#7-启动nginx，重启docker" class="headerlink" title="7.启动nginx，重启docker"></a>7.启动nginx，重启docker</h2><h2 id="8-验证镜像仓库"><a href="#8-验证镜像仓库" class="headerlink" title="8.验证镜像仓库"></a>8.验证镜像仓库</h2><pre><code class="hljs">sudo docker tag nginx registry.sword.org/nginx
-sudo docker push registry.sword.org/nginx
-</code></pre>
-<h2 id="9-nginx配置auth-basic，实现镜像仓库访问认证"><a href="#9-nginx配置auth-basic，实现镜像仓库访问认证" class="headerlink" title="9.nginx配置auth_basic，实现镜像仓库访问认证"></a>9.nginx配置auth_basic，实现镜像仓库访问认证</h2><hr>
-<h1 id="harbor搭建私有仓库"><a href="#harbor搭建私有仓库" class="headerlink" title="harbor搭建私有仓库"></a>harbor搭建私有仓库</h1><h2 id="1-配置仓库域名解析"><a href="#1-配置仓库域名解析" class="headerlink" title="1.配置仓库域名解析"></a>1.配置仓库域名解析</h2><pre><code class="hljs">vi /etc/hosts
+<h3 id="4-1-3-创建认证文件"><a href="#4-1-3-创建认证文件" class="headerlink" title="4.1.3 创建认证文件"></a>4.1.3 创建认证文件</h3><pre><code class="hljs">sudo vi /etc/containerd/certs.d/docker.io/hosts.toml
 
 
-172.16.100.100	hub.sword.com
-</code></pre>
-<h2 id="2-部署docker-compose"><a href="#2-部署docker-compose" class="headerlink" title="2.部署docker-compose"></a>2.部署docker-compose</h2><pre><code class="hljs"># 下载docker-compose
-curl -L https://github.com/docker/compose/releases/download/1.25.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+server = &quot;https://docker.io&quot;
 
-chmod +x /usr/local/bin/docker-compose
-ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+[host.&quot;http://hub-mirror.c.163.com&quot;]
+  capabilities = [&quot;pull&quot;, &quot;resolve&quot;]
+
+[host.&quot;https://docker.m.daocloud.io&quot;]
+  capabilities = [&quot;pull&quot;, &quot;resolve&quot;]
+
+[host.&quot;https://registry.docker-cn.com&quot;]
+  capabilities = [&quot;pull&quot;, &quot;resolve&quot;]
 </code></pre>
-<h2 id="3-创建https证书"><a href="#3-创建https证书" class="headerlink" title="3.创建https证书"></a>3.创建https证书</h2><pre><code class="hljs">mkdir -p /var/lib/docker/images/certs
-cd /var/lib/docker/images/certs
-</code></pre>
-<h3 id="3-1-生成私钥，需设置密码"><a href="#3-1-生成私钥，需设置密码" class="headerlink" title="3.1 生成私钥，需设置密码"></a>3.1 生成私钥，需设置密码</h3><pre><code class="hljs">openssl genrsa -des3 -out harbor.key 4096
-</code></pre>
-<h3 id="3-2-生成CA证书，需输入密码"><a href="#3-2-生成CA证书，需输入密码" class="headerlink" title="3.2 生成CA证书，需输入密码"></a>3.2 生成CA证书，需输入密码</h3><pre><code class="hljs">openssl req -sha512 -new \
--subj &quot;/C=CN/ST=HeNan/L=ShangQiu/O=sword/OU=opt/CN=hub.sword.com&quot; \
--key harbor.key \
--out harbor.csr
-</code></pre>
-<h3 id="3-3-备份证书"><a href="#3-3-备份证书" class="headerlink" title="3.3 备份证书"></a>3.3 备份证书</h3><pre><code class="hljs">cp harbor.key harbor.key.org
-</code></pre>
-<h3 id="3-4-退掉私钥密码以便docker访问，也可参考官方的双向认证"><a href="#3-4-退掉私钥密码以便docker访问，也可参考官方的双向认证" class="headerlink" title="3.4 退掉私钥密码以便docker访问，也可参考官方的双向认证"></a>3.4 退掉私钥密码以便docker访问，也可参考官方的双向认证</h3><pre><code class="hljs">openssl rsa -in harbor.key.org -out harbor.key
-</code></pre>
-<h3 id="3-5-使用证书进行签名"><a href="#3-5-使用证书进行签名" class="headerlink" title="3.5 使用证书进行签名"></a>3.5 使用证书进行签名</h3><pre><code class="hljs">openssl x509 -req -days 365 -in harbor.csr -signkey harbor.key -out harbor.crt
-</code></pre>
-<h2 id="4-将https证书发送给连接仓库的docker"><a href="#4-将https证书发送给连接仓库的docker" class="headerlink" title="4.将https证书发送给连接仓库的docker"></a>4.将https证书发送给连接仓库的docker</h2><pre><code class="hljs">mkdir -p /etc/docker/certs.d/hub.sword.com
-cp /var/lib/docker/images/certs/harbor.crt /etc/docker/certs.d/hub.sword.com
-</code></pre>
-<h2 id="5-安装harbor"><a href="#5-安装harbor" class="headerlink" title="5.安装harbor"></a>5.安装harbor</h2><pre><code class="hljs">tar -xzvf harbor-offline-installer-v2.0.0.tgz
-cd harbor &amp;&amp; cp harbor.yml.tmpl harbor.yml
-</code></pre>
-<h3 id="5-1-创建配置文件"><a href="#5-1-创建配置文件" class="headerlink" title="5.1 创建配置文件"></a>5.1 创建配置文件</h3><pre><code class="hljs">vi harbor.yml
+<h2 id="4-2-配置私有仓库镜像源"><a href="#4-2-配置私有仓库镜像源" class="headerlink" title="4.2 配置私有仓库镜像源"></a>4.2 配置私有仓库镜像源</h2><pre><code class="hljs">sudo vi /etc/containerd/config.toml
 
 
-
-# 设置仓库域名，与证书域名一致
-hostname: hub.sword.com
-# 设置证书路径
-certificate: /var/lib/docker/images/certs/harbor.crt
-private_key: /var/lib/docker/images/certs/harbor.key
-# 设置仓库登录密码，用户名默认为admin
-harbor_admin_password: Harbor12345
-# 设置镜像挂载目录
-data_volume: /var/lib/docker/images
-# 设置harbor仓库日志目录
-location: /var/log/harbor
+[plugins.&quot;io.containerd.grpc.v1.cri&quot;.registry.configs]
+    [plugins.&quot;io.containerd.grpc.v1.cri&quot;.registry.configs.&quot;reg.ops.com&quot;.tls]
+      insecure_skip_verify = true
+    [plugin.&quot;io.containerd.grpc.v1.cri&quot;.registry.configs.&quot;reg.ops.com&quot;.auth]
+      username = &quot;admin&quot;
+      password = &quot;Harbor12345&quot;
 </code></pre>
-<h3 id="5-2-安装harbor"><a href="#5-2-安装harbor" class="headerlink" title="5.2 安装harbor"></a>5.2 安装harbor</h3><pre><code class="hljs">./install.sh
+<h1 id="5-启动Containerd"><a href="#5-启动Containerd" class="headerlink" title="5.启动Containerd"></a>5.启动Containerd</h1><pre><code class="hljs">sudo systemctl daemon-reload
+sudo systemctl start containerd.service
+sudo systemctl enable containerd.service
 </code></pre>
-<h2 id="6-镜像的推送与拉取"><a href="#6-镜像的推送与拉取" class="headerlink" title="6.镜像的推送与拉取"></a>6.镜像的推送与拉取</h2><pre><code class="hljs"># 登录仓库
-docker login hub.sword.com
-# 设置镜像标签，带上项目名称
-docker tag nginx hub.sword.com/library/nginx
-docker push hub.sword.com/library/nginx
-docker pull hub.sword.com/library/nginx
+<h1 id="6-镜像管理"><a href="#6-镜像管理" class="headerlink" title="6.镜像管理"></a>6.镜像管理</h1><h2 id="6-1-镜像查看"><a href="#6-1-镜像查看" class="headerlink" title="6.1 镜像查看"></a>6.1 镜像查看</h2><pre><code class="hljs">ctr images ls
 </code></pre>
-<h2 id="7-harbor的启动与停止"><a href="#7-harbor的启动与停止" class="headerlink" title="7.harbor的启动与停止"></a>7.harbor的启动与停止</h2><pre><code class="hljs"># 启动harbor
-docker-compose up -d
-
-# 停止harbor
-docker-compose down
+<h2 id="6-2-镜像拉取"><a href="#6-2-镜像拉取" class="headerlink" title="6.2 镜像拉取"></a>6.2 镜像拉取</h2><pre><code class="hljs">ctr images pull docker.io/library/nginx:latest --hosts-dir=/etc/containerd/certs.d
 </code></pre>
-<h2 id="8-访问镜像仓库"><a href="#8-访问镜像仓库" class="headerlink" title="8.访问镜像仓库"></a>8.访问镜像仓库</h2><p><a target="_blank" rel="noopener" href="https://hub.sword.com/">https://hub.sword.com</a></p>
+<h2 id="6-3-镜像打标签"><a href="#6-3-镜像打标签" class="headerlink" title="6.3 镜像打标签"></a>6.3 镜像打标签</h2><pre><code class="hljs">ctr images tag docker.io/library/nginx:latest reg.ops.com/library/nginx
+</code></pre>
+<h2 id="6-4-镜像推送"><a href="#6-4-镜像推送" class="headerlink" title="6.4 镜像推送"></a>6.4 镜像推送</h2><pre><code class="hljs">ctr images pull --user admin:Harbor12345 -k reg.ops.com/library/nginx:latest
+</code></pre>
+<h2 id="6-5-镜像导出"><a href="#6-5-镜像导出" class="headerlink" title="6.5 镜像导出"></a>6.5 镜像导出</h2><pre><code class="hljs"> ctr image export nginx.img reg.ops.com/library/nginx:latest
+</code></pre>
+<h2 id="6-6-镜像导入"><a href="#6-6-镜像导入" class="headerlink" title="6.6 镜像导入"></a>6.6 镜像导入</h2><pre><code class="hljs"># 也可导入docker镜像
+ctr images import nginx.img
+</code></pre>
+<h2 id="6-7-镜像删除"><a href="#6-7-镜像删除" class="headerlink" title="6.7 镜像删除"></a>6.7 镜像删除</h2><pre><code class="hljs">ctr mages rm docker.io/library/nginx:latest
+</code></pre>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhuzi91/p/12364200.html">https://www.cnblogs.com/zhuzi91/p/12364200.html</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/zfw_666666/article/details/128918101">https://blog.csdn.net/zfw_666666/article/details/128918101</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u013276277/article/details/102994771">https://blog.csdn.net/u013276277/article/details/102994771</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.51cto.com/article/718918.html">https://www.51cto.com/article/718918.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/XY-Heruo/p/17638634.html">https://www.cnblogs.com/XY-Heruo/p/17638634.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_41822345/article/details/126677121">https://blog.csdn.net/qq_41822345/article/details/126677121</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_45310323/article/details/130423510">https://blog.csdn.net/weixin_45310323/article/details/130423510</a></li>
 </ul>
 
                 
@@ -500,11 +443,11 @@ docker-compose down
       
         <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
       
-        <a href="/tags/Docker/">#Docker</a>
-      
         <a href="/tags/%E5%AE%B9%E5%99%A8/">#容器</a>
       
         <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+      
+        <a href="/tags/Containerd/">#Containerd</a>
       
     </div>
   
@@ -516,8 +459,8 @@ docker-compose down
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Docker镜像仓库管理</div>
-      <div>https://hfsxs.github.io/linux/DockerRepository/</div>
+      <div>Containerd的安装与配置</div>
+      <div>https://hfsxs.github.io/linux/Containerd/</div>
     </div>
     <div class="license-meta">
       
@@ -529,13 +472,13 @@ docker-compose down
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2020年4月3日</div>
+          <div>2025年3月30日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月30日</div>
+          <div>2025年4月2日</div>
         </div>
       
       <div class="license-meta-item">
@@ -564,18 +507,12 @@ docker-compose down
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/linux/Crontab/" title="Linux系统配置Cron定时任务">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Linux系统配置Cron定时任务</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/linux/DockerImage/" title="Docker镜像管理">
-                        <span class="hidden-mobile">Docker镜像管理</span>
+                      <a href="/linux/Prometheus-CertSSL/" title="Prometheus监控Kubernetes集群证书">
+                        <span class="hidden-mobile">Prometheus监控Kubernetes集群证书</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
