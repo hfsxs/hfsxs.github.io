@@ -248,7 +248,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/linux/EtcdTroubleshooting/" target="_self">
         <div>
-          Etcd作为Kubernetes集群的数据库，存储着整个集群的状态数据，其性能直接决定着业务的稳定性。所以，Etcd集群的扩容、故障处理及数据迁移将是必然要考虑的问题，大致思路是：将扩容或处理后的节点配置文件ETCD_INITIAL_CLUSTER_STATE参数改为existing，随后再加入集群，重新同步集群数据 1.查看集群节点&#x2F;opt&#x2F;etcd&#x2F;bin&#x2F;etcdctl --endpoint
+          Etcd作为Kubernetes的数据库，存储着整个集群的状态和配置信息，其性能直接决定着业务的稳定性。因此，Etcd集群的扩容、数据迁移及故障处理将是必然要考虑的问题，处理的大致流程为：将扩容的新节点或处理后的故障节点的配置文件ETCD_INITIAL_CLUSTER_STATE参数改为existing，随后再加入集群，重新同步集群数据 1.查看集群节点&#x2F;opt&#x2F;etcd&#x2F;bin&#x2F;etcdctl
         </div>
       </a>
 

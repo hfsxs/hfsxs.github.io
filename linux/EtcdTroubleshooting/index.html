@@ -16,15 +16,15 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Etcd作为Kubernetes集群的数据库，存储着整个集群的状态数据，其性能直接决定着业务的稳定性。所以，Etcd集群的扩容、故障处理及数据迁移将是必然要考虑的问题，大致思路是：将扩容或处理后的节点配置文件ETCD_INITIAL_CLUSTER_STATE参数改为existing，随后再加入集群，重新同步集群数据 1.查看集群节点&#x2F;opt&#x2F;etcd&#x2F;bin&#x2F;etcdctl --endpoint">
+    <meta name="description" content="Etcd作为Kubernetes的数据库，存储着整个集群的状态和配置信息，其性能直接决定着业务的稳定性。因此，Etcd集群的扩容、数据迁移及故障处理将是必然要考虑的问题，处理的大致流程为：将扩容的新节点或处理后的故障节点的配置文件ETCD_INITIAL_CLUSTER_STATE参数改为existing，随后再加入集群，重新同步集群数据 1.查看集群节点&#x2F;opt&#x2F;etcd&#x2F;bin&#x2F;etcdctl">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kubernetes集群Etcd数据库故障处理与迁移">
 <meta property="og:url" content="https://hfsxs.github.io/linux/EtcdTroubleshooting/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="Etcd作为Kubernetes集群的数据库，存储着整个集群的状态数据，其性能直接决定着业务的稳定性。所以，Etcd集群的扩容、故障处理及数据迁移将是必然要考虑的问题，大致思路是：将扩容或处理后的节点配置文件ETCD_INITIAL_CLUSTER_STATE参数改为existing，随后再加入集群，重新同步集群数据 1.查看集群节点&#x2F;opt&#x2F;etcd&#x2F;bin&#x2F;etcdctl --endpoint">
+<meta property="og:description" content="Etcd作为Kubernetes的数据库，存储着整个集群的状态和配置信息，其性能直接决定着业务的稳定性。因此，Etcd集群的扩容、数据迁移及故障处理将是必然要考虑的问题，处理的大致流程为：将扩容的新节点或处理后的故障节点的配置文件ETCD_INITIAL_CLUSTER_STATE参数改为existing，随后再加入集群，重新同步集群数据 1.查看集群节点&#x2F;opt&#x2F;etcd&#x2F;bin&#x2F;etcdctl">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-04-02T14:15:04.000Z">
-<meta property="article:modified_time" content="2025-04-02T15:18:33.842Z">
+<meta property="article:modified_time" content="2025-04-03T01:38:22.716Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -241,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.4k 字
+          1.3k 字
         
       </span>
     
@@ -295,12 +295,12 @@
             
               <div class="markdown-body">
                 
-                <p>Etcd作为Kubernetes集群的数据库，存储着整个集群的状态数据，其性能直接决定着业务的稳定性。所以，Etcd集群的扩容、故障处理及数据迁移将是必然要考虑的问题，大致思路是：将扩容或处理后的节点配置文件ETCD_INITIAL_CLUSTER_STATE参数改为existing，随后再加入集群，重新同步集群数据</p>
+                <p>Etcd作为Kubernetes的数据库，存储着整个集群的状态和配置信息，其性能直接决定着业务的稳定性。因此，Etcd集群的扩容、数据迁移及故障处理将是必然要考虑的问题，处理的大致流程为：将扩容的新节点或处理后的故障节点的配置文件ETCD_INITIAL_CLUSTER_STATE参数改为existing，随后再加入集群，重新同步集群数据</p>
 <h1 id="1-查看集群节点"><a href="#1-查看集群节点" class="headerlink" title="1.查看集群节点"></a>1.查看集群节点</h1><pre><code class="hljs">/opt/etcd/bin/etcdctl --endpoints=https://10.1.11.180:2379,https://10.1.11.181:2379,https://10.1.11.182:2379 --cacert=/opt/etcd/ssl/ca.pem --cert=/opt/etcd/ssl/server.pem --key=/opt/etcd/ssl/server-key.pem member list --write-out=table
 </code></pre>
-<h1 id="2-剔除Etcd节点"><a href="#2-剔除Etcd节点" class="headerlink" title="2.剔除Etcd节点"></a>2.剔除Etcd节点</h1><pre><code class="hljs">/opt/etcd/bin/etcdctl --endpoints=https://10.1.11.180:2379,https://10.1.11.181:2379,https://10.1.11.182:2379 --cacert=/opt/etcd/ssl/ca.pem --cert=/opt/etcd/ssl/server.pem --key=/opt/etcd/ssl/server-key.pem member remove bb109c41b2b0c75
+<h1 id="2-剔除节点"><a href="#2-剔除节点" class="headerlink" title="2.剔除节点"></a>2.剔除节点</h1><pre><code class="hljs">/opt/etcd/bin/etcdctl --endpoints=https://10.1.11.180:2379,https://10.1.11.181:2379,https://10.1.11.182:2379 --cacert=/opt/etcd/ssl/ca.pem --cert=/opt/etcd/ssl/server.pem --key=/opt/etcd/ssl/server-key.pem member remove bb109c41b2b0c75
 </code></pre>
-<h1 id="3-关机KVM，并导出配置文件"><a href="#3-关机KVM，并导出配置文件" class="headerlink" title="3.关机KVM，并导出配置文件"></a>3.关机KVM，并导出配置文件</h1><h1 id="4-将KVM虚拟机磁盘文件及配置文件迁移到另一台物理机"><a href="#4-将KVM虚拟机磁盘文件及配置文件迁移到另一台物理机" class="headerlink" title="4.将KVM虚拟机磁盘文件及配置文件迁移到另一台物理机"></a>4.将KVM虚拟机磁盘文件及配置文件迁移到另一台物理机</h1><h1 id="5-加载KVM虚拟机文件并开机"><a href="#5-加载KVM虚拟机文件并开机" class="headerlink" title="5.加载KVM虚拟机文件并开机"></a>5.加载KVM虚拟机文件并开机</h1><ul>
+<h1 id="3-导出KVM配置文件并关机"><a href="#3-导出KVM配置文件并关机" class="headerlink" title="3.导出KVM配置文件并关机"></a>3.导出KVM配置文件并关机</h1><h1 id="4-迁移KVM虚拟机磁盘及配置文件"><a href="#4-迁移KVM虚拟机磁盘及配置文件" class="headerlink" title="4.迁移KVM虚拟机磁盘及配置文件"></a>4.迁移KVM虚拟机磁盘及配置文件</h1><h1 id="5-加载KVM虚拟机文件并开机"><a href="#5-加载KVM虚拟机文件并开机" class="headerlink" title="5.加载KVM虚拟机文件并开机"></a>5.加载KVM虚拟机文件并开机</h1><ul>
 <li>注：此步骤IP地址保持不变</li>
 </ul>
 <h1 id="6-重新同步集群数据"><a href="#6-重新同步集群数据" class="headerlink" title="6.重新同步集群数据"></a>6.重新同步集群数据</h1><h2 id="6-1-清空旧数据"><a href="#6-1-清空旧数据" class="headerlink" title="6.1 清空旧数据"></a>6.1 清空旧数据</h2><pre><code class="hljs">sudo mv /var/lib/etcd/member /var/lib/etcd/member.bak
@@ -316,7 +316,7 @@ ETCD_INITIAL_CLUSTER_STATE=&quot;existing&quot;
 sudo systemctl enable etcd.service
 sudo systemctl restart etcd.service
 </code></pre>
-<h1 id="7-启动Api-Server，验证数据"><a href="#7-启动Api-Server，验证数据" class="headerlink" title="7.启动Api-Server，验证数据"></a>7.启动Api-Server，验证数据</h1><hr>
+<h1 id="7-验证数据"><a href="#7-验证数据" class="headerlink" title="7.验证数据"></a>7.验证数据</h1><hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/liweifeng888/p/17740486.html">https://www.cnblogs.com/liweifeng888/p/17740486.html</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_44397993/article/details/115391463">https://blog.csdn.net/qq_44397993/article/details/115391463</a></li>
@@ -395,7 +395,7 @@ sudo systemctl restart etcd.service
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年4月2日</div>
+          <div>2025年4月3日</div>
         </div>
       
       <div class="license-meta-item">
