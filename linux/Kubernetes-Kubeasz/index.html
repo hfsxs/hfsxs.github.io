@@ -16,25 +16,28 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Linux，自由与开源的基于POSIX和UNI多用户、多任务、支持多线程和多CPU的类UNIX操作系统，能运行主要的UNIX工具软件、应用程序和网络协议，支持32位和64位硬件，继承了Unix以网络为核心的设计思想，是一个性能稳定的多用户网络操作系统 Linux之父-林纳斯Linux内核最初是由由芬兰人林纳斯·托瓦兹（Linus Torvalds）1991年于赫尔辛基大学读书时出于个人爱好而编写，">
+    <meta name="description" content="Kubeasz，Kubernetes Easy Setup with Ansible，基于Ansible的自动化部署Kubernetes集群的开源项目，即通过Ansible预定义的Playbook和配置模板，以二进制的方式一键式全自动的完成Kubernetes高可用集群的部署，且可用于集群的后期维护，如添加或删除Master和Node节点、Etcd数据备份及恢复等，大大节省了运维成本和时间。此外，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linux系统">
-<meta property="og:url" content="https://hfsxs.github.io/linux/Linux/index.html">
+<meta property="og:title" content="Kubernetes集群离线部署工具Kubeasz">
+<meta property="og:url" content="https://hfsxs.github.io/linux/Kubernetes-Kubeasz/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="Linux，自由与开源的基于POSIX和UNI多用户、多任务、支持多线程和多CPU的类UNIX操作系统，能运行主要的UNIX工具软件、应用程序和网络协议，支持32位和64位硬件，继承了Unix以网络为核心的设计思想，是一个性能稳定的多用户网络操作系统 Linux之父-林纳斯Linux内核最初是由由芬兰人林纳斯·托瓦兹（Linus Torvalds）1991年于赫尔辛基大学读书时出于个人爱好而编写，">
+<meta property="og:description" content="Kubeasz，Kubernetes Easy Setup with Ansible，基于Ansible的自动化部署Kubernetes集群的开源项目，即通过Ansible预定义的Playbook和配置模板，以二进制的方式一键式全自动的完成Kubernetes高可用集群的部署，且可用于集群的后期维护，如添加或删除Master和Node节点、Etcd数据备份及恢复等，大大节省了运维成本和时间。此外，">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-02-01T00:17:48.000Z">
-<meta property="article:modified_time" content="2025-04-07T06:42:38.082Z">
+<meta property="article:published_time" content="2025-04-08T03:24:56.000Z">
+<meta property="article:modified_time" content="2025-04-08T08:22:48.998Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="容器云">
+<meta property="article:tag" content="云原生">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Linux系统 - 扬帆</title>
+  <title>Kubernetes集群离线部署工具Kubeasz - 扬帆</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -214,7 +217,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Linux系统</span>
+            <span id="subtitle">Kubernetes集群离线部署工具Kubeasz</span>
           
         </div>
 
@@ -225,8 +228,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2020-02-01 08:17" pubdate>
-          2020年2月1日 早上
+        <time datetime="2025-04-08 11:24" pubdate>
+          2025年4月8日 上午
         </time>
       </span>
     
@@ -237,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.7k 字
+          1.8k 字
         
       </span>
     
@@ -248,7 +251,7 @@
         
         
         
-          14 分钟
+          16 分钟
         
       </span>
     
@@ -286,34 +289,90 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Linux系统</h1>
+            <h1 style="display: none">Kubernetes集群离线部署工具Kubeasz</h1>
             
             
               <div class="markdown-body">
                 
-                <p>Linux，自由与开源的基于POSIX和UNI多用户、多任务、支持多线程和多CPU的类UNIX操作系统，能运行主要的UNIX工具软件、应用程序和网络协议，支持32位和64位硬件，继承了Unix以网络为核心的设计思想，是一个性能稳定的多用户网络操作系统</p>
-<h1 id="Linux之父-林纳斯"><a href="#Linux之父-林纳斯" class="headerlink" title="Linux之父-林纳斯"></a>Linux之父-林纳斯</h1><p>Linux内核最初是由由芬兰人林纳斯·托瓦兹（Linus Torvalds）1991年于赫尔辛基大学读书时出于个人爱好而编写，最初目的就是建立不受任何商业化软件版权制约的、全世界都能自由使用的类 Unix 操作系统兼容产品。其后在自由软件之父理查德·斯托曼（Richard Stallman）某些精神的感召下，林纳斯将这款类Unix的操作系统命名为Linux，并加入到自由软件基金（FSF）的GNU计划中，即任何人通过GPL的通用性授权之后都可销售、拷贝及改动程序，但必须将同样的自由传递下去，且须免费公开修改后的代码。林纳斯的这一举措给他自己以及Linux赢得了巨大的成功和极高的声誉，短短几年间，Linux就聚集了成千上万的狂热分子不计得失的为Linux增补、修改，并随之将开源运动的自由主义精神传扬下去，人们几乎像看待神明一样对林纳斯顶礼膜拜。</p>
-<ul>
-<li>有些人生来就具有统率百万人的领袖风范，另一些人则是为写出颠覆世界的软件而生。唯一一个能同时做到这两者的人，就是托瓦兹</li>
+                <p>Kubeasz，Kubernetes Easy Setup with Ansible，基于Ansible的自动化部署Kubernetes集群的开源项目，即通过Ansible预定义的Playbook和配置模板，以二进制的方式一键式全自动的完成Kubernetes高可用集群的部署，且可用于集群的后期维护，如添加或删除Master和Node节点、Etcd数据备份及恢复等，大大节省了运维成本和时间。此外，Kubeasz还可用于制作离线安装包，包括集群组件、基础镜像、网络插件及其余附属功能（监控、日志及镜像仓库等），特别适用于没有外网的局域网环境</p>
+<h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul>
+<li>172.16.100.100 manger</li>
+<li>172.16.100.101 master01</li>
+<li>172.16.100.102 master02</li>
+<li>172.16.100.103 master03</li>
+<li>172.16.100.201 worker01</li>
+<li>172.16.100.202 worker02</li>
+<li>172.16.100.203 worker03</li>
 </ul>
-<p>这是美国《时代》周刊给林纳斯的评价，而在《时代》周刊根据读者投票评选出的二十世纪100位最重要人物中，林纳斯排到15位，而从20世纪的最后几年就开始霸占全球首富称号的盖茨是17位</p>
-<p>事实上，与做出的贡献相比，林纳斯所获赞誉远不止此。他创造的“优秀的开源软件吸引更多人对开源进行贡献”这一机制，所引领的浪潮极其快速的席卷了全球，从而引导了这个世界上绝大多数电子设备的诞生，如路由器、交换机、智能手机、服务器等</p>
-<p>林纳斯，创造了开源世界，真正的云上信息时代由此而开启</p>
-<h1 id="Linux系统架构"><a href="#Linux系统架构" class="headerlink" title="Linux系统架构"></a>Linux系统架构</h1><p>Linux系统由四部分组成，即内核、shell、文件系统和应用程序，其中内核、shell和文件系统一起形成了基本的操作系统结构，使得用户可以运行程序、管理文件并使用系统</p>
-<h2 id="1-内核"><a href="#1-内核" class="headerlink" title="1.内核"></a>1.内核</h2><p>内核，操作系统的核心，负责管理系统的进程、内存、设备驱动程序、文件和网络系统等操作系统的基本功能，决定系统的性能和稳定性</p>
-<h2 id="2-Shell"><a href="#2-Shell" class="headerlink" title="2.Shell"></a>2.Shell</h2><p>shell，系统用户界面，提供用户与内核进行交互操作的接口，接收用户输入的命令并把它送入内核去执行，是一个命令解释器</p>
-<p>shell版本</p>
+<h1 id="1-下载Kubeasz"><a href="#1-下载Kubeasz" class="headerlink" title="1.下载Kubeasz"></a>1.下载Kubeasz</h1><pre><code class="hljs">wget https://github.com/easzlab/kubeasz/releases/download/3.6.2/ezdown
+chmod +x ezdown
+</code></pre>
+<h1 id="2-创建离线安装包"><a href="#2-创建离线安装包" class="headerlink" title="2.创建离线安装包"></a>2.创建离线安装包</h1><h2 id="2-1-下载二进制包及镜像"><a href="#2-1-下载二进制包及镜像" class="headerlink" title="2.1 下载二进制包及镜像"></a>2.1 下载二进制包及镜像</h2><pre><code class="hljs"># -d，指定Docker版本；-k，指定Kubernetes版本
+./ezdown -D -d 24.0.9 -k v.1.25.12
+</code></pre>
 <ul>
-<li>Bourne Shell，由贝尔实验室开发</li>
-<li>BASH，GNU的Bourne Again Shell，是GNU操作系统上默认的shell，为大部分linux发行版所使用</li>
-<li>Korn Shell，Bourne SHell的延伸版，大部分与Bourne Shell兼容</li>
-<li>C Shell，SUN公司Shell的BSD版本</li>
+<li>注：ezdown需要tar命令支持，需先行安装</li>
 </ul>
-<h2 id="3-文件系统"><a href="#3-文件系统" class="headerlink" title="3.文件系统"></a>3.文件系统</h2><p>文件系统，即文件存放在磁盘等存储设备上的组织方法，Linux系统能支持多种目前流行的文件系统，如EXT2、 EXT3、 FAT、 FAT32、 VFAT和ISO9660等</p>
-<h2 id="4-应用程序"><a href="#4-应用程序" class="headerlink" title="4.应用程序"></a>4.应用程序</h2><p>Linux系统一般都有一套称为应用程序的程序集，包括文本编辑器、编程语言、X Window、办公套件、Internet工具和数据库等</p>
-<h1 id="Linux发行版"><a href="#Linux发行版" class="headerlink" title="Linux发行版"></a>Linux发行版</h1><p>Linux发行版，是指一些组织或厂商将林纳斯所开发的Linux内核与各种软件和文档包装起来，并提供系统安装界面和系统配置、设定与管理工具所构成的一套完整的Linux操作系统</p>
-<p>Linux发行版大体分为两类，即商业公司维护的发行版，如RedHat；社区组织维护的发行版，如Debian</p>
-<h2 id="1-Red-Hat-Linux"><a href="#1-Red-Hat-Linux" class="headerlink" title="1.Red Hat Linux"></a>1.Red Hat Linux</h2><p>Red Hat，红帽公司，创建于1993年，是目前世界上资深的Linux厂商，产品主要包括RHEL（Red Hat Enterprise Linux，收费）和CentOS（RHEL的社区克隆版本，免费）、Fedora Core（由RedHat桌面版发展而来，免费版本）。特别是CentOS，国内使用人群最多、资料丰富，且大多数Linux教程都以之作为基础，推荐初学者使用</p>
+<h2 id="2-2-下载Flannel网络插件"><a href="#2-2-下载Flannel网络插件" class="headerlink" title="2.2 下载Flannel网络插件"></a>2.2 下载Flannel网络插件</h2><pre><code class="hljs">./ezdown -X flannel
+</code></pre>
+<h2 id="2-3-下载操作系统离线依赖包"><a href="#2-3-下载操作系统离线依赖包" class="headerlink" title="2.3 下载操作系统离线依赖包"></a>2.3 下载操作系统离线依赖包</h2><pre><code class="hljs">./ezdown -P centos_7
+</code></pre>
+<ul>
+<li>注：.&#x2F;ezdown -P –help命令可显示支持的操作系统，若不在此列，建议以centos7为例查看所需依赖包的名称，再另行制备</li>
+</ul>
+<h2 id="2-4-下载Harbor离线安装包"><a href="#2-4-下载Harbor离线安装包" class="headerlink" title="2.4 下载Harbor离线安装包"></a>2.4 下载Harbor离线安装包</h2><pre><code class="hljs">./ezdown -R
+</code></pre>
+<h2 id="2-5-制作离线依赖包"><a href="#2-5-制作离线依赖包" class="headerlink" title="2.5 制作离线依赖包"></a>2.5 制作离线依赖包</h2><pre><code class="hljs">cd /etc/kubeasz
+tar -czvf kubeasz-v1.25.12.tar.gz kubeasz
+</code></pre>
+<h1 id="3-配置管理节点"><a href="#3-配置管理节点" class="headerlink" title="3.配置管理节点"></a>3.配置管理节点</h1><p>将离线安装包发送到管理节点，所有操作都在此完成</p>
+<h2 id="3-1-部署离线安装包"><a href="#3-1-部署离线安装包" class="headerlink" title="3.1 部署离线安装包"></a>3.1 部署离线安装包</h2><pre><code class="hljs">tar -xzvf kubeasz-v1.25.12.tar.gz
+mv kubeasz /etc
+</code></pre>
+<h2 id="3-2-配置SSH免密登录"><a href="#3-2-配置SSH免密登录" class="headerlink" title="3.2 配置SSH免密登录"></a>3.2 配置SSH免密登录</h2><h2 id="3-3-启动容器化kubeasz"><a href="#3-3-启动容器化kubeasz" class="headerlink" title="3.3 启动容器化kubeasz"></a>3.3 启动容器化kubeasz</h2><pre><code class="hljs">./ezdown -S
+</code></pre>
+<h2 id="3-4-创建集群"><a href="#3-4-创建集群" class="headerlink" title="3.4 创建集群"></a>3.4 创建集群</h2><pre><code class="hljs">ezctl new kubernetes
+</code></pre>
+<h2 id="3-5-配置集群信息"><a href="#3-5-配置集群信息" class="headerlink" title="3.5 配置集群信息"></a>3.5 配置集群信息</h2><pre><code class="hljs">docker exec -it kubeasz /bin/bash
+</code></pre>
+<h3 id="3-5-1-配置集群基础信息"><a href="#3-5-1-配置集群基础信息" class="headerlink" title="3.5.1 配置集群基础信息"></a>3.5.1 配置集群基础信息</h3><pre><code class="hljs">vi /etc/kubeasz/clusters/kubernetes/hosts
+
+
+# 设置Etcd节点IP
+[etcd]
+172.16.100.101
+172.16.100.102
+172.16.100.103
+
+# 设置Master节点IP
+[kube_master]
+172.16.100.101 k8s_nodename=&#39;master01&#39;
+172.16.100.102 k8s_nodename=&#39;master02&#39;
+172.16.100.103 k8s_nodename=&#39;master03&#39;
+
+# 设置Node节点Ip
+[kube_node]
+172.16.100.201 k8s_nodename=&#39;worker01&#39;
+172.16.100.202 k8s_nodename=&#39;worker02&#39;
+172.16.100.202 k8s_nodename=&#39;worker03&#39;
+
+# 设置集群网络插件，默认为
+CLUSTER_NETWORK=&quot;flannel&quot;
+</code></pre>
+<h3 id="3-5-2-配置安装信息"><a href="#3-5-2-配置安装信息" class="headerlink" title="3.5.2 配置安装信息"></a>3.5.2 配置安装信息</h3><pre><code class="hljs">vi /etc/kubeasz/clusters/kubernetes/config.yml 
+
+
+# 设置安装方式，offline
+INSTALL_SOURCE: &quot;offline&quot;
+# k8s version
+K8S_VER: &quot;1.25.12&quot;
+</code></pre>
+<h1 id="4-离线部署Kubernetes集群"><a href="#4-离线部署Kubernetes集群" class="headerlink" title="4.离线部署Kubernetes集群"></a>4.离线部署Kubernetes集群</h1><hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/easzlab/kubeasz">https://github.com/easzlab/kubeasz</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Chen-Yi-jia/p/17814851.html">https://www.cnblogs.com/Chen-Yi-jia/p/17814851.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u013527895/article/details/126672642">https://blog.csdn.net/u013527895/article/details/126672642</a></li>
+</ul>
 
                 
               </div>
@@ -351,6 +410,12 @@
       
         <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
       
+        <a href="/tags/Kubernetes/">#Kubernetes</a>
+      
+        <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+      
+        <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+      
     </div>
   
 </div>
@@ -361,8 +426,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Linux系统</div>
-      <div>https://hfsxs.github.io/linux/Linux/</div>
+      <div>Kubernetes集群离线部署工具Kubeasz</div>
+      <div>https://hfsxs.github.io/linux/Kubernetes-Kubeasz/</div>
     </div>
     <div class="license-meta">
       
@@ -374,13 +439,13 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2020年2月1日</div>
+          <div>2025年4月8日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年4月7日</div>
+          <div>2025年4月8日</div>
         </div>
       
       <div class="license-meta-item">
@@ -409,18 +474,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/linux/CentOSIP/" title="CentOS配置静态IP">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">CentOS配置静态IP</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/linux/CloudComputing/" title="云计算">
-                        <span class="hidden-mobile">云计算</span>
+                      <a href="/linux/EtcdTroubleshooting/" title="Kubernetes集群Etcd数据库故障处理与数据迁移">
+                        <span class="hidden-mobile">Kubernetes集群Etcd数据库故障处理与数据迁移</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
