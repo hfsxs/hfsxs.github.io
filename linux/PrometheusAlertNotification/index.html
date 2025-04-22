@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/dingtalk.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/wechat.jpg">
 <meta property="article:published_time" content="2023-10-24T07:51:46.000Z">
-<meta property="article:modified_time" content="2025-03-15T14:54:20.994Z">
+<meta property="article:modified_time" content="2025-04-22T08:10:16.956Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -412,15 +412,16 @@ receivers:
  - name: &#39;email&#39;
    email_configs:
    - to: &#39;523343553@qq.com&#39;
+     html: &#39;&#123;&#123; template  "email.html". &#125;&#125;&#39;
      send_resolved: true
 
 inhibit_rules:
   # 设置抑制规则源告警的匹配标签、名称或注释，可为标签列表或正则表达式，可选参数
   - source_match:
-      severity: &#39;critical&#39;
+      severity: &#39;Critical&#39;
     # 设置抑制规则目标告警的匹配标签、名称或注释，可为标签列表或正则表达式，可选参数
     target_match:
-      severity: &#39;warning&#39;
+      severity: &#39;Warning&#39;
     # 设置源告警与目标告警相同的标签值，可选参数，意为同instance、alertname的warning告警将被critical告警抑制
     equal: [&#39;alertname&#39;, &#39;instance&#39;]
 </code></pre>
@@ -431,8 +432,8 @@ sudo vi /usr/local/prometheus/template/email.tmpl
 &#123;&#123; define "email.html" &#125;&#125; 
 &#123;&#123; range .Alerts &#125;&#125; 
 =========start==========&lt;br&gt; 
-告警程序: Prometheus &lt;br&gt; 
-告警级别: &#123;&#123; .Labels.severity &#125;&#125; 级 &lt;br&gt;
+告警集群: CloudServer &lt;br&gt; 
+告警级别: &#123;&#123; .Labels.severity &#125;&#125; &lt;br&gt;
 告警类型: &#123;&#123; .Labels.alertname &#125;&#125; &lt;br&gt; 
 故障主机: &#123;&#123; .Labels.instance &#125;&#125; &lt;br&gt; 
 告警主题: &#123;&#123; .Annotations.summary &#125;&#125; &lt;br&gt;
@@ -583,10 +584,10 @@ receivers:
 inhibit_rules:
   # 设置抑制规则源告警的匹配标签、名称或注释，可为标签列表或正则表达式，可选参数
   - source_match:
-      severity: &#39;critical&#39;
+      severity: &#39;Critical&#39;
     # 设置抑制规则目标告警的匹配标签、名称或注释，可为标签列表或正则表达式，可选参数
     target_match:
-      severity: &#39;warning&#39;
+      severity: &#39;Warning&#39;
     # 设置源告警与目标告警相同的标签值，可选参数，意为同instance、alertname的warning告警将被critical告警抑制
     equal: [&#39;alertname&#39;, &#39;instance&#39;]
 </code></pre>
@@ -793,7 +794,7 @@ receivers:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月15日</div>
+          <div>2025年4月22日</div>
         </div>
       
       <div class="license-meta-item">
