@@ -24,7 +24,7 @@
 <meta property="og:description" content="Kubeasz，Kubernetes Easy Setup with Ansible，基于Ansible的自动化部署Kubernetes集群的开源项目，即通过Ansible预定义的Playbook和配置模板，以二进制的方式一键式全自动的完成Kubernetes高可用集群的部署，且可用于集群的后期维护，如添加或删除Master和Node节点、Etcd数据备份及恢复等，大大节省了运维成本和时间。此外，">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-04-08T03:24:56.000Z">
-<meta property="article:modified_time" content="2025-04-18T09:29:20.879Z">
+<meta property="article:modified_time" content="2025-04-23T07:20:35.263Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -304,11 +304,11 @@
 <li>172.16.100.202 worker02</li>
 <li>172.16.100.203 worker03</li>
 </ul>
-<h1 id="1-下载Kubeasz"><a href="#1-下载Kubeasz" class="headerlink" title="1.下载Kubeasz"></a>1.下载Kubeasz</h1><pre><code class="hljs">wget https://github.com/easzlab/kubeasz/releases/download/3.3.3/ezdown
+<h1 id="1-下载Kubeasz"><a href="#1-下载Kubeasz" class="headerlink" title="1.下载Kubeasz"></a>1.下载Kubeasz</h1><pre><code class="hljs">wget https://github.com/easzlab/kubeasz/releases/download/3.6.2/ezdown
 chmod +x ezdown
 </code></pre>
 <h1 id="2-创建离线安装包"><a href="#2-创建离线安装包" class="headerlink" title="2.创建离线安装包"></a>2.创建离线安装包</h1><h2 id="2-1-下载二进制包及镜像"><a href="#2-1-下载二进制包及镜像" class="headerlink" title="2.1 下载二进制包及镜像"></a>2.1 下载二进制包及镜像</h2><pre><code class="hljs"># -d，指定Docker版本；-k，指定Kubernetes版本
-./ezdown -D -d 20.10.24 -k v.1.24.12
+./ezdown -D -d 20.10.24 -k v.1.24.16
 </code></pre>
 <ul>
 <li>注：ezdown需要tar命令支持，需先行安装</li>
@@ -323,10 +323,10 @@ chmod +x ezdown
 <h2 id="2-4-下载Harbor离线安装包"><a href="#2-4-下载Harbor离线安装包" class="headerlink" title="2.4 下载Harbor离线安装包"></a>2.4 下载Harbor离线安装包</h2><pre><code class="hljs">./ezdown -R
 </code></pre>
 <h2 id="2-5-制作离线依赖包"><a href="#2-5-制作离线依赖包" class="headerlink" title="2.5 制作离线依赖包"></a>2.5 制作离线依赖包</h2><pre><code class="hljs">cd /etc/kubeasz
-tar -czvf kubeasz-v1.24.12.tar.gz kubeasz
+tar -czvf kubeasz-v1.24.16.tar.gz kubeasz
 </code></pre>
 <h1 id="3-配置管理节点"><a href="#3-配置管理节点" class="headerlink" title="3.配置管理节点"></a>3.配置管理节点</h1><p>将离线安装包发送到管理节点，所有操作都在此完成</p>
-<h2 id="3-1-部署离线安装包"><a href="#3-1-部署离线安装包" class="headerlink" title="3.1 部署离线安装包"></a>3.1 部署离线安装包</h2><pre><code class="hljs">tar -xzvf kubeasz-v1.25.12.tar.gz
+<h2 id="3-1-部署离线安装包"><a href="#3-1-部署离线安装包" class="headerlink" title="3.1 部署离线安装包"></a>3.1 部署离线安装包</h2><pre><code class="hljs">tar -xzvf kubeasz-v1.24.16.tar.gz
 mv kubeasz /etc
 </code></pre>
 <h2 id="3-2-配置SSH免密登录"><a href="#3-2-配置SSH免密登录" class="headerlink" title="3.2 配置SSH免密登录"></a>3.2 配置SSH免密登录</h2><h2 id="3-3-启动容器化kubeasz"><a href="#3-3-启动容器化kubeasz" class="headerlink" title="3.3 启动容器化kubeasz"></a>3.3 启动容器化kubeasz</h2><pre><code class="hljs">./ezdown -S
@@ -527,7 +527,7 @@ spec:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年4月18日</div>
+          <div>2025年4月23日</div>
         </div>
       
       <div class="license-meta-item">
