@@ -28,7 +28,7 @@
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/dingtalk.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/wechat.jpg">
 <meta property="article:published_time" content="2023-10-24T07:51:46.000Z">
-<meta property="article:modified_time" content="2025-04-22T08:10:16.956Z">
+<meta property="article:modified_time" content="2025-04-23T02:23:32.492Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -245,7 +245,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          12k 字
+          13k 字
         
       </span>
     
@@ -256,7 +256,7 @@
         
         
         
-          103 分钟
+          111 分钟
         
       </span>
     
@@ -413,6 +413,7 @@ receivers:
    email_configs:
    - to: &#39;523343553@qq.com&#39;
      html: &#39;&#123;&#123; template  "email.html". &#125;&#125;&#39;
+     headers: &#123; Subject: &quot;监控告警&#123;&#123;- if gt (len .Alerts.Resolved) 0 -&#125;&#125;恢复&#123;&#123; end &#125;&#125;&quot; &#125;
      send_resolved: true
 
 inhibit_rules:
@@ -430,18 +431,35 @@ sudo vi /usr/local/prometheus/template/email.tmpl
 
 
 &#123;&#123; define "email.html" &#125;&#125; 
-&#123;&#123; range .Alerts &#125;&#125; 
-=========start==========&lt;br&gt; 
-告警集群: CloudServer &lt;br&gt; 
+&#123;&#123;- if gt (len .Alerts.Firing) 0 -&#125;&#125;
+&#123;&#123; range .Alerts &#125;&#125;
+=========start==========&lt;br&gt;
+告警集群: tc-mc &lt;br&gt;
 告警级别: &#123;&#123; .Labels.severity &#125;&#125; &lt;br&gt;
-告警类型: &#123;&#123; .Labels.alertname &#125;&#125; &lt;br&gt; 
-故障主机: &#123;&#123; .Labels.instance &#125;&#125; &lt;br&gt; 
+告警类型: &#123;&#123; .Labels.alertname &#125;&#125; &lt;br&gt;
+故障主机: &#123;&#123; .Labels.instance &#125;&#125; &lt;br&gt;
 告警主题: &#123;&#123; .Annotations.summary &#125;&#125; &lt;br&gt;
 告警详情: &#123;&#123; .Annotations.description &#125;&#125; &lt;br&gt;
-触发时间: &#123;&#123; .StartsAt &#125;&#125; &lt;br&gt;
-=========end==========&lt;br&gt; 
-&#123;&#123; end &#125;&#125; 
+告警时间：&#123;&#123; (.StartsAt.Add 28800e9).Format "2006-01-02 15:04:05" &#125;&#125;&lt;br&gt;
+=========end==========&lt;br&gt;
 &#123;&#123; end &#125;&#125;
+&#123;&#123; end &#125;&#125;
+
+&#123;&#123;- if gt (len .Alerts.Resolved) 0 -&#125;&#125;
+&#123;&#123; range .Alerts &#125;&#125;
+=========start==========&lt;br&gt;
+告警集群: tc-mc &lt;br&gt;
+告警级别: &#123;&#123; .Labels.severity &#125;&#125; &lt;br&gt;
+告警类型: &#123;&#123; .Labels.alertname &#125;&#125; &lt;br&gt;
+故障主机: &#123;&#123; .Labels.instance &#125;&#125; &lt;br&gt;
+告警主题: &#123;&#123; .Annotations.summary &#125;&#125; &lt;br&gt;
+告警详情: &#123;&#123; .Annotations.description &#125;&#125; &lt;br&gt;
+告警时间：&#123;&#123; (.StartsAt.Add 28800e9).Format "2006-01-02 15:04:05" &#125;&#125;&lt;br&gt; 
+恢复时间：&#123;&#123; (.EndsAt.Add 28800e9).Format "2006-01-02 15:04:05" &#125;&#125;&lt;br&gt; 
+=========end==========&lt;br&gt;
+&#123;&#123;- end &#125;&#125;
+&#123;&#123;- end &#125;&#125;
+&#123;&#123;- end &#125;&#125;
 </code></pre>
 <h1 id="2-4-重启AlertManager，验证告警信息"><a href="#2-4-重启AlertManager，验证告警信息" class="headerlink" title="2.4 重启AlertManager，验证告警信息"></a>2.4 重启AlertManager，验证告警信息</h1><p><img src="/img/wiki/prometheus/email02.jpg" srcset="/img/loading.gif" lazyload alt="email02"></p>
 <h1 id="3-配置钉钉告警"><a href="#3-配置钉钉告警" class="headerlink" title="3.配置钉钉告警"></a>3.配置钉钉告警</h1><h2 id="3-1-钉钉群创建机器人"><a href="#3-1-钉钉群创建机器人" class="headerlink" title="3.1 钉钉群创建机器人"></a>3.1 钉钉群创建机器人</h2><h2 id="3-2-部署钉钉告警插件"><a href="#3-2-部署钉钉告警插件" class="headerlink" title="3.2 部署钉钉告警插件"></a>3.2 部署钉钉告警插件</h2><h3 id="3-2-1-安装Webhook-dingtalk"><a href="#3-2-1-安装Webhook-dingtalk" class="headerlink" title="3.2.1 安装Webhook-dingtalk"></a>3.2.1 安装Webhook-dingtalk</h3><pre><code class="hljs">sudo mkdir -p /usr/local/prometheus/dingtalk
@@ -794,7 +812,7 @@ receivers:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年4月22日</div>
+          <div>2025年4月23日</div>
         </div>
       
       <div class="license-meta-item">
