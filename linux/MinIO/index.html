@@ -24,13 +24,14 @@
 <meta property="og:description" content="MinIO，Go语言开发的高性能、分布式开源对象存储系统，兼容Amazon S3对象存储接口，并支持所有核心S3功能，非常适用于存储大容量非结构化的数据，如图片、视频、日志文件、备份数据和容器、虚拟机镜像文件等等，广泛应用于机器学习、大数据、私有云、混合云、数据分析、高性能应用负载、原生云等领域 集群架构 172.16.100.101 minio01 172.16.100.102 minio02">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-04-25T01:18:07.000Z">
-<meta property="article:modified_time" content="2025-04-27T07:10:01.107Z">
+<meta property="article:modified_time" content="2025-05-09T05:30:53.339Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
 <meta property="article:tag" content="存储">
 <meta property="article:tag" content="分布式存储">
 <meta property="article:tag" content="对象存储">
+<meta property="article:tag" content="MinIO">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -240,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.2k 字
+          2.2k 字
         
       </span>
     
@@ -251,7 +252,7 @@
         
         
         
-          10 分钟
+          19 分钟
         
       </span>
     
@@ -310,11 +311,11 @@ sudo vi /opt/minio/run.sh
 
 
 export MINIO_ROOT_USER=admin
-export MINIO_ROOT_PASSWORD=Admin@123
-/opt/minio/minio server --address :19000 --console-address :19001 \
-http://minio01/mnt/minio01 http://minio01/mnt/minio02 \
-http://minio02/mnt/minio01 http://minio02/mnt/minio02 \
-http://minio03/mnt/minio01 http://minio03/mnt/minio02
+export MINIO_ROOT_PASSWORD=MinIO@2025
+/opt/minio/minio server --address :9000 --console-address :9001 \
+http://minio01:9000/mnt/minio01 http://minio01:9000/mnt/minio02 \
+http://minio02:9000/mnt/minio01 http://minio02:9000/mnt/minio02 \
+http://minio03:9000/mnt/minio01 http://minio03:9000/mnt/minio02
 </code></pre>
 <h1 id="4-创建启动脚本"><a href="#4-创建启动脚本" class="headerlink" title="4.创建启动脚本"></a>4.创建启动脚本</h1><pre><code class="hljs">sudo vi /lib/systemd/system/minio.service
 
@@ -336,7 +337,66 @@ WantedBy=muti-user.target
 systemctl start minio.service
 systemctl enable minio.service
 </code></pre>
-<h1 id="6-验证MinIO"><a href="#6-验证MinIO" class="headerlink" title="6.验证MinIO"></a>6.验证MinIO</h1><hr>
+<h1 id="6-配置负载均衡"><a href="#6-配置负载均衡" class="headerlink" title="6.配置负载均衡"></a>6.配置负载均衡</h1><pre><code class="hljs">sudo vi /etc/nginx/conf.d/minio.conf
+
+
+upstream minio_api &#123;
+  server 172.16.100.101:9000;
+  server 172.16.100.102:9000;
+  server 172.16.100.103:9000;
+&#125;
+
+upstream minio_console &#123;
+  server 172.16.100.101:9001;
+  server 172.16.100.102:9001;
+  server 172.16.100.103:9001;
+&#125;
+
+server&#123;
+  listen       19000;
+  server_name  172.16.100.101;
+
+  ignore_invalid_headers off;
+  client_max_body_size 0;
+  proxy_buffering off;
+
+  location  &#123;
+    proxy_set_header   X-Forwarded-Proto $scheme;
+    proxy_set_header   Host              $http_host;
+    proxy_set_header   X-Real-IP         $remote_addr;
+
+    proxy_connect_timeout 300;
+    proxy_http_version 1.1;
+    chunked_transfer_encoding off;
+    proxy_ignore_client_abort on;
+
+    proxy_pass http://minio_api;
+  &#125;
+&#125;
+
+server&#123;
+  listen       19001;
+  server_name  172.16.100.101;
+
+  ignore_invalid_headers off;
+  client_max_body_size 0;
+  proxy_buffering off;
+
+  location  &#123;
+    proxy_set_header   X-Forwarded-Proto $scheme;
+    proxy_set_header   Host              $http_host;
+    proxy_set_header   X-Real-IP         $remote_addr;
+
+    proxy_connect_timeout 300;
+    proxy_http_version 1.1;
+    chunked_transfer_encoding off;
+    proxy_ignore_client_abort on;
+
+    proxy_pass http://minio_console;
+  &#125;
+&#125;
+</code></pre>
+<h1 id="7-验证MinIO"><a href="#7-验证MinIO" class="headerlink" title="7.验证MinIO"></a>7.验证MinIO</h1><hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://www.minio.org.cn/">https://www.minio.org.cn</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.modb.pro/db/634327">https://www.modb.pro/db/634327</a></li>
@@ -385,6 +445,8 @@ systemctl enable minio.service
       
         <a href="/tags/%E5%AF%B9%E8%B1%A1%E5%AD%98%E5%82%A8/">#对象存储</a>
       
+        <a href="/tags/MinIO/">#MinIO</a>
+      
     </div>
   
 </div>
@@ -414,7 +476,7 @@ systemctl enable minio.service
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年4月27日</div>
+          <div>2025年5月9日</div>
         </div>
       
       <div class="license-meta-item">
