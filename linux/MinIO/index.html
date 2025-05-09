@@ -24,7 +24,7 @@
 <meta property="og:description" content="MinIO，Go语言开发的高性能、分布式开源对象存储系统，兼容Amazon S3对象存储接口，并支持所有核心S3功能，非常适用于存储大容量非结构化的数据，如图片、视频、日志文件、备份数据和容器、虚拟机镜像文件等等，广泛应用于机器学习、大数据、私有云、混合云、数据分析、高性能应用负载、原生云等领域 集群架构 172.16.100.101 minio01 172.16.100.102 minio02">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-04-25T01:18:07.000Z">
-<meta property="article:modified_time" content="2025-05-09T05:30:53.339Z">
+<meta property="article:modified_time" content="2025-05-09T06:06:28.619Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -241,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.2k 字
+          2.4k 字
         
       </span>
     
@@ -252,7 +252,7 @@
         
         
         
-          19 分钟
+          21 分钟
         
       </span>
     
@@ -341,18 +341,23 @@ systemctl enable minio.service
 
 
 upstream minio_api &#123;
+
   server 172.16.100.101:9000;
   server 172.16.100.102:9000;
   server 172.16.100.103:9000;
+
 &#125;
 
 upstream minio_console &#123;
+
   server 172.16.100.101:9001;
   server 172.16.100.102:9001;
   server 172.16.100.103:9001;
+
 &#125;
 
-server&#123;
+server &#123;
+
   listen       19000;
   server_name  172.16.100.101;
 
@@ -360,7 +365,8 @@ server&#123;
   client_max_body_size 0;
   proxy_buffering off;
 
-  location  &#123;
+  location / &#123;
+
     proxy_set_header   X-Forwarded-Proto $scheme;
     proxy_set_header   Host              $http_host;
     proxy_set_header   X-Real-IP         $remote_addr;
@@ -370,11 +376,16 @@ server&#123;
     chunked_transfer_encoding off;
     proxy_ignore_client_abort on;
 
+    access_log  /var/log/nginx/minio_api_access.log  main;
+    error_log  /var/log/nginx/minio_api_error.log;
+
     proxy_pass http://minio_api;
+
   &#125;
 &#125;
 
-server&#123;
+server &#123;
+
   listen       19001;
   server_name  172.16.100.101;
 
@@ -382,7 +393,8 @@ server&#123;
   client_max_body_size 0;
   proxy_buffering off;
 
-  location  &#123;
+  location / &#123;
+
     proxy_set_header   X-Forwarded-Proto $scheme;
     proxy_set_header   Host              $http_host;
     proxy_set_header   X-Real-IP         $remote_addr;
@@ -392,7 +404,11 @@ server&#123;
     chunked_transfer_encoding off;
     proxy_ignore_client_abort on;
 
+    access_log  /var/log/nginx/minio_console_access.log  main;
+    error_log  /var/log/nginx/minio_console_error.log;
+
     proxy_pass http://minio_console;
+
   &#125;
 &#125;
 </code></pre>
