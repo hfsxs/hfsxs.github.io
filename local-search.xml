@@ -4678,6 +4678,39 @@
   
   
   <entry>
+    <title>PostgreSQL数据库编译安装</title>
+    <link href="/linux/PostgreSQL/"/>
+    <url>/linux/PostgreSQL/</url>
+    
+    <content type="html"><![CDATA[<p>PostgreSQL，基于C语言实现的先进的开源企业级关系型数据库管理系统，以其强大的扩展性、可靠性、稳定性和数据一致性享誉业内。作为开源数据库，PostgreSQL拥有媲美商业数据库的功能，是完全的事务安全性数据库，而且资源消耗更少</p><p>PostgreSQL起源于1986年加州大学伯克利分校Michael Stonebraker教授开发的用于教学演示的数据库管理系统POSTGRES</p><h1 id="1-安装依赖包"><a href="#1-安装依赖包" class="headerlink" title="1.安装依赖包"></a>1.安装依赖包</h1><pre><code class="hljs">yum install -y gcc make openssl-devel perl-devel zlib-devel libxml2-devel readline-devel systemd-devel </code></pre><h1 id="2-创建postgres用户"><a href="#2-创建postgres用户" class="headerlink" title="2.创建postgres用户"></a>2.创建postgres用户</h1><pre><code class="hljs">groupadd postgres &amp;&amp; useradd postgres</code></pre><h1 id="3-编译安装PostgreSQL"><a href="#3-编译安装PostgreSQL" class="headerlink" title="3.编译安装PostgreSQL"></a>3.编译安装PostgreSQL</h1><pre><code class="hljs">tar -xzvf postgresql-10.0.tar.gz &amp;&amp; cd postgresql-10.0./configure --prefix=/usr/local/pgsql --with-zlib --with-perl --with-openssl --with-libxml --with-systemdmake &amp;&amp; make install</code></pre><h1 id="4-编译安装安装第三方工具"><a href="#4-编译安装安装第三方工具" class="headerlink" title="4.编译安装安装第三方工具"></a>4.编译安装安装第三方工具</h1><pre><code class="hljs">cd contribmake &amp;&amp; make install</code></pre><h1 id="5-初始化PostgreSQL数据库"><a href="#5-初始化PostgreSQL数据库" class="headerlink" title="5.初始化PostgreSQL数据库"></a>5.初始化PostgreSQL数据库</h1><pre><code class="hljs">mkdir /usr/local/pgsql/datachown -R postgres.postgres /usr/local/pgsqlsu - postgres -c &quot;/usr/local/pgsql/bin/initdb -D /usr/local/pgsql/data&quot;</code></pre><h1 id="6-配置启动脚本"><a href="#6-配置启动脚本" class="headerlink" title="6.配置启动脚本"></a>6.配置启动脚本</h1><pre><code class="hljs">cp contrib/start-scripts/linux /etc/init.d/pgsqldchmod +x /etc/init.d/pgsqld</code></pre><h1 id="7-配置PostgreSQL动态库"><a href="#7-配置PostgreSQL动态库" class="headerlink" title="7.配置PostgreSQL动态库"></a>7.配置PostgreSQL动态库</h1><pre><code class="hljs">echo &quot;/usr/local/pgsql/lib&quot; &gt; /etc/ld.so.conf.d/pgsql.confldconfig</code></pre><h1 id="8-启动PostgreSQL"><a href="#8-启动PostgreSQL" class="headerlink" title="8.启动PostgreSQL"></a>8.启动PostgreSQL</h1><pre><code class="hljs">service pgsqld startchkconfig pgsqld on</code></pre><h1 id="9-验证数据库登录"><a href="#9-验证数据库登录" class="headerlink" title="9.验证数据库登录"></a>9.验证数据库登录</h1><pre><code class="hljs">ln -s /usr/local/pgsql/bin/psql /usr/binpsql -h 127.0.0.1 -U postgres -d postgres</code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>SQL</tag>
+      
+      <tag>数据库</tag>
+      
+      <tag>PostgreSQL</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Linux系统日志轮转工具Logrotate</title>
     <link href="/linux/Logrotate/"/>
     <url>/linux/Logrotate/</url>
