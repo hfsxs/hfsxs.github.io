@@ -1,0 +1,800 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Hadoop，Apache基金会基于Java开发和维护的开源分布式计算与存储框架，核心功能是为庞大的计算机集群提供可靠的、统一且稳定的、可伸缩的存储和计算环境。Hadoop使用简单的编程模型跨计算机群集分布式处理大型数据集，其设计理念是将数据和计算任务分布到多个计算节点，通过分布式计算来提高处理效率，以解决单台机器处理大数据时的瓶颈问题 体系架构核心部件包括分布式文件系统 (Hadoop DFS，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hadoop集群部署">
+<meta property="og:url" content="https://hfsxs.github.io/linux/Hadoop/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="Hadoop，Apache基金会基于Java开发和维护的开源分布式计算与存储框架，核心功能是为庞大的计算机集群提供可靠的、统一且稳定的、可伸缩的存储和计算环境。Hadoop使用简单的编程模型跨计算机群集分布式处理大型数据集，其设计理念是将数据和计算任务分布到多个计算节点，通过分布式计算来提高处理效率，以解决单台机器处理大数据时的瓶颈问题 体系架构核心部件包括分布式文件系统 (Hadoop DFS，">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-27T01:50:51.000Z">
+<meta property="article:modified_time" content="2025-05-28T01:07:42.300Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="大数据">
+<meta property="article:tag" content="Hadoop">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Hadoop集群部署 - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Hadoop集群部署</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-05-27 09:50" pubdate>
+          2025年5月27日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          41 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Hadoop集群部署</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Hadoop，Apache基金会基于Java开发和维护的开源分布式计算与存储框架，核心功能是为庞大的计算机集群提供可靠的、统一且稳定的、可伸缩的存储和计算环境。Hadoop使用简单的编程模型跨计算机群集分布式处理大型数据集，其设计理念是将数据和计算任务分布到多个计算节点，通过分布式计算来提高处理效率，以解决单台机器处理大数据时的瓶颈问题</p>
+<h1 id="体系架构"><a href="#体系架构" class="headerlink" title="体系架构"></a>体系架构</h1><p>核心部件包括分布式文件系统 (Hadoop DFS，HDFS) 和 MapReduce</p>
+<h1 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h1><h2 id="1-互联网行业"><a href="#1-互联网行业" class="headerlink" title="1.互联网行业"></a>1.互联网行业</h2><h3 id="1-1-日志分析"><a href="#1-1-日志分析" class="headerlink" title="1.1 日志分析"></a>1.1 日志分析</h3><ul>
+<li><p>用户行为分析，互联网公司每天都会产生海量的用户访问日志，记录了用户的登录时间、浏览页面、停留时长、点击链接等信息。通过 Hadoop将这些日志数据收集存储在HDFS，再利用MapReduce或Spark等计算框架进行处理分析，以统计出用户的活跃度、最受欢迎的页面、用户在不同页面间的跳转路径等，为优化网站布局、提升用户体验、精准推送广告等提供依据，如电商网站根据用户行为分析来推荐符合其购买倾向的商品，提高商品转化率</p>
+</li>
+<li><p>系统性能监测，服务器端会生成大量的系统日志，记录了CPU使用率、内存占用、网络带宽消耗、请求响应时间等指标。通过Hadoop对这些日志进行分析，能及时发现系统性能瓶颈，排查故障隐患，如判断哪个时间段服务器负载过高、哪些服务频繁出现超时等情况，以便运维人员采取相应措施优化服务器配置和网络架构</p>
+</li>
+</ul>
+<h3 id="1-2-搜索引擎"><a href="#1-2-搜索引擎" class="headerlink" title="1.2 搜索引擎"></a>1.2 搜索引擎</h3><p>百度、谷歌这类搜索引擎需要抓取海量网页并对其内容进行索引处理，Hadoop可助力完成网页数据的存储（HDFS）及索引构建过程中的大规模数据并行计算（MapReduce等），通过对网页文本内容进行词频统计、倒排索引构建等操作，使得用户在搜索时能够快速定位到相关网页，提高搜索结果的准确性和检索速度</p>
+<h2 id="2-金融行业"><a href="#2-金融行业" class="headerlink" title="2.金融行业"></a>2.金融行业</h2><h3 id="2-1-风险评估与信用分析"><a href="#2-1-风险评估与信用分析" class="headerlink" title="2.1 风险评估与信用分析"></a>2.1 风险评估与信用分析</h3><p>金融机构会收集客户的多维度数据，如个人基本信息、交易记录、借贷历史、消费行为等海量资料。利用 Hadoop 存储这些复杂多样的数据，并通过数据挖掘算法（基于 MapReduce 或 Spark 等框架实现）进行特征提取和模型构建，分析客户的信用状况，预测违约风险，帮助银行等金融机构决定是否发放贷款、确定贷款额度及利率等，例如分析一个中小企业的资金流水、上下游交易情况来评估其还款能力和信用等级</p>
+<h3 id="2-2-金融市场数据分析"><a href="#2-2-金融市场数据分析" class="headerlink" title="2.2 金融市场数据分析"></a>2.2 金融市场数据分析</h3><p>证券交易所、投资银行等会处理海量的金融市场数据，如股票价格走势、成交量、宏观经济指标、行业数据等。Hadoop 可以存储这些时间序列数据，并结合数据分析工具对其进行相关性分析、趋势预测等，辅助投资者制定投资策略，例如通过分析过去多年不同行业股票价格与宏观经济因素的关联，判断在当前经济形势下哪些行业更具投资潜力</p>
+<h2 id="3-电信行业"><a href="#3-电信行业" class="headerlink" title="3.电信行业"></a>3.电信行业</h2><h3 id="3-1-客户关系管理"><a href="#3-1-客户关系管理" class="headerlink" title="3.1 客户关系管理"></a>3.1 客户关系管理</h3><p>电信运营商拥有庞大的客户群体，积累了诸如用户通话记录、短信内容、上网流量使用情况、套餐订购历史等丰富的数据。借助 Hadoop 存储这些数据后，进行数据挖掘和分析，可以深入了解客户的使用习惯、需求偏好，进而实现精准营销，比如针对流量使用大户推荐更合适的大流量套餐，对通话时长较长的客户推荐优惠的通话套餐等，同时还能及时处理客户投诉，提升客户满意度</p>
+<h3 id="3-2-网络优化与运维"><a href="#3-2-网络优化与运维" class="headerlink" title="3.2 网络优化与运维"></a>3.2 网络优化与运维</h3><p>电信网络会产生大量的设备运行日志、网络性能指标数据等，通过 Hadoop 收集并分析这些数据，能够发现网络中的故障点、拥塞区域，评估网络设备的健康状况，为网络的优化升级、基站的合理布局、资源的有效调配等提供决策支持，确保网络的稳定和高效运行，例如根据不同区域基站的信号覆盖范围、用户接入数量等数据来决定是否需要增设基站或调整基站发射功率</p>
+<h2 id="4-零售行业"><a href="#4-零售行业" class="headerlink" title="4.零售行业"></a>4.零售行业</h2><h3 id="4-1-销售数据分析"><a href="#4-1-销售数据分析" class="headerlink" title="4.1 销售数据分析"></a>4.1 销售数据分析</h3><p>零售商需要处理海量的销售记录，包括商品销售数量、销售额、库存变化、顾客购买时间、购买渠道等数据。利用 Hadoop 存储并分析这些数据，可以分析出不同商品的销售趋势、季节性波动、地区差异等，帮助商家制定采购计划、调整商品定价、优化店铺布局，例如大型连锁超市通过分析各门店不同季节商品的销售情况来提前备货、调配库存，避免积压或缺货现象</p>
+<h3 id="4-2-供应链管理"><a href="#4-2-供应链管理" class="headerlink" title="4.2 供应链管理"></a>4.2 供应链管理</h3><p>从供应商、物流、仓储到销售终端整个供应链环节都会产生大量的数据，Hadoop 可以存储这些数据并进行整合分析，实现对供应链的可视化管理，优化物流配送路径、预测需求、降低库存成本等，比如通过分析历史订单数据以及交通路况等信息来规划最优的物流配送路线，提高配送效率，减少运输损耗</p>
+<h2 id="5-医疗行业"><a href="#5-医疗行业" class="headerlink" title="5.医疗行业"></a>5.医疗行业</h2><h3 id="5-1-医疗影像分析"><a href="#5-1-医疗影像分析" class="headerlink" title="5.1 医疗影像分析"></a>5.1 医疗影像分析</h3><p>医院会产生大量的 X 光、CT、MRI 等影像资料，这些影像数据量极大且需要长期保存。Hadoop 的 HDFS 可提供大容量存储解决方案，同时可以结合机器学习算法（在 Spark 等计算框架上运行）对影像进行特征提取、疾病诊断辅助，例如通过分析大量的肺部 CT 影像来辅助医生识别早期肺癌病变特征，提高诊断的准确性和效率</p>
+<h3 id="5-2-临床数据研究"><a href="#5-2-临床数据研究" class="headerlink" title="5.2 临床数据研究"></a>5.2 临床数据研究</h3><p>收集患者的病历、症状、治疗方案、用药情况、基因数据等多方面临床数据，利用 Hadoop 进行存储和分析，有助于医学研究人员开展疾病的发病机制研究、药物疗效评估、个性化医疗方案制定等工作，比如通过分析大量糖尿病患者的用药和血糖控制数据来评估不同药物的治疗效果，为研发更有效的治疗方法提供参考</p>
+<h2 id="6-能源行业"><a href="#6-能源行业" class="headerlink" title="6.能源行业"></a>6.能源行业</h2><h3 id="6-1-电力系统监测与管理"><a href="#6-1-电力系统监测与管理" class="headerlink" title="6.1 电力系统监测与管理"></a>6.1 电力系统监测与管理</h3><p>电力公司要面对大量来自发电厂、变电站、输电线路等设备的运行数据，如发电量、电压、电流、设备温度等实时监测数据以及历史运维数据。Hadoop 可以存储这些海量数据，并通过分析来预测设备故障、优化发电计划、调配电力资源等，例如通过分析过往变压器故障前的各项运行参数变化来提前预警可能出现的故障，保障电力系统的安全稳定运行</p>
+<h3 id="6-2-油气勘探与生产"><a href="#6-2-油气勘探与生产" class="headerlink" title="6.2 油气勘探与生产"></a>6.2 油气勘探与生产</h3><p>在油气行业，勘探阶段会有海量的地质数据，生产阶段也有油井产量、压力、含水率等数据。利用 Hadoop 存储和分析这些数据，能辅助确定油气资源的分布、优化油井开采方案、提高采收率等，比如通过分析不同区域的地质构造和油井历史生产数据来制定更合理的油井压裂、注水等增产措施</p>
+<h2 id="7-政府部门"><a href="#7-政府部门" class="headerlink" title="7.政府部门"></a>7.政府部门</h2><h3 id="7-1-智慧城市建设"><a href="#7-1-智慧城市建设" class="headerlink" title="7.1 智慧城市建设"></a>7.1 智慧城市建设</h3><p>涉及到交通、安防、环保、政务等多个领域的数据整合与分析。例如交通管理部门利用 Hadoop 存储和分析道路监控摄像头采集的车辆流量、车速等交通数据，实现智能交通调度，缓解拥堵；安防部门通过分析监控视频、报警记录等数据来提升城市治安防控水平；环保部门处理空气质量监测、水污染监测等数据来制定更有效的环境治理策略等，全面提升城市的智能化管理水平</p>
+<h3 id="7-2-人口普查与统计分析"><a href="#7-2-人口普查与统计分析" class="headerlink" title="7.2 人口普查与统计分析"></a>7.2 人口普查与统计分析</h3><p>每过一段时间进行的人口普查会产生海量的人口信息数据，包括个人基本信息、家庭情况、就业情况等。Hadoop 可以存储这些大规模数据，并进行数据挖掘和分析，辅助政府制定相关政策，比如分析不同地区的人口年龄结构、劳动力分布等来规划教育资源、就业培训、养老设施等方面的建设</p>
+<p>互联网公司：</p>
+<p>用户行为分析：互联网公司使用 Hadoop 来分析用户的浏览和点击行为，从而优化广告投放、推荐系统和内容个性化。<br>日志分析：Hadoop 被用于处理和分析大量的服务器日志数据，以监控系统性能、检测异常和改进用户体验。<br>金融行业：</p>
+<p>风险管理：金融机构利用 Hadoop 分析大规模交易数据，评估风险，检测欺诈行为，并进行市场趋势分析。<br>实时数据处理：Hadoop 支持流数据处理，可以实时分析金融市场数据，做出快速决策。<br>医疗健康：</p>
+<p>基因组学研究：Hadoop 被用于处理和分析大规模基因组数据，帮助科学家进行基因组学研究和疾病预测。<br>病历数据分析：医疗机构使用 Hadoop 分析患者的电子病历数据，提供个性化医疗服务和改进医疗质量。<br>电信行业：</p>
+<p>网络监控：电信公司利用 Hadoop 处理和分析大量的网络数据，监控网络性能，优化网络配置，并提供更好的用户体验。<br>客户分析：Hadoop 帮助电信公司分析客户的使用行为和需求，从而进行精准的市场营销和客户服务</p>
+<h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul>
+<li>172.16.100.101 hadoop01 NameNode&#x2F;DataNode&#x2F;Nodemanager</li>
+<li>172.16.100.102 hadoop02 SecondaryNameNode&#x2F;DataNode&#x2F;Nodemanager</li>
+<li>172.16.100.103 hadoop03 ResourceManager&#x2F;NodeManager&#x2F;DataNode</li>
+</ul>
+<h1 id="1-配置集群SSH免密"><a href="#1-配置集群SSH免密" class="headerlink" title="1.配置集群SSH免密"></a>1.配置集群SSH免密</h1><h1 id="2-配置集群Java环境"><a href="#2-配置集群Java环境" class="headerlink" title="2.配置集群Java环境"></a>2.配置集群Java环境</h1><pre><code class="hljs">yum install -y java-1.8.0-openjdk
+</code></pre>
+<h1 id="3-配置集群"><a href="#3-配置集群" class="headerlink" title="3.配置集群"></a>3.配置集群</h1><pre><code class="hljs">tar -xzvf hadoop-3.2.4.tar.gz
+mv hadoop-3.2.4 /opt/hadoop &amp;&amp; mkdir -p /opt/hadoop/data
+useradd hadoop &amp;&amp; chown -R hadoop.hadoop /opt/hadoop
+</code></pre>
+<h2 id="3-1-环境变量配置"><a href="#3-1-环境变量配置" class="headerlink" title="3.1 环境变量配置"></a>3.1 环境变量配置</h2><pre><code class="hljs">vi /opt/hadoop/etc/hadoop/hadoop-env.sh 
+
+
+export HDFS_NAMENODE_USER=hadoop
+export HDFS_DATANODE_USER=hadoop
+export HDFS_SECONDARYNAMENODE_USER=hadoop
+export JAVA_HOME=/usr/lib/jvm/jre-1.8.0-openjdk
+export YARN_RESOURCEMANAGER_USER=hadoop
+export YARN_NODEMANAGER_USER=Hadoop
+</code></pre>
+<h2 id="3-2-集群核心配置"><a href="#3-2-集群核心配置" class="headerlink" title="3.2 集群核心配置"></a>3.2 集群核心配置</h2><pre><code class="hljs">vi /opt/hadoop/etc/hadoop/core-site.xml
+
+
+&lt;configuration&gt;
+    &lt;!-- 设置NameNode地址 --&gt;
+    &lt;property&gt;
+        &lt;name&gt;fs.defaultFS&lt;/name&gt;
+        &lt;value&gt;hdfs://hadoop01:8020&lt;/value&gt;
+    &lt;/property&gt;
+
+    &lt;!-- 设置Hadoop数据存储目录 --&gt;
+    &lt;property&gt;
+        &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;
+        &lt;value&gt;/opt/hadoop/data&lt;/value&gt;
+    &lt;/property&gt;
+
+    &lt;!--设置HDFS网页登录用户为 --&gt;
+    &lt;property&gt;
+      &lt;name&gt;hadoop.http.staticuser.user&lt;/name&gt;
+      &lt;value&gt;hadoop&lt;/value&gt;
+    &lt;/property&gt;
+&lt;/configuration&gt;
+</code></pre>
+<h2 id="3-3-HDFS配置"><a href="#3-3-HDFS配置" class="headerlink" title="3.3 HDFS配置"></a>3.3 HDFS配置</h2><pre><code class="hljs">vi /opt/hadoop/etc/hadoop/hdfs-site.xml
+
+
+&lt;configuration&gt;
+    &lt;!-- 设置NameNode控制界面访问地址 --&gt;
+    &lt;property&gt;
+      &lt;name&gt;dfs.namenode.http-address&lt;/name&gt;
+      &lt;value&gt;hadoop01:9870&lt;/value&gt;
+  &lt;/property&gt;
+    &lt;!-- 设置SecondaryNameNode控制界面访问地址 --&gt;
+  &lt;property&gt;
+      &lt;name&gt;dfs.namenode.secondary.http-address&lt;/name&gt;
+      &lt;value&gt;hadoop02:9868&lt;/value&gt;
+  &lt;/property&gt;
+&lt;/configuration&gt;
+</code></pre>
+<h2 id="3-4-YARN配置"><a href="#3-4-YARN配置" class="headerlink" title="3.4 YARN配置"></a>3.4 YARN配置</h2><pre><code class="hljs">vi /opt/hadoop/etc/hadoop/yarn-site.xml
+</code></pre>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/">#大数据</a>
+      
+        <a href="/tags/Hadoop/">#Hadoop</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Hadoop集群部署</div>
+      <div>https://hfsxs.github.io/linux/Hadoop/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年5月27日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年5月28日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/linux/MinIO/" title="MinIO对象存储集群部署">
+                        <span class="hidden-mobile">MinIO对象存储集群部署</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+
+<div>
+<span id="timeDate"> 正在载入天数...</span>
+<span id="times"> 载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime(){
+        var grt= new Date("1/12/2025 01:15:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if(String(snum).length ==1 ){
+                snum = "0" + snum;
+        }
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
+        document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+</div>
+
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
