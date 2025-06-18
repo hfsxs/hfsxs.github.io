@@ -240,144 +240,6 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/linux/RabbitMQ/" target="_self">
-          RabbitMQ配置高可用集群
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/RabbitMQ/" target="_self">
-        <div>
-          RabbitMQ，由Erlang语言开发的轻量级开源消息队列系统。RabbitMQ最初起源于金融系统，基于AMQP（高级消息队列协议，应用层协议的一个开放标准，为面向消息的中间件设计，基于此协议的客户端与消息中间件可传递消息，并不受产品、开发语言等条件的限制）传递消息，也可通过插件扩展的方式支持STOMP、MQTT、RabbitMQ Stream协议，广泛应用于分布式系统中存储、转发消息，在易用性
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-02-12 10:38" pubdate>
-              2025-02-12
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/MQ/">#MQ</a>
-            
-              <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">#中间件</a>
-            
-              <a href="/tags/RabbitMQ/">#RabbitMQ</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/linux/Prometheus-Alertsnitch/" target="_self">
-          Prometheus监控告警数据持久化
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/Prometheus-Alertsnitch/" target="_self">
-        <div>
-          Prometheus监控系统的告警信息基于告警规则生成，并将生成的告警信息存储为时间序列，再发送给Alertmanager进行转发，整个过程一直专注于实时化告警的处理，并不会持久化存储。这一设计虽然简化了系统设计的复杂性，但大量的告警无疑将会影响故障排查和响应效率，也难以直观地区分告警的轻重缓急。此外，也不能对历史告警进行检索与统计，无法对业务系统的瓶颈与缺陷进行分析。Alertsnitch工具弥
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-02-11 13:48" pubdate>
-              2025-02-11
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
-            
-              <a href="/tags/Prometheus/">#Prometheus</a>
-            
-              <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
         <a href="/linux/Prometheus-MySQL/" target="_self">
           Prometheus监控MySQL数据库
         </a>
@@ -915,6 +777,144 @@
               <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
             
               <a href="/tags/%E5%A0%A1%E5%9E%92%E6%9C%BA/">#堡垒机</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/linux/KafkaRaft/" target="_self">
+          Kafka集群Kraft模式部署
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/KafkaRaft/" target="_self">
+        <div>
+          Kafka基于Zookeeper服务管理集群的元数据信息以及集群的协调工作，性能必然受其制约与影响，也增加了运维难度。于是，2.8版本开始，Kafka引入KRaft集群架构模式，力图去除Zookeeper依赖。当然，KRaft集群模式最初并不如Zookeeper模式稳定，所以依然保持了兼容的状态。直到3.3.1版本，Kafka官方开始将KRaft标注为生产环境适用。之后，经过长期的多个版本的持续迭
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-08-07 10:55" pubdate>
+              2024-08-07
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/Kafka/">#Kafka</a>
+            
+              <a href="/tags/MQ/">#MQ</a>
+            
+              <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">#中间件</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/linux/Kafka/" target="_self">
+          Kafka集群部署
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/Kafka/" target="_self">
+        <div>
+          Kafka，由Scala和Java开发的开源的高可靠、高吞吐量、低延迟的流式数据平台，可用作分布式发布-订阅消息队列系统。Kafka基于ZooKeeper同步服务，将消息数据以分区的方式并行地存储于分布式集群的磁盘，并以多副本的方式构建数据冗余机制，适用于大数据实时数据流处理领域，如消费者在网站上所有动作流数据（网页浏览、点击、搜索以及其他用户行动） 体系架构 Kafka是典型的分布式消息队列系统
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2024-08-01 14:15" pubdate>
+              2024-08-01
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/Kafka/">#Kafka</a>
+            
+              <a href="/tags/MQ/">#MQ</a>
+            
+              <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">#中间件</a>
             
           </div>
         
