@@ -16,18 +16,19 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Hadoop，Apache基金会基于Java开发和维护的开源分布式计算与存储框架，核心功能是为庞大的计算机集群提供可靠的、统一且稳定的、可伸缩的存储和计算环境。Hadoop使用简单的编程模型跨计算机群集分布式处理大型数据集，其设计理念是将数据和计算任务分布到多个计算节点，通过分布式计算来提高处理效率，以解决单台机器处理大数据时的瓶颈问题 体系架构Hadoop核心部件包括分布式文件系统 (Hadoo">
+    <meta name="description" content="Hadoop，Apache基金会基于Java开发和维护的开源分布式计算与存储框架，核心功能是为庞大的计算机集群提供可靠的、统一且稳定的、可伸缩的存储和计算环境。Hadoop使用简单的编程模型跨计算机群集分布式处理大型数据集，其设计理念是将数据和计算任务分布到多个计算节点，通过分布式计算来提高处理效率，以解决单台机器处理大数据时的瓶颈问题 体系架构Hadoop集群核心由三部分构成，即分布式文件系统H">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hadoop集群部署">
 <meta property="og:url" content="https://hfsxs.github.io/linux/Hadoop/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="Hadoop，Apache基金会基于Java开发和维护的开源分布式计算与存储框架，核心功能是为庞大的计算机集群提供可靠的、统一且稳定的、可伸缩的存储和计算环境。Hadoop使用简单的编程模型跨计算机群集分布式处理大型数据集，其设计理念是将数据和计算任务分布到多个计算节点，通过分布式计算来提高处理效率，以解决单台机器处理大数据时的瓶颈问题 体系架构Hadoop核心部件包括分布式文件系统 (Hadoo">
+<meta property="og:description" content="Hadoop，Apache基金会基于Java开发和维护的开源分布式计算与存储框架，核心功能是为庞大的计算机集群提供可靠的、统一且稳定的、可伸缩的存储和计算环境。Hadoop使用简单的编程模型跨计算机群集分布式处理大型数据集，其设计理念是将数据和计算任务分布到多个计算节点，通过分布式计算来提高处理效率，以解决单台机器处理大数据时的瓶颈问题 体系架构Hadoop集群核心由三部分构成，即分布式文件系统H">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-05-27T01:50:51.000Z">
-<meta property="article:modified_time" content="2025-05-28T09:17:36.260Z">
+<meta property="article:modified_time" content="2025-06-18T07:34:26.208Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
+<meta property="article:tag" content="存储">
 <meta property="article:tag" content="大数据">
 <meta property="article:tag" content="Hadoop">
 <meta name="twitter:card" content="summary_large_image">
@@ -239,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.5k 字
+          6.9k 字
         
       </span>
     
@@ -250,7 +251,7 @@
         
         
         
-          47 分钟
+          58 分钟
         
       </span>
     
@@ -294,7 +295,19 @@
               <div class="markdown-body">
                 
                 <p>Hadoop，Apache基金会基于Java开发和维护的开源分布式计算与存储框架，核心功能是为庞大的计算机集群提供可靠的、统一且稳定的、可伸缩的存储和计算环境。Hadoop使用简单的编程模型跨计算机群集分布式处理大型数据集，其设计理念是将数据和计算任务分布到多个计算节点，通过分布式计算来提高处理效率，以解决单台机器处理大数据时的瓶颈问题</p>
-<h1 id="体系架构"><a href="#体系架构" class="headerlink" title="体系架构"></a>体系架构</h1><p>Hadoop核心部件包括分布式文件系统 (Hadoop DFS，HDFS) 和 MapReduce</p>
+<h1 id="体系架构"><a href="#体系架构" class="headerlink" title="体系架构"></a>体系架构</h1><p>Hadoop集群核心由三部分构成，即分布式文件系统HDFS (HadoopDFS)、分布式计算框架MapReduce和资源调度系统YARN，也即狭义上的Hadoop，广义上讲就是以这三个核心进行扩展的Hadoop生态圈</p>
+<h2 id="1-HDFS"><a href="#1-HDFS" class="headerlink" title="1.HDFS"></a>1.HDFS</h2><p>HDFS，Hadoop Distributed File System，Hadoop集群的分布式文件系统，工作原理是将文件分割成为固定大小的数据块，并将这些块分布式存储在不同的节点上，从而实现大规模数据的存储和管理</p>
+<h2 id="2-MapReduce"><a href="#2-MapReduce" class="headerlink" title="2.MapReduce"></a>2.MapReduce</h2><p>MapReduce，Hadoop分布式计算框架，工作原理是将计算任务分为Map和Reduce两个阶段，以这种分而治之的策略将复杂的任务分解成许多独立的小任务，从而实现大规模数据的分布式并行计算，极大地提高了数据处理的效率</p>
+<h2 id="3-YARN"><a href="#3-YARN" class="headerlink" title="3.YARN"></a>3.YARN</h2><p>YARN，Yet Another Resource Negotiator，Hadoop资源管理系统，协调和分配集群的计算资源，支持多个数据处理框架（如 MapReduce、Spark）在同一集群上运行并共享资源，从而实现资源利用的最大化</p>
+<h2 id="4-生态系统"><a href="#4-生态系统" class="headerlink" title="4.生态系统"></a>4.生态系统</h2><h3 id="4-1-Hive"><a href="#4-1-Hive" class="headerlink" title="4.1 Hive"></a>4.1 Hive</h3><p>Hive，Hadoop的数据仓库，为大数据分析提供了一种类SQL（HiveQL）的查询语言，使得数据工程师能够使用类似SQL的语法查询存储在 HDFS中的数据，而不需要编写复杂的MapReduce程序</p>
+<h3 id="4-2-Pig"><a href="#4-2-Pig" class="headerlink" title="4.2 Pig"></a>4.2 Pig</h3><p>Pig，用于处理大规模数据的高级数据流语言，类似于Hive，Pig提供了一种简单的编程方式来对大数据进行处理，但与SQL类语言不同，Pig使用Pig Latin脚本语言，适用于更加灵活的、非结构化数据处理的场景</p>
+<h2 id="4-3-HBase"><a href="#4-3-HBase" class="headerlink" title="4.3 HBase"></a>4.3 HBase</h2><p>HBase，基于HDFS的NoSQL数据库，用于存储非结构化和半结构化数据，能够处理大规模PB级的稀疏表格数据，通过列族组织数据，适合实时随机读写和处理海量的键值对数据，且可在大规模集群中进行水平扩展</p>
+<h2 id="4-4-Sqoop"><a href="#4-4-Sqoop" class="headerlink" title="4.4 Sqoop"></a>4.4 Sqoop</h2><p>Sqoop，用于将关系型数据库（MySQL、PostgreSQL等）的数据导入到Hadoop生态系统（HDFS、Hive或HBase）以及将Hadoop集群的数据导出到关系型数据库。Sqoop提供了高效的数据传输能力，简化了数据在传统关系型数据库与Hadoop之间的传输</p>
+<h2 id="4-5-Flume"><a href="#4-5-Flume" class="headerlink" title="4.5 Flume"></a>4.5 Flume</h2><p>Flume，分布式的、高可用的日志收集系统，可从多个不同的数据源（如应用日志、网络流量等）收集数据，并将数据传输到Hadoop集群（如HDFS或HBase）。Flume是一种流式数据收集工具，适合处理日志和流数据</p>
+<h2 id="4-6-Oozie"><a href="#4-6-Oozie" class="headerlink" title="4.6 Oozie"></a>4.6 Oozie</h2><p>Oozie，用于管理Hadoop作业的工作流调度系统，允许用户定义复杂的工作流，并指定多个MapReduce、Hive、Pig等任务的依赖关系，支持基于时间的调度（如定时任务）和基于数据事件的调度（如新数据到达时触发任务）</p>
+<h2 id="4-7-Zookeeper"><a href="#4-7-Zookeeper" class="headerlink" title="4.7 Zookeeper"></a>4.7 Zookeeper</h2><p>Zookeeper，分布式协调服务，用于管理Hadoop集群的协调问题，如配置管理、元数据同步和分布式锁</p>
+<h2 id="4-8-Spark"><a href="#4-8-Spark" class="headerlink" title="4.8 Spark"></a>4.8 Spark</h2><p>Spark，快速的内存计算框架，作为Hadoop MapReduce的补充，提供了更加高效的内存计算能力，能够进行大规模数据处理。不用于MapReduce，Spark可更好地处理迭代计算和实时数据处理</p>
+<h2 id="4-9-Mahout"><a href="#4-9-Mahout" class="headerlink" title="4.9 Mahout"></a>4.9 Mahout</h2><p>Mahout，Hadoop集群的机器学习库，帮助开发者构建大规模机器学习算法，提供了多个开箱即用的机器学习算法，如分类、聚类、协同过滤等</p>
 <h1 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h1><h2 id="1-互联网行业"><a href="#1-互联网行业" class="headerlink" title="1.互联网行业"></a>1.互联网行业</h2><h3 id="1-1-日志分析"><a href="#1-1-日志分析" class="headerlink" title="1.1 日志分析"></a>1.1 日志分析</h3><p>互联网行业每天都会产生大量的日志文件，包括用户访问日志和服务器系统日志。用户访问日志记录了用户的登录时间、浏览页面、停留时长、点击链接等信息，通过Hadoop将这些日志数据收集存储在HDFS，再利用MapReduce或Spark等计算框架进行处理分析，以统计出用户的活跃度、最受欢迎的页面、用户在不同页面间的跳转路径等，为优化网站布局、提升用户体验、精准推送广告等提供依据，如电商网站根据用户行为分析来推荐符合其购买倾向的商品，提高商品转化率</p>
 <p>服务器系统日志用于监测系统性能，主要记录了CPU使用率、内存占用、网络带宽消耗、请求响应时间等指标。通过Hadoop对这些日志进行分析，能及时发现系统性能瓶颈，排查故障隐患，如判断哪个时间段服务器负载过高、哪些服务频繁出现超时等情况，以便运维人员采取相应措施优化服务器配置和网络架构</p>
 <h3 id="1-2-搜索引擎"><a href="#1-2-搜索引擎" class="headerlink" title="1.2 搜索引擎"></a>1.2 搜索引擎</h3><p>百度、谷歌这类搜索引擎需要抓取海量网页并对其内容进行索引处理，Hadoop可助力完成网页数据的存储（HDFS）及索引构建过程中的大规模数据并行计算（MapReduce等），通过对网页文本内容进行词频统计、倒排索引构建等操作，使得用户在搜索时能够快速定位到相关网页，提高搜索结果的准确性和检索速度</p>
@@ -453,6 +466,8 @@ mkdir -p /opt/hadoop/data &amp;&amp; chown -R hadoop.hadoop /opt/hadoop
       
         <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
       
+        <a href="/tags/%E5%AD%98%E5%82%A8/">#存储</a>
+      
         <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/">#大数据</a>
       
         <a href="/tags/Hadoop/">#Hadoop</a>
@@ -486,7 +501,7 @@ mkdir -p /opt/hadoop/data &amp;&amp; chown -R hadoop.hadoop /opt/hadoop
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年5月28日</div>
+          <div>2025年6月18日</div>
         </div>
       
       <div class="license-meta-item">
@@ -514,6 +529,12 @@ mkdir -p /opt/hadoop/data &amp;&amp; chown -R hadoop.hadoop /opt/hadoop
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/linux/cmc1n0uuu00002lf8f3370avo/" title="GitHook自动化流程详解">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">GitHook自动化流程详解</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
