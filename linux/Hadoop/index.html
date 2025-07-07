@@ -16,15 +16,15 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Hadoop，Apache基金会基于Java开发和维护的开源分布式计算与存储框架，核心功能是为庞大的计算机集群提供可靠的、统一且稳定的、可伸缩的存储和计算环境。Hadoop使用简单的编程模型跨计算机群集分布式处理大型数据集，其设计理念是将数据和计算任务分布到多个计算节点，通过分布式计算来提高处理效率，以解决单台机器处理大数据时的瓶颈问题 体系架构Hadoop集群核心由三部分构成，即分布式文件系统H">
+    <meta name="description" content="Hadoop，Apache基金会基于Java开发和维护的开源分布式计算与存储框架，核心功能是为庞大的计算机集群提供可靠的、统一且稳定的、可伸缩的存储和计算环境。Hadoop使用简单的编程模型跨计算机群集分布式处理大型数据集，其设计理念是将数据和计算任务分布到多个计算节点，通过分布式计算来提高处理效率，以解决单台机器处理大数据时的瓶颈问题 体系架构Hadoop核心由三部分构成，即分布式文件系统HDF">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Hadoop集群部署">
 <meta property="og:url" content="https://hfsxs.github.io/linux/Hadoop/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="Hadoop，Apache基金会基于Java开发和维护的开源分布式计算与存储框架，核心功能是为庞大的计算机集群提供可靠的、统一且稳定的、可伸缩的存储和计算环境。Hadoop使用简单的编程模型跨计算机群集分布式处理大型数据集，其设计理念是将数据和计算任务分布到多个计算节点，通过分布式计算来提高处理效率，以解决单台机器处理大数据时的瓶颈问题 体系架构Hadoop集群核心由三部分构成，即分布式文件系统H">
+<meta property="og:description" content="Hadoop，Apache基金会基于Java开发和维护的开源分布式计算与存储框架，核心功能是为庞大的计算机集群提供可靠的、统一且稳定的、可伸缩的存储和计算环境。Hadoop使用简单的编程模型跨计算机群集分布式处理大型数据集，其设计理念是将数据和计算任务分布到多个计算节点，通过分布式计算来提高处理效率，以解决单台机器处理大数据时的瓶颈问题 体系架构Hadoop核心由三部分构成，即分布式文件系统HDF">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-05-27T01:50:51.000Z">
-<meta property="article:modified_time" content="2025-06-18T07:34:26.208Z">
+<meta property="article:modified_time" content="2025-06-27T02:34:52.000Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -295,10 +295,10 @@
               <div class="markdown-body">
                 
                 <p>Hadoop，Apache基金会基于Java开发和维护的开源分布式计算与存储框架，核心功能是为庞大的计算机集群提供可靠的、统一且稳定的、可伸缩的存储和计算环境。Hadoop使用简单的编程模型跨计算机群集分布式处理大型数据集，其设计理念是将数据和计算任务分布到多个计算节点，通过分布式计算来提高处理效率，以解决单台机器处理大数据时的瓶颈问题</p>
-<h1 id="体系架构"><a href="#体系架构" class="headerlink" title="体系架构"></a>体系架构</h1><p>Hadoop集群核心由三部分构成，即分布式文件系统HDFS (HadoopDFS)、分布式计算框架MapReduce和资源调度系统YARN，也即狭义上的Hadoop，广义上讲就是以这三个核心进行扩展的Hadoop生态圈</p>
-<h2 id="1-HDFS"><a href="#1-HDFS" class="headerlink" title="1.HDFS"></a>1.HDFS</h2><p>HDFS，Hadoop Distributed File System，Hadoop集群的分布式文件系统，工作原理是将文件分割成为固定大小的数据块，并将这些块分布式存储在不同的节点上，从而实现大规模数据的存储和管理</p>
+<h1 id="体系架构"><a href="#体系架构" class="headerlink" title="体系架构"></a>体系架构</h1><p>Hadoop核心由三部分构成，即分布式文件系统HDFS (HadoopDFS)、分布式计算框架MapReduce和资源调度系统YARN，也即狭义上的Hadoop，广义上讲就是以这三个核心进行扩展的Hadoop生态圈</p>
+<h2 id="1-HDFS"><a href="#1-HDFS" class="headerlink" title="1.HDFS"></a>1.HDFS</h2><p>HDFS，Hadoop Distributed File System，Hadoop分布式文件系统，工作原理是将文件分割为固定大小的数据块，并将这些块分布式存储在不同的节点上，从而实现大规模数据的存储和管理</p>
 <h2 id="2-MapReduce"><a href="#2-MapReduce" class="headerlink" title="2.MapReduce"></a>2.MapReduce</h2><p>MapReduce，Hadoop分布式计算框架，工作原理是将计算任务分为Map和Reduce两个阶段，以这种分而治之的策略将复杂的任务分解成许多独立的小任务，从而实现大规模数据的分布式并行计算，极大地提高了数据处理的效率</p>
-<h2 id="3-YARN"><a href="#3-YARN" class="headerlink" title="3.YARN"></a>3.YARN</h2><p>YARN，Yet Another Resource Negotiator，Hadoop资源管理系统，协调和分配集群的计算资源，支持多个数据处理框架（如 MapReduce、Spark）在同一集群上运行并共享资源，从而实现资源利用的最大化</p>
+<h2 id="3-YARN"><a href="#3-YARN" class="headerlink" title="3.YARN"></a>3.YARN</h2><p>YARN，Yet Another Resource Negotiator，Hadoop资源管理系统，负责协调和分配集群的计算资源，支持多个数据处理框架（如 MapReduce、Spark）在同一集群上运行并共享资源，从而实现资源利用的最大化</p>
 <h2 id="4-生态系统"><a href="#4-生态系统" class="headerlink" title="4.生态系统"></a>4.生态系统</h2><h3 id="4-1-Hive"><a href="#4-1-Hive" class="headerlink" title="4.1 Hive"></a>4.1 Hive</h3><p>Hive，Hadoop的数据仓库，为大数据分析提供了一种类SQL（HiveQL）的查询语言，使得数据工程师能够使用类似SQL的语法查询存储在 HDFS中的数据，而不需要编写复杂的MapReduce程序</p>
 <h3 id="4-2-Pig"><a href="#4-2-Pig" class="headerlink" title="4.2 Pig"></a>4.2 Pig</h3><p>Pig，用于处理大规模数据的高级数据流语言，类似于Hive，Pig提供了一种简单的编程方式来对大数据进行处理，但与SQL类语言不同，Pig使用Pig Latin脚本语言，适用于更加灵活的、非结构化数据处理的场景</p>
 <h2 id="4-3-HBase"><a href="#4-3-HBase" class="headerlink" title="4.3 HBase"></a>4.3 HBase</h2><p>HBase，基于HDFS的NoSQL数据库，用于存储非结构化和半结构化数据，能够处理大规模PB级的稀疏表格数据，通过列族组织数据，适合实时随机读写和处理海量的键值对数据，且可在大规模集群中进行水平扩展</p>
@@ -501,7 +501,7 @@ mkdir -p /opt/hadoop/data &amp;&amp; chown -R hadoop.hadoop /opt/hadoop
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年6月18日</div>
+          <div>2025年6月27日</div>
         </div>
       
       <div class="license-meta-item">
