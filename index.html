@@ -240,6 +240,75 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/linux/PrometheusAuth/" target="_self">
+          Prometheus监控配置安全认证
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/PrometheusAuth/" target="_self">
+        <div>
+          Prometheus监控系统默认没有配置安全加密机制，这可能会导致监控信息遭到泄漏，特别是对安全性要求较高的业务场景，很容易在合规检查中被扫描到安全漏洞。有鉴于此，Prometheus于2.24版本引入Basic Auth加密机制，以保障监控信息的安全性与完整性 1.安装htpasswdsudo yum -y install httpd-tools sudo apt -y install apac
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-07-11 09:17" pubdate>
+              2025-07-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+            
+              <a href="/tags/Prometheus/">#Prometheus</a>
+            
+              <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/linux/Hadoop/" target="_self">
           Hadoop集群部署
         </a>
@@ -854,75 +923,6 @@
               <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">#中间件</a>
             
               <a href="/tags/RabbitMQ/">#RabbitMQ</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/linux/Prometheus-Alertsnitch/" target="_self">
-          Prometheus监控告警数据持久化
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/Prometheus-Alertsnitch/" target="_self">
-        <div>
-          Prometheus监控系统的告警信息基于告警规则生成，并将生成的告警信息存储为时间序列，再发送给Alertmanager进行转发，整个过程一直专注于实时化告警的处理，并不会持久化存储。这一设计虽然简化了系统设计的复杂性，但大量的告警无疑将会影响故障排查和响应效率，也难以直观地区分告警的轻重缓急。此外，也不能对历史告警进行检索与统计，无法对业务系统的瓶颈与缺陷进行分析。Alertsnitch工具弥
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-02-11 13:48" pubdate>
-              2025-02-11
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
-            
-              <a href="/tags/Prometheus/">#Prometheus</a>
-            
-              <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
             
           </div>
         
