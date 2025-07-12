@@ -23,8 +23,9 @@
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="Prometheus监控系统默认没有配置安全加密机制，这可能会导致监控信息遭到泄漏，特别是对安全性要求较高的业务场景，很容易在合规检查中被扫描到安全漏洞。有鉴于此，Prometheus于2.24版本引入Basic Auth加密机制，以保障监控信息的安全性与完整性 1.安装htpasswdsudo yum -y install httpd-tools sudo apt -y install apac">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/auth.jpg">
 <meta property="article:published_time" content="2025-07-11T01:17:37.000Z">
-<meta property="article:modified_time" content="2025-07-11T02:33:40.500Z">
+<meta property="article:modified_time" content="2025-07-12T13:27:42.505Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -32,6 +33,7 @@
 <meta property="article:tag" content="Prometheus">
 <meta property="article:tag" content="监控告警">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hfsxs.github.io/img/wiki/prometheus/auth.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -240,7 +242,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.2k 字
+          1.4k 字
         
       </span>
     
@@ -251,7 +253,7 @@
         
         
         
-          11 分钟
+          12 分钟
         
       </span>
     
@@ -298,7 +300,15 @@
 <h1 id="1-安装htpasswd"><a href="#1-安装htpasswd" class="headerlink" title="1.安装htpasswd"></a>1.安装htpasswd</h1><pre><code class="hljs">sudo yum -y install httpd-tools
 sudo apt -y install apache2-utils
 </code></pre>
-<h1 id="2-创建身份认证文件"><a href="#2-创建身份认证文件" class="headerlink" title="2.创建身份认证文件"></a>2.创建身份认证文件</h1><pre><code class="hljs">sudo htpasswd -c /usr/local/prometheus/auth.yml prometheus Prometheus@2025
+<h1 id="2-创建身份认证文件"><a href="#2-创建身份认证文件" class="headerlink" title="2.创建身份认证文件"></a>2.创建身份认证文件</h1><h2 id="2-1-创建认证用户及密码"><a href="#2-1-创建认证用户及密码" class="headerlink" title="2.1 创建认证用户及密码"></a>2.1 创建认证用户及密码</h2><pre><code class="hljs">sudo htpasswd -nbB -C 10 prometheus Prometheus@2025
+
+prometheus:$2y$10$d70aiv0cdRPRSe8XYJt4fekhAnsNYtKfHyJKB8yy3gg2YzG80oNHW
+</code></pre>
+<h2 id="2-2-创建认证文件"><a href="#2-2-创建认证文件" class="headerlink" title="2.2 创建认证文件"></a>2.2 创建认证文件</h2><pre><code class="hljs">sudo vi /usr/local/prometheus/auth.yml
+
+
+basic_auth_users:
+  prometheus: $2y$10$d70aiv0cdRPRSe8XYJt4fekhAnsNYtKfHyJKB8yy3gg2YzG80oNHW
 </code></pre>
 <h1 id="3-配置Prometheus安全认证"><a href="#3-配置Prometheus安全认证" class="headerlink" title="3.配置Prometheus安全认证"></a>3.配置Prometheus安全认证</h1><h2 id="3-1-配置启动脚本"><a href="#3-1-配置启动脚本" class="headerlink" title="3.1 配置启动脚本"></a>3.1 配置启动脚本</h2><pre><code class="hljs">sudo vi /lib/systemd/system/prometheus.service
 
@@ -331,7 +341,8 @@ scrape_configs:
 </code></pre>
 <h3 id="4-3-2-重载Prometheus"><a href="#4-3-2-重载Prometheus" class="headerlink" title="4.3.2 重载Prometheus"></a>4.3.2 重载Prometheus</h3><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload
 </code></pre>
-<h1 id="5-配置Grafana"><a href="#5-配置Grafana" class="headerlink" title="5.配置Grafana"></a>5.配置Grafana</h1><hr>
+<h1 id="5-配置Grafana"><a href="#5-配置Grafana" class="headerlink" title="5.配置Grafana"></a>5.配置Grafana</h1><p><img src="/img/wiki/prometheus/auth.jpg" srcset="/img/loading.gif" lazyload alt="auth"></p>
+<hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/gjjumin/article/details/143021107">https://blog.csdn.net/gjjumin/article/details/143021107</a></li>
 </ul>
@@ -407,7 +418,7 @@ scrape_configs:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年7月11日</div>
+          <div>2025年7月12日</div>
         </div>
       
       <div class="license-meta-item">
