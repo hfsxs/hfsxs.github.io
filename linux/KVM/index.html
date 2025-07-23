@@ -24,7 +24,7 @@
 <meta property="og:description" content="KVM，Kernel-based Virtual Machine，即基于内核的虚拟机，开源的操作系统虚拟化模块，目前已集成到Linux的各个发行版，用于Linux实现Hypervisor，是基于虚拟化扩展（Intel VT或AMD-V）的X86硬件的原生全虚拟化解决方案 KVM最初由Qumranet公司的Avi Kivity开发，作为VDI产品的后台虚拟化解决方案。为了简化开发，Avi Kivit">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-10-31T02:06:33.000Z">
-<meta property="article:modified_time" content="2025-03-15T09:35:31.637Z">
+<meta property="article:modified_time" content="2025-07-22T09:01:58.725Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -377,7 +377,7 @@ sudo virt-clone -o centos7 -n master -f /home/kvm/servers/master.qcow2
 </code></pre>
 <h1 id="8-kvm开启虚拟机嵌套虚拟化"><a href="#8-kvm开启虚拟机嵌套虚拟化" class="headerlink" title="8.kvm开启虚拟机嵌套虚拟化"></a>8.kvm开启虚拟机嵌套虚拟化</h1><h2 id="8-1-查看宿主机是否已开启嵌套虚拟化功能"><a href="#8-1-查看宿主机是否已开启嵌套虚拟化功能" class="headerlink" title="8.1 查看宿主机是否已开启嵌套虚拟化功能"></a>8.1 查看宿主机是否已开启嵌套虚拟化功能</h2><pre><code class="hljs">cat /sys/module/kvm_intel/parameters/nested
 </code></pre>
-<h2 id="8-2-创建配置文件"><a href="#8-2-创建配置文件" class="headerlink" title="8.2 创建配置文件"></a>8.2 创建配置文件</h2><pre><code class="hljs">vi /etc/modprobe.d/kvm-nested.conf
+<h2 id="8-2-创建配置文件"><a href="#8-2-创建配置文件" class="headerlink" title="8.2 创建配置文件"></a>8.2 创建配置文件</h2><pre><code class="hljs">sudo vi /etc/modprobe.d/kvm-nested.conf
 
 
 options kvm-intel nested=1
@@ -476,7 +476,7 @@ modprobe -a kvm_intel
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月15日</div>
+          <div>2025年7月22日</div>
         </div>
       
       <div class="license-meta-item">

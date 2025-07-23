@@ -24,7 +24,7 @@
 <meta property="og:description" content="kvm虚拟机的网络连接模式有两种，即NAT和Bridge模式  1.NATNAT是KVM默认的网络连接方式，此模式下宿主机配置有虚拟网桥virbr0作为虚拟交换机，并绑定到虚拟网卡virbr0-nic。虚拟机的虚拟网卡vnet0连接virbr0交换机，通过virbr0-nic网卡将数据包转发到宿主机。此时的宿主机已经配置了iptables，成为配置了SNAT规则具备路由功能的路由器，从而将数据包发">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-03-07T06:27:35.000Z">
-<meta property="article:modified_time" content="2025-03-15T09:35:58.569Z">
+<meta property="article:modified_time" content="2025-07-22T12:05:08.024Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -312,9 +312,9 @@
 </code></pre>
 <h2 id="1-4-查看虚拟交换机的连接"><a href="#1-4-查看虚拟交换机的连接" class="headerlink" title="1.4 查看虚拟交换机的连接"></a>1.4 查看虚拟交换机的连接</h2><pre><code class="hljs">sudo brctl show
 </code></pre>
-<h2 id="1-5-查看虚拟机网络接口类型"><a href="#1-5-查看虚拟机网络接口类型" class="headerlink" title="1.5 查看虚拟机网络接口类型"></a>1.5 查看虚拟机网络接口类型</h2><pre><code class="hljs">sudo sudo virsh domiflist centos7
+<h2 id="1-5-查看虚拟机网络接口类型"><a href="#1-5-查看虚拟机网络接口类型" class="headerlink" title="1.5 查看虚拟机网络接口类型"></a>1.5 查看虚拟机网络接口类型</h2><pre><code class="hljs">sudo virsh domiflist centos7
 </code></pre>
-<h2 id="1-6-查看虚拟机网卡IP地址"><a href="#1-6-查看虚拟机网卡IP地址" class="headerlink" title="1.6 查看虚拟机网卡IP地址"></a>1.6 查看虚拟机网卡IP地址</h2><pre><code class="hljs">sudo sudo virsh domifaddr centos7
+<h2 id="1-6-查看虚拟机网卡IP地址"><a href="#1-6-查看虚拟机网卡IP地址" class="headerlink" title="1.6 查看虚拟机网卡IP地址"></a>1.6 查看虚拟机网卡IP地址</h2><pre><code class="hljs">sudo virsh domifaddr centos7
 </code></pre>
 <h1 id="2-Bridge"><a href="#2-Bridge" class="headerlink" title="2.Bridge"></a>2.Bridge</h1><p>Bridge模式是将宿主机的物理网卡eth0桥接到虚拟交换机virbr1，虚拟机的虚拟网卡vnet0连接virbr1交换机，从而直接将数据包通过宿主机的物理网卡发送到外网进行数据交换</p>
 <h2 id="2-1-centos配置桥接网络"><a href="#2-1-centos配置桥接网络" class="headerlink" title="2.1 centos配置桥接网络"></a>2.1 centos配置桥接网络</h2><h3 id="2-1-1-创建虚拟网桥配置文件"><a href="#2-1-1-创建虚拟网桥配置文件" class="headerlink" title="2.1.1 创建虚拟网桥配置文件"></a>2.1.1 创建虚拟网桥配置文件</h3><pre><code class="hljs">sudo vi /etc/sysconfig/network-scripts/ifcfg-virbr1
@@ -369,9 +369,9 @@ BRIDGE=virbr1
 </code></pre>
 <h3 id="2-1-5-查看虚拟交换机的连接"><a href="#2-1-5-查看虚拟交换机的连接" class="headerlink" title="2.1.5 查看虚拟交换机的连接"></a>2.1.5 查看虚拟交换机的连接</h3><pre><code class="hljs">sudo brctl show
 </code></pre>
-<h3 id="2-1-6-查看虚拟机网络接口类型"><a href="#2-1-6-查看虚拟机网络接口类型" class="headerlink" title="2.1.6 查看虚拟机网络接口类型"></a>2.1.6 查看虚拟机网络接口类型</h3><pre><code class="hljs">sudo sudo virsh domiflist debian10
+<h3 id="2-1-6-查看虚拟机网络接口类型"><a href="#2-1-6-查看虚拟机网络接口类型" class="headerlink" title="2.1.6 查看虚拟机网络接口类型"></a>2.1.6 查看虚拟机网络接口类型</h3><pre><code class="hljs">sudo virsh domiflist debian10
 </code></pre>
-<h3 id="2-1-7-查看虚拟机网卡IP地址"><a href="#2-1-7-查看虚拟机网卡IP地址" class="headerlink" title="2.1.7 查看虚拟机网卡IP地址"></a>2.1.7 查看虚拟机网卡IP地址</h3><pre><code class="hljs">sudo sudo virsh domifaddr debian10
+<h3 id="2-1-7-查看虚拟机网卡IP地址"><a href="#2-1-7-查看虚拟机网卡IP地址" class="headerlink" title="2.1.7 查看虚拟机网卡IP地址"></a>2.1.7 查看虚拟机网卡IP地址</h3><pre><code class="hljs">sudo virsh domifaddr debian10
 </code></pre>
 <h2 id="2-2-debian配置桥接网络"><a href="#2-2-debian配置桥接网络" class="headerlink" title="2.2 debian配置桥接网络"></a>2.2 debian配置桥接网络</h2><pre><code class="hljs">sudo apt install -y bridge-utils
 </code></pre>
@@ -505,7 +505,7 @@ network:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月15日</div>
+          <div>2025年7月22日</div>
         </div>
       
       <div class="license-meta-item">
