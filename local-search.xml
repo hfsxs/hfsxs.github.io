@@ -4,6 +4,41 @@
   
   
   <entry>
+    <title>KVM虚拟机基于Ceph存储系统实现热迁移</title>
+    <link href="/linux/KVM-Ceph/"/>
+    <url>/linux/KVM-Ceph/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1-Ceph集群创建KVM存储池"><a href="#1-Ceph集群创建KVM存储池" class="headerlink" title="1.Ceph集群创建KVM存储池"></a>1.Ceph集群创建KVM存储池</h1><pre><code class="hljs">ceph osd pool create kvm 16 16rbd pool init kvm</code></pre><h1 id="2-Ceph集群创建KVM用户"><a href="#2-Ceph集群创建KVM用户" class="headerlink" title="2.Ceph集群创建KVM用户"></a>2.Ceph集群创建KVM用户</h1><pre><code class="hljs">ceph auth get-or-create client.kvm mon &#39;profile rbd&#39; osd &#39;profile rbd pool=kvm&#39;[client.kvm]    key = AQAsf39ovuHNIxAAAQ8JnmPv3qZTCPmPiLadkg==</code></pre><h1 id="3-源宿主机配置"><a href="#3-源宿主机配置" class="headerlink" title="3.源宿主机配置"></a>3.源宿主机配置</h1><h2 id="3-1-创建Ceph集群KVM用户密钥"><a href="#3-1-创建Ceph集群KVM用户密钥" class="headerlink" title="3.1 创建Ceph集群KVM用户密钥"></a>3.1 创建Ceph集群KVM用户密钥</h2><h3 id="3-1-1-创建配置文件"><a href="#3-1-1-创建配置文件" class="headerlink" title="3.1.1 创建配置文件"></a>3.1.1 创建配置文件</h3><pre><code class="hljs">vi secret.xml&lt;secret ephemeral=&#39;no&#39; private=&#39;no&#39;&gt;  &lt;usage type=&#39;ceph&#39;&gt;    &lt;name&gt;client.kvm secret&lt;/name&gt;  &lt;/usage&gt;&lt;/secret&gt;</code></pre><h3 id="3-1-2-创建KVM加密密钥"><a href="#3-1-2-创建KVM加密密钥" class="headerlink" title="3.1.2 创建KVM加密密钥"></a>3.1.2 创建KVM加密密钥</h3><pre><code class="hljs">virsh secret-define --file secret.xml Secret 2f0003b4-d4d6-4b86-a654-2e849edbc6e8 created</code></pre><h3 id="3-1-3-创建KVM用户认证密钥"><a href="#3-1-3-创建KVM用户认证密钥" class="headerlink" title="3.1.3 创建KVM用户认证密钥"></a>3.1.3 创建KVM用户认证密钥</h3><pre><code class="hljs">virsh secret-set-value --secret 2f0003b4-d4d6-4b86-a654-2e849edbc6e8 --base64 AQAsf39ovuHNIxAAAQ8JnmPv3qZTCPmPiLadkg==</code></pre><h2 id="3-2-虚拟机磁盘文件导入Ceph"><a href="#3-2-虚拟机磁盘文件导入Ceph" class="headerlink" title="3.2 虚拟机磁盘文件导入Ceph"></a>3.2 虚拟机磁盘文件导入Ceph</h2><pre><code class="hljs">qemu-img convert -f qcow2 /home/kvm/ops.qcow2 -O raw rbd:kvm/ops.img</code></pre><h1 id="4-目标宿主机配置"><a href="#4-目标宿主机配置" class="headerlink" title="4.目标宿主机配置"></a>4.目标宿主机配置</h1><h2 id="4-1-导入源宿主机加密密钥"><a href="#4-1-导入源宿主机加密密钥" class="headerlink" title="4.1 导入源宿主机加密密钥"></a>4.1 导入源宿主机加密密钥</h2><h3 id="4-1-1-源宿主机导出加密密钥"><a href="#4-1-1-源宿主机导出加密密钥" class="headerlink" title="4.1.1 源宿主机导出加密密钥"></a>4.1.1 源宿主机导出加密密钥</h3><pre><code class="hljs">virsh secret-dumpxml 2f0003b4-d4d6-4b86-a654-2e849edbc6e8 &gt; secret-source.xml</code></pre><h3 id="4-1-2-目标宿主机导入加密密钥"><a href="#4-1-2-目标宿主机导入加密密钥" class="headerlink" title="4.1.2 目标宿主机导入加密密钥"></a>4.1.2 目标宿主机导入加密密钥</h3><pre><code class="hljs">virsh secret-define --file secret-source.xml</code></pre><h2 id="4-2-创建KVM用户认证密钥"><a href="#4-2-创建KVM用户认证密钥" class="headerlink" title="4.2 创建KVM用户认证密钥"></a>4.2 创建KVM用户认证密钥</h2><pre><code class="hljs">virsh secret-set-value --secret 2f0003b4-d4d6-4b86-a654-2e849edbc6e8 --base64 AQAsf39ovuHNIxAAAQ8JnmPv3qZTCPmPiLadkg==</code></pre><h1 id="5-迁移虚拟机"><a href="#5-迁移虚拟机" class="headerlink" title="5.迁移虚拟机"></a>5.迁移虚拟机</h1><pre><code class="hljs">virsh migrate --live --verbose ops qemu+ssh://172.25.12.195/system tcp://172.25.12.195 --unsafe --persistent</code></pre><h1 id="6-验证虚拟机迁移"><a href="#6-验证虚拟机迁移" class="headerlink" title="6.验证虚拟机迁移"></a>6.验证虚拟机迁移</h1><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://www.cnblogs.com/yinzhengjie/p/18134411">https://www.cnblogs.com/yinzhengjie/p/18134411</a></li><li><a href="https://blog.csdn.net/2501_91350469/article/details/148712782">https://blog.csdn.net/2501_91350469/article/details/148712782</a></li><li><a href="https://blog.csdn.net/weixin_44953658/article/details/140626237">https://blog.csdn.net/weixin_44953658/article/details/140626237</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>Ceph</tag>
+      
+      <tag>存储</tag>
+      
+      <tag>KVM</tag>
+      
+      <tag>虚拟化</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Prometheus监控配置安全认证</title>
     <link href="/linux/PrometheusAuth/"/>
     <url>/linux/PrometheusAuth/</url>

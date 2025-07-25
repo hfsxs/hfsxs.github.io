@@ -16,30 +16,29 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Prometheus监控系统默认没有配置安全加密机制，这可能会导致监控信息遭到泄漏，特别是对安全性要求较高的业务场景，很容易在合规检查中被扫描到安全漏洞。有鉴于此，Prometheus于2.24版本引入Basic Auth加密机制，以保障监控信息的安全性与完整性 1.安装htpasswdsudo yum -y install httpd-tools sudo apt -y install apac">
+    <meta name="description" content="1.Ceph集群创建KVM存储池ceph osd pool create kvm 16 16 rbd pool init kvm  2.Ceph集群创建KVM用户ceph auth get-or-create client.kvm mon &#39;profile rbd&#39; osd &#39;profile rbd pool&#x3D;kvm&#39;  [client.kvm]     key &#x3D;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Prometheus监控配置安全认证">
-<meta property="og:url" content="https://hfsxs.github.io/linux/PrometheusAuth/index.html">
+<meta property="og:title" content="KVM虚拟机基于Ceph存储系统实现热迁移">
+<meta property="og:url" content="https://hfsxs.github.io/linux/KVM-Ceph/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="Prometheus监控系统默认没有配置安全加密机制，这可能会导致监控信息遭到泄漏，特别是对安全性要求较高的业务场景，很容易在合规检查中被扫描到安全漏洞。有鉴于此，Prometheus于2.24版本引入Basic Auth加密机制，以保障监控信息的安全性与完整性 1.安装htpasswdsudo yum -y install httpd-tools sudo apt -y install apac">
+<meta property="og:description" content="1.Ceph集群创建KVM存储池ceph osd pool create kvm 16 16 rbd pool init kvm  2.Ceph集群创建KVM用户ceph auth get-or-create client.kvm mon &#39;profile rbd&#39; osd &#39;profile rbd pool&#x3D;kvm&#39;  [client.kvm]     key &#x3D;">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/auth.jpg">
-<meta property="article:published_time" content="2025-07-11T01:17:37.000Z">
-<meta property="article:modified_time" content="2025-07-12T13:32:34.804Z">
+<meta property="article:published_time" content="2025-07-22T01:30:08.000Z">
+<meta property="article:modified_time" content="2025-07-25T12:33:41.457Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
-<meta property="article:tag" content="云原生">
-<meta property="article:tag" content="Prometheus">
-<meta property="article:tag" content="监控告警">
+<meta property="article:tag" content="Ceph">
+<meta property="article:tag" content="存储">
+<meta property="article:tag" content="KVM">
+<meta property="article:tag" content="虚拟化">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://hfsxs.github.io/img/wiki/prometheus/auth.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Prometheus监控配置安全认证 - 扬帆</title>
+  <title>KVM虚拟机基于Ceph存储系统实现热迁移 - 扬帆</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -219,7 +218,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Prometheus监控配置安全认证</span>
+            <span id="subtitle">KVM虚拟机基于Ceph存储系统实现热迁移</span>
           
         </div>
 
@@ -230,8 +229,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-07-11 09:17" pubdate>
-          2025年7月11日 上午
+        <time datetime="2025-07-22 09:30" pubdate>
+          2025年7月22日 上午
         </time>
       </span>
     
@@ -242,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.4k 字
+          1.3k 字
         
       </span>
     
@@ -253,7 +252,7 @@
         
         
         
-          12 分钟
+          11 分钟
         
       </span>
     
@@ -291,60 +290,48 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Prometheus监控配置安全认证</h1>
+            <h1 style="display: none">KVM虚拟机基于Ceph存储系统实现热迁移</h1>
             
             
               <div class="markdown-body">
                 
-                <p>Prometheus监控系统默认没有配置安全加密机制，这可能会导致监控信息遭到泄漏，特别是对安全性要求较高的业务场景，很容易在合规检查中被扫描到安全漏洞。有鉴于此，Prometheus于2.24版本引入Basic Auth加密机制，以保障监控信息的安全性与完整性</p>
-<h1 id="1-安装htpasswd"><a href="#1-安装htpasswd" class="headerlink" title="1.安装htpasswd"></a>1.安装htpasswd</h1><pre><code class="hljs">sudo yum -y install httpd-tools
-sudo apt -y install apache2-utils
+                <h1 id="1-Ceph集群创建KVM存储池"><a href="#1-Ceph集群创建KVM存储池" class="headerlink" title="1.Ceph集群创建KVM存储池"></a>1.Ceph集群创建KVM存储池</h1><pre><code class="hljs">ceph osd pool create kvm 16 16
+rbd pool init kvm
 </code></pre>
-<h1 id="2-创建身份认证文件"><a href="#2-创建身份认证文件" class="headerlink" title="2.创建身份认证文件"></a>2.创建身份认证文件</h1><h2 id="2-1-创建认证用户及密码"><a href="#2-1-创建认证用户及密码" class="headerlink" title="2.1 创建认证用户及密码"></a>2.1 创建认证用户及密码</h2><pre><code class="hljs">sudo htpasswd -nbB -C 10 prometheus Prometheus@2025
+<h1 id="2-Ceph集群创建KVM用户"><a href="#2-Ceph集群创建KVM用户" class="headerlink" title="2.Ceph集群创建KVM用户"></a>2.Ceph集群创建KVM用户</h1><pre><code class="hljs">ceph auth get-or-create client.kvm mon &#39;profile rbd&#39; osd &#39;profile rbd pool=kvm&#39;
 
-prometheus:$2y$10$d70aiv0cdRPRSe8XYJt4fekhAnsNYtKfHyJKB8yy3gg2YzG80oNHW
+[client.kvm]
+    key = AQAsf39ovuHNIxAAAQ8JnmPv3qZTCPmPiLadkg==
 </code></pre>
-<h2 id="2-2-创建认证文件"><a href="#2-2-创建认证文件" class="headerlink" title="2.2 创建认证文件"></a>2.2 创建认证文件</h2><pre><code class="hljs">sudo vi /usr/local/prometheus/auth.yml
-
-
-basic_auth_users:
-  prometheus: $2y$10$d70aiv0cdRPRSe8XYJt4fekhAnsNYtKfHyJKB8yy3gg2YzG80oNHW
-</code></pre>
-<h1 id="3-配置Prometheus安全认证"><a href="#3-配置Prometheus安全认证" class="headerlink" title="3.配置Prometheus安全认证"></a>3.配置Prometheus安全认证</h1><h2 id="3-1-配置启动脚本"><a href="#3-1-配置启动脚本" class="headerlink" title="3.1 配置启动脚本"></a>3.1 配置启动脚本</h2><pre><code class="hljs">sudo vi /lib/systemd/system/prometheus.service
+<h1 id="3-源宿主机配置"><a href="#3-源宿主机配置" class="headerlink" title="3.源宿主机配置"></a>3.源宿主机配置</h1><h2 id="3-1-创建Ceph集群KVM用户密钥"><a href="#3-1-创建Ceph集群KVM用户密钥" class="headerlink" title="3.1 创建Ceph集群KVM用户密钥"></a>3.1 创建Ceph集群KVM用户密钥</h2><h3 id="3-1-1-创建配置文件"><a href="#3-1-1-创建配置文件" class="headerlink" title="3.1.1 创建配置文件"></a>3.1.1 创建配置文件</h3><pre><code class="hljs">vi secret.xml
 
 
-ExecStart=/usr/local/prometheus/prometheus --config.file=/usr/local/prometheus/prometheus.yml --web.listen-address=0.0.0.0:9090 --web.enable-lifecycle --web.config.file=/usr/local/prometheus/auth.yml
+&lt;secret ephemeral=&#39;no&#39; private=&#39;no&#39;&gt;
+  &lt;usage type=&#39;ceph&#39;&gt;
+    &lt;name&gt;client.kvm secret&lt;/name&gt;
+  &lt;/usage&gt;
+&lt;/secret&gt;
 </code></pre>
-<h2 id="3-2-重启Prometheus"><a href="#3-2-重启Prometheus" class="headerlink" title="3.2 重启Prometheus"></a>3.2 重启Prometheus</h2><pre><code class="hljs">sudo systemctl daemon-reload
-sudo systemctl restart prometheus.service
+<h3 id="3-1-2-创建KVM加密密钥"><a href="#3-1-2-创建KVM加密密钥" class="headerlink" title="3.1.2 创建KVM加密密钥"></a>3.1.2 创建KVM加密密钥</h3><pre><code class="hljs">virsh secret-define --file secret.xml 
+Secret 2f0003b4-d4d6-4b86-a654-2e849edbc6e8 created
 </code></pre>
-<h1 id="4-配置Node-exporter安全认证"><a href="#4-配置Node-exporter安全认证" class="headerlink" title="4.配置Node_exporter安全认证"></a>4.配置Node_exporter安全认证</h1><h2 id="4-1-配置启动脚本"><a href="#4-1-配置启动脚本" class="headerlink" title="4.1 配置启动脚本"></a>4.1 配置启动脚本</h2><pre><code class="hljs">sudo vi /lib/systemd/system/node_exporter.service
-
-
-ExecStart=/usr/local/bin/node_exporter --web.config.file=/usr/local/prometheus/auth.yml
+<h3 id="3-1-3-创建KVM用户认证密钥"><a href="#3-1-3-创建KVM用户认证密钥" class="headerlink" title="3.1.3 创建KVM用户认证密钥"></a>3.1.3 创建KVM用户认证密钥</h3><pre><code class="hljs">virsh secret-set-value --secret 2f0003b4-d4d6-4b86-a654-2e849edbc6e8 --base64 AQAsf39ovuHNIxAAAQ8JnmPv3qZTCPmPiLadkg==
 </code></pre>
-<h2 id="4-2-重启Node-exporter"><a href="#4-2-重启Node-exporter" class="headerlink" title="4.2 重启Node_exporter"></a>4.2 重启Node_exporter</h2><pre><code class="hljs">sudo systemctl daemon-reload
-sudo systemctl restart node_exporter.service
+<h2 id="3-2-虚拟机磁盘文件导入Ceph"><a href="#3-2-虚拟机磁盘文件导入Ceph" class="headerlink" title="3.2 虚拟机磁盘文件导入Ceph"></a>3.2 虚拟机磁盘文件导入Ceph</h2><pre><code class="hljs">qemu-img convert -f qcow2 /home/kvm/ops.qcow2 -O raw rbd:kvm/ops.img
 </code></pre>
-<h2 id="4-3-配置Prometheus"><a href="#4-3-配置Prometheus" class="headerlink" title="4.3 配置Prometheus"></a>4.3 配置Prometheus</h2><h3 id="4-3-1-配置监控Job"><a href="#4-3-1-配置监控Job" class="headerlink" title="4.3.1 配置监控Job"></a>4.3.1 配置监控Job</h3><pre><code class="hljs">sudo vi /usr/local/prometheus/prometheus.yml 
-
-scrape_configs:
-
-  - job_name: node
-    basic_auth:
-      username: prometheus
-      password: Prometheus@2025
-    file_sd_configs:
-    - files:
-      - /usr/local/prometheus/configs/*.yaml
-      refresh_interval: 2m
+<h1 id="4-目标宿主机配置"><a href="#4-目标宿主机配置" class="headerlink" title="4.目标宿主机配置"></a>4.目标宿主机配置</h1><h2 id="4-1-导入源宿主机加密密钥"><a href="#4-1-导入源宿主机加密密钥" class="headerlink" title="4.1 导入源宿主机加密密钥"></a>4.1 导入源宿主机加密密钥</h2><h3 id="4-1-1-源宿主机导出加密密钥"><a href="#4-1-1-源宿主机导出加密密钥" class="headerlink" title="4.1.1 源宿主机导出加密密钥"></a>4.1.1 源宿主机导出加密密钥</h3><pre><code class="hljs">virsh secret-dumpxml 2f0003b4-d4d6-4b86-a654-2e849edbc6e8 &gt; secret-source.xml
 </code></pre>
-<h3 id="4-3-2-重载Prometheus"><a href="#4-3-2-重载Prometheus" class="headerlink" title="4.3.2 重载Prometheus"></a>4.3.2 重载Prometheus</h3><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload
+<h3 id="4-1-2-目标宿主机导入加密密钥"><a href="#4-1-2-目标宿主机导入加密密钥" class="headerlink" title="4.1.2 目标宿主机导入加密密钥"></a>4.1.2 目标宿主机导入加密密钥</h3><pre><code class="hljs">virsh secret-define --file secret-source.xml
 </code></pre>
-<h1 id="5-配置Grafana"><a href="#5-配置Grafana" class="headerlink" title="5.配置Grafana"></a>5.配置Grafana</h1><p><img src="/img/wiki/prometheus/auth.jpg" srcset="/img/loading.gif" lazyload alt="auth"></p>
-<h1 id="6-验证认证机制"><a href="#6-验证认证机制" class="headerlink" title="6.验证认证机制"></a>6.验证认证机制</h1><hr>
+<h2 id="4-2-创建KVM用户认证密钥"><a href="#4-2-创建KVM用户认证密钥" class="headerlink" title="4.2 创建KVM用户认证密钥"></a>4.2 创建KVM用户认证密钥</h2><pre><code class="hljs">virsh secret-set-value --secret 2f0003b4-d4d6-4b86-a654-2e849edbc6e8 --base64 AQAsf39ovuHNIxAAAQ8JnmPv3qZTCPmPiLadkg==
+</code></pre>
+<h1 id="5-迁移虚拟机"><a href="#5-迁移虚拟机" class="headerlink" title="5.迁移虚拟机"></a>5.迁移虚拟机</h1><pre><code class="hljs">virsh migrate --live --verbose ops qemu+ssh://172.25.12.195/system tcp://172.25.12.195 --unsafe --persistent
+</code></pre>
+<h1 id="6-验证虚拟机迁移"><a href="#6-验证虚拟机迁移" class="headerlink" title="6.验证虚拟机迁移"></a>6.验证虚拟机迁移</h1><hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/gjjumin/article/details/143021107">https://blog.csdn.net/gjjumin/article/details/143021107</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yinzhengjie/p/18134411">https://www.cnblogs.com/yinzhengjie/p/18134411</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/2501_91350469/article/details/148712782">https://blog.csdn.net/2501_91350469/article/details/148712782</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44953658/article/details/140626237">https://blog.csdn.net/weixin_44953658/article/details/140626237</a></li>
 </ul>
 
                 
@@ -383,11 +370,13 @@ scrape_configs:
       
         <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
       
-        <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+        <a href="/tags/Ceph/">#Ceph</a>
       
-        <a href="/tags/Prometheus/">#Prometheus</a>
+        <a href="/tags/%E5%AD%98%E5%82%A8/">#存储</a>
       
-        <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
+        <a href="/tags/KVM/">#KVM</a>
+      
+        <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
       
     </div>
   
@@ -399,8 +388,8 @@ scrape_configs:
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Prometheus监控配置安全认证</div>
-      <div>https://hfsxs.github.io/linux/PrometheusAuth/</div>
+      <div>KVM虚拟机基于Ceph存储系统实现热迁移</div>
+      <div>https://hfsxs.github.io/linux/KVM-Ceph/</div>
     </div>
     <div class="license-meta">
       
@@ -412,13 +401,13 @@ scrape_configs:
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年7月11日</div>
+          <div>2025年7月22日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年7月12日</div>
+          <div>2025年7月25日</div>
         </div>
       
       <div class="license-meta-item">
@@ -447,18 +436,12 @@ scrape_configs:
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/linux/KVM-Ceph/" title="KVM虚拟机基于Ceph存储系统实现热迁移">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">KVM虚拟机基于Ceph存储系统实现热迁移</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/linux/geek/CodeServer/" title="CodeServer部署云端开发环境">
-                        <span class="hidden-mobile">CodeServer部署云端开发环境</span>
+                      <a href="/linux/PrometheusAuth/" title="Prometheus监控配置安全认证">
+                        <span class="hidden-mobile">Prometheus监控配置安全认证</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
