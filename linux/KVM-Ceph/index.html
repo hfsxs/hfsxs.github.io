@@ -24,7 +24,7 @@
 <meta property="og:description" content="1.Ceph集群创建KVM存储池ceph osd pool create kvm 16 16 rbd pool init kvm  2.Ceph集群创建KVM用户ceph auth get-or-create client.kvm mon &#39;profile rbd&#39; osd &#39;profile rbd pool&#x3D;kvm&#39;  [client.kvm]     key &#x3D;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-07-22T01:30:08.000Z">
-<meta property="article:modified_time" content="2025-07-25T12:33:41.457Z">
+<meta property="article:modified_time" content="2025-07-25T12:40:15.759Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -325,7 +325,7 @@ Secret 2f0003b4-d4d6-4b86-a654-2e849edbc6e8 created
 </code></pre>
 <h2 id="4-2-创建KVM用户认证密钥"><a href="#4-2-创建KVM用户认证密钥" class="headerlink" title="4.2 创建KVM用户认证密钥"></a>4.2 创建KVM用户认证密钥</h2><pre><code class="hljs">virsh secret-set-value --secret 2f0003b4-d4d6-4b86-a654-2e849edbc6e8 --base64 AQAsf39ovuHNIxAAAQ8JnmPv3qZTCPmPiLadkg==
 </code></pre>
-<h1 id="5-迁移虚拟机"><a href="#5-迁移虚拟机" class="headerlink" title="5.迁移虚拟机"></a>5.迁移虚拟机</h1><pre><code class="hljs">virsh migrate --live --verbose ops qemu+ssh://172.25.12.195/system tcp://172.25.12.195 --unsafe --persistent
+<h1 id="5-迁移虚拟机"><a href="#5-迁移虚拟机" class="headerlink" title="5.迁移虚拟机"></a>5.迁移虚拟机</h1><pre><code class="hljs">virsh migrate --live --verbose ops qemu+ssh://192.168.100.200/system tcp://192.168.100.200 --unsafe --persistent
 </code></pre>
 <h1 id="6-验证虚拟机迁移"><a href="#6-验证虚拟机迁移" class="headerlink" title="6.验证虚拟机迁移"></a>6.验证虚拟机迁移</h1><hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>

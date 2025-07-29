@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/ceph.jpg">
 <meta property="article:published_time" content="2024-04-27T10:18:33.000Z">
-<meta property="article:modified_time" content="2025-07-19T08:15:28.141Z">
+<meta property="article:modified_time" content="2025-07-29T08:39:50.703Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -256,7 +256,7 @@
         
         
         
-          30 分钟
+          29 分钟
         
       </span>
     
@@ -319,7 +319,7 @@ ceph mgr module ls
   static_configs:
     - targets: [&quot;172.100.100.183:9283&quot;]
       labels:
-        clusters: &#39;Ceph&#39;
+        cluster: Ceph
 </code></pre>
 <h1 id="4-重载Prometheus"><a href="#4-重载Prometheus" class="headerlink" title="4.重载Prometheus"></a>4.重载Prometheus</h1><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload
 </code></pre>
@@ -488,7 +488,7 @@ groups:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年7月19日</div>
+          <div>2025年7月29日</div>
         </div>
       
       <div class="license-meta-item">
