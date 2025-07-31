@@ -248,7 +248,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/linux/PrometheusAlertNotification/" target="_self">
         <div>
-          Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的去重、分组、抑制与静默，最后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等 告警分组分组，即是将具有相同性质的告警合并后作为单个通知进行发送，如两台主机的CPU&#x2F;内存&#x2F;磁盘使用率同时告警，则这些告警就可合并为一个告警通知，从而避免大量同类错误产生的告警风暴所导致关键
+          Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的去重、分组、抑制与静默，之后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等，将告警信息通知到相关负责人进行处理 1.配置解析# 设置全局参数，即作为默认值供子设置继承的公共设置，子参数中也可覆盖其设置 global:   # 设置处理超时时间，即为告警的解决的时间，直接影响到警报恢复的
         </div>
       </a>
 
@@ -857,7 +857,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/linux/PrometheusAlertmanager/" target="_self">
         <div>
-          Prometheus基于降低耦合度的设计理念，并没有集成告警这一核心功能，而是将产生的告警信息推送给Alertmanager组件，并进行一些处理，如告警信息的去重、分组、抑制与静默等，以避免重复告警的产生 1.部署Alertmanager1.1 下载安装包wget https:&#x2F;&#x2F;github.com&#x2F;prometheus&#x2F;alertmanager&#x2F;releases&#x2F;download&#x2F;v0.25.
+          Prometheus基于降低耦合度的设计理念，并没有集成告警这一核心功能，而是将产生的告警信息推送给Alertmanager组件并进行管理，如告警信息的去重、分组、抑制与静默等，最终分发到不同的告警介质 1.告警管理1.1 告警分组分组，即是将具有相同性质的告警合并后作为单个通知进行发送，如两台主机的CPU&#x2F;内存&#x2F;磁盘使用率同时告警，则这些告警就可合并为一个告警通知，从而避免大
         </div>
       </a>
 

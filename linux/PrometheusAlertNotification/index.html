@@ -16,19 +16,19 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的去重、分组、抑制与静默，最后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等 告警分组分组，即是将具有相同性质的告警合并后作为单个通知进行发送，如两台主机的CPU&#x2F;内存&#x2F;磁盘使用率同时告警，则这些告警就可合并为一个告警通知，从而避免大量同类错误产生的告警风暴所导致关键">
+    <meta name="description" content="Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的去重、分组、抑制与静默，之后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等，将告警信息通知到相关负责人进行处理 1.配置解析# 设置全局参数，即作为默认值供子设置继承的公共设置，子参数中也可覆盖其设置 global:   # 设置处理超时时间，即为告警的解决的时间，直接影响到警报恢复的">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Prometheus监控告警管理与推送">
 <meta property="og:url" content="https://hfsxs.github.io/linux/PrometheusAlertNotification/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的去重、分组、抑制与静默，最后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等 告警分组分组，即是将具有相同性质的告警合并后作为单个通知进行发送，如两台主机的CPU&#x2F;内存&#x2F;磁盘使用率同时告警，则这些告警就可合并为一个告警通知，从而避免大量同类错误产生的告警风暴所导致关键">
+<meta property="og:description" content="Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的去重、分组、抑制与静默，之后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等，将告警信息通知到相关负责人进行处理 1.配置解析# 设置全局参数，即作为默认值供子设置继承的公共设置，子参数中也可覆盖其设置 global:   # 设置处理超时时间，即为告警的解决的时间，直接影响到警报恢复的">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/email01.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/email02.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/dingtalk.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/wechat.jpg">
 <meta property="article:published_time" content="2023-10-24T07:51:46.000Z">
-<meta property="article:modified_time" content="2025-04-23T03:08:32.998Z">
+<meta property="article:modified_time" content="2025-07-31T14:51:46.482Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -256,7 +256,7 @@
         
         
         
-          111 分钟
+          105 分钟
         
       </span>
     
@@ -299,11 +299,7 @@
             
               <div class="markdown-body">
                 
-                <p>Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的去重、分组、抑制与静默，最后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等</p>
-<h1 id="告警分组"><a href="#告警分组" class="headerlink" title="告警分组"></a>告警分组</h1><p>分组，即是将具有相同性质的告警合并后作为单个通知进行发送，如两台主机的CPU&#x2F;内存&#x2F;磁盘使用率同时告警，则这些告警就可合并为一个告警通知，从而避免大量同类错误产生的告警风暴所导致关键告警信息的淹没。分组规则由group_by配置项按照告警标签指定，匹配到的告警合并为一个组</p>
-<h1 id="告警抑制"><a href="#告警抑制" class="headerlink" title="告警抑制"></a>告警抑制</h1><p>抑制，即是禁止触发相互依赖的级联告警，从而可以集中于真正的故障所在，如主机宕机的告警即可抑制该主机上所有运行的服务，Docker、MySQL等等</p>
-<h1 id="告警静默"><a href="#告警静默" class="headerlink" title="告警静默"></a>告警静默</h1><p>静默，即某些预期内的告警不再进行发送，若从Prometheus推送过来的告警事件被静默规则匹配到，Alertmanager则将之设为静默状态，不再进行发送。告警静默通常用于系统维护升级，或上游服务器故障所导致的下游服务器告警，这些某个时间段内不希望触发告警通知的场景。直到维护结束，手动解除静默，恢复对应服务的告警通知功能。告警静默功能由Alertmanager UI通过定义标签的匹配规则(字符串或者正则表达式)启用</p>
-<h1 id="告警路由"><a href="#告警路由" class="headerlink" title="告警路由"></a>告警路由</h1><p>路由，即基于告警匹配规则将告警事件推送给不同的接受者，以便于进行进一步的处理。告警路由分为两部分，即顶级根路由和子路由，其本质上就是一个基于标签匹配规则的树状结构，所有告警信息从顶级路由开始，根据标签匹配规则进入到不同的子路由，并且根据子路由设置的接收器发送告警，匹配不到子路由的告警则由默认接收者接收。子路由的告警匹配方式有两种，基于字符串验证，通过设置match规则判断告警是否存在标签label.name，且其值等于label.value；基于正则表达式，通过设置match_re验证告警标签的值是否满足正则表达式</p>
+                <p>Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的去重、分组、抑制与静默，之后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等，将告警信息通知到相关负责人进行处理</p>
 <h1 id="1-配置解析"><a href="#1-配置解析" class="headerlink" title="1.配置解析"></a>1.配置解析</h1><pre><code class="hljs"># 设置全局参数，即作为默认值供子设置继承的公共设置，子参数中也可覆盖其设置
 global:
   # 设置处理超时时间，即为告警的解决的时间，直接影响到警报恢复的通知时间，默认为5分钟，建议依据实际生产场景进行设置
@@ -812,7 +808,7 @@ receivers:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年4月23日</div>
+          <div>2025年7月31日</div>
         </div>
       
       <div class="license-meta-item">

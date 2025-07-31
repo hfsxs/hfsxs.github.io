@@ -16,16 +16,16 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Prometheus基于降低耦合度的设计理念，并没有集成告警这一核心功能，而是将产生的告警信息推送给Alertmanager组件，并进行一些处理，如告警信息的去重、分组、抑制与静默等，以避免重复告警的产生 1.部署Alertmanager1.1 下载安装包wget https:&#x2F;&#x2F;github.com&#x2F;prometheus&#x2F;alertmanager&#x2F;releases&#x2F;download&#x2F;v0.25.">
+    <meta name="description" content="Prometheus基于降低耦合度的设计理念，并没有集成告警这一核心功能，而是将产生的告警信息推送给Alertmanager组件并进行管理，如告警信息的去重、分组、抑制与静默等，最终分发到不同的告警介质 1.告警管理1.1 告警分组分组，即是将具有相同性质的告警合并后作为单个通知进行发送，如两台主机的CPU&#x2F;内存&#x2F;磁盘使用率同时告警，则这些告警就可合并为一个告警通知，从而避免大">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Prometheus监控配置Alertmanager告警组件">
 <meta property="og:url" content="https://hfsxs.github.io/linux/PrometheusAlertmanager/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="Prometheus基于降低耦合度的设计理念，并没有集成告警这一核心功能，而是将产生的告警信息推送给Alertmanager组件，并进行一些处理，如告警信息的去重、分组、抑制与静默等，以避免重复告警的产生 1.部署Alertmanager1.1 下载安装包wget https:&#x2F;&#x2F;github.com&#x2F;prometheus&#x2F;alertmanager&#x2F;releases&#x2F;download&#x2F;v0.25.">
+<meta property="og:description" content="Prometheus基于降低耦合度的设计理念，并没有集成告警这一核心功能，而是将产生的告警信息推送给Alertmanager组件并进行管理，如告警信息的去重、分组、抑制与静默等，最终分发到不同的告警介质 1.告警管理1.1 告警分组分组，即是将具有相同性质的告警合并后作为单个通知进行发送，如两台主机的CPU&#x2F;内存&#x2F;磁盘使用率同时告警，则这些告警就可合并为一个告警通知，从而避免大">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/alertmanager.jpg">
 <meta property="article:published_time" content="2023-08-08T14:54:17.000Z">
-<meta property="article:modified_time" content="2025-07-31T14:26:11.871Z">
+<meta property="article:modified_time" content="2025-07-31T14:50:41.090Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -242,7 +242,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4k 字
+          4.7k 字
         
       </span>
     
@@ -253,7 +253,7 @@
         
         
         
-          34 分钟
+          40 分钟
         
       </span>
     
@@ -296,7 +296,15 @@
             
               <div class="markdown-body">
                 
-                <p>Prometheus基于降低耦合度的设计理念，并没有集成告警这一核心功能，而是将产生的告警信息推送给Alertmanager组件，并进行一些处理，如告警信息的去重、分组、抑制与静默等，以避免重复告警的产生</p>
+                <p>Prometheus基于降低耦合度的设计理念，并没有集成告警这一核心功能，而是将产生的告警信息推送给Alertmanager组件并进行管理，如告警信息的去重、分组、抑制与静默等，最终分发到不同的告警介质</p>
+<h1 id="1-告警管理"><a href="#1-告警管理" class="headerlink" title="1.告警管理"></a>1.告警管理</h1><h2 id="1-1-告警分组"><a href="#1-1-告警分组" class="headerlink" title="1.1 告警分组"></a>1.1 告警分组</h2><p>分组，即是将具有相同性质的告警合并后作为单个通知进行发送，如两台主机的CPU&#x2F;内存&#x2F;磁盘使用率同时告警，则这些告警就可合并为一个告警通知，从而避免大量同类错误产生的告警风暴所导致关键告警信息的淹没。分组规则由group_by配置项按照告警标签指定，匹配到的告警合并为一个组</p>
+<h2 id="1-2-告警抑制"><a href="#1-2-告警抑制" class="headerlink" title="1.2 告警抑制"></a>1.2 告警抑制</h2><p>抑制，即是禁止触发相互依赖的级联告警，从而可以集中于真正的故障所在，如主机宕机的告警即可抑制该主机上所有运行的服务，Docker、MySQL等等</p>
+<h2 id="1-3-告警静默"><a href="#1-3-告警静默" class="headerlink" title="1.3 告警静默"></a>1.3 告警静默</h2><p>静默，即某些预期内的告警不再进行发送，若从Prometheus推送过来的告警事件被静默规则匹配到，Alertmanager则将之设为静默状态，不再进行发送。告警静默通常用于系统维护升级，或上游服务器故障所导致的下游服务器告警，这些某个时间段内不希望触发告警通知的场景。直到维护结束，手动解除静默，恢复对应服务的告警通知功能。告警静默功能由Alertmanager UI通过定义标签的匹配规则(字符串或者正则表达式)启用</p>
+<h2 id="1-4-告警路由"><a href="#1-4-告警路由" class="headerlink" title="1.4 告警路由"></a>1.4 告警路由</h2><p>路由，即基于告警匹配规则将告警事件推送给不同的接受者，以便于进行进一步的处理。告警路由分为两部分，即顶级根路由和子路由，其本质上就是一个基于标签匹配规则的树状结构，所有告警信息从顶级路由开始，根据标签匹配规则进入到不同的子路由，并且根据子路由设置的接收器发送告警，匹配不到子路由的告警则由默认接收者接收。子路由的告警匹配方式有两种，基于字符串验证，通过设置match规则判断告警是否存在标签label.name，且其值等于label.value；基于正则表达式，通过设置match_re验证告警标签的值是否满足正则表达式</p>
+<h1 id="2-告警流程"><a href="#2-告警流程" class="headerlink" title="2.告警流程"></a>2.告警流程</h1><h2 id="2-1-告警规则解析"><a href="#2-1-告警规则解析" class="headerlink" title="2.1 告警规则解析"></a>2.1 告警规则解析</h2><p>Prometheus加载告警规则文件，持续采集指标数据，并定期计算监控指标是否满足告警规则，计算周期由配置参数evaluation_interval指定，默认为1分钟</p>
+<h2 id="2-2-告警触发"><a href="#2-2-告警触发" class="headerlink" title="2.2 告警触发"></a>2.2 告警触发</h2><p>监控指标触发告警规则，指标告警状态转为Pending，若持续时间超过for所指定的时间，则转换为Firing，并将告警信息发送到Alertmanager</p>
+<h2 id="2-3-告警分组与路由"><a href="#2-3-告警分组与路由" class="headerlink" title="2.3 告警分组与路由"></a>2.3 告警分组与路由</h2><p>Alertmanager收到告警后，等待所定义的分组时间后，通过配置的告警介质发送到告警通知；若在此期间该分组又持续收到了告警，则会等待一个分组告警间隔时间，再次为该分组发送告警</p>
+<h2 id="2-4-告警恢复或抑制"><a href="#2-4-告警恢复或抑制" class="headerlink" title="2.4 告警恢复或抑制"></a>2.4 告警恢复或抑制</h2><p>若该告警一直存在，Alertmanager则会按照重发时间间隔重复发送告警通知，直到告警恢复或被抑制</p>
 <h1 id="1-部署Alertmanager"><a href="#1-部署Alertmanager" class="headerlink" title="1.部署Alertmanager"></a>1.部署Alertmanager</h1><h2 id="1-1-下载安装包"><a href="#1-1-下载安装包" class="headerlink" title="1.1 下载安装包"></a>1.1 下载安装包</h2><pre><code class="hljs">wget https://github.com/prometheus/alertmanager/releases/download/v0.25.0/alertmanager-0.25.0.linux-amd64.tar.gz
 </code></pre>
 <h2 id="1-2-安装Alertmanager"><a href="#1-2-安装Alertmanager" class="headerlink" title="1.2 安装Alertmanager"></a>1.2 安装Alertmanager</h2><pre><code class="hljs">tar -xzvf alertmanager-0.25.0.linux-amd64.tar.gz
@@ -381,19 +389,13 @@ groups:
 <h3 id="3-1-3-for"><a href="#3-1-3-for" class="headerlink" title="3.1.3 for"></a>3.1.3 for</h3><p>评估等待时间，可选参数，告警规则初始状态为inactive，当监控指标触发规则后，在for定义的时间区间内该规则会处于Pending状态，超过该时间后规则状态转换为Firing，并发送告警信息到Alertmanager</p>
 <h3 id="3-1-4-labels"><a href="#3-1-4-labels" class="headerlink" title="3.1.4 labels"></a>3.1.4 labels</h3><p>自定义标签，允许用户指定要添加到告警信息上的一组附加标签，如告警等级等，告警等级一般分为三种，即warning、critical和emergency，严重等级依次递增</p>
 <h3 id="3-1-5-annotations"><a href="#3-1-5-annotations" class="headerlink" title="3.1.5 annotations"></a>3.1.5 annotations</h3><p>用于指定一组附加信息，如描述告警的信息文字等，summary用于描述主要信息，description用于描述详细的告警内容，支持两种类型的模版变量，$labels.<labelname>类型变量支持告警实例指定标签的值，$value则是获取当前PromQL计算的变量(expr里表达式的值)</p>
-<h2 id="3-2-告警流程"><a href="#3-2-告警流程" class="headerlink" title="3.2 告警流程"></a>3.2 告警流程</h2><ul>
-<li>1.Prometheus加载告警规则文件，持续采集指标数据，并定期计算监控指标是否满足告警规则，计算周期由配置参数evaluation_interval指定，默认为1分钟</li>
-<li>2.监控指标触发告警规则，指标告警状态转为Pending，若持续时间超过for所指定的时间，则转换为Firing，并将告警信息发送到Alertmanager</li>
-<li>3.Alertmanager收到告警后，等待所定义的分组时间后，通过配置的告警介质发送到告警通知；若在此期间该分组又持续收到了告警，则会等待一个分组告警间隔时间，再次为该分组发送告警</li>
-<li>4.若该告警一直存在，Alertmanager则会按照重发时间间隔重复发送告警通知，直到告警恢复</li>
-</ul>
-<h2 id="3-3-告警状态"><a href="#3-3-告警状态" class="headerlink" title="3.3 告警状态"></a>3.3 告警状态</h2><p>Prometheus告警状态分为三种，即Inactive、Pending、Firing</p>
+<h2 id="3-2-告警状态"><a href="#3-2-告警状态" class="headerlink" title="3.2 告警状态"></a>3.2 告警状态</h2><p>Prometheus告警状态分为三种，即Inactive、Pending、Firing</p>
 <ul>
 <li>Inactive，非活动状态，表示正在监控，但还未有任何告警触发</li>
 <li>Pending，表示告警已被触发，等待分组、抑制或静默验证，验证通过则将转到Firing状态</li>
 <li>Firing，告警信息已发送到AlertManager，之后按照配置发送给接收者，告警解除后则将状态转为Inactive</li>
 </ul>
-<h2 id="3-4-创建告警规则文件"><a href="#3-4-创建告警规则文件" class="headerlink" title="3.4 创建告警规则文件"></a>3.4 创建告警规则文件</h2><pre><code class="hljs">sudo mkdir -p /usr/local/prometheus/rules
+<h2 id="3-3-创建告警规则文件"><a href="#3-3-创建告警规则文件" class="headerlink" title="3.3 创建告警规则文件"></a>3.3 创建告警规则文件</h2><pre><code class="hljs">sudo mkdir -p /usr/local/prometheus/rules
 sudo vi /usr/local/prometheus/rules/nodes.yml
 
 
