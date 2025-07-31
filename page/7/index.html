@@ -857,7 +857,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/linux/PrometheusAlertmanager/" target="_self">
         <div>
-          Alertmanager组件负责接收并处理来自Prometheus Server的告警信息，如消除大量重复告警信息、对告警信息分组以及将之路由到通知方，如邮箱、钉钉、微信等。此外，还提供了静默和告警抑制机制来对告警通知行为进行优化 1.部署Alertmanager1.1 下载安装包wget https:&#x2F;&#x2F;github.com&#x2F;prometheus&#x2F;alertmanager&#x2F;releases&#x2F;do
+          Prometheus基于降低耦合度的设计理念，并没有集成告警这一核心功能，而是将产生的告警信息推送给Alertmanager组件，并进行一些处理，如告警信息的去重、分组、抑制与静默等，以避免重复告警的产生 1.部署Alertmanager1.1 下载安装包wget https:&#x2F;&#x2F;github.com&#x2F;prometheus&#x2F;alertmanager&#x2F;releases&#x2F;download&#x2F;v0.25.
         </div>
       </a>
 
