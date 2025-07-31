@@ -16,15 +16,15 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1.Ceph集群创建KVM存储池ceph osd pool create kvm 16 16 rbd pool init kvm  2.Ceph集群创建KVM用户ceph auth get-or-create client.kvm mon &#39;profile rbd&#39; osd &#39;profile rbd pool&#x3D;kvm&#39;  [client.kvm]     key &#x3D;">
+    <meta name="description" content="1.Ceph集群创建KVM存储池ceph osd pool create kvm 16 16 rbd pool init kvm  2.Ceph集群创建KVM用户ceph auth get-or-create client.kvm mon &#39;profile rbd&#39; osd &#39;profile rbd pool&#x3D;kvm&#39; -o &#x2F;etc&#x2F;ceph&#x2F;ceph.clien">
 <meta property="og:type" content="article">
 <meta property="og:title" content="KVM虚拟机基于Ceph存储系统实现热迁移">
 <meta property="og:url" content="https://hfsxs.github.io/linux/KVM-Ceph/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="1.Ceph集群创建KVM存储池ceph osd pool create kvm 16 16 rbd pool init kvm  2.Ceph集群创建KVM用户ceph auth get-or-create client.kvm mon &#39;profile rbd&#39; osd &#39;profile rbd pool&#x3D;kvm&#39;  [client.kvm]     key &#x3D;">
+<meta property="og:description" content="1.Ceph集群创建KVM存储池ceph osd pool create kvm 16 16 rbd pool init kvm  2.Ceph集群创建KVM用户ceph auth get-or-create client.kvm mon &#39;profile rbd&#39; osd &#39;profile rbd pool&#x3D;kvm&#39; -o &#x2F;etc&#x2F;ceph&#x2F;ceph.clien">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-07-22T01:30:08.000Z">
-<meta property="article:modified_time" content="2025-07-25T12:40:15.759Z">
+<meta property="article:modified_time" content="2025-07-31T06:20:44.531Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -241,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.3k 字
+          1.4k 字
         
       </span>
     
@@ -252,7 +252,7 @@
         
         
         
-          11 分钟
+          12 分钟
         
       </span>
     
@@ -298,8 +298,9 @@
                 <h1 id="1-Ceph集群创建KVM存储池"><a href="#1-Ceph集群创建KVM存储池" class="headerlink" title="1.Ceph集群创建KVM存储池"></a>1.Ceph集群创建KVM存储池</h1><pre><code class="hljs">ceph osd pool create kvm 16 16
 rbd pool init kvm
 </code></pre>
-<h1 id="2-Ceph集群创建KVM用户"><a href="#2-Ceph集群创建KVM用户" class="headerlink" title="2.Ceph集群创建KVM用户"></a>2.Ceph集群创建KVM用户</h1><pre><code class="hljs">ceph auth get-or-create client.kvm mon &#39;profile rbd&#39; osd &#39;profile rbd pool=kvm&#39;
+<h1 id="2-Ceph集群创建KVM用户"><a href="#2-Ceph集群创建KVM用户" class="headerlink" title="2.Ceph集群创建KVM用户"></a>2.Ceph集群创建KVM用户</h1><pre><code class="hljs">ceph auth get-or-create client.kvm mon &#39;profile rbd&#39; osd &#39;profile rbd pool=kvm&#39; -o /etc/ceph/ceph.client.kvm.keyring
 
+cat /etc/ceph/ceph.client.kvm.keyring
 [client.kvm]
     key = AQAsf39ovuHNIxAAAQ8JnmPv3qZTCPmPiLadkg==
 </code></pre>
@@ -407,7 +408,7 @@ Secret 2f0003b4-d4d6-4b86-a654-2e849edbc6e8 created
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年7月25日</div>
+          <div>2025年7月31日</div>
         </div>
       
       <div class="license-meta-item">
