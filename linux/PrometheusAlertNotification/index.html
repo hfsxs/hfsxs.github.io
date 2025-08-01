@@ -16,19 +16,19 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的去重、分组、抑制与静默，之后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等，将告警信息通知到相关负责人进行处理 1.配置解析# 设置全局参数，即作为默认值供子设置继承的公共设置，子参数中也可覆盖其设置 global:   # 设置处理超时时间，即为告警的解决的时间，直接影响到警报恢复的">
+    <meta name="description" content="Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的分组、合并、抑制与静默登，之后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等，将告警信息通知到相关负责人进行处理 1.配置解析# 设置全局参数，即作为默认值供子设置继承的公共设置，子参数中也可覆盖其设置 global:   # 设置处理超时时间，即为告警的解决的时间，直接影响到警报恢复">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Prometheus监控告警管理与推送">
+<meta property="og:title" content="Prometheus监控告警信息的管理与推送">
 <meta property="og:url" content="https://hfsxs.github.io/linux/PrometheusAlertNotification/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的去重、分组、抑制与静默，之后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等，将告警信息通知到相关负责人进行处理 1.配置解析# 设置全局参数，即作为默认值供子设置继承的公共设置，子参数中也可覆盖其设置 global:   # 设置处理超时时间，即为告警的解决的时间，直接影响到警报恢复的">
+<meta property="og:description" content="Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的分组、合并、抑制与静默登，之后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等，将告警信息通知到相关负责人进行处理 1.配置解析# 设置全局参数，即作为默认值供子设置继承的公共设置，子参数中也可覆盖其设置 global:   # 设置处理超时时间，即为告警的解决的时间，直接影响到警报恢复">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/email01.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/email02.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/dingtalk.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/wechat.jpg">
 <meta property="article:published_time" content="2023-10-24T07:51:46.000Z">
-<meta property="article:modified_time" content="2025-07-31T14:51:46.482Z">
+<meta property="article:modified_time" content="2025-08-01T01:15:52.994Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -42,7 +42,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Prometheus监控告警管理与推送 - 扬帆</title>
+  <title>Prometheus监控告警信息的管理与推送 - 扬帆</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -222,7 +222,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Prometheus监控告警管理与推送</span>
+            <span id="subtitle">Prometheus监控告警信息的管理与推送</span>
           
         </div>
 
@@ -294,12 +294,12 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Prometheus监控告警管理与推送</h1>
+            <h1 style="display: none">Prometheus监控告警信息的管理与推送</h1>
             
             
               <div class="markdown-body">
                 
-                <p>Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的去重、分组、抑制与静默，之后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等，将告警信息通知到相关负责人进行处理</p>
+                <p>Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的分组、合并、抑制与静默登，之后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等，将告警信息通知到相关负责人进行处理</p>
 <h1 id="1-配置解析"><a href="#1-配置解析" class="headerlink" title="1.配置解析"></a>1.配置解析</h1><pre><code class="hljs"># 设置全局参数，即作为默认值供子设置继承的公共设置，子参数中也可覆盖其设置
 global:
   # 设置处理超时时间，即为告警的解决的时间，直接影响到警报恢复的通知时间，默认为5分钟，建议依据实际生产场景进行设置
@@ -789,7 +789,7 @@ receivers:
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Prometheus监控告警管理与推送</div>
+      <div>Prometheus监控告警信息的管理与推送</div>
       <div>https://hfsxs.github.io/linux/PrometheusAlertNotification/</div>
     </div>
     <div class="license-meta">
@@ -808,7 +808,7 @@ receivers:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年7月31日</div>
+          <div>2025年8月1日</div>
         </div>
       
       <div class="license-meta-item">

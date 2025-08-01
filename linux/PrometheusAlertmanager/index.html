@@ -16,16 +16,16 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Prometheus基于降低耦合度的设计理念，并没有集成告警这一核心功能，而是将产生的告警信息推送给Alertmanager组件并进行管理，如告警信息的去重、分组、抑制与静默等，最终分发到不同的告警介质 1.告警管理1.1 告警分组分组，即是将具有相同性质的告警合并后作为单个通知进行发送，如两台主机的CPU&#x2F;内存&#x2F;磁盘使用率同时告警，则这些告警就可合并为一个告警通知，从而避免大">
+    <meta name="description" content="Prometheus基于降低耦合度的设计理念，并没有集成告警这一核心功能，而是将基于告警规则所计算出告警信息推送给Alertmanager组件并进行管理，如告警信息的分组、合并、抑制与静默等，最终分发到不同的告警介质 1.告警管理1.1 告警分组分组，即是将具有相同性质的告警合并后作为单个通知进行发送，如两台主机的CPU&#x2F;内存&#x2F;磁盘使用率同时告警，则这些告警就可合并为一个告警通">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Prometheus监控配置Alertmanager告警组件">
 <meta property="og:url" content="https://hfsxs.github.io/linux/PrometheusAlertmanager/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="Prometheus基于降低耦合度的设计理念，并没有集成告警这一核心功能，而是将产生的告警信息推送给Alertmanager组件并进行管理，如告警信息的去重、分组、抑制与静默等，最终分发到不同的告警介质 1.告警管理1.1 告警分组分组，即是将具有相同性质的告警合并后作为单个通知进行发送，如两台主机的CPU&#x2F;内存&#x2F;磁盘使用率同时告警，则这些告警就可合并为一个告警通知，从而避免大">
+<meta property="og:description" content="Prometheus基于降低耦合度的设计理念，并没有集成告警这一核心功能，而是将基于告警规则所计算出告警信息推送给Alertmanager组件并进行管理，如告警信息的分组、合并、抑制与静默等，最终分发到不同的告警介质 1.告警管理1.1 告警分组分组，即是将具有相同性质的告警合并后作为单个通知进行发送，如两台主机的CPU&#x2F;内存&#x2F;磁盘使用率同时告警，则这些告警就可合并为一个告警通">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/alertmanager.jpg">
 <meta property="article:published_time" content="2023-08-08T14:54:17.000Z">
-<meta property="article:modified_time" content="2025-07-31T14:50:41.090Z">
+<meta property="article:modified_time" content="2025-08-01T01:15:26.152Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -296,7 +296,7 @@
             
               <div class="markdown-body">
                 
-                <p>Prometheus基于降低耦合度的设计理念，并没有集成告警这一核心功能，而是将产生的告警信息推送给Alertmanager组件并进行管理，如告警信息的去重、分组、抑制与静默等，最终分发到不同的告警介质</p>
+                <p>Prometheus基于降低耦合度的设计理念，并没有集成告警这一核心功能，而是将基于告警规则所计算出告警信息推送给Alertmanager组件并进行管理，如告警信息的分组、合并、抑制与静默等，最终分发到不同的告警介质</p>
 <h1 id="1-告警管理"><a href="#1-告警管理" class="headerlink" title="1.告警管理"></a>1.告警管理</h1><h2 id="1-1-告警分组"><a href="#1-1-告警分组" class="headerlink" title="1.1 告警分组"></a>1.1 告警分组</h2><p>分组，即是将具有相同性质的告警合并后作为单个通知进行发送，如两台主机的CPU&#x2F;内存&#x2F;磁盘使用率同时告警，则这些告警就可合并为一个告警通知，从而避免大量同类错误产生的告警风暴所导致关键告警信息的淹没。分组规则由group_by配置项按照告警标签指定，匹配到的告警合并为一个组</p>
 <h2 id="1-2-告警抑制"><a href="#1-2-告警抑制" class="headerlink" title="1.2 告警抑制"></a>1.2 告警抑制</h2><p>抑制，即是禁止触发相互依赖的级联告警，从而可以集中于真正的故障所在，如主机宕机的告警即可抑制该主机上所有运行的服务，Docker、MySQL等等</p>
 <h2 id="1-3-告警静默"><a href="#1-3-告警静默" class="headerlink" title="1.3 告警静默"></a>1.3 告警静默</h2><p>静默，即某些预期内的告警不再进行发送，若从Prometheus推送过来的告警事件被静默规则匹配到，Alertmanager则将之设为静默状态，不再进行发送。告警静默通常用于系统维护升级，或上游服务器故障所导致的下游服务器告警，这些某个时间段内不希望触发告警通知的场景。直到维护结束，手动解除静默，恢复对应服务的告警通知功能。告警静默功能由Alertmanager UI通过定义标签的匹配规则(字符串或者正则表达式)启用</p>
@@ -494,7 +494,7 @@ groups:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年7月31日</div>
+          <div>2025年8月1日</div>
         </div>
       
       <div class="license-meta-item">

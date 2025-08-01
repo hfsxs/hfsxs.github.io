@@ -240,15 +240,88 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/linux/Kube-Prometheus-ServiceMonitor/" target="_self">
+          Kubernetes集群基于Kube-Prometheus配置自定义监控
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/Kube-Prometheus-ServiceMonitor/" target="_self">
+        <div>
+          Kube-Prometheus由自定义资源ServiceMonitor实现对资源的监控，该资源描述了Prometheus Server的Target列表，具体是通过Selector依据Labels选取到对应Service的endpoints，监控数据由Prometheus Server通过Service进行拉取，从而实现跨命名空间的动态服务发现。此外，ServiceMonito监听Kubernet
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-10-31 10:41" pubdate>
+              2023-10-31
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/Kubernetes/">#Kubernetes</a>
+            
+              <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+            
+              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+            
+              <a href="/tags/Prometheus/">#Prometheus</a>
+            
+              <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/linux/PrometheusAlertNotification/" target="_self">
-          Prometheus监控告警管理与推送
+          Prometheus监控告警信息的管理与推送
         </a>
       </h1>
 
       
       <a class="index-excerpt index-excerpt__noimg" href="/linux/PrometheusAlertNotification/" target="_self">
         <div>
-          Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的去重、分组、抑制与静默，之后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等，将告警信息通知到相关负责人进行处理 1.配置解析# 设置全局参数，即作为默认值供子设置继承的公共设置，子参数中也可覆盖其设置 global:   # 设置处理超时时间，即为告警的解决的时间，直接影响到警报恢复的
+          Prometheus监控系统的告警通知由Alertmanager组件负责管理，如告警信息的分组、合并、抑制与静默登，之后通过路由推送给配置好的接收者，如电子邮箱、Slack、Webhook等，将告警信息通知到相关负责人进行处理 1.配置解析# 设置全局参数，即作为默认值供子设置继承的公共设置，子参数中也可覆盖其设置 global:   # 设置处理超时时间，即为告警的解决的时间，直接影响到警报恢复
         </div>
       </a>
 
@@ -836,75 +909,6 @@
               <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
             
               <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/linux/PrometheusAlertmanager/" target="_self">
-          Prometheus监控配置Alertmanager告警组件
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/PrometheusAlertmanager/" target="_self">
-        <div>
-          Prometheus基于降低耦合度的设计理念，并没有集成告警这一核心功能，而是将产生的告警信息推送给Alertmanager组件并进行管理，如告警信息的去重、分组、抑制与静默等，最终分发到不同的告警介质 1.告警管理1.1 告警分组分组，即是将具有相同性质的告警合并后作为单个通知进行发送，如两台主机的CPU&#x2F;内存&#x2F;磁盘使用率同时告警，则这些告警就可合并为一个告警通知，从而避免大
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-08-08 22:54" pubdate>
-              2023-08-08
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/Prometheus/">#Prometheus</a>
-            
-              <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
-            
-              <a href="/tags/Alertmanager/">#Alertmanager</a>
             
           </div>
         
