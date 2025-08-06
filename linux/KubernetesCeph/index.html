@@ -24,7 +24,7 @@
 <meta property="og:description" content="1.Ceph集群创建存储池及账户，并授予权限ceph osd pool create kubernetes 128 128 ceph osd pool application enable kubernetes rbd rbd pool init kubernetes  sudo ceph auth get-or-create client.kubernetes mon &#39;allow r&amp;">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-07-12T07:50:21.000Z">
-<meta property="article:modified_time" content="2025-07-31T06:28:41.946Z">
+<meta property="article:modified_time" content="2025-08-02T00:55:46.412Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -438,8 +438,7 @@ ceph auth get-key client.kubernetes
 --namespace=kube-system
 </code></pre>
 <h2 id="5-2-创建kubernetes账户secret"><a href="#5-2-创建kubernetes账户secret" class="headerlink" title="5.2 创建kubernetes账户secret"></a>5.2 创建kubernetes账户secret</h2><pre><code class="hljs">kubectl create secret generic ceph-user-secret --type=&quot;kubernetes.io/rbd&quot; \
---from-literal=key=AQDaWq5kcpcgGxAAJrrD4pgmOUvCH1TE9a6taQ== \
---namespace=kube-system
+--from-literal=key=AQDaWq5kcpcgGxAAJrrD4pgmOUvCH1TE9a6taQ==
 </code></pre>
 <h2 id="5-3-创建资源配置文件"><a href="#5-3-创建资源配置文件" class="headerlink" title="5.3 创建资源配置文件"></a>5.3 创建资源配置文件</h2><pre><code class="hljs">vi sc-ceph-rbd.yaml
 
@@ -593,7 +592,7 @@ spec:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年7月31日</div>
+          <div>2025年8月2日</div>
         </div>
       
       <div class="license-meta-item">

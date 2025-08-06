@@ -18,14 +18,14 @@
   
     <meta name="description" content="code-server，开源的网页版VS Code编辑器，可部署于服务器以构建云端开发环境，使得开发者能够通过任何设备访问完整的开发环境 1.安装CodeServersudo docker run -it -d --name code-server -p 8080:8080 \ -v &#x2F;root&#x2F;.local:&#x2F;root&#x2F;.local -v &#x2F;root&#x2F;.config:&#x2F;root&#x2F;.config">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CodeServer部署云端开发环境">
+<meta property="og:title" content="Linux部署CodeServer搭建云端开发环境">
 <meta property="og:url" content="https://hfsxs.github.io/linux/geek/CodeServer/index.html">
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="code-server，开源的网页版VS Code编辑器，可部署于服务器以构建云端开发环境，使得开发者能够通过任何设备访问完整的开发环境 1.安装CodeServersudo docker run -it -d --name code-server -p 8080:8080 \ -v &#x2F;root&#x2F;.local:&#x2F;root&#x2F;.local -v &#x2F;root&#x2F;.config:&#x2F;root&#x2F;.config">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/linux/codeserver.jpg">
 <meta property="article:published_time" content="2025-07-06T02:17:15.000Z">
-<meta property="article:modified_time" content="2025-07-24T08:03:05.777Z">
+<meta property="article:modified_time" content="2025-08-06T07:17:13.119Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -37,7 +37,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>CodeServer部署云端开发环境 - 扬帆</title>
+  <title>Linux部署CodeServer搭建云端开发环境 - 扬帆</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -217,7 +217,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">CodeServer部署云端开发环境</span>
+            <span id="subtitle">Linux部署CodeServer搭建云端开发环境</span>
           
         </div>
 
@@ -240,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          368 字
+          910 字
         
       </span>
     
@@ -251,7 +251,7 @@
         
         
         
-          4 分钟
+          8 分钟
         
       </span>
     
@@ -289,7 +289,7 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">CodeServer部署云端开发环境</h1>
+            <h1 style="display: none">Linux部署CodeServer搭建云端开发环境</h1>
             
             
               <div class="markdown-body">
@@ -301,9 +301,37 @@
 </code></pre>
 <h1 id="2-查看登录密码"><a href="#2-查看登录密码" class="headerlink" title="2.查看登录密码"></a>2.查看登录密码</h1><pre><code class="hljs">cat /root/.config/code-server/config.yaml
 </code></pre>
-<h1 id="3-登录CodeServer"><a href="#3-登录CodeServer" class="headerlink" title="3.登录CodeServer"></a>3.登录CodeServer</h1><p><img src="/img/wiki/linux/codeserver.jpg" srcset="/img/loading.gif" lazyload alt="codeserver"></p>
+<h1 id="3-配置Nginx代理"><a href="#3-配置Nginx代理" class="headerlink" title="3.配置Nginx代理"></a>3.配置Nginx代理</h1><pre><code class="hljs">sudo vi vscode.conf
+
+
+server &#123;
+  listen 80;
+  server_name localhost;
+
+  location / &#123;
+
+    proxy_pass http://127.0.0.1:8080;
+
+    # 设置WebSocket连接
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection &quot;upgrade&quot;;
+
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+
+    proxy_connect_timeout 600s;
+    proxy_read_timeout 600s;
+    proxy_send_timeout 600s;
+  &#125;
+&#125;
+</code></pre>
+<h1 id="4-登录CodeServer"><a href="#4-登录CodeServer" class="headerlink" title="4.登录CodeServer"></a>4.登录CodeServer</h1><p><img src="/img/wiki/linux/codeserver.jpg" srcset="/img/loading.gif" lazyload alt="codeserver"></p>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_35556658/article/details/147704987">https://blog.csdn.net/qq_35556658/article/details/147704987</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/gitblog_01038/article/details/148323626">https://blog.csdn.net/gitblog_01038/article/details/148323626</a></li>
 </ul>
 
@@ -362,7 +390,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>CodeServer部署云端开发环境</div>
+      <div>Linux部署CodeServer搭建云端开发环境</div>
       <div>https://hfsxs.github.io/linux/geek/CodeServer/</div>
     </div>
     <div class="license-meta">
@@ -381,7 +409,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年7月24日</div>
+          <div>2025年8月6日</div>
         </div>
       
       <div class="license-meta-item">
