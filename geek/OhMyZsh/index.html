@@ -16,33 +16,26 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1.Ceph集群创建存储池及账户，并授予权限ceph osd pool create kubernetes 128 128 ceph osd pool application enable kubernetes rbd rbd pool init kubernetes  sudo ceph auth get-or-create client.kubernetes mon &#39;allow r&amp;">
+    <meta name="description" content="1.安装zsh# MacOS brew install zsh sudo apt -y install zsh  2.切换设置默认终端# 查看当前Shell echo $SHELL # 切换为Zshell chsh -s &#x2F;bin&#x2F;zsh  3.安装oh-my-zsh3.1 安装Git# MacOS brew install git sudo apt -y install git  3.2 安装o">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Kubernetes集群配置Ceph块存储">
-<meta property="og:url" content="https://hfsxs.github.io/linux/KubernetesCeph/index.html">
+<meta property="og:title" content="Linux系统配置命令行终端美化工具oh-my-zsh">
+<meta property="og:url" content="https://hfsxs.github.io/geek/OhMyZsh/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="1.Ceph集群创建存储池及账户，并授予权限ceph osd pool create kubernetes 128 128 ceph osd pool application enable kubernetes rbd rbd pool init kubernetes  sudo ceph auth get-or-create client.kubernetes mon &#39;allow r&amp;">
+<meta property="og:description" content="1.安装zsh# MacOS brew install zsh sudo apt -y install zsh  2.切换设置默认终端# 查看当前Shell echo $SHELL # 切换为Zshell chsh -s &#x2F;bin&#x2F;zsh  3.安装oh-my-zsh3.1 安装Git# MacOS brew install git sudo apt -y install git  3.2 安装o">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-07-12T07:50:21.000Z">
-<meta property="article:modified_time" content="2025-08-08T07:02:25.621Z">
+<meta property="article:published_time" content="2025-08-10T08:25:04.000Z">
+<meta property="article:modified_time" content="2025-08-11T01:47:13.002Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
-<meta property="article:tag" content="云计算">
-<meta property="article:tag" content="Ceph">
-<meta property="article:tag" content="存储">
-<meta property="article:tag" content="分布式存储">
-<meta property="article:tag" content="云存储">
-<meta property="article:tag" content="块存储">
-<meta property="article:tag" content="Kubernetes">
-<meta property="article:tag" content="容器云">
-<meta property="article:tag" content="云原生">
+<meta property="article:tag" content="极客">
+<meta property="article:tag" content="Git">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Kubernetes集群配置Ceph块存储 - 扬帆</title>
+  <title>Linux系统配置命令行终端美化工具oh-my-zsh - 扬帆</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -222,7 +215,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Kubernetes集群配置Ceph块存储</span>
+            <span id="subtitle">Linux系统配置命令行终端美化工具oh-my-zsh</span>
           
         </div>
 
@@ -233,8 +226,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-07-12 15:50" pubdate>
-          2023年7月12日 下午
+        <time datetime="2025-08-10 16:25" pubdate>
+          2025年8月10日 下午
         </time>
       </span>
     
@@ -245,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.5k 字
+          819 字
         
       </span>
     
@@ -256,7 +249,7 @@
         
         
         
-          38 分钟
+          7 分钟
         
       </span>
     
@@ -294,222 +287,42 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Kubernetes集群配置Ceph块存储</h1>
+            <h1 style="display: none">Linux系统配置命令行终端美化工具oh-my-zsh</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="1-Ceph集群创建存储池及账户，并授予权限"><a href="#1-Ceph集群创建存储池及账户，并授予权限" class="headerlink" title="1.Ceph集群创建存储池及账户，并授予权限"></a>1.Ceph集群创建存储池及账户，并授予权限</h1><pre><code class="hljs">ceph osd pool create kubernetes 128 128
-ceph osd pool application enable kubernetes rbd
-rbd pool init kubernetes
-
-sudo ceph auth get-or-create client.kubernetes mon &#39;allow r&#39; osd &#39;allow class-read object_prefix rbd_children, allow rwx pool=kubernetes&#39; -o /etc/ceph/ceph.client.kubernetes.keyring
+                <h1 id="1-安装zsh"><a href="#1-安装zsh" class="headerlink" title="1.安装zsh"></a>1.安装zsh</h1><pre><code class="hljs"># MacOS
+brew install zsh
+sudo apt -y install zsh
 </code></pre>
-<h1 id="2-Kubernetes集群worker节点配置ceph"><a href="#2-Kubernetes集群worker节点配置ceph" class="headerlink" title="2.Kubernetes集群worker节点配置ceph"></a>2.Kubernetes集群worker节点配置ceph</h1><h2 id="2-1-安装ceph客户端"><a href="#2-1-安装ceph客户端" class="headerlink" title="2.1 安装ceph客户端"></a>2.1 安装ceph客户端</h2><pre><code class="hljs">sudo apt install -y ceph-common
+<h1 id="2-切换设置默认终端"><a href="#2-切换设置默认终端" class="headerlink" title="2.切换设置默认终端"></a>2.切换设置默认终端</h1><pre><code class="hljs"># 查看当前Shell
+echo $SHELL
+# 切换为Zshell
+chsh -s /bin/zsh
 </code></pre>
-<h2 id="2-2-Ceph集群密钥环发送worker节点"><a href="#2-2-Ceph集群密钥环发送worker节点" class="headerlink" title="2.2 Ceph集群密钥环发送worker节点"></a>2.2 Ceph集群密钥环发送worker节点</h2><pre><code class="hljs">scp -r /etc/ceph worker01:/etc
-scp -r /etc/ceph worker02:/etc
-scp -r /etc/ceph worker03:/etc
+<h1 id="3-安装oh-my-zsh"><a href="#3-安装oh-my-zsh" class="headerlink" title="3.安装oh-my-zsh"></a>3.安装oh-my-zsh</h1><h2 id="3-1-安装Git"><a href="#3-1-安装Git" class="headerlink" title="3.1 安装Git"></a>3.1 安装Git</h2><pre><code class="hljs"># MacOS
+brew install git
+sudo apt -y install git
 </code></pre>
-<h1 id="3-Kubernetes集群创建rbd-provisioner"><a href="#3-Kubernetes集群创建rbd-provisioner" class="headerlink" title="3.Kubernetes集群创建rbd provisioner"></a>3.Kubernetes集群创建rbd provisioner</h1><h2 id="3-1-创建资源配置文件"><a href="#3-1-创建资源配置文件" class="headerlink" title="3.1 创建资源配置文件"></a>3.1 创建资源配置文件</h2><pre><code class="hljs">vi ceph-rbd-provisioner.yaml
-
-
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: rbd-provisioner
-  namespace: kube-system
----
-kind: ClusterRole
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: rbd-provisioner
-rules:
-  - apiGroups: [&quot;&quot;]
-    resources: [&quot;persistentvolumes&quot;]
-    verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;create&quot;, &quot;delete&quot;]
-  - apiGroups: [&quot;&quot;]
-    resources: [&quot;persistentvolumeclaims&quot;]
-    verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;update&quot;]
-  - apiGroups: [&quot;storage.k8s.io&quot;]
-    resources: [&quot;storageclasses&quot;]
-    verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;]
-  - apiGroups: [&quot;&quot;]
-    resources: [&quot;events&quot;]
-    verbs: [&quot;create&quot;, &quot;update&quot;, &quot;patch&quot;]
-  - apiGroups: [&quot;&quot;]
-    resources: [&quot;endpoints&quot;]
-    verbs: [&quot;get&quot;, &quot;list&quot;, &quot;watch&quot;, &quot;create&quot;, &quot;update&quot;, &quot;patch&quot;]
-  - apiGroups: [&quot;&quot;]
-    resources: [&quot;services&quot;]
-    resourceNames: [&quot;kube-dns&quot;]
-    verbs: [&quot;list&quot;, &quot;get&quot;]
----
-kind: ClusterRoleBinding
-apiVersion: rbac.authorization.k8s.io/v1
-metadata:
-  name: rbd-provisioner
-subjects:
-  - kind: ServiceAccount
-    name: rbd-provisioner
-    namespace: kube-system
-roleRef:
-  kind: ClusterRole
-  ame: rbd-provisioner
-  apiGroup: rbac.authorization.k8s.io
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: rbd-provisioner
-  namespace: kube-system
-rules:
-- apiGroups: [&quot;&quot;]
-  resources: [&quot;secrets&quot;]
-  verbs: [&quot;get&quot;]
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: rbd-provisioner
-  namespace: kube-system
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: rbd-provisioner
-subjects:
-- kind: ServiceAccount
-  name: rbd-provisioner
-  namespace: kube-system
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: rbd-provisioner
-  namespace: kube-system
-spec:
-  selector:
-    matchLabels:
-      app: rbd-provisioner
-  replicas: 1
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        app: rbd-provisioner
-    spec:
-      containers:
-      - name: rbd-provisioner
-        image: quay.io/external_storage/rbd-provisioner
-        env:
-        - name: PROVISIONER_NAME
-          value: ceph-rbd
-        resources:
-          limits:
-            cpu: 50m
-            memory: 100Mi
-          requests:
-            cpu: 20m
-            memory: 50Mi
-        volumeMounts:
-          - name: ceph-config
-            mountPath: /etc/ceph
-          - name: localtime
-            mountPath: /etc/localtime
-      volumes:
-        - name: ceph-config
-          hostPath:
-            path: /etc/ceph
-        - name: localtime
-          hostPath:
-            path: /etc/localtime
-      serviceAccount: rbd-provisioner
+<h2 id="3-2-安装oh-my-zsh"><a href="#3-2-安装oh-my-zsh" class="headerlink" title="3.2 安装oh-my-zsh"></a>3.2 安装oh-my-zsh</h2><pre><code class="hljs">sh -c &quot;$(curl -fsSL https://gitee.com/shmhlsy/oh-my-zsh-install.sh/raw/master/install.sh)&quot;
 </code></pre>
-<h2 id="3-2-创建rbd-provisioner"><a href="#3-2-创建rbd-provisioner" class="headerlink" title="3.2 创建rbd provisioner"></a>3.2 创建rbd provisioner</h2><pre><code class="hljs">kubectl apply -f ceph-rbd-provisioner.yaml
-</code></pre>
-<h1 id="4-Ceph集群查看账户密钥环"><a href="#4-Ceph集群查看账户密钥环" class="headerlink" title="4.Ceph集群查看账户密钥环"></a>4.Ceph集群查看账户密钥环</h1><pre><code class="hljs"># 管理员账户密钥环
-ceph auth get-key client.admin
-# kubernetes账户密钥环
-ceph auth get-key client.kubernetes
-</code></pre>
-<h1 id="5-Kubernetes集群Ceph-Storageclass"><a href="#5-Kubernetes集群Ceph-Storageclass" class="headerlink" title="5.Kubernetes集群Ceph Storageclass"></a>5.Kubernetes集群Ceph Storageclass</h1><h2 id="5-1-创建管理员账户secret"><a href="#5-1-创建管理员账户secret" class="headerlink" title="5.1 创建管理员账户secret"></a>5.1 创建管理员账户secret</h2><pre><code class="hljs">kubectl create secret generic ceph-secret --type=&quot;kubernetes.io/rbd&quot; \
---from-literal=key=AQDaWq5kcpcgGxAAJrrD4pgmOUvCH1TE9a6taQ== \
---namespace=kube-system
-</code></pre>
-<h2 id="5-2-创建kubernetes账户secret"><a href="#5-2-创建kubernetes账户secret" class="headerlink" title="5.2 创建kubernetes账户secret"></a>5.2 创建kubernetes账户secret</h2><pre><code class="hljs">kubectl create secret generic ceph-user-secret --type=&quot;kubernetes.io/rbd&quot; \
---from-literal=key=AQDaWq5kcpcgGxAAJrrD4pgmOUvCH1TE9a6taQ==
-</code></pre>
-<h2 id="5-3-创建资源配置文件"><a href="#5-3-创建资源配置文件" class="headerlink" title="5.3 创建资源配置文件"></a>5.3 创建资源配置文件</h2><pre><code class="hljs">vi sc-ceph-rbd.yaml
+<h1 id="4-配置zsh"><a href="#4-配置zsh" class="headerlink" title="4.配置zsh"></a>4.配置zsh</h1><h2 id="4-1-配置主题"><a href="#4-1-配置主题" class="headerlink" title="4.1 配置主题"></a>4.1 配置主题</h2><p>oh-my-zsh内置了大量的主题以供使用，可将主题设为random，即每次登录随机分配</p>
+<pre><code class="hljs">cd ~ &amp;&amp; vi .zshrc
 
 
-kind: StorageClass
-apiVersion: storage.k8s.io/v1
-metadata:
-  name: sc-ceph-rbd
-provisioner: ceph-rbd
-parameters:
-  monitors: 192.168.100.108:6789,192.168.100.118:6789,192.168.100.128:6789
-  adminId: admin
-  adminSecretName: ceph-secret
-  adminSecretNamespace: kube-system
-  pool: kubernetes
-  userId: kubernetes
-  userSecretName: ceph-user-secret
-  fsType: ext4
-  imageFormat: &quot;2&quot;
-  imageFeatures: &quot;layering&quot;
+ZSH_THEME=&quot;random&quot;
 </code></pre>
-<h2 id="5-4-创建StorageClass"><a href="#5-4-创建StorageClass" class="headerlink" title="5.4 创建StorageClass"></a>5.4 创建StorageClass</h2><pre><code class="hljs">kubectl apply -f sc-ceph-rbd.yaml
+<h2 id="4-2-配置字体"><a href="#4-2-配置字体" class="headerlink" title="4.2 配置字体"></a>4.2 配置字体</h2><h2 id="4-3-配置代码高亮"><a href="#4-3-配置代码高亮" class="headerlink" title="4.3 配置代码高亮"></a>4.3 配置代码高亮</h2><pre><code class="hljs">git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $&#123;ZSH_CUSTOM:-~/.oh-my-zsh/custom&#125;/plugins/zsh-syntax-highlighting
+echo &#39;plugins=(zsh-syntax-highlighting zsh-autosuggestions)&#39; &gt;&gt;~/.zshrc
 </code></pre>
-<h1 id="6-创建POD，测试Ceph-StorageClass"><a href="#6-创建POD，测试Ceph-StorageClass" class="headerlink" title="6.创建POD，测试Ceph StorageClass"></a>6.创建POD，测试Ceph StorageClass</h1><h2 id="6-1-创建PVC"><a href="#6-1-创建PVC" class="headerlink" title="6.1 创建PVC"></a>6.1 创建PVC</h2><h3 id="6-1-1-创建资源配置文件"><a href="#6-1-1-创建资源配置文件" class="headerlink" title="6.1.1 创建资源配置文件"></a>6.1.1 创建资源配置文件</h3><pre><code class="hljs">vi nginx-ceph-pvc.yaml
-
-
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: nginx-ceph-rbd
-spec:
-  accessModes:     
-    - ReadWriteOnce
-  storageClassName: sc-ceph-rbd
-  resources:
-    requests:
-      storage: 1Gi
+<h1 id="5-生效配置"><a href="#5-生效配置" class="headerlink" title="5.生效配置"></a>5.生效配置</h1><pre><code class="hljs">source .zshrc
 </code></pre>
-<h3 id="6-1-2-创建PVC"><a href="#6-1-2-创建PVC" class="headerlink" title="6.1.2 创建PVC"></a>6.1.2 创建PVC</h3><pre><code class="hljs">kubectl apply -f nginx-ceph-pvc.yaml
-</code></pre>
-<h3 id="6-1-3-查看PV-x2F-PVC"><a href="#6-1-3-查看PV-x2F-PVC" class="headerlink" title="6.1.3 查看PV&#x2F;PVC"></a>6.1.3 查看PV&#x2F;PVC</h3><pre><code class="hljs">kubectl get pv
-kubectl get pvc
-</code></pre>
-<h2 id="6-2-创建测试POD"><a href="#6-2-创建测试POD" class="headerlink" title="6.2 创建测试POD"></a>6.2 创建测试POD</h2><h3 id="6-2-1-创建资源配置文件"><a href="#6-2-1-创建资源配置文件" class="headerlink" title="6.2.1 创建资源配置文件"></a>6.2.1 创建资源配置文件</h3><pre><code class="hljs">vi nginx.yaml
-
-
-apiVersion: v1
-kind: Pod
-metadata:
-  name: nginx
-  labels:
-    name: nginx
-spec:
-  containers:
-  - name: nginx
-    image: nginx
-    ports:
-    - name: web
-      containerPort: 80
-    volumeMounts:
-    - name: nginx-html
-      mountPath: /usr/share/nginx/html
-  volumes:
-  - name: nginx-html
-    persistentVolumeClaim:
-      claimName: nginx-ceph-rbd
-</code></pre>
-<hr>
+<h1 id="6-验证效果"><a href="#6-验证效果" class="headerlink" title="6.验证效果"></a>6.验证效果</h1><hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.51cto.com/u_13710166/5290959">https://blog.51cto.com/u_13710166/5290959</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/chuyiwang/p/17612831.html">https://www.cnblogs.com/chuyiwang/p/17612831.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/little-lunatic/p/17447723.html">https://www.cnblogs.com/little-lunatic/p/17447723.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Xiang__Qian/article/details/139871268">https://blog.csdn.net/Xiang__Qian/article/details/139871268</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_46106427/article/details/147518326">https://blog.csdn.net/weixin_46106427/article/details/147518326</a></li>
 </ul>
 
                 
@@ -529,7 +342,7 @@ spec:
     
       <span class="category-chain">
         
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  <a href="/categories/geek/" class="category-chain-item">极客</a>
   
   
 
@@ -546,23 +359,9 @@ spec:
       
         <a href="/tags/Linux/">#Linux</a>
       
-        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+        <a href="/tags/%E6%9E%81%E5%AE%A2/">#极客</a>
       
-        <a href="/tags/Ceph/">#Ceph</a>
-      
-        <a href="/tags/%E5%AD%98%E5%82%A8/">#存储</a>
-      
-        <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/">#分布式存储</a>
-      
-        <a href="/tags/%E4%BA%91%E5%AD%98%E5%82%A8/">#云存储</a>
-      
-        <a href="/tags/%E5%9D%97%E5%AD%98%E5%82%A8/">#块存储</a>
-      
-        <a href="/tags/Kubernetes/">#Kubernetes</a>
-      
-        <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
-      
-        <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+        <a href="/tags/Git/">#Git</a>
       
     </div>
   
@@ -574,8 +373,8 @@ spec:
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Kubernetes集群配置Ceph块存储</div>
-      <div>https://hfsxs.github.io/linux/KubernetesCeph/</div>
+      <div>Linux系统配置命令行终端美化工具oh-my-zsh</div>
+      <div>https://hfsxs.github.io/geek/OhMyZsh/</div>
     </div>
     <div class="license-meta">
       
@@ -587,13 +386,13 @@ spec:
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年7月12日</div>
+          <div>2025年8月10日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年8月8日</div>
+          <div>2025年8月11日</div>
         </div>
       
       <div class="license-meta-item">
@@ -622,18 +421,12 @@ spec:
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/linux/CephFS/" title="Ceph集群文件存储的配置与管理">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Ceph集群文件存储的配置与管理</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/linux/CephRBD/" title="Ceph集群块存储的配置与管理">
-                        <span class="hidden-mobile">Ceph集群块存储的配置与管理</span>
+                      <a href="/linux/AnsibleReport/" title="Ansible自动化运维工具生成Linux系统巡检报告">
+                        <span class="hidden-mobile">Ansible自动化运维工具生成Linux系统巡检报告</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
