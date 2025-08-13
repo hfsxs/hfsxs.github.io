@@ -585,7 +585,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/linux/Prometheus-Kubernetes/" target="_self">
         <div>
-          Prometheus监控Kubernetes集群可通过kube-prometheus方式部署于集群内部，也方便直接调用集群内的认证证书及暴露的监控地址，但将会增加集群的资源开销，也不利于业务的稳定。因此，可以将Prometheus部署于Kubernetes集群之外，也便于监控的集中管理。此时，涉及到的监控指标主要分为三类，即Node节点性能指标（节点CPU、内存、磁盘及网络性能）、Pod及容器资源
+          Prometheus部署于Kubernetes集群内部将会增加集群的资源开销，也不利于监控系统的维护，因此建议独立部署于集群之外。Prometheus对Kubernetes集群的监控涉及到的指标分为三类，即Node节点性能指标、集群组件及资源状态指标和容器资源指标 1.Node节点性能指标节点CPU、内存、磁盘空间及IO、TCP连接数和网络流量等，由节点上部署的node_exporter进行暴露。
         </div>
       </a>
 
