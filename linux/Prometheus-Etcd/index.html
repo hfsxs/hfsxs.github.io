@@ -16,27 +16,30 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1.command默认模块，远程主机执行命令时不经过其Shell处理，不支持管道符、重定向和变量   ansible hosts -m command -a &#39;uptime&#39; # chdir，执行命令前先切换到指定目录 ansible hosts -m command -a &#39;chdir&#x3D;&#x2F;root ls -l&#39;   2.shell基础模块，远程主机执行命令时经过其">
+    <meta name="description" content="Etcd默认在2379端口暴露监控metrics数据，且接口基于https协议，所以还涉及到SSL证书。若是部署于Kubernetes集群的Prometheus，则需要将证书挂载到集群内部，比较繁琐 1.Prometheus服务器配置Etcd证书mkdir -p &#x2F;usr&#x2F;local&#x2F;prometheus&#x2F;etcd scp -r master:&#x2F;opt&#x2F;etcd&#x2F;ssl &#x2F;usr&#x2F;local&#x2F;pr">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Ansible自动化运维工具常用模块">
-<meta property="og:url" content="https://hfsxs.github.io/linux/AnsibleModule/index.html">
+<meta property="og:title" content="Prometheus监控Etcd集群">
+<meta property="og:url" content="https://hfsxs.github.io/linux/Prometheus-Etcd/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="1.command默认模块，远程主机执行命令时不经过其Shell处理，不支持管道符、重定向和变量   ansible hosts -m command -a &#39;uptime&#39; # chdir，执行命令前先切换到指定目录 ansible hosts -m command -a &#39;chdir&#x3D;&#x2F;root ls -l&#39;   2.shell基础模块，远程主机执行命令时经过其">
+<meta property="og:description" content="Etcd默认在2379端口暴露监控metrics数据，且接口基于https协议，所以还涉及到SSL证书。若是部署于Kubernetes集群的Prometheus，则需要将证书挂载到集群内部，比较繁琐 1.Prometheus服务器配置Etcd证书mkdir -p &#x2F;usr&#x2F;local&#x2F;prometheus&#x2F;etcd scp -r master:&#x2F;opt&#x2F;etcd&#x2F;ssl &#x2F;usr&#x2F;local&#x2F;pr">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-09-14T08:02:54.000Z">
-<meta property="article:modified_time" content="2025-08-13T06:14:58.885Z">
+<meta property="article:published_time" content="2025-02-25T14:21:32.000Z">
+<meta property="article:modified_time" content="2025-08-14T09:17:24.122Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
-<meta property="article:tag" content="Ansible">
-<meta property="article:tag" content="自动化运维">
 <meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Kubernetes">
+<meta property="article:tag" content="云原生">
+<meta property="article:tag" content="Etcd">
+<meta property="article:tag" content="Prometheus">
+<meta property="article:tag" content="监控告警">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Ansible自动化运维工具常用模块 - 扬帆</title>
+  <title>Prometheus监控Etcd集群 - 扬帆</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -216,7 +219,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Ansible自动化运维工具常用模块</span>
+            <span id="subtitle">Prometheus监控Etcd集群</span>
           
         </div>
 
@@ -227,8 +230,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-09-14 16:02" pubdate>
-          2022年9月14日 下午
+        <time datetime="2025-02-25 22:21" pubdate>
+          2025年2月25日 晚上
         </time>
       </span>
     
@@ -239,7 +242,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.8k 字
+          1k 字
         
       </span>
     
@@ -250,7 +253,7 @@
         
         
         
-          16 分钟
+          9 分钟
         
       </span>
     
@@ -288,52 +291,41 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Ansible自动化运维工具常用模块</h1>
+            <h1 style="display: none">Prometheus监控Etcd集群</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="1-command"><a href="#1-command" class="headerlink" title="1.command"></a>1.command</h1><p>默认模块，远程主机执行命令时不经过其Shell处理，不支持管道符、重定向和变量  </p>
-<pre><code class="hljs">ansible hosts -m command -a &#39;uptime&#39;
-# chdir，执行命令前先切换到指定目录
-ansible hosts -m command -a &#39;chdir=/root ls -l&#39; 
+                <p>Etcd默认在2379端口暴露监控metrics数据，且接口基于https协议，所以还涉及到SSL证书。若是部署于Kubernetes集群的Prometheus，则需要将证书挂载到集群内部，比较繁琐</p>
+<h1 id="1-Prometheus服务器配置Etcd证书"><a href="#1-Prometheus服务器配置Etcd证书" class="headerlink" title="1.Prometheus服务器配置Etcd证书"></a>1.Prometheus服务器配置Etcd证书</h1><pre><code class="hljs">mkdir -p /usr/local/prometheus/etcd
+scp -r master:/opt/etcd/ssl /usr/local/prometheus/etcd
 </code></pre>
-<h1 id="2-shell"><a href="#2-shell" class="headerlink" title="2.shell"></a>2.shell</h1><p>基础模块，远程主机执行命令时经过其&#x2F;bin&#x2F;sh程序处理</p>
-<pre><code class="hljs">ansible master -m shell -a &#39;chdir=/root ps -ef|grep keepalived|grep -v grep&#39;
+<h1 id="2-验证Etcd指标数据"><a href="#2-验证Etcd指标数据" class="headerlink" title="2.验证Etcd指标数据"></a>2.验证Etcd指标数据</h1><pre><code class="hljs">curl -Lk --cert /usr/local/prometheus/etcd/ssl/ca.pem --key /usr/local/prometheus/etcd/ssl/ca-key.pem https://172.18.100.100:2379/metrics
 </code></pre>
-<h1 id="3-yum-x2F-apt"><a href="#3-yum-x2F-apt" class="headerlink" title="3.yum&#x2F;apt"></a>3.yum&#x2F;apt</h1><p>用于管理远程主机的RPM&#x2F;DEB包，执行安装、升级及卸载操作</p>
-<p>参数详解：<br>name，包名字<br>state，对包进行的操作，latest&#x2F;installd&#x2F;present表示安装，removed&#x2F;absent表示卸载 </p>
-<pre><code class="hljs"># 安装最新版本docker
-ansible hosts -m yum -a &#39;name=docker state=latest&#39;
-# 安装指定版本软件包
-ansible hosts -m apt -a &#39;name=docker-20. state=present&#39;
-# 将所有软件包升级到最新版本
-ansible hosts -m apt -a &#39;name=* state=latest&#39;
+<h1 id="3-配置Prometheus"><a href="#3-配置Prometheus" class="headerlink" title="3.配置Prometheus"></a>3.配置Prometheus</h1><pre><code class="hljs">sudo vi /usr/local/prometheus/prometheus.yml
 
-# 卸载软件包
-ansible hosts -m yum -a &#39;name=docker state=absent&#39;
+
+- job_name: kubernetes-etcd
+  scheme: https
+  tls_config:
+    ca_file: /usr/local/prometheus/etcd/ssl/ca.pem
+    cert_file: /usr/local/prometheus/etcd/ssl/server.pem
+    key_file: /usr/local/prometheus/etcd/ssl/server-key.pem
+  scrape_interval: 5s
+  static_configs:
+  - targets: 
+    - 172.18.100.100:2379
+    - 172.18.100.101:2379
+    - 172.18.100.102:2379
 </code></pre>
-<h1 id="4-copy"><a href="#4-copy" class="headerlink" title="4.copy"></a>4.copy</h1><p>用于将控制主机的文件复制到受控主机的制定目录，类似于scp命令，但不支持文件夹和变量</p>
-<p>参数详解：<br>src，本地文件路径<br>dest，远程主机路径<br>backup，备份，默认为no，远程主机的同名文件将被覆盖<br>owner，设置受控主机文件属主，默认与控制主机的权限一致<br>group，设置受控主机文件属组，默认与控制主机的权限一致<br>mode，远程主机的文件权限，默认与控制主机的权限一致</p>
-<pre><code class="hljs">ansible hosts -m copy -a &#39;src=/root/docker- dest=/root&#39;
-# 将本地文件复制到受控主机，若内容不同则执行备份操作
-ansible hosts -m copy -a &#39;src=/etc/hosts dest=/etc backup=yes&#39;
-# 将本地文件复制到受控主机，并修改文件权限
-ansible host -m copy -a &#39;src=/root/docker- dest=/home/sword owner=sword group=sword mode=755&#39;
+<h1 id="4-配置告警规则"><a href="#4-配置告警规则" class="headerlink" title="4.配置告警规则"></a>4.配置告警规则</h1><h1 id="5-重载Prometheus，验证集群监控状态"><a href="#5-重载Prometheus，验证集群监控状态" class="headerlink" title="5.重载Prometheus，验证集群监控状态"></a>5.重载Prometheus，验证集群监控状态</h1><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload
 </code></pre>
-<h1 id="5-unarchive"><a href="#5-unarchive" class="headerlink" title="5.unarchive"></a>5.unarchive</h1><p>用于解压缩远程主机的压缩包</p>
-<p>参数详解：<br>src，控制主机的压缩包文件路径，默认上传到远程主机<br>dest，远程主机压缩包解压的路径<br>copy，是否拷贝压缩包文件到远程主机，默认为yes，no则表示在远程主机搜索压缩包文件<br>exec，排除的文件或目录<br>owner，设置受控主机文件属主，默认与控制主机的权限一致<br>group，设置受控主机文件属组，默认与控制主机的权限一致<br>mode，远程主机的文件权限，默认与控制主机的权限一致</p>
-<pre><code class="hljs">ansible hosts -m unarchive -a &#39;src=docker-20.10.16.tgz dest=/root&#39;
-ansible hosts -m unarchive -a &#39;src=/root/apache-tomcat-10.0.20.tar.gz dest=/usr/local mode=755&#39;
-</code></pre>
-<h1 id="5-service"><a href="#5-service" class="headerlink" title="5.service"></a>5.service</h1><p>用于管理远程主机上的服务，且远程主机的服务须通过BSD init,、OpenRC、SysV、Solaris SMF、systemd、<br>upstart中的任意一种所管理</p>
-<p>参数详解：<br>name，服务名称<br>state，对服务进行的操作，started表示启动，stopped表示停止，restarted表示重启，reloaded表示重载<br>enabled，yes表示服务设为开机启动，no则相反</p>
-<pre><code class="hljs">ansible hosts -m service -a &#39;name=docker state=started enabled=yes&#39;
-</code></pre>
-<h1 id="6-tags"><a href="#6-tags" class="headerlink" title="6.tags"></a>6.tags</h1><p>tags，标签</p>
+<h1 id="6-Grafana导入监控模版"><a href="#6-Grafana导入监控模版" class="headerlink" title="6.Grafana导入监控模版"></a>6.Grafana导入监控模版</h1><p>Dashboards —&gt; Manage —&gt; Import —&gt; 模版ID：15308</p>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/xcndafad/article/details/122138782?spm=1001.2014.3001.5502">https://blog.csdn.net/xcndafad/article/details/122138782?spm=1001.2014.3001.5502</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.lixueduan.com/posts/etcd/17-monitor">https://www.lixueduan.com/posts/etcd/17-monitor</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_34939308/article/details/123314719">https://blog.csdn.net/qq_34939308/article/details/123314719</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_44930876/article/details/141565577">https://blog.csdn.net/qq_44930876/article/details/141565577</a></li>
 </ul>
 
                 
@@ -370,11 +362,17 @@ ansible hosts -m unarchive -a &#39;src=/root/apache-tomcat-10.0.20.tar.gz dest=/
       
         <a href="/tags/Linux/">#Linux</a>
       
-        <a href="/tags/Ansible/">#Ansible</a>
-      
-        <a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%90%E7%BB%B4/">#自动化运维</a>
-      
         <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/Kubernetes/">#Kubernetes</a>
+      
+        <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+      
+        <a href="/tags/Etcd/">#Etcd</a>
+      
+        <a href="/tags/Prometheus/">#Prometheus</a>
+      
+        <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
       
     </div>
   
@@ -386,8 +384,8 @@ ansible hosts -m unarchive -a &#39;src=/root/apache-tomcat-10.0.20.tar.gz dest=/
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Ansible自动化运维工具常用模块</div>
-      <div>https://hfsxs.github.io/linux/AnsibleModule/</div>
+      <div>Prometheus监控Etcd集群</div>
+      <div>https://hfsxs.github.io/linux/Prometheus-Etcd/</div>
     </div>
     <div class="license-meta">
       
@@ -399,13 +397,13 @@ ansible hosts -m unarchive -a &#39;src=/root/apache-tomcat-10.0.20.tar.gz dest=/
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年9月14日</div>
+          <div>2025年2月25日</div>
         </div>
       
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年8月13日</div>
+          <div>2025年8月14日</div>
         </div>
       
       <div class="license-meta-item">
@@ -434,9 +432,9 @@ ansible hosts -m unarchive -a &#39;src=/root/apache-tomcat-10.0.20.tar.gz dest=/
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/geek/Cockpit/" title="Linux系统安装Web虚拟化管理平台Cockpit">
+                      <a href="/linux/AI-Ollama/" title="Linux基于Ollama部署本地AI大模型">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Linux系统安装Web虚拟化管理平台Cockpit</span>
+                        <span class="hidden-mobile">Linux基于Ollama部署本地AI大模型</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -444,8 +442,8 @@ ansible hosts -m unarchive -a &#39;src=/root/apache-tomcat-10.0.20.tar.gz dest=/
                   <article class="post-next col-6">
                     
                     
-                      <a href="/geek/ProxmoxVE/" title="ProxmoxVE虚拟化管理平台部署与配置">
-                        <span class="hidden-mobile">ProxmoxVE虚拟化管理平台部署与配置</span>
+                      <a href="/linux/KubernetesCertExpiration/" title="Kubernetes集群证书过期解决方案">
+                        <span class="hidden-mobile">Kubernetes集群证书过期解决方案</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

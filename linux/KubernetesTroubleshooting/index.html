@@ -24,7 +24,7 @@
 <meta property="og:description" content="1.worker节点重启后一直notready状态故障背景某个worker节点服务器重启，重启后处于notready状态 故障现象集群master节点正常，docker运行正常，机器负载正常，kubelet反复启动 故障原因刚接触kubernets不太熟悉，排查半天不得要领，直到查看kubelet日志发现有报错：”Failed to run kubelet” err&#x3D;”failed to">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-01-30T04:25:53.000Z">
-<meta property="article:modified_time" content="2025-03-15T13:16:19.557Z">
+<meta property="article:modified_time" content="2025-08-14T06:08:39.846Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -240,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.1k 字
+          5.5k 字
         
       </span>
     
@@ -251,7 +251,7 @@
         
         
         
-          43 分钟
+          46 分钟
         
       </span>
     
@@ -421,6 +421,10 @@ nameserver 8.8.8.8
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/czlong/p/15802384.html">https://www.cnblogs.com/czlong/p/15802384.html</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xzlive/p/17139520.html">https://www.cnblogs.com/xzlive/p/17139520.html</a></li>
 </ul>
+<h1 id="10-node节点OOM"><a href="#10-node节点OOM" class="headerlink" title="10.node节点OOM"></a>10.node节点OOM</h1><h2 id="故障背景-9"><a href="#故障背景-9" class="headerlink" title="故障背景"></a>故障背景</h2><p>集群为1.9.9版本，机器也比较旧，资源也很紧张</p>
+<h2 id="故障现象-9"><a href="#故障现象-9" class="headerlink" title="故障现象"></a>故障现象</h2><p>故障群大批量告警，业务方反馈系统某功能异常</p>
+<h2 id="故障原因-9"><a href="#故障原因-9" class="headerlink" title="故障原因"></a>故障原因</h2><p>大批量KubeDeploymentReplicasMismatch告警说明是集群节点异常，kubectl describe nodes命令显示SystemOOM。因为集群只有4个node节点，不好进行驱逐，因此先重启Pod恢复业务。系统OOM即内存超限，导致容器被kill，监控也显示内存突然飙升，所以接下来就要定位是哪个进程导致的内存突增。运行命令dmesg | grep -i “Killed process”查看被kill掉的进程，发现ruby进程所占内存异常</p>
+<h2 id="解决方案-9"><a href="#解决方案-9" class="headerlink" title="解决方案"></a>解决方案</h2><p>ruby是日志采集与投递程序td-agent，排查之后发现是配置文件导致日志不能解析，并一直循环，修改配置并重启之后恢复正常</p>
 
                 
               </div>
@@ -493,7 +497,7 @@ nameserver 8.8.8.8
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月15日</div>
+          <div>2025年8月14日</div>
         </div>
       
       <div class="license-meta-item">

@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/kubernetes.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/kubernetes-alerts.jpg">
 <meta property="article:published_time" content="2024-05-10T06:59:01.000Z">
-<meta property="article:modified_time" content="2025-08-13T01:04:13.433Z">
+<meta property="article:modified_time" content="2025-08-14T06:09:26.604Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -244,7 +244,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          50k 字
+          49k 字
         
       </span>
     
@@ -255,7 +255,7 @@
         
         
         
-          415 分钟
+          407 分钟
         
       </span>
     
@@ -636,42 +636,6 @@ spec:
     action: keep
   - action: labelmap
     regex: __meta_kubernetes_pod_label_(.+)
-</code></pre>
-<h2 id="4-6-Etcd监控配置"><a href="#4-6-Etcd监控配置" class="headerlink" title="4.6 Etcd监控配置"></a>4.6 Etcd监控配置</h2><p>Etcd启动参数–listen-metrics-url用于指定监控端口与协议，即通过http协议的2381端口对外暴露，且访问地址为本地。因此，需要先修改监控端口的绑定地址为0.0.0.0，才能与Promethues通信</p>
-<pre><code class="hljs">- job_name: kubernetes-etcd
-  scheme: https
-  tls_config:
-    ca_file: /etc/kubernetes/pki/etcd/ca.crt
-    cert_file: /etc/kubernetes/pki/etcd/server.crt
-    key_file: /etc/kubernetes/pki/etcd/server.key
-  scrape_interval: 5s
-  static_configs:
-  - targets: [&#39;172.18.100.101:2379&#39;]
-  - targets: [&#39;172.18.100.102:2379&#39;]
-  - targets: [&#39;172.18.100.103:2379&#39;]
-</code></pre>
-<hr>
-<pre><code class="hljs">- job_name: etcd
-  kubernetes_sd_configs:
-  - role: pod
-  relabel_configs:
-  - source_labels:
-      - __meta_kubernetes_pod_label_component
-    regex: etcd
-    action: keep
-  - source_labels: [__meta_kubernetes_pod_ip]
-    regex: (.+)
-    target_label: __address__
-    replacement: $&#123;1&#125;:2381
-  - source_labels: [__meta_kubernetes_endpoints_name]
-    action: replace
-    target_label: endpoint
-  - source_labels: [__meta_kubernetes_pod_name]
-    action: replace
-    target_label: pod
-  - source_labels: [__meta_kubernetes_namespace]
-    action: replace
-    target_label: namespace
 </code></pre>
 <h1 id="5-集群资源监控配置"><a href="#5-集群资源监控配置" class="headerlink" title="5.集群资源监控配置"></a>5.集群资源监控配置</h1><h2 id="5-1-Pod及容器监控配置"><a href="#5-1-Pod及容器监控配置" class="headerlink" title="5.1 Pod及容器监控配置"></a>5.1 Pod及容器监控配置</h2><pre><code class="hljs">- job_name: kubernetes-pods 
   scheme: https
@@ -1571,7 +1535,6 @@ groups:
 <li><a target="_blank" rel="noopener" href="https://blog.51cto.com/u_16099314/9650104">https://blog.51cto.com/u_16099314/9650104</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/suyj/p/16053993.html">https://www.cnblogs.com/suyj/p/16053993.html</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/MrFDd/article/details/134535787">https://blog.csdn.net/MrFDd/article/details/134535787</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_34939308/article/details/123314719">https://blog.csdn.net/qq_34939308/article/details/123314719</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_33816243/article/details/126863790">https://blog.csdn.net/qq_33816243/article/details/126863790</a></li>
 <li><a target="_blank" rel="noopener" href="https://docs.tianshu.org.cn/docs/setup/monitor-pod-indicator-information">https://docs.tianshu.org.cn/docs/setup/monitor-pod-indicator-information</a></li>
 </ul>
@@ -1649,7 +1612,7 @@ groups:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年8月13日</div>
+          <div>2025年8月14日</div>
         </div>
       
       <div class="license-meta-item">
