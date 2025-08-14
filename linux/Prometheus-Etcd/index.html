@@ -23,8 +23,9 @@
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="Etcd默认在2379端口暴露监控metrics数据，且接口基于https协议，所以还涉及到SSL证书。若是部署于Kubernetes集群的Prometheus，则需要将证书挂载到集群内部，比较繁琐 1.Prometheus服务器配置Etcd证书mkdir -p &#x2F;usr&#x2F;local&#x2F;prometheus&#x2F;etcd scp -r master:&#x2F;opt&#x2F;etcd&#x2F;ssl &#x2F;usr&#x2F;local&#x2F;pr">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/etcd.jpg">
 <meta property="article:published_time" content="2025-02-25T14:21:32.000Z">
-<meta property="article:modified_time" content="2025-08-14T09:17:24.122Z">
+<meta property="article:modified_time" content="2025-08-14T14:14:47.059Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -34,6 +35,7 @@
 <meta property="article:tag" content="Prometheus">
 <meta property="article:tag" content="监控告警">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hfsxs.github.io/img/wiki/prometheus/etcd.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -321,6 +323,7 @@ scp -r master:/opt/etcd/ssl /usr/local/prometheus/etcd
 <h1 id="4-配置告警规则"><a href="#4-配置告警规则" class="headerlink" title="4.配置告警规则"></a>4.配置告警规则</h1><h1 id="5-重载Prometheus，验证集群监控状态"><a href="#5-重载Prometheus，验证集群监控状态" class="headerlink" title="5.重载Prometheus，验证集群监控状态"></a>5.重载Prometheus，验证集群监控状态</h1><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload
 </code></pre>
 <h1 id="6-Grafana导入监控模版"><a href="#6-Grafana导入监控模版" class="headerlink" title="6.Grafana导入监控模版"></a>6.Grafana导入监控模版</h1><p>Dashboards —&gt; Manage —&gt; Import —&gt; 模版ID：15308</p>
+<p><img src="/img/wiki/prometheus/etcd.jpg" srcset="/img/loading.gif" lazyload alt="etcd"></p>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://www.lixueduan.com/posts/etcd/17-monitor">https://www.lixueduan.com/posts/etcd/17-monitor</a></li>
