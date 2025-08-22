@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/kubernetes/EventsAlert.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/kubernetes/EventsMySQL.jpg">
 <meta property="article:published_time" content="2025-08-15T02:50:36.000Z">
-<meta property="article:modified_time" content="2025-08-22T03:10:15.642Z">
+<meta property="article:modified_time" content="2025-08-22T05:38:40.771Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -243,7 +243,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.2k 字
+          2.4k 字
         
       </span>
     
@@ -254,7 +254,7 @@
         
         
         
-          19 分钟
+          20 分钟
         
       </span>
     
@@ -299,7 +299,8 @@
                 
                 <p>Events，即事件，用于记录Kubernetes集群中资源对象的状态变化，如Node的上线与下线、Deployment&#x2F;Pod&#x2F;PV的创建与销毁等，由集群组件API-Server生成并写入Etcd集群。Kubernetes集群的事件记录了集群各种操作的时间、类型、对象、原因以及描述等信息，反映了集群的实时和历史状态及行为轨迹，可作为调试故障、监控性能的核心依据。但由于事件频繁生成且数据量较大，Kubernetes集群基于Etcd压力的考量，默认情况下只保留1个小时的事件信息，很多时候来不及进行排查。因为，事件的持久化存储应运而生</p>
 <p>Kubernetes集群的事件分为两种，即Warning事件和Normal事件，前者由非预期操作产生，也即异常或错误事件，如Pod调度失败、容器崩溃或重启及Node节点异常等</p>
-<h1 id="1-下载kube-eventer"><a href="#1-下载kube-eventer" class="headerlink" title="1.下载kube-eventer"></a>1.下载kube-eventer</h1><p>   git clone <a target="_blank" rel="noopener" href="https://github.com/AliyunContainerService/kube-eventer.git">https://github.com/AliyunContainerService/kube-eventer.git</a> </p>
+<h1 id="1-下载kube-eventer"><a href="#1-下载kube-eventer" class="headerlink" title="1.下载kube-eventer"></a>1.下载kube-eventer</h1><pre><code class="hljs">git clone https://github.com/AliyunContainerService/kube-eventer.git 
+</code></pre>
 <h1 id="2-配置钉钉告警"><a href="#2-配置钉钉告警" class="headerlink" title="2.配置钉钉告警"></a>2.配置钉钉告警</h1><h2 id="2-1-创建钉钉集群机器人"><a href="#2-1-创建钉钉集群机器人" class="headerlink" title="2.1 创建钉钉集群机器人"></a>2.1 创建钉钉集群机器人</h2><h2 id="2-2-配置事件告警"><a href="#2-2-配置事件告警" class="headerlink" title="2.2 配置事件告警"></a>2.2 配置事件告警</h2><pre><code class="hljs">cd kube-eventer/deploy
 vi deploy.yaml
 
@@ -313,7 +314,6 @@ vi deploy.yaml
 </code></pre>
 <h2 id="2-4-验证事件告警"><a href="#2-4-验证事件告警" class="headerlink" title="2.4 验证事件告警"></a>2.4 验证事件告警</h2><p><img src="/img/wiki/kubernetes/EventsAlert.jpg" srcset="/img/loading.gif" lazyload alt="EventsAlert"></p>
 <h1 id="3-配置事件持久化到MySQL数据库"><a href="#3-配置事件持久化到MySQL数据库" class="headerlink" title="3.配置事件持久化到MySQL数据库"></a>3.配置事件持久化到MySQL数据库</h1><h2 id="3-1-安装MySQL数据库"><a href="#3-1-安装MySQL数据库" class="headerlink" title="3.1 安装MySQL数据库"></a>3.1 安装MySQL数据库</h2><h2 id="3-2-创建事件存储数据库"><a href="#3-2-创建事件存储数据库" class="headerlink" title="3.2 创建事件存储数据库"></a>3.2 创建事件存储数据库</h2><pre><code class="hljs">MariaDB [(none)]&gt; create table k8s_event;
-# 创建数据表
 MariaDB [(none)]&gt; use k8s_event;
 MariaDB [(none)]&gt; create table k8s_event ( 
   id bigint(20)           not null auto_increment primary key comment &#39;event primary key&#39;,
@@ -325,8 +325,6 @@ MariaDB [(none)]&gt; create table k8s_event (
   kind                    varchar(64)  not null default &#39;&#39; comment &#39;event kind&#39; ,
   first_occurrence_time   varchar(64)    not null default &#39;&#39; comment &#39;event first occurrence time&#39;,     last_occurrence_time    varchar(64)    not null default &#39;&#39; comment &#39;event last occurrence time&#39; )
   ENGINE = InnoDB default CHARSET = utf8 comment =&#39;Event info tables&#39;;
-
-# 数据库授权
 MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON kube_eventer.* TO &#39;kube_eventer&#39;@&#39;172.16.100.%&#39; IDENTIFIED BY &#39;kube_eventer&#39;;
 MariaDB [(none)]&gt; FLUSH PRIVILEGES;
 </code></pre>
@@ -339,6 +337,7 @@ vi deploy.yaml
 <h2 id="3-4-部署kube-eventer"><a href="#3-4-部署kube-eventer" class="headerlink" title="3.4 部署kube-eventer"></a>3.4 部署kube-eventer</h2><pre><code class="hljs">kubectl apply -f deploy.yaml
 </code></pre>
 <h2 id="3-5-配置Grafana，验证数据持久化"><a href="#3-5-配置Grafana，验证数据持久化" class="headerlink" title="3.5 配置Grafana，验证数据持久化"></a>3.5 配置Grafana，验证数据持久化</h2><p><img src="/img/wiki/kubernetes/EventsMySQL.jpg" srcset="/img/loading.gif" lazyload alt="EventsMySQL"></p>
+<p>注：计公式为：SELECT first_occurrence_time,name,namespace,reason,message FROM kube_eventer.k8s_event WHERE type &#x3D; ‘Warning’ LIMIT 50</p>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://www.modb.pro/db/1777517834276507648">https://www.modb.pro/db/1777517834276507648</a></li>
