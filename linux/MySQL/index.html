@@ -24,7 +24,7 @@
 <meta property="og:description" content="MySQL，是由瑞典MySQL AB公司开发的开源的关系型数据库管理系统，目前已被Oracle收购，全球范围内被广泛应用，其使用的SQL语言是用于访问数据库的最常用的标准化语言。MySQL分为社区版和商业版，由于其体积小、速度快、总体拥有成本低，尤其是开放源码这一特点，一般中小型和大型网站的开发都选择MySQL作为网站数据库。 发展历史 1979年，MySQL创始人Michael Widenius">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-02-02T07:13:16.000Z">
-<meta property="article:modified_time" content="2025-03-15T09:08:18.280Z">
+<meta property="article:modified_time" content="2025-08-15T05:32:29.631Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -356,26 +356,28 @@ mv mysql-5.7.22-linux-glibc2.12-x86_64 /usr/local/mysql
 
 
 [client]
-port=3306
-socket=/var/lib/mysql/mysql.sock
+port = 3306
+socket = /var/lib/mysql/mysql.sock
 
 [mysqld]
-port=3306
-basedir=/usr/local/mysql
-datadir=/usr/local/mysql/data
-socket=/var/lib/mysql/mysql.sock
-pid-file=/var/lib/mysql/mysql.pid
-log-error =/usr/local/mysql/data/mysql-server.log
+port = 3306
+basedir = /usr/local/mysql
+datadir = /usr/local/mysql/data
+socket = /var/lib/mysql/mysql.sock
+pid-file = /var/lib/mysql/mysql.pid
+log-error = /usr/local/mysql/data/mysql-server.log
 # mariadb无需配置
-log_timestamps=system
+log_timestamps = system
 
-default-storage-engine=InnoDB
-character-set-server=utf8
-innodb_file_per_table=1
-symbolic-links=0
+max_connections = 4096
+default-storage-engine = InnoDB
+character-set-server = utf8
+collation-server = utf8_general_ci
+symbolic-links = 0
+innodb_file_per_table = 1
 skip-external-locking
-wait_timeout=600
-interactive_timeout=600
+wait_timeout = 300
+interactive_timeout = 600
 </code></pre>
 <h1 id="6-配置环境变量"><a href="#6-配置环境变量" class="headerlink" title="6. 配置环境变量"></a>6. 配置环境变量</h1><pre><code class="hljs"># echo &#39;PATH=/usr/local/mysql/bin/:$PATH&#39; &gt;&gt;/etc/profile &amp;&amp; source /etc/profile
 ln -s /usr/local/mysql/bin/mysql /usr/bin
@@ -466,7 +468,7 @@ chkconfig mysqld on
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月15日</div>
+          <div>2025年8月15日</div>
         </div>
       
       <div class="license-meta-item">

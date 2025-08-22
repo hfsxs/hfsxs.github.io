@@ -24,7 +24,7 @@
 <meta property="og:description" content="1.Prometheus监控规则vi &#x2F;usr&#x2F;local&#x2F;prometheus&#x2F;rules&#x2F;prometheus.yaml   groups: - name: prometheus   rules:   - alert: PrometheusAllTargetsMissing     expr: count by (job) (up) &#x3D;&#x3D; 0     for: 2m     labels:">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-08-17T00:57:51.000Z">
-<meta property="article:modified_time" content="2025-07-21T06:27:59.963Z">
+<meta property="article:modified_time" content="2025-08-21T14:33:34.154Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -239,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          41k 字
+          36k 字
         
       </span>
     
@@ -250,7 +250,7 @@
         
         
         
-          342 分钟
+          299 分钟
         
       </span>
     
@@ -1151,122 +1151,6 @@ groups:
       summary: &quot;&#123;&#123; $labels.name &#125;&#125;容器内存使用率过低，建议缩减内存配额&quot;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125;实例&#123;&#123; $labels.name &#125;&#125;容器持续7天内存使用率低于20%, 当前值为&#123;&#123; $value &#125;&#125;&quot;
 </code></pre>
-<h1 id="10-Etcd集群监控规则"><a href="#10-Etcd集群监控规则" class="headerlink" title="10.Etcd集群监控规则"></a>10.Etcd集群监控规则</h1><pre><code class="hljs">vi /usr/local/prometheus/rules/etcd.yaml
-
-
-groups:
-- name: Etcd
-  rules:
-  - alert: EtcdInsufficientMembers
-    expr: count(etcd_server_id) % 2 == 0
-    for: 0m
-    labels:
-      severity: Critical
-      cluster: EtcdServer
-    annotations:
-      summary: Etcd insufficient Members (instance &#123;&#123; $labels.instance &#125;&#125;)
-      description: &quot;Etcd cluster should have an odd number of members\n  VALUE = &#123;&#123; $value &#125;&#125;\n  LABELS = &#123;&#123; $labels &#125;&#125;&quot;
-  - alert: EtcdNoLeader
-    expr: etcd_server_has_leader == 0
-    for: 0m
-    labels:
-      severity: Critical
-      cluster: EtcdServer
-    annotations:
-      summary: Etcd no Leader (instance &#123;&#123; $labels.instance &#125;&#125;)
-      description: &quot;Etcd cluster have no leader\n  VALUE = &#123;&#123; $value &#125;&#125;\n  LABELS = &#123;&#123; $labels &#125;&#125;&quot;
-  - alert: EtcdHighNumberOfLeaderChanges
-    expr: increase(etcd_server_leader_changes_seen_total[10m]) &gt; 2
-    for: 0m
-    labels:
-      severity: Warning
-      cluster: EtcdServer
-    annotations:
-      summary: Etcd high number of leader changes (instance &#123;&#123; $labels.instance &#125;&#125;)
-      description: &quot;Etcd leader changed more than 2 times during 10 minutes\n  VALUE = &#123;&#123; $value &#125;&#125;\n  LABELS = &#123;&#123; $labels &#125;&#125;&quot;
-  - alert: EtcdHighNumberOfFailedGrpcRequests
-    expr: sum(rate(grpc_server_handled_total&#123;grpc_code!=&quot;OK&quot;&#125;[1m])) BY (grpc_service, grpc_method) / sum(rate(grpc_server_handled_total[1m])) BY (grpc_service, grpc_method) &gt; 0.01
-    for: 2m
-    labels:
-      severity: Warning
-      cluster: EtcdServer
-    annotations:
-      summary: Etcd high number of failed GRPC requests (instance &#123;&#123; $labels.instance &#125;&#125;)
-      description: &quot;More than 1% GRPC request failure detected in Etcd\n  VALUE = &#123;&#123; $value &#125;&#125;\n  LABELS = &#123;&#123; $labels &#125;&#125;&quot;
-  - alert: EtcdHighNumberOfFailedGrpcRequests
-    expr: sum(rate(grpc_server_handled_total&#123;grpc_code!=&quot;OK&quot;&#125;[1m])) BY (grpc_service, grpc_method) / sum(rate(grpc_server_handled_total[1m])) BY (grpc_service, grpc_method) &gt; 0.05
-    for: 2m
-    labels:
-      severity: Critical
-      cluster: EtcdServer
-    annotations:
-      summary: Etcd high number of failed GRPC requests (instance &#123;&#123; $labels.instance &#125;&#125;)
-      description: &quot;More than 5% GRPC request failure detected in Etcd\n  VALUE = &#123;&#123; $value &#125;&#125;\n  LABELS = &#123;&#123; $labels &#125;&#125;&quot;
-  - alert: EtcdGrpcRequestsSlow
-    expr: histogram_quantile(0.99, sum(rate(grpc_server_handling_seconds_bucket&#123;grpc_type=&quot;unary&quot;&#125;[1m])) by (grpc_service, grpc_method, le)) &gt; 0.15
-    for: 2m
-    labels:
-      severity: Warning
-      cluster: EtcdServer
-    annotations:
-      summary: Etcd GRPC requests slow (instance &#123;&#123; $labels.instance &#125;&#125;)
-      description: &quot;GRPC requests slowing down, 99th percentile is over 0.15s\n  VALUE = &#123;&#123; $value &#125;&#125;\n  LABELS = &#123;&#123; $labels &#125;&#125;&quot;
-  - alert: EtcdHighNumberOfFailedHttpRequests
-    expr: sum(rate(etcd_http_failed_total[1m])) BY (method) / sum(rate(etcd_http_received_total[1m])) BY (method) &gt; 0.01
-    for: 2m
-    labels:
-      severity: Warning
-      cluster: EtcdServer
-    annotations:
-      summary: Etcd high number of failed HTTP requests (instance &#123;&#123; $labels.instance &#125;&#125;)
-      description: &quot;More than 1% HTTP failure detected in Etcd\n  VALUE = &#123;&#123; $value &#125;&#125;\n  LABELS = &#123;&#123; $labels &#125;&#125;&quot;
-  - alert: EtcdHttpRequestsSlow
-    expr: histogram_quantile(0.99, rate(etcd_http_successful_duration_seconds_bucket[1m])) &gt; 0.15
-    for: 2m
-    labels:
-      severity: Warning
-      cluster: EtcdServer
-    annotations:
-      summary: Etcd HTTP requests slow (instance &#123;&#123; $labels.instance &#125;&#125;)
-      description: &quot;HTTP requests slowing down, 99th percentile is over 0.15s\n  VALUE = &#123;&#123; $value &#125;&#125;\n  LABELS = &#123;&#123; $labels &#125;&#125;&quot;
-  - alert: EtcdMemberCommunicationSlow
-    expr: histogram_quantile(0.99, rate(etcd_network_peer_round_trip_time_seconds_bucket[1m])) &gt; 0.15
-    for: 2m
-    labels:
-      severity: Warning
-      cluster: EtcdServer
-    annotations:
-      summary: Etcd member communication slow (instance &#123;&#123; $labels.instance &#125;&#125;)
-      description: &quot;Etcd member communication slowing down, 99th percentile is over 0.15s\n  VALUE = &#123;&#123; $value &#125;&#125;\n  LABELS = &#123;&#123; $labels &#125;&#125;&quot;
-  - alert: EtcdHighNumberOfFailedProposals
-    expr: increase(etcd_server_proposals_failed_total[1h]) &gt; 5
-    for: 2m
-    labels:
-      severity: Warning
-      cluster: EtcdServer
-    annotations:
-      summary: Etcd high number of failed proposals (instance &#123;&#123; $labels.instance &#125;&#125;)
-      description: &quot;Etcd server got more than 5 failed proposals past hour\n  VALUE = &#123;&#123; $value &#125;&#125;\n  LABELS = &#123;&#123; $labels &#125;&#125;&quot;
-  - alert: EtcdHighFsyncDurations
-    expr: histogram_quantile(0.99, rate(etcd_disk_wal_fsync_duration_seconds_bucket[1m])) &gt; 0.5
-    for: 2m
-    labels:
-      severity: Warning
-      cluster: EtcdServer
-    annotations:
-      summary: Etcd high fsync durations (instance &#123;&#123; $labels.instance &#125;&#125;)
-      description: &quot;Etcd WAL fsync duration increasing, 99th percentile is over 0.5s\n  VALUE = &#123;&#123; $value &#125;&#125;\n  LABELS = &#123;&#123; $labels &#125;&#125;&quot;
-  - alert: EtcdHighCommitDurations
-    expr: histogram_quantile(0.99, rate(etcd_disk_backend_commit_duration_seconds_bucket[1m])) &gt; 0.25
-    for: 2m
-    labels:
-      severity: Warning
-      cluster: EtcdServer
-    annotations:
-      summary: Etcd high commit durations (instance &#123;&#123; $labels.instance &#125;&#125;)
-      description: &quot;Etcd commit duration increasing, 99th percentile is over 0.25s\n  VALUE = &#123;&#123; $value &#125;&#125;\n  LABELS = &#123;&#123; $labels &#125;&#125;&quot;
-</code></pre>
-<hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://blog.51cto.com/u_64214/6080565">https://blog.51cto.com/u_64214/6080565</a></li>
 <li><a target="_blank" rel="noopener" href="https://codeleading.com/article/55986015391">https://codeleading.com/article/55986015391</a></li>
@@ -1344,7 +1228,7 @@ groups:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年7月21日</div>
+          <div>2025年8月21日</div>
         </div>
       
       <div class="license-meta-item">
