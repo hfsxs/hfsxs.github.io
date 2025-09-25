@@ -4,6 +4,70 @@
   
   
   <entry>
+    <title>Linux系统开启回收站功能</title>
+    <link href="/linux/Trash/"/>
+    <url>/linux/Trash/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1-安装trash"><a href="#1-安装trash" class="headerlink" title="1.安装trash"></a>1.安装trash</h1><pre><code class="hljs">sudo apt install trash-clisudo mkdir -p /home/backup/.trashsudo chmod 777 -R /home/backup/.trash</code></pre><h1 id="2-配置回收站"><a href="#2-配置回收站" class="headerlink" title="2.配置回收站"></a>2.配置回收站</h1><h2 id="2-1-创建回收站脚本"><a href="#2-1-创建回收站脚本" class="headerlink" title="2.1 创建回收站脚本"></a>2.1 创建回收站脚本</h2><pre><code class="hljs">sudo vi /usr/local/rm#!/bin/bashif ! command -v trash-put &amp;&gt; /dev/null; then  echo &quot;Error: &#39;trash-put&#39; command not found. Please install trash-cli.&quot;  exit 1fi# 设置回收站目录env XDG_DATA_HOME=&quot;/home/backup/.trash&quot; trash-put &quot;$@&quot;</code></pre><h2 id="2-2-回收站命令赋执行权限"><a href="#2-2-回收站命令赋执行权限" class="headerlink" title="2.2 回收站命令赋执行权限"></a>2.2 回收站命令赋执行权限</h2><pre><code class="hljs">sudo chmod +x /usr/local/rm</code></pre><h2 id="2-3-备份原rm命令"><a href="#2-3-备份原rm命令" class="headerlink" title="2.3 备份原rm命令"></a>2.3 备份原rm命令</h2><pre><code class="hljs">sudo mv /bin/rm /usr/bin/rm-real</code></pre><h1 id="3-验证回收站功能"><a href="#3-验证回收站功能" class="headerlink" title="3.验证回收站功能"></a>3.验证回收站功能</h1><h2 id="3-1-删除文件，验证回收站功能"><a href="#3-1-删除文件，验证回收站功能" class="headerlink" title="3.1 删除文件，验证回收站功能"></a>3.1 删除文件，验证回收站功能</h2><pre><code class="hljs">sudo rm -rf ~test/*trash-listll /home/backup/.trash/Trash/files</code></pre><h2 id="3-2-还原回收站文件"><a href="#3-2-还原回收站文件" class="headerlink" title="3.2 还原回收站文件"></a>3.2 还原回收站文件</h2><pre><code class="hljs">sudo su -trash-restore</code></pre><h2 id="3-3-清空回收站"><a href="#3-3-清空回收站" class="headerlink" title="3.3 清空回收站"></a>3.3 清空回收站</h2><pre><code class="hljs">trash-empty</code></pre><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://blog.csdn.net/zfw_666666/article/details/124670544">https://blog.csdn.net/zfw_666666/article/details/124670544</a></li><li><a href="https://blog.csdn.net/qq_74397635/article/details/151857733">https://blog.csdn.net/qq_74397635/article/details/151857733</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>存储</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>CloudStack集群部署</title>
+    <link href="/linux/CloudStack/"/>
+    <url>/linux/CloudStack/</url>
+    
+    <content type="html"><![CDATA[<p>CloudStack，Java开发的开源云计算管理平台，用于管理和部署大规模的虚拟化环境，支持 IaaS（基础设施即服务）模型，以其简洁的架构广泛应用于私有云、公共云和混合云场景</p><h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul><li>172.100.100.160 manager</li><li>172.100.100.161 cloud01</li><li>172.100.100.162 cloud02</li></ul><h1 id="1-配置系统环境"><a href="#1-配置系统环境" class="headerlink" title="1.配置系统环境"></a>1.配置系统环境</h1><h1 id="2-配置管理节点"><a href="#2-配置管理节点" class="headerlink" title="2.配置管理节点"></a>2.配置管理节点</h1><h2 id="2-1-部署MySQL数据库"><a href="#2-1-部署MySQL数据库" class="headerlink" title="2.1 部署MySQL数据库"></a>2.1 部署MySQL数据库</h2><h2 id="2-2-创建yum仓库"><a href="#2-2-创建yum仓库" class="headerlink" title="2.2 创建yum仓库"></a>2.2 创建yum仓库</h2><pre><code class="hljs">vi /etc/yum.repos.d/CloudStack.repo [cloudstack]name=cloudstackbaseurl=http://download.cloudstack.org/centos/$releasever/4.18/enabled=1gpgcheck=0</code></pre><h2 id="2-3-安装管理服务"><a href="#2-3-安装管理服务" class="headerlink" title="2.3 安装管理服务"></a>2.3 安装管理服务</h2><pre><code class="hljs">yum install -y cloudstack-management</code></pre><h2 id="2-4-初始化数据库"><a href="#2-4-初始化数据库" class="headerlink" title="2.4 初始化数据库"></a>2.4 初始化数据库</h2><pre><code class="hljs">cloudstack-setup-databases cloud:CloudStack_2025@localhost --deploy-as=root:CloudStack_2025</code></pre><h2 id="2-5-启动管理服务"><a href="#2-5-启动管理服务" class="headerlink" title="2.5 启动管理服务"></a>2.5 启动管理服务</h2><pre><code class="hljs">cloudstack-setup-management</code></pre><h1 id="3-配置计算节点"><a href="#3-配置计算节点" class="headerlink" title="3.配置计算节点"></a>3.配置计算节点</h1><h2 id="3-1-安装计算服务"><a href="#3-1-安装计算服务" class="headerlink" title="3.1 安装计算服务"></a>3.1 安装计算服务</h2><pre><code class="hljs">yum install -y cloudstack-agent</code></pre><h2 id="3-2-配置libvirt服务"><a href="#3-2-配置libvirt服务" class="headerlink" title="3.2 配置libvirt服务"></a>3.2 配置libvirt服务</h2><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://www.cnblogs.com/xull0651/p/15884218.html">https://www.cnblogs.com/xull0651/p/15884218.html</a></li><li><a href="https://blog.csdn.net/u012124304/article/details/80960504">https://blog.csdn.net/u012124304/article/details/80960504</a></li><li><a href="https://blog.csdn.net/weixin_51065082/article/details/132639500">https://blog.csdn.net/weixin_51065082/article/details/132639500</a></li><li><a href="https://docs.cloudstack.apache.org/en/4.18.0.0/installguide/management-server/index.html">https://docs.cloudstack.apache.org/en/4.18.0.0/installguide/management-server/index.html</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>虚拟化</tag>
+      
+      <tag>私有云</tag>
+      
+      <tag>公有云</tag>
+      
+      <tag>CloudStack</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Kubernetes集群Event持久化存储与告警</title>
     <link href="/linux/KubernetesEvent/"/>
     <url>/linux/KubernetesEvent/</url>
