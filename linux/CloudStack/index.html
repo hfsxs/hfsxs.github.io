@@ -16,15 +16,15 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="CloudStack，Java开发的开源云计算管理平台，用于管理和部署大规模的虚拟化环境，支持 IaaS（基础设施即服务）模型，以其简洁的架构广泛应用于私有云、公共云和混合云场景 集群架构 172.100.100.160 manager 172.100.100.161 cloud01 172.100.100.162 cloud02  1.配置系统环境2.配置管理节点2.1 部署MySQL数据库2.">
+    <meta name="description" content="CloudStack，基于Java的开源云计算管理平台，作为IaaS（基础设施即服务）管理和部署大规模的虚拟化环境，以其简洁的架构、良好的扩展性广泛应用于私有云、公共云和混合云场景，如韩国电信、英国天空广播、阿尔卡特-朗讯等企业用于大规模生产环境。相比于OpenStack，其架构与配置都简单的多，安装与维护十分友好，特别适用于小型的私有化项目。但其生态发展远不如OpenStack，GitHub贡献">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CloudStack集群部署">
 <meta property="og:url" content="https://hfsxs.github.io/linux/CloudStack/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="CloudStack，Java开发的开源云计算管理平台，用于管理和部署大规模的虚拟化环境，支持 IaaS（基础设施即服务）模型，以其简洁的架构广泛应用于私有云、公共云和混合云场景 集群架构 172.100.100.160 manager 172.100.100.161 cloud01 172.100.100.162 cloud02  1.配置系统环境2.配置管理节点2.1 部署MySQL数据库2.">
+<meta property="og:description" content="CloudStack，基于Java的开源云计算管理平台，作为IaaS（基础设施即服务）管理和部署大规模的虚拟化环境，以其简洁的架构、良好的扩展性广泛应用于私有云、公共云和混合云场景，如韩国电信、英国天空广播、阿尔卡特-朗讯等企业用于大规模生产环境。相比于OpenStack，其架构与配置都简单的多，安装与维护十分友好，特别适用于小型的私有化项目。但其生态发展远不如OpenStack，GitHub贡献">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-09-22T07:09:03.000Z">
-<meta property="article:modified_time" content="2025-09-25T06:29:30.434Z">
+<meta property="article:modified_time" content="2025-09-29T09:13:57.754Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -241,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          835 字
+          1.3k 字
         
       </span>
     
@@ -252,7 +252,7 @@
         
         
         
-          7 分钟
+          11 分钟
         
       </span>
     
@@ -295,13 +295,13 @@
             
               <div class="markdown-body">
                 
-                <p>CloudStack，Java开发的开源云计算管理平台，用于管理和部署大规模的虚拟化环境，支持 IaaS（基础设施即服务）模型，以其简洁的架构广泛应用于私有云、公共云和混合云场景</p>
-<h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul>
+                <p>CloudStack，基于Java的开源云计算管理平台，作为IaaS（基础设施即服务）管理和部署大规模的虚拟化环境，以其简洁的架构、良好的扩展性广泛应用于私有云、公共云和混合云场景，如韩国电信、英国天空广播、阿尔卡特-朗讯等企业用于大规模生产环境。相比于OpenStack，其架构与配置都简单的多，安装与维护十分友好，特别适用于小型的私有化项目。但其生态发展远不如OpenStack，GitHub贡献者数量不断下降，新功能开发放缓，且商业支持也较少，创新动力不足</p>
+<h1 id="体系架构"><a href="#体系架构" class="headerlink" title="体系架构"></a>体系架构</h1><h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul>
 <li>172.100.100.160 manager</li>
 <li>172.100.100.161 cloud01</li>
 <li>172.100.100.162 cloud02</li>
 </ul>
-<h1 id="1-配置系统环境"><a href="#1-配置系统环境" class="headerlink" title="1.配置系统环境"></a>1.配置系统环境</h1><h1 id="2-配置管理节点"><a href="#2-配置管理节点" class="headerlink" title="2.配置管理节点"></a>2.配置管理节点</h1><h2 id="2-1-部署MySQL数据库"><a href="#2-1-部署MySQL数据库" class="headerlink" title="2.1 部署MySQL数据库"></a>2.1 部署MySQL数据库</h2><h2 id="2-2-创建yum仓库"><a href="#2-2-创建yum仓库" class="headerlink" title="2.2 创建yum仓库"></a>2.2 创建yum仓库</h2><pre><code class="hljs">vi /etc/yum.repos.d/CloudStack.repo 
+<h1 id="1-配置系统环境"><a href="#1-配置系统环境" class="headerlink" title="1.配置系统环境"></a>1.配置系统环境</h1><h2 id="1-1-关闭防火墙"><a href="#1-1-关闭防火墙" class="headerlink" title="1.1 关闭防火墙"></a>1.1 关闭防火墙</h2><h2 id="1-2-关闭Selinux"><a href="#1-2-关闭Selinux" class="headerlink" title="1.2 关闭Selinux"></a>1.2 关闭Selinux</h2><h2 id="1-3-配置时间同步"><a href="#1-3-配置时间同步" class="headerlink" title="1.3 配置时间同步"></a>1.3 配置时间同步</h2><h1 id="2-配置yum仓库"><a href="#2-配置yum仓库" class="headerlink" title="2.配置yum仓库"></a>2.配置yum仓库</h1><pre><code class="hljs">vi /etc/yum.repos.d/CloudStack.repo 
 
 [cloudstack]
 name=cloudstack
@@ -309,15 +309,22 @@ baseurl=http://download.cloudstack.org/centos/$releasever/4.18/
 enabled=1
 gpgcheck=0
 </code></pre>
-<h2 id="2-3-安装管理服务"><a href="#2-3-安装管理服务" class="headerlink" title="2.3 安装管理服务"></a>2.3 安装管理服务</h2><pre><code class="hljs">yum install -y cloudstack-management
+<h2 id="3-部署NFS"><a href="#3-部署NFS" class="headerlink" title="3.部署NFS"></a>3.部署NFS</h2><h1 id="4-部署管理节点"><a href="#4-部署管理节点" class="headerlink" title="4.部署管理节点"></a>4.部署管理节点</h1><h2 id="4-1-部署MySQL数据库"><a href="#4-1-部署MySQL数据库" class="headerlink" title="4.1 部署MySQL数据库"></a>4.1 部署MySQL数据库</h2><h2 id="4-2-安装管理服务"><a href="#4-2-安装管理服务" class="headerlink" title="4.2 安装管理服务"></a>4.2 安装管理服务</h2><pre><code class="hljs">yum update -y
+yum install -y cloudstack-management
 </code></pre>
-<h2 id="2-4-初始化数据库"><a href="#2-4-初始化数据库" class="headerlink" title="2.4 初始化数据库"></a>2.4 初始化数据库</h2><pre><code class="hljs">cloudstack-setup-databases cloud:CloudStack_2025@localhost --deploy-as=root:CloudStack_2025
+<h2 id="4-3-初始化数据库"><a href="#4-3-初始化数据库" class="headerlink" title="4.3 初始化数据库"></a>4.3 初始化数据库</h2><pre><code class="hljs">cloudstack-setup-databases cloud:CloudStack_2025@localhost --deploy-as=root:CloudStack_2025
 </code></pre>
-<h2 id="2-5-启动管理服务"><a href="#2-5-启动管理服务" class="headerlink" title="2.5 启动管理服务"></a>2.5 启动管理服务</h2><pre><code class="hljs">cloudstack-setup-management
+<h2 id="4-4-启动管理服务"><a href="#4-4-启动管理服务" class="headerlink" title="4.4 启动管理服务"></a>4.4 启动管理服务</h2><pre><code class="hljs">systemctl start cloudstack-management.service
 </code></pre>
-<h1 id="3-配置计算节点"><a href="#3-配置计算节点" class="headerlink" title="3.配置计算节点"></a>3.配置计算节点</h1><h2 id="3-1-安装计算服务"><a href="#3-1-安装计算服务" class="headerlink" title="3.1 安装计算服务"></a>3.1 安装计算服务</h2><pre><code class="hljs">yum install -y cloudstack-agent
+<h1 id="5-部署计算节点"><a href="#5-部署计算节点" class="headerlink" title="5.部署计算节点"></a>5.部署计算节点</h1><h2 id="5-1-安装计算服务"><a href="#5-1-安装计算服务" class="headerlink" title="5.1 安装计算服务"></a>5.1 安装计算服务</h2><pre><code class="hljs">yum install -y cloudstack-agent
 </code></pre>
-<h2 id="3-2-配置libvirt服务"><a href="#3-2-配置libvirt服务" class="headerlink" title="3.2 配置libvirt服务"></a>3.2 配置libvirt服务</h2><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<h2 id="5-2-配置桥接网卡"><a href="#5-2-配置桥接网卡" class="headerlink" title="5.2 配置桥接网卡"></a>5.2 配置桥接网卡</h2><h2 id="5-3-配置libvirt服务"><a href="#5-3-配置libvirt服务" class="headerlink" title="5.3 配置libvirt服务"></a>5.3 配置libvirt服务</h2><h3 id="5-3-1-配置vnc默认监听地址"><a href="#5-3-1-配置vnc默认监听地址" class="headerlink" title="5.3.1 配置vnc默认监听地址"></a>5.3.1 配置vnc默认监听地址</h3><pre><code class="hljs">sed -i &#39;s/^#vnc_listen =.*/vnc_listen = &quot;0.0.0.0&quot;/g&#39; /etc/libvirt/qemu.conf
+</code></pre>
+<h3 id="5-3-2-配置管理节点IP"><a href="#5-3-2-配置管理节点IP" class="headerlink" title="5.3.2 配置管理节点IP"></a>5.3.2 配置管理节点IP</h3><pre><code class="hljs">sed -i &quot;s@host=.*@host=172.16.100.160@g&quot; /etc/cloudstack/agent/agent.properties
+</code></pre>
+<h3 id="5-3-3-重启libvirt"><a href="#5-3-3-重启libvirt" class="headerlink" title="5.3.3 重启libvirt"></a>5.3.3 重启libvirt</h3><pre><code class="hljs">systemctl restart libvirtd
+</code></pre>
+<h1 id="6-配置资源域"><a href="#6-配置资源域" class="headerlink" title="6.配置资源域"></a>6.配置资源域</h1><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/xull0651/p/15884218.html">https://www.cnblogs.com/xull0651/p/15884218.html</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u012124304/article/details/80960504">https://blog.csdn.net/u012124304/article/details/80960504</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_51065082/article/details/132639500">https://blog.csdn.net/weixin_51065082/article/details/132639500</a></li>
@@ -397,7 +404,7 @@ gpgcheck=0
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年9月25日</div>
+          <div>2025年9月29日</div>
         </div>
       
       <div class="license-meta-item">
