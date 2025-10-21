@@ -16,15 +16,15 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="CloudStack，基于Java的开源云计算管理平台，作为IaaS（基础设施即服务）管理和部署大规模的虚拟化环境，支持市面上大部分主流的hypervisors，如KVM、XenServer、VMware、OracleVM和Xen等。CloudStack以其简洁的架构、良好的扩展性广泛应用于私有云、公共云和混合云场景，如韩国电信、英国天空广播、阿尔卡特-朗讯等企业。相比于OpenStack，其架构">
+    <meta name="description" content="CloudStack，基于Java的开源云计算管理平台，作为IaaS（基础设施即服务）管理和部署大规模的虚拟化环境，支持市面上大部分主流的hypervisors，如KVM、XenServer、VMware、OracleVM和Xen等，以其简洁的架构、良好的扩展性广泛应用于私有云、公共云和混合云场景，如韩国电信、英国天空广播、阿尔卡特-朗讯等企业。相比于OpenStack，CloudStack架构与">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CloudStack集群部署">
 <meta property="og:url" content="https://hfsxs.github.io/linux/CloudStack/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="CloudStack，基于Java的开源云计算管理平台，作为IaaS（基础设施即服务）管理和部署大规模的虚拟化环境，支持市面上大部分主流的hypervisors，如KVM、XenServer、VMware、OracleVM和Xen等。CloudStack以其简洁的架构、良好的扩展性广泛应用于私有云、公共云和混合云场景，如韩国电信、英国天空广播、阿尔卡特-朗讯等企业。相比于OpenStack，其架构">
+<meta property="og:description" content="CloudStack，基于Java的开源云计算管理平台，作为IaaS（基础设施即服务）管理和部署大规模的虚拟化环境，支持市面上大部分主流的hypervisors，如KVM、XenServer、VMware、OracleVM和Xen等，以其简洁的架构、良好的扩展性广泛应用于私有云、公共云和混合云场景，如韩国电信、英国天空广播、阿尔卡特-朗讯等企业。相比于OpenStack，CloudStack架构与">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-09-22T07:09:03.000Z">
-<meta property="article:modified_time" content="2025-09-30T02:14:15.745Z">
+<meta property="article:modified_time" content="2025-10-16T06:21:01.724Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -241,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.3k 字
+          1.4k 字
         
       </span>
     
@@ -295,7 +295,7 @@
             
               <div class="markdown-body">
                 
-                <p>CloudStack，基于Java的开源云计算管理平台，作为IaaS（基础设施即服务）管理和部署大规模的虚拟化环境，支持市面上大部分主流的hypervisors，如KVM、XenServer、VMware、OracleVM和Xen等。CloudStack以其简洁的架构、良好的扩展性广泛应用于私有云、公共云和混合云场景，如韩国电信、英国天空广播、阿尔卡特-朗讯等企业。相比于OpenStack，其架构与配置都简单得多，安装、配置与维护十分友好，特别适用于小型的私有化项目。但其生态发展远不如OpenStack，商业支持较少也导致创新动力不足，开发进度缓慢</p>
+                <p>CloudStack，基于Java的开源云计算管理平台，作为IaaS（基础设施即服务）管理和部署大规模的虚拟化环境，支持市面上大部分主流的hypervisors，如KVM、XenServer、VMware、OracleVM和Xen等，以其简洁的架构、良好的扩展性广泛应用于私有云、公共云和混合云场景，如韩国电信、英国天空广播、阿尔卡特-朗讯等企业。相比于OpenStack，CloudStack架构与配置都简单得多，安装、配置与维护十分友好，特别适用于小型的私有化项目。但其生态发展远不如OpenStack，商业支持较少也导致创新动力不足，开发进度缓慢</p>
 <h1 id="体系架构"><a href="#体系架构" class="headerlink" title="体系架构"></a>体系架构</h1><h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul>
 <li>172.100.100.160 manager</li>
 <li>172.100.100.161 cloud01</li>
@@ -310,7 +310,7 @@ enabled=1
 gpgcheck=0
 </code></pre>
 <h2 id="3-部署NFS"><a href="#3-部署NFS" class="headerlink" title="3.部署NFS"></a>3.部署NFS</h2><h1 id="4-部署管理节点"><a href="#4-部署管理节点" class="headerlink" title="4.部署管理节点"></a>4.部署管理节点</h1><h2 id="4-1-部署MySQL数据库"><a href="#4-1-部署MySQL数据库" class="headerlink" title="4.1 部署MySQL数据库"></a>4.1 部署MySQL数据库</h2><h2 id="4-2-安装管理服务"><a href="#4-2-安装管理服务" class="headerlink" title="4.2 安装管理服务"></a>4.2 安装管理服务</h2><pre><code class="hljs">yum update -y
-yum install -y cloudstack-management
+yum install -y epel-release cloudstack-management
 </code></pre>
 <h2 id="4-3-初始化数据库"><a href="#4-3-初始化数据库" class="headerlink" title="4.3 初始化数据库"></a>4.3 初始化数据库</h2><pre><code class="hljs">cloudstack-setup-databases cloud:CloudStack_2025@localhost --deploy-as=root:CloudStack_2025
 </code></pre>
@@ -404,7 +404,7 @@ yum install -y cloudstack-management
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年9月30日</div>
+          <div>2025年10月16日</div>
         </div>
       
       <div class="license-meta-item">
