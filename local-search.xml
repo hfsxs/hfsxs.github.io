@@ -4,6 +4,41 @@
   
   
   <entry>
+    <title>Linux系统基于PandaWiki构建AI知识库</title>
+    <link href="/linux/AI-Wiki/"/>
+    <url>/linux/AI-Wiki/</url>
+    
+    <content type="html"><![CDATA[]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>容器</tag>
+      
+      <tag>AI</tag>
+      
+      <tag>大模型</tag>
+      
+      <tag>Dcoker</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Linux系统开启回收站功能</title>
     <link href="/linux/Trash/"/>
     <url>/linux/Trash/</url>
@@ -60,6 +95,39 @@
       <tag>公有云</tag>
       
       <tag>CloudStack</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>PostgreSQL数据库配置文件详解</title>
+    <link href="/linux/cmfercs030000pmpvcgojcg54/"/>
+    <url>/linux/cmfercs030000pmpvcgojcg54/</url>
+    
+    <content type="html"><![CDATA[<p>PostgreSQL数据库通过3个配置文件控制整个数据库系统的管理与运行，即主配置文件postgresql.conf、访问策略配置文件pg_hba.conf和系统用户映射配置文件pg_ident.conf</p><h1 id="1-主配置文件"><a href="#1-主配置文件" class="headerlink" title="1.主配置文件"></a>1.主配置文件</h1><p>postgresql.conf，PostgreSQL数据库的主配置文件，定义了数据库服务器运行的各种参数，如性能参数、资源限制、日志设置、网络设置等，修改需重启PostgreSQL服务器或使用pg_ctl reload命令才能生效</p><p>General: 通用设置，如数据目录的位置、监听的端口等。<br>Connection and Authentication: 连接和认证相关的设置，如最大连接数、超时设置等。<br>Performance: 性能相关设置，如缓存大小、工作内存等。<br>Logging and Replication: 日志记录和复制相关的设置，如日志级别、归档模式等。<br>Security: 安全相关的设置，如密码复杂度要求、SSL 设置等</p><h1 id="2-访问策略配置文件"><a href="#2-访问策略配置文件" class="headerlink" title="2.访问策略配置文件"></a>2.访问策略配置文件</h1><p>pg_hba.conf，PostgreSQL数据库的网络访问策略配置文件，定义了允许访问数据库的客户端及其认证方式，如连接类型、目标数据库、用户、地址、认证方法等，每行代表一个访问规则。该文件定义的规则按照顺序依次匹配，匹配到则直接应用于连接</p><h1 id="3-系统用户"><a href="#3-系统用户" class="headerlink" title="3.系统用户"></a>3.系统用户</h1><p>pg_ident.conf，PostgreSQL数据库的操作系统用户映射到数据库用户的配置文件，即映射名称、系统用户名和数据库用户名，对于ident或peer认证方式尤为重要，每行定义一个映射规则。如不需要特别复杂的映射，建议忽略此文件，使用默认行为即可</p><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://blog.csdn.net/mingongge/article/details/131485525">https://blog.csdn.net/mingongge/article/details/131485525</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>SQL</tag>
+      
+      <tag>数据库</tag>
+      
+      <tag>PostgreSQL</tag>
       
     </tags>
     
@@ -229,7 +297,7 @@
   
   
   <entry>
-    <title>Linux部署CodeServer搭建云端开发环境</title>
+    <title>Linux系统部署CodeServer搭建云端开发环境</title>
     <link href="/linux/geek/CodeServer/"/>
     <url>/linux/geek/CodeServer/</url>
     
@@ -464,7 +532,7 @@
   
   
   <entry>
-    <title>Linux基于Ollama部署本地AI大模型</title>
+    <title>Linux系统基于Ollama部署本地AI大模型</title>
     <link href="/linux/AI-Ollama/"/>
     <url>/linux/AI-Ollama/</url>
     
