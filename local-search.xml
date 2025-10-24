@@ -4,11 +4,44 @@
   
   
   <entry>
+    <title>PostgreSQL数据库配置文件详解</title>
+    <link href="/linux/cmfercs030000pmpvcgojcg54/"/>
+    <url>/linux/cmfercs030000pmpvcgojcg54/</url>
+    
+    <content type="html"><![CDATA[<p>PostgreSQL数据库通过3个配置文件控制整个数据库系统的管理与运行，即主配置文件postgresql.conf、访问策略配置文件pg_hba.conf和系统用户映射配置文件pg_ident.conf</p><h1 id="1-主配置文件"><a href="#1-主配置文件" class="headerlink" title="1.主配置文件"></a>1.主配置文件</h1><p>postgresql.conf，PostgreSQL数据库的主配置文件，定义了数据库服务器运行的各种参数，如性能参数、资源限制、日志设置、网络设置等，修改需重启PostgreSQL服务器或使用pg_ctl reload命令才能生效</p><p>General: 通用设置，如数据目录的位置、监听的端口等。<br>Connection and Authentication: 连接和认证相关的设置，如最大连接数、超时设置等。<br>Performance: 性能相关设置，如缓存大小、工作内存等。<br>Logging and Replication: 日志记录和复制相关的设置，如日志级别、归档模式等。<br>Security: 安全相关的设置，如密码复杂度要求、SSL 设置等</p><h1 id="2-访问策略配置文件"><a href="#2-访问策略配置文件" class="headerlink" title="2.访问策略配置文件"></a>2.访问策略配置文件</h1><p>pg_hba.conf，PostgreSQL数据库的网络访问策略配置文件，定义了允许访问数据库的客户端及其认证方式，如连接类型、目标数据库、用户、地址、认证方法等。该文件每行代表一个访问规则，且定义的规则按照顺序依次匹配，匹配到则直接应用于连接</p><h1 id="3-系统用户映射配置文件"><a href="#3-系统用户映射配置文件" class="headerlink" title="3.系统用户映射配置文件"></a>3.系统用户映射配置文件</h1><p>pg_ident.conf，PostgreSQL数据库的操作系统用户映射到数据库用户的配置文件，即映射名称、系统用户名和数据库用户名。该文件同样每行定义一个映射规则，若不是特别复杂的映射股则，建议忽略此文件，使用默认行为即可</p><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://cloud.tencent.com/developer/article/2449739">https://cloud.tencent.com/developer/article/2449739</a></li><li><a href="https://blog.csdn.net/mingongge/article/details/131485525">https://blog.csdn.net/mingongge/article/details/131485525</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>SQL</tag>
+      
+      <tag>数据库</tag>
+      
+      <tag>PostgreSQL</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Linux系统基于PandaWiki构建AI知识库</title>
     <link href="/linux/AI-Wiki/"/>
     <url>/linux/AI-Wiki/</url>
     
-    <content type="html"><![CDATA[]]></content>
+    <content type="html"><![CDATA[<p>PandaWiki，AI大模型驱动的国内开源知识库系统，用于快速地构建产品文档、技术文档、FAQ和博客平台，并由AI整合辅助写作、智能问答和语义搜索等功能。PandaWiki部署简单，支持多种渠道和文件格式内容的导入、编辑与导出，具备很强的易用性。此外，还支持钉钉、飞书等第三方集成及API调用，能满足大多数企业内部和个人知识库的管理需求</p><h1 id="1-配置yum源"><a href="#1-配置yum源" class="headerlink" title="1.配置yum源"></a>1.配置yum源</h1><h1 id="2-安装Docker"><a href="#2-安装Docker" class="headerlink" title="2.安装Docker"></a>2.安装Docker</h1><h1 id="3-部署PandaWiki"><a href="#3-部署PandaWiki" class="headerlink" title="3.部署PandaWiki"></a>3.部署PandaWiki</h1><pre><code class="hljs">bash -c &quot;$(curl -fsSLk https://release.baizhi.cloud/panda-wiki/manager.sh)&quot;</code></pre><h1 id="4-配置AI大模型"><a href="#4-配置AI大模型" class="headerlink" title="4.配置AI大模型"></a>4.配置AI大模型</h1><h1 id="5-上传知识库文件"><a href="#5-上传知识库文件" class="headerlink" title="5.上传知识库文件"></a>5.上传知识库文件</h1><h1 id="6-验证知识库问答"><a href="#6-验证知识库问答" class="headerlink" title="6.验证知识库问答"></a>6.验证知识库问答</h1><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1>]]></content>
     
     
     <categories>
@@ -72,7 +105,7 @@
     <link href="/linux/CloudStack/"/>
     <url>/linux/CloudStack/</url>
     
-    <content type="html"><![CDATA[<p>CloudStack，基于Java的开源云计算管理平台，作为IaaS（基础设施即服务）管理和部署大规模的虚拟化环境，支持市面上大部分主流的hypervisors，如KVM、XenServer、VMware、OracleVM和Xen等，以其简洁的架构、良好的扩展性广泛应用于私有云、公共云和混合云场景，如韩国电信、英国天空广播、阿尔卡特-朗讯等企业。相比于OpenStack，CloudStack架构与配置都简单得多，安装、配置与维护十分友好，特别适用于小型的私有化项目。但其生态发展远不如OpenStack，商业支持较少也导致创新动力不足，开发进度缓慢</p><h1 id="体系架构"><a href="#体系架构" class="headerlink" title="体系架构"></a>体系架构</h1><h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul><li>172.100.100.160 manager</li><li>172.100.100.161 cloud01</li><li>172.100.100.162 cloud02</li></ul><h1 id="1-配置系统环境"><a href="#1-配置系统环境" class="headerlink" title="1.配置系统环境"></a>1.配置系统环境</h1><h2 id="1-1-关闭防火墙"><a href="#1-1-关闭防火墙" class="headerlink" title="1.1 关闭防火墙"></a>1.1 关闭防火墙</h2><h2 id="1-2-关闭Selinux"><a href="#1-2-关闭Selinux" class="headerlink" title="1.2 关闭Selinux"></a>1.2 关闭Selinux</h2><h2 id="1-3-配置时间同步"><a href="#1-3-配置时间同步" class="headerlink" title="1.3 配置时间同步"></a>1.3 配置时间同步</h2><h1 id="2-配置yum仓库"><a href="#2-配置yum仓库" class="headerlink" title="2.配置yum仓库"></a>2.配置yum仓库</h1><pre><code class="hljs">vi /etc/yum.repos.d/CloudStack.repo [cloudstack]name=cloudstackbaseurl=http://download.cloudstack.org/centos/$releasever/4.18/enabled=1gpgcheck=0</code></pre><h2 id="3-部署NFS"><a href="#3-部署NFS" class="headerlink" title="3.部署NFS"></a>3.部署NFS</h2><h1 id="4-部署管理节点"><a href="#4-部署管理节点" class="headerlink" title="4.部署管理节点"></a>4.部署管理节点</h1><h2 id="4-1-部署MySQL数据库"><a href="#4-1-部署MySQL数据库" class="headerlink" title="4.1 部署MySQL数据库"></a>4.1 部署MySQL数据库</h2><h2 id="4-2-安装管理服务"><a href="#4-2-安装管理服务" class="headerlink" title="4.2 安装管理服务"></a>4.2 安装管理服务</h2><pre><code class="hljs">yum update -yyum install -y epel-release cloudstack-management</code></pre><h2 id="4-3-初始化数据库"><a href="#4-3-初始化数据库" class="headerlink" title="4.3 初始化数据库"></a>4.3 初始化数据库</h2><pre><code class="hljs">cloudstack-setup-databases cloud:CloudStack_2025@localhost --deploy-as=root:CloudStack_2025</code></pre><h2 id="4-4-启动管理服务"><a href="#4-4-启动管理服务" class="headerlink" title="4.4 启动管理服务"></a>4.4 启动管理服务</h2><pre><code class="hljs">systemctl start cloudstack-management.service</code></pre><h1 id="5-部署计算节点"><a href="#5-部署计算节点" class="headerlink" title="5.部署计算节点"></a>5.部署计算节点</h1><h2 id="5-1-安装计算服务"><a href="#5-1-安装计算服务" class="headerlink" title="5.1 安装计算服务"></a>5.1 安装计算服务</h2><pre><code class="hljs">yum install -y cloudstack-agent</code></pre><h2 id="5-2-配置桥接网卡"><a href="#5-2-配置桥接网卡" class="headerlink" title="5.2 配置桥接网卡"></a>5.2 配置桥接网卡</h2><h2 id="5-3-配置libvirt服务"><a href="#5-3-配置libvirt服务" class="headerlink" title="5.3 配置libvirt服务"></a>5.3 配置libvirt服务</h2><h3 id="5-3-1-配置vnc默认监听地址"><a href="#5-3-1-配置vnc默认监听地址" class="headerlink" title="5.3.1 配置vnc默认监听地址"></a>5.3.1 配置vnc默认监听地址</h3><pre><code class="hljs">sed -i &#39;s/^#vnc_listen =.*/vnc_listen = &quot;0.0.0.0&quot;/g&#39; /etc/libvirt/qemu.conf</code></pre><h3 id="5-3-2-配置管理节点IP"><a href="#5-3-2-配置管理节点IP" class="headerlink" title="5.3.2 配置管理节点IP"></a>5.3.2 配置管理节点IP</h3><pre><code class="hljs">sed -i &quot;s@host=.*@host=172.16.100.160@g&quot; /etc/cloudstack/agent/agent.properties</code></pre><h3 id="5-3-3-重启libvirt"><a href="#5-3-3-重启libvirt" class="headerlink" title="5.3.3 重启libvirt"></a>5.3.3 重启libvirt</h3><pre><code class="hljs">systemctl restart libvirtd</code></pre><h1 id="6-配置资源域"><a href="#6-配置资源域" class="headerlink" title="6.配置资源域"></a>6.配置资源域</h1><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://www.cnblogs.com/xull0651/p/15884218.html">https://www.cnblogs.com/xull0651/p/15884218.html</a></li><li><a href="https://blog.csdn.net/u012124304/article/details/80960504">https://blog.csdn.net/u012124304/article/details/80960504</a></li><li><a href="https://blog.csdn.net/weixin_51065082/article/details/132639500">https://blog.csdn.net/weixin_51065082/article/details/132639500</a></li><li><a href="https://docs.cloudstack.apache.org/en/4.18.0.0/installguide/management-server/index.html">https://docs.cloudstack.apache.org/en/4.18.0.0/installguide/management-server/index.html</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<p>CloudStack，基于Java的开源云计算管理平台，作为IaaS（基础设施即服务）管理和部署大规模的虚拟化环境，支持市面上大部分主流的hypervisors，如KVM、XenServer、VMware、OracleVM和Xen等，以其简洁的架构、良好的扩展性广泛应用于私有云、公共云和混合云场景，如韩国电信、英国天空广播、阿尔卡特-朗讯等企业。相比于OpenStack，CloudStack架构与配置都简单得多，安装、配置与维护十分友好，特别适用于小型的私有化项目。但其生态发展远不如OpenStack，商业支持较少也导致创新动力不足，开发进度缓慢</p><h1 id="体系架构"><a href="#体系架构" class="headerlink" title="体系架构"></a>体系架构</h1><h1 id="集群架构"><a href="#集群架构" class="headerlink" title="集群架构"></a>集群架构</h1><ul><li>172.100.100.160 manager</li><li>172.100.100.161 cloud01</li><li>172.100.100.162 cloud02</li></ul><h1 id="1-配置系统环境"><a href="#1-配置系统环境" class="headerlink" title="1.配置系统环境"></a>1.配置系统环境</h1><h2 id="1-1-关闭防火墙"><a href="#1-1-关闭防火墙" class="headerlink" title="1.1 关闭防火墙"></a>1.1 关闭防火墙</h2><h2 id="1-2-关闭Selinux"><a href="#1-2-关闭Selinux" class="headerlink" title="1.2 关闭Selinux"></a>1.2 关闭Selinux</h2><h2 id="1-3-配置时间同步"><a href="#1-3-配置时间同步" class="headerlink" title="1.3 配置时间同步"></a>1.3 配置时间同步</h2><h1 id="2-配置yum仓库"><a href="#2-配置yum仓库" class="headerlink" title="2.配置yum仓库"></a>2.配置yum仓库</h1><pre><code class="hljs">vi /etc/yum.repos.d/CloudStack.repo [cloudstack]name=cloudstackbaseurl=http://download.cloudstack.org/centos/$releasever/4.18/enabled=1gpgcheck=0</code></pre><h2 id="3-部署NFS"><a href="#3-部署NFS" class="headerlink" title="3.部署NFS"></a>3.部署NFS</h2><h1 id="4-部署管理节点"><a href="#4-部署管理节点" class="headerlink" title="4.部署管理节点"></a>4.部署管理节点</h1><h2 id="4-1-部署MySQL数据库"><a href="#4-1-部署MySQL数据库" class="headerlink" title="4.1 部署MySQL数据库"></a>4.1 部署MySQL数据库</h2><h2 id="4-2-安装管理服务"><a href="#4-2-安装管理服务" class="headerlink" title="4.2 安装管理服务"></a>4.2 安装管理服务</h2><pre><code class="hljs">yum update -yyum install -y epel-release cloudstack-management</code></pre><h2 id="4-3-初始化数据库"><a href="#4-3-初始化数据库" class="headerlink" title="4.3 初始化数据库"></a>4.3 初始化数据库</h2><pre><code class="hljs">cloudstack-setup-databases cloud:CloudStack_2025@localhost --deploy-as=root:CloudStack_2025</code></pre><h2 id="4-4-启动管理服务"><a href="#4-4-启动管理服务" class="headerlink" title="4.4 启动管理服务"></a>4.4 启动管理服务</h2><pre><code class="hljs">systemctl start cloudstack-management.service</code></pre><h1 id="5-部署计算节点"><a href="#5-部署计算节点" class="headerlink" title="5.部署计算节点"></a>5.部署计算节点</h1><h2 id="5-1-安装计算服务"><a href="#5-1-安装计算服务" class="headerlink" title="5.1 安装计算服务"></a>5.1 安装计算服务</h2><pre><code class="hljs">yum install -y cloudstack-agent</code></pre><h2 id="5-2-配置桥接网卡"><a href="#5-2-配置桥接网卡" class="headerlink" title="5.2 配置桥接网卡"></a>5.2 配置桥接网卡</h2><h2 id="5-3-配置libvirt服务"><a href="#5-3-配置libvirt服务" class="headerlink" title="5.3 配置libvirt服务"></a>5.3 配置libvirt服务</h2><h3 id="5-3-1-配置vnc默认监听地址"><a href="#5-3-1-配置vnc默认监听地址" class="headerlink" title="5.3.1 配置vnc默认监听地址"></a>5.3.1 配置vnc默认监听地址</h3><pre><code class="hljs">sed -i &#39;s/^#vnc_listen =.*/vnc_listen = &quot;0.0.0.0&quot;/g&#39; /etc/libvirt/qemu.conf</code></pre><h3 id="5-3-2-配置管理节点IP"><a href="#5-3-2-配置管理节点IP" class="headerlink" title="5.3.2 配置管理节点IP"></a>5.3.2 配置管理节点IP</h3><pre><code class="hljs">sed -i &quot;s@host=.*@host=172.16.100.160@g&quot; /etc/cloudstack/agent/agent.properties</code></pre><h3 id="5-3-3-重启libvirt"><a href="#5-3-3-重启libvirt" class="headerlink" title="5.3.3 重启libvirt"></a>5.3.3 重启libvirt</h3><pre><code class="hljs">systemctl restart libvirtd</code></pre><h1 id="6-验证CloudStack"><a href="#6-验证CloudStack" class="headerlink" title="6.验证CloudStack"></a>6.验证CloudStack</h1><p><img src="/img/wiki/CloudStack/CloudStack.jpg" alt="CloudStack"></p><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://www.cnblogs.com/xull0651/p/15884218.html">https://www.cnblogs.com/xull0651/p/15884218.html</a></li><li><a href="https://blog.csdn.net/u012124304/article/details/80960504">https://blog.csdn.net/u012124304/article/details/80960504</a></li><li><a href="https://blog.csdn.net/weixin_51065082/article/details/132639500">https://blog.csdn.net/weixin_51065082/article/details/132639500</a></li><li><a href="https://docs.cloudstack.apache.org/en/4.18.0.0/installguide/management-server/index.html">https://docs.cloudstack.apache.org/en/4.18.0.0/installguide/management-server/index.html</a></li></ul>]]></content>
     
     
     <categories>
@@ -95,39 +128,6 @@
       <tag>公有云</tag>
       
       <tag>CloudStack</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>PostgreSQL数据库配置文件详解</title>
-    <link href="/linux/cmfercs030000pmpvcgojcg54/"/>
-    <url>/linux/cmfercs030000pmpvcgojcg54/</url>
-    
-    <content type="html"><![CDATA[<p>PostgreSQL数据库通过3个配置文件控制整个数据库系统的管理与运行，即主配置文件postgresql.conf、访问策略配置文件pg_hba.conf和系统用户映射配置文件pg_ident.conf</p><h1 id="1-主配置文件"><a href="#1-主配置文件" class="headerlink" title="1.主配置文件"></a>1.主配置文件</h1><p>postgresql.conf，PostgreSQL数据库的主配置文件，定义了数据库服务器运行的各种参数，如性能参数、资源限制、日志设置、网络设置等，修改需重启PostgreSQL服务器或使用pg_ctl reload命令才能生效</p><p>General: 通用设置，如数据目录的位置、监听的端口等。<br>Connection and Authentication: 连接和认证相关的设置，如最大连接数、超时设置等。<br>Performance: 性能相关设置，如缓存大小、工作内存等。<br>Logging and Replication: 日志记录和复制相关的设置，如日志级别、归档模式等。<br>Security: 安全相关的设置，如密码复杂度要求、SSL 设置等</p><h1 id="2-访问策略配置文件"><a href="#2-访问策略配置文件" class="headerlink" title="2.访问策略配置文件"></a>2.访问策略配置文件</h1><p>pg_hba.conf，PostgreSQL数据库的网络访问策略配置文件，定义了允许访问数据库的客户端及其认证方式，如连接类型、目标数据库、用户、地址、认证方法等，每行代表一个访问规则。该文件定义的规则按照顺序依次匹配，匹配到则直接应用于连接</p><h1 id="3-系统用户"><a href="#3-系统用户" class="headerlink" title="3.系统用户"></a>3.系统用户</h1><p>pg_ident.conf，PostgreSQL数据库的操作系统用户映射到数据库用户的配置文件，即映射名称、系统用户名和数据库用户名，对于ident或peer认证方式尤为重要，每行定义一个映射规则。如不需要特别复杂的映射，建议忽略此文件，使用默认行为即可</p><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://blog.csdn.net/mingongge/article/details/131485525">https://blog.csdn.net/mingongge/article/details/131485525</a></li></ul>]]></content>
-    
-    
-    <categories>
-      
-      <category>工作</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>Linux</tag>
-      
-      <tag>云计算</tag>
-      
-      <tag>SQL</tag>
-      
-      <tag>数据库</tag>
-      
-      <tag>PostgreSQL</tag>
       
     </tags>
     

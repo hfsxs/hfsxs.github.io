@@ -23,8 +23,8 @@
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="PostgreSQL数据库通过3个配置文件控制整个数据库系统的管理与运行，即主配置文件postgresql.conf、访问策略配置文件pg_hba.conf和系统用户映射配置文件pg_ident.conf 1.主配置文件postgresql.conf，PostgreSQL数据库的主配置文件，定义了数据库服务器运行的各种参数，如性能参数、资源限制、日志设置、网络设置等，修改需重启PostgreSQL">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-08-30T01:00:10.000Z">
-<meta property="article:modified_time" content="2025-10-23T09:08:14.937Z">
+<meta property="article:published_time" content="2025-10-24T01:00:10.000Z">
+<meta property="article:modified_time" content="2025-10-23T13:05:38.372Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -228,8 +228,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-08-30 09:00" pubdate>
-          2025年8月30日 上午
+        <time datetime="2025-10-24 09:00" pubdate>
+          2025年10月24日 上午
         </time>
       </span>
     
@@ -240,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          739 字
+          782 字
         
       </span>
     
@@ -297,9 +297,10 @@
                 <p>PostgreSQL数据库通过3个配置文件控制整个数据库系统的管理与运行，即主配置文件postgresql.conf、访问策略配置文件pg_hba.conf和系统用户映射配置文件pg_ident.conf</p>
 <h1 id="1-主配置文件"><a href="#1-主配置文件" class="headerlink" title="1.主配置文件"></a>1.主配置文件</h1><p>postgresql.conf，PostgreSQL数据库的主配置文件，定义了数据库服务器运行的各种参数，如性能参数、资源限制、日志设置、网络设置等，修改需重启PostgreSQL服务器或使用pg_ctl reload命令才能生效</p>
 <p>General: 通用设置，如数据目录的位置、监听的端口等。<br>Connection and Authentication: 连接和认证相关的设置，如最大连接数、超时设置等。<br>Performance: 性能相关设置，如缓存大小、工作内存等。<br>Logging and Replication: 日志记录和复制相关的设置，如日志级别、归档模式等。<br>Security: 安全相关的设置，如密码复杂度要求、SSL 设置等</p>
-<h1 id="2-访问策略配置文件"><a href="#2-访问策略配置文件" class="headerlink" title="2.访问策略配置文件"></a>2.访问策略配置文件</h1><p>pg_hba.conf，PostgreSQL数据库的网络访问策略配置文件，定义了允许访问数据库的客户端及其认证方式，如连接类型、目标数据库、用户、地址、认证方法等，每行代表一个访问规则。该文件定义的规则按照顺序依次匹配，匹配到则直接应用于连接</p>
-<h1 id="3-系统用户"><a href="#3-系统用户" class="headerlink" title="3.系统用户"></a>3.系统用户</h1><p>pg_ident.conf，PostgreSQL数据库的操作系统用户映射到数据库用户的配置文件，即映射名称、系统用户名和数据库用户名，对于ident或peer认证方式尤为重要，每行定义一个映射规则。如不需要特别复杂的映射，建议忽略此文件，使用默认行为即可</p>
+<h1 id="2-访问策略配置文件"><a href="#2-访问策略配置文件" class="headerlink" title="2.访问策略配置文件"></a>2.访问策略配置文件</h1><p>pg_hba.conf，PostgreSQL数据库的网络访问策略配置文件，定义了允许访问数据库的客户端及其认证方式，如连接类型、目标数据库、用户、地址、认证方法等。该文件每行代表一个访问规则，且定义的规则按照顺序依次匹配，匹配到则直接应用于连接</p>
+<h1 id="3-系统用户映射配置文件"><a href="#3-系统用户映射配置文件" class="headerlink" title="3.系统用户映射配置文件"></a>3.系统用户映射配置文件</h1><p>pg_ident.conf，PostgreSQL数据库的操作系统用户映射到数据库用户的配置文件，即映射名称、系统用户名和数据库用户名。该文件同样每行定义一个映射规则，若不是特别复杂的映射股则，建议忽略此文件，使用默认行为即可</p>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2449739">https://cloud.tencent.com/developer/article/2449739</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/mingongge/article/details/131485525">https://blog.csdn.net/mingongge/article/details/131485525</a></li>
 </ul>
 
@@ -368,7 +369,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年8月30日</div>
+          <div>2025年10月24日</div>
         </div>
       
       
@@ -403,18 +404,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/linux/CloudStack/" title="CloudStack集群部署">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">CloudStack集群部署</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/linux/KubernetesEvent/" title="Kubernetes集群Event持久化存储与告警">
-                        <span class="hidden-mobile">Kubernetes集群Event持久化存储与告警</span>
+                      <a href="/linux/AI-Wiki/" title="Linux系统基于PandaWiki构建AI知识库">
+                        <span class="hidden-mobile">Linux系统基于PandaWiki构建AI知识库</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
