@@ -24,7 +24,7 @@
 <meta property="og:description" content="Elasticsearch作为分布式、可扩展的搜索和分析引擎，随着大数据时代的到来已经成为了许多企业和组织的重要数据处理工具。与此同时，数据安全问题也日益凸显，即确保数据的安全与合规，并保障数据资产不至泄露。Elasticsearch安全认证机制分为两种方式，即X-Pack安全插件和SSL证书认证 1.X-PackX-Pack，Elastic 6.8版本之后开发的免费的安全扩展插件，并在7.0版本">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-12-06T08:31:57.000Z">
-<meta property="article:modified_time" content="2025-03-28T05:11:34.944Z">
+<meta property="article:modified_time" content="2025-10-29T08:05:37.941Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -238,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.7k 字
+          3.6k 字
         
       </span>
     
@@ -249,7 +249,7 @@
         
         
         
-          23 分钟
+          31 分钟
         
       </span>
     
@@ -365,8 +365,30 @@ elasticsearch.password: &quot;password&quot;
 <ul>
 <li>注：重启Kibana生效配置</li>
 </ul>
+<h1 id="2-SSL证书认证"><a href="#2-SSL证书认证" class="headerlink" title="2.SSL证书认证"></a>2.SSL证书认证</h1><p>Elasticsearch最新版目前已对生产环境的集群强制启用SSL认证，以防用户凭据、个人身份信息这些敏感数据被恶意窃取，保障了数据传输过程的安全性</p>
+<h2 id="2-1-创建CA证书"><a href="#2-1-创建CA证书" class="headerlink" title="2.1 创建CA证书"></a>2.1 创建CA证书</h2><pre><code class="hljs">/usr/share/elasticsearch/bin/elasticsearch-certutil ca
+</code></pre>
+<h2 id="2-2-创建SSL证书"><a href="#2-2-创建SSL证书" class="headerlink" title="2.2 创建SSL证书"></a>2.2 创建SSL证书</h2><pre><code class="hljs">/usr/share/elasticsearch/bin/elasticsearch-certutil cert --ca elastic-stack-ca.p12
+</code></pre>
+<h2 id="2-3-集群分发SSL证书"><a href="#2-3-集群分发SSL证书" class="headerlink" title="2.3 集群分发SSL证书"></a>2.3 集群分发SSL证书</h2><pre><code class="hljs">cp /usr/share/elasticsearch/*.p12 /etc/elasticsearch
+scp /usr/share/elasticsearch/*.p12 node02:/etc/elasticsearch
+scp /usr/share/elasticsearch/*.p12 node03:/etc/elasticsearch
+</code></pre>
+<h2 id="2-4-配置SSL证书"><a href="#2-4-配置SSL证书" class="headerlink" title="2.4 配置SSL证书"></a>2.4 配置SSL证书</h2><pre><code class="hljs">vi /etc/elasticsearch/elasticsearch.yml
+
+
+xpack.license.self_generated.type: basic
+xpack.security.transport.ssl.enabled: true
+xpack.security.transport.ssl.verification_mode: certificate 
+xpack.security.transport.ssl.client_authentication: required
+xpack.security.transport.ssl.keystore.path: elastic-certificates.p12
+xpack.security.transport.ssl.truststore.path: elastic-certificates.p12
+</code></pre>
+<h2 id="2-5-重启Elasticsearch集群"><a href="#2-5-重启Elasticsearch集群" class="headerlink" title="2.5 重启Elasticsearch集群"></a>2.5 重启Elasticsearch集群</h2><pre><code class="hljs">systemctl restart elasticsearch.service 
+</code></pre>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Death_Eric/article/details/105188968">https://blog.csdn.net/Death_Eric/article/details/105188968</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42263280/article/details/141438215">https://blog.csdn.net/qq_42263280/article/details/141438215</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.elastic.co/guide/en/elasticsearch/reference/7.17/security-minimal-setup.html">https://www.elastic.co/guide/en/elasticsearch/reference/7.17/security-minimal-setup.html</a></li>
 </ul>
@@ -438,7 +460,7 @@ elasticsearch.password: &quot;password&quot;
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月28日</div>
+          <div>2025年10月29日</div>
         </div>
       
       <div class="license-meta-item">

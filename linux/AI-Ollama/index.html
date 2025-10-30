@@ -24,7 +24,7 @@
 <meta property="og:description" content="Ollama，管理和运维大语言模型（LLM，Large Language Model）的可扩展的轻量级开源框架，用于大语言模型的本地化部署、运行与管理，致力于简化大语言模型的运维流程和使用门槛。Ollama支持文本生成、翻译、代码编写、问答等多种自然语言处理任务，并以强大的扩展性支持多种开源语言模型文件的热加载，如Llama 3、Phi 3、Mistral、Gemma、Qwen及DeepSeek等">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-03-02T15:34:37.000Z">
-<meta property="article:modified_time" content="2025-10-23T09:11:10.395Z">
+<meta property="article:modified_time" content="2025-10-27T01:10:34.602Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -239,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          726 字
+          761 字
         
       </span>
     
@@ -296,15 +296,15 @@
                 <p>Ollama，管理和运维大语言模型（LLM，Large Language Model）的可扩展的轻量级开源框架，用于大语言模型的本地化部署、运行与管理，致力于简化大语言模型的运维流程和使用门槛。Ollama支持文本生成、翻译、代码编写、问答等多种自然语言处理任务，并以强大的扩展性支持多种开源语言模型文件的热加载，如Llama 3、Phi 3、Mistral、Gemma、Qwen及DeepSeek等</p>
 <h1 id="1-安装Ollama"><a href="#1-安装Ollama" class="headerlink" title="1.安装Ollama"></a>1.安装Ollama</h1><h2 id="1-1-二进制安装"><a href="#1-1-二进制安装" class="headerlink" title="1.1 二进制安装"></a>1.1 二进制安装</h2><pre><code class="hljs">curl -fsSL https://ollama.com/install.sh | bash
 </code></pre>
-<h2 id="1-2-Docker安装"><a href="#1-2-Docker安装" class="headerlink" title="1.2 Docker安装"></a>1.2 Docker安装</h2><pre><code class="hljs">sudo docker run -p 11434:11434 ollama/ollama
+<h2 id="1-2-Docker安装"><a href="#1-2-Docker安装" class="headerlink" title="1.2 Docker安装"></a>1.2 Docker安装</h2><pre><code class="hljs">docker run -it -d --name ollama -v /web/ollama:/root/.ollama -p 11434:11434 ollama/ollama
 </code></pre>
 <h1 id="2-运行大模型"><a href="#2-运行大模型" class="headerlink" title="2.运行大模型"></a>2.运行大模型</h1><pre><code class="hljs">ollama run deepseek-r1:32b
 </code></pre>
 <h1 id="3-安装AI界面"><a href="#3-安装AI界面" class="headerlink" title="3.安装AI界面"></a>3.安装AI界面</h1><h2 id="3-1-二进制安装"><a href="#3-1-二进制安装" class="headerlink" title="3.1 二进制安装"></a>3.1 二进制安装</h2><pre><code class="hljs">curl -LsSf https://astral.sh/uv/install.sh | sh
 </code></pre>
-<h2 id="3-2-Docker安装"><a href="#3-2-Docker安装" class="headerlink" title="3.2 Docker安装"></a>3.2 Docker安装</h2><pre><code class="hljs">sudo docker run -p 8080:8080 --name open-webui \
--e OLLAMA_BASE_URL=http://172.16.100.200:11434 \
---restart always -v open-webui-data:/app/backend/data ghcr.io/open-webui/open-webui
+<h2 id="3-2-Docker安装"><a href="#3-2-Docker安装" class="headerlink" title="3.2 Docker安装"></a>3.2 Docker安装</h2><pre><code class="hljs">docker run -d -it -p 8080:8080 --name open-webui \
+--restart always -e OLLAMA_BASE_URL=http://172.16.100.200:11434 \
+-v /web/wiki:/app/backend/data ghcr.io/open-webui/open-webui
 </code></pre>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
@@ -382,7 +382,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年10月23日</div>
+          <div>2025年10月27日</div>
         </div>
       
       <div class="license-meta-item">

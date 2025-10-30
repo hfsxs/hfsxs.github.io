@@ -24,7 +24,7 @@
 <meta property="og:description" content="Redis的消息推送功能多用于实时性较高而持久性较低的场景，且redis本身并没有消息队列的容错机制。由于Redis的数据存储于内存，生产的消息只能一次性全部处消费掉，且没有留下任何痕迹，若消息在未到达消费者前因网络中断或其它缘由就发生丢失，而接受者并不知道有此消息，最终就会导致分布式事务的不一致，排查问题也无从着手 kafka的数据是consumer端的，所以对于消费而言consumer被赋予极">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-02-16T06:03:00.000Z">
-<meta property="article:modified_time" content="2025-03-15T13:36:38.609Z">
+<meta property="article:modified_time" content="2025-10-29T08:53:11.281Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -253,7 +253,7 @@
         
         
         
-          10 分钟
+          11 分钟
         
       </span>
     
@@ -299,11 +299,11 @@
                 <p>Redis的消息推送功能多用于实时性较高而持久性较低的场景，且redis本身并没有消息队列的容错机制。由于Redis的数据存储于内存，生产的消息只能一次性全部处消费掉，且没有留下任何痕迹，若消息在未到达消费者前因网络中断或其它缘由就发生丢失，而接受者并不知道有此消息，最终就会导致分布式事务的不一致，排查问题也无从着手</p>
 <p>kafka的数据是consumer端的，所以对于消费而言consumer被赋予极大的自由度。consumer可以顺序地消费消息，也可以重新消费之前处理过的消息</p>
 <h1 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h1><ul>
-<li>1.filebeat收集应用服务器的日志数据，发送到Kafka消息系统</li>
-<li>2.logstash从Kafka消息队列取到日志数据，过滤、结构化后发送到elasticsearch集群存储</li>
-<li>3.kibana连接elasticsearch集群提供数据的可视化分析与展示</li>
+<li>1.Filebeat收集应用服务器的日志数据，发送到Kafka消息系统</li>
+<li>2.Logstash从Kafka消息队列取到日志数据，过滤、结构化后发送到Elasticsearch集群存储</li>
+<li>3.Kibana连接Elasticsearch集群提供数据的可视化分析与展示</li>
 </ul>
-<h1 id="1-安装es、logstash、filebeat、kafka"><a href="#1-安装es、logstash、filebeat、kafka" class="headerlink" title="1.安装es、logstash、filebeat、kafka"></a>1.安装es、logstash、filebeat、kafka</h1><h1 id="2-配置filebeat"><a href="#2-配置filebeat" class="headerlink" title="2.配置filebeat"></a>2.配置filebeat</h1><pre><code class="hljs">sudo vi /usr/local/filebeat/filebeat.yml
+<h1 id="1-安装Elasticsearch、Logstash、Filebeat、Kafka"><a href="#1-安装Elasticsearch、Logstash、Filebeat、Kafka" class="headerlink" title="1.安装Elasticsearch、Logstash、Filebeat、Kafka"></a>1.安装Elasticsearch、Logstash、Filebeat、Kafka</h1><h1 id="2-配置ilebeat"><a href="#2-配置ilebeat" class="headerlink" title="2.配置ilebeat"></a>2.配置ilebeat</h1><pre><code class="hljs">sudo vi /usr/local/filebeat/filebeat.yml
 
 
 filebeat.prospectors:
@@ -331,8 +331,8 @@ compression: gzip
 max_message_bytes: 1000000
 </code></pre>
 <h1 id="3-配置logstash"><a href="#3-配置logstash" class="headerlink" title="3.配置logstash"></a>3.配置logstash</h1><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wangmo/p/9505883.html">https://www.cnblogs.com/wangmo/p/9505883.html</a></li>
 <li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/87e737c081d4">https://www.jianshu.com/p/87e737c081d4</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wangmo/p/9505883.html">https://www.cnblogs.com/wangmo/p/9505883.html</a></li>
 <li><a target="_blank" rel="noopener" href="https://doc.yonyoucloud.com/doc/logstash-best-practice-cn/input/redis.html">https://doc.yonyoucloud.com/doc/logstash-best-practice-cn/input/redis.html</a></li>
 </ul>
 
@@ -411,7 +411,7 @@ max_message_bytes: 1000000
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月15日</div>
+          <div>2025年10月29日</div>
         </div>
       
       <div class="license-meta-item">

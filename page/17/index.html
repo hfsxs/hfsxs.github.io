@@ -676,7 +676,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/linux/ELK-Filebeat/" target="_self">
         <div>
-          Logstash可用于日志的收集，但资源消耗巨大，并不适合部署于应用服务器上收集日志，主要用于日志的过滤与格式化处理 Filebeat用于日志的收集更灵活，消耗资源较少，扩展性也较强。filebeat部署于应用服务器负责收集日志，logstash负责日志的解析、过滤及格式化，再发送给es集群进行日志的存储，大大节省了资源的开销，构建了经典的日志分析平台 1.部署ELK2.配置logstash2.1
+          Filebeat，轻量级日志收集工具，资源消耗比Logstash大大降低，扩展性也较强。这样，就构成了经典的日志分析平台，即Filebeat部署于应用服务器负责日志收集，Logstash负责日志解析、过滤及格式化，Elasticsearch集群负责日志存储 1.部署ELK2.配置logstash2.1 创建配置文件sudo vi &#x2F;usr&#x2F;local&#x2F;logstash&#x2F;config&#x2F;system.
         </div>
       </a>
 
