@@ -24,7 +24,7 @@
 <meta property="og:description" content="Kafka基于Zookeeper服务管理集群的元数据信息以及集群的协调工作，性能必然受其制约与影响，也增加了运维难度。于是，2.8版本开始，Kafka引入KRaft集群架构模式，力图去除Zookeeper依赖。当然，KRaft集群模式最初并不如Zookeeper模式稳定，所以依然保持了兼容的状态。直到3.3.1版本，Kafka官方开始将KRaft标注为生产环境适用。之后，经过长期的多个版本的持续迭">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-08-07T02:55:47.000Z">
-<meta property="article:modified_time" content="2025-11-07T08:41:53.414Z">
+<meta property="article:modified_time" content="2025-11-10T07:51:54.899Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -240,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3k 字
+          2.3k 字
         
       </span>
     
@@ -251,7 +251,7 @@
         
         
         
-          25 分钟
+          20 分钟
         
       </span>
     
@@ -356,18 +356,6 @@ sudo systemctl enable kafka.service
 </code></pre>
 <h2 id="7-2-控制器状态"><a href="#7-2-控制器状态" class="headerlink" title="7.2 控制器状态"></a>7.2 控制器状态</h2><pre><code class="hljs">/usr/local/kafka/bin/kafka-metadata-quorum.sh --bootstrap-server localhost:9092 describe --replication
 </code></pre>
-<h2 id="7-2-创建topic"><a href="#7-2-创建topic" class="headerlink" title="7.2 创建topic"></a>7.2 创建topic</h2><pre><code class="hljs">/usr/local/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic test --partitions 3 --replication-factor 3
-</code></pre>
-<h2 id="7-3-查看topic"><a href="#7-3-查看topic" class="headerlink" title="7.3 查看topic"></a>7.3 查看topic</h2><pre><code class="hljs">/usr/local/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
-</code></pre>
-<h2 id="7-4-查看topic元数据信息"><a href="#7-4-查看topic元数据信息" class="headerlink" title="7.4 查看topic元数据信息"></a>7.4 查看topic元数据信息</h2><pre><code class="hljs">/usr/local/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic test
-</code></pre>
-<h2 id="7-5-topic写入消息"><a href="#7-5-topic写入消息" class="headerlink" title="7.5 topic写入消息"></a>7.5 topic写入消息</h2><pre><code class="hljs">/usr/local/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic test
-</code></pre>
-<h2 id="7-6-查看topic消息"><a href="#7-6-查看topic消息" class="headerlink" title="7.6 查看topic消息"></a>7.6 查看topic消息</h2><pre><code class="hljs">/usr/local/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning --max-messages 50
-</code></pre>
-<h2 id="7-7-删除topic"><a href="#7-7-删除topic" class="headerlink" title="7.7 删除topic"></a>7.7 删除topic</h2><pre><code class="hljs">/usr/local/kafka/bin/kafka-topics.sh --delete --topic test --bootstrap-server localhost:9092
-</code></pre>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/iamxiaofu/p/17858962.html">https://www.cnblogs.com/iamxiaofu/p/17858962.html</a></li>
@@ -448,7 +436,7 @@ sudo systemctl enable kafka.service
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年11月7日</div>
+          <div>2025年11月10日</div>
         </div>
       
       <div class="license-meta-item">

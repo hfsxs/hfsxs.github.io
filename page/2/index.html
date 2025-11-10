@@ -240,6 +240,77 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/linux/KVM-Ceph/" target="_self">
+          KVM虚拟机基于Ceph存储系统实现热迁移
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/KVM-Ceph/" target="_self">
+        <div>
+          1.Ceph集群创建KVM存储池ceph osd pool create kvm 16 16 rbd pool init kvm  2.Ceph集群创建KVM用户ceph auth get-or-create client.kvm mon &#39;profile rbd&#39; osd &#39;profile rbd pool&#x3D;kvm&#39; -o &#x2F;etc&#x2F;ceph&#x2F;ceph.clien
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-07-22 09:30" pubdate>
+              2025-07-22
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/Ceph/">#Ceph</a>
+            
+              <a href="/tags/%E5%AD%98%E5%82%A8/">#存储</a>
+            
+              <a href="/tags/KVM/">#KVM</a>
+            
+              <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/linux/PrometheusAuth/" target="_self">
           Prometheus监控配置安全认证
         </a>
@@ -855,79 +926,6 @@
               <a href="/tags/AI/">#AI</a>
             
               <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/">#大模型</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/linux/Prometheus-Etcd/" target="_self">
-          Prometheus监控Etcd集群
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/Prometheus-Etcd/" target="_self">
-        <div>
-          Etcd默认在2379端口暴露监控metrics数据，且接口基于https协议，所以还涉及到SSL证书。若是部署于Kubernetes集群的Prometheus，则需要将证书挂载到集群内部，比较繁琐 1.Prometheus服务器配置Etcd证书mkdir -p &#x2F;usr&#x2F;local&#x2F;prometheus&#x2F;etcd scp -r master:&#x2F;opt&#x2F;etcd&#x2F;ssl &#x2F;usr&#x2F;local&#x2F;pr
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-02-25 22:21" pubdate>
-              2025-02-25
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/Kubernetes/">#Kubernetes</a>
-            
-              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
-            
-              <a href="/tags/Etcd/">#Etcd</a>
-            
-              <a href="/tags/Prometheus/">#Prometheus</a>
-            
-              <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
             
           </div>
         

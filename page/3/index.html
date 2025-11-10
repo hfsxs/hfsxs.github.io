@@ -240,6 +240,79 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/linux/Prometheus-Etcd/" target="_self">
+          Prometheus监控Etcd集群
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/Prometheus-Etcd/" target="_self">
+        <div>
+          Etcd默认在2379端口暴露监控metrics数据，且接口基于https协议，所以还涉及到SSL证书。若是部署于Kubernetes集群的Prometheus，则需要将证书挂载到集群内部，比较繁琐 1.Prometheus服务器配置Etcd证书mkdir -p &#x2F;usr&#x2F;local&#x2F;prometheus&#x2F;etcd scp -r master:&#x2F;opt&#x2F;etcd&#x2F;ssl &#x2F;usr&#x2F;local&#x2F;pr
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-02-25 22:21" pubdate>
+              2025-02-25
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/Kubernetes/">#Kubernetes</a>
+            
+              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+            
+              <a href="/tags/Etcd/">#Etcd</a>
+            
+              <a href="/tags/Prometheus/">#Prometheus</a>
+            
+              <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/linux/KubernetesCertExpiration/" target="_self">
           Kubernetes集群证书过期解决方案
         </a>
@@ -850,73 +923,6 @@
               <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
             
               <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
-            
-              <a href="/tags/Prometheus/">#Prometheus</a>
-            
-              <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/linux/Prometheus-URL/" target="_self">
-          Prometheus监控域名和站点的可用性
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/Prometheus-URL/" target="_self">
-        <div>
-          Blackbox，即黑盒，Prometheus从外部发起探测的监控方式，用于探测url和端口的可用性及性能等指标。Blackbox不同于常见的exporter，即无须安装在被监控的目标端，只需能与Prometheus和被监控端通信即可，随后通过HTTP、HTTPS(URL&#x2F;API可用性检测)、DNS(域名解析)、TCP(端口存活检测)、ICMP(主机存活检测)等方式进行探测监控。此外，B
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2024-10-30 09:36" pubdate>
-              2024-10-30
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
             
               <a href="/tags/Prometheus/">#Prometheus</a>
             
