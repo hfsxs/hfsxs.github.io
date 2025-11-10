@@ -24,7 +24,7 @@
 <meta property="og:description" content="Kafka基于Zookeeper服务管理集群的元数据信息以及集群的协调工作，性能必然受其制约与影响，也增加了运维难度。于是，2.8版本开始，Kafka引入KRaft集群架构模式，力图去除Zookeeper依赖。当然，KRaft集群模式最初并不如Zookeeper模式稳定，所以依然保持了兼容的状态。直到3.3.1版本，Kafka官方开始将KRaft标注为生产环境适用。之后，经过长期的多个版本的持续迭">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-08-07T02:55:47.000Z">
-<meta property="article:modified_time" content="2025-10-27T01:14:21.351Z">
+<meta property="article:modified_time" content="2025-11-07T08:41:53.414Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -240,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.6k 字
+          3k 字
         
       </span>
     
@@ -251,7 +251,7 @@
         
         
         
-          22 分钟
+          25 分钟
         
       </span>
     
@@ -317,10 +317,10 @@ controller.quorum.voters = 1@172.100.100.101:9093,2@172.100.100.102:9093,3@172.1
 inter.broker.listener.name = PLAINTEXT
 # 设置controller服务协议别名
 controller.listener.names = CONTROLLER
-# 设置Broker角色绑定的端口，数据节点端口为9092，控制节点端口为9093
+# 设置Broker节点绑定的端口，数据节点端口为9092，控制节点端口为9093
 listeners = PLAINTEXT://:9092,CONTROLLER://:9093
 # 设置Broker节点外网访问地址，支持域名和IP
-advertised.Listeners = PLAINTEXT://:9092
+advertised.Listeners = PLAINTEXT://172.100.100.101:9092
 </code></pre>
 <ul>
 <li>注：三个节点node.id参数务必要保持其唯一性，且建议Broker节点角色单独部署，以免混合部署的服务器资源不足引发OOM等问题</li>
@@ -360,10 +360,17 @@ sudo systemctl enable kafka.service
 </code></pre>
 <h2 id="7-3-查看topic"><a href="#7-3-查看topic" class="headerlink" title="7.3 查看topic"></a>7.3 查看topic</h2><pre><code class="hljs">/usr/local/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
 </code></pre>
-<h2 id="7-4-查看topic详情"><a href="#7-4-查看topic详情" class="headerlink" title="7.4 查看topic详情"></a>7.4 查看topic详情</h2><pre><code class="hljs">/usr/local/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic test
+<h2 id="7-4-查看topic元数据信息"><a href="#7-4-查看topic元数据信息" class="headerlink" title="7.4 查看topic元数据信息"></a>7.4 查看topic元数据信息</h2><pre><code class="hljs">/usr/local/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic test
+</code></pre>
+<h2 id="7-5-topic写入消息"><a href="#7-5-topic写入消息" class="headerlink" title="7.5 topic写入消息"></a>7.5 topic写入消息</h2><pre><code class="hljs">/usr/local/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic test
+</code></pre>
+<h2 id="7-6-查看topic消息"><a href="#7-6-查看topic消息" class="headerlink" title="7.6 查看topic消息"></a>7.6 查看topic消息</h2><pre><code class="hljs">/usr/local/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning --max-messages 50
+</code></pre>
+<h2 id="7-7-删除topic"><a href="#7-7-删除topic" class="headerlink" title="7.7 删除topic"></a>7.7 删除topic</h2><pre><code class="hljs">/usr/local/kafka/bin/kafka-topics.sh --delete --topic test --bootstrap-server localhost:9092
 </code></pre>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/iamxiaofu/p/17858962.html">https://www.cnblogs.com/iamxiaofu/p/17858962.html</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_27740127/article/details/134725178">https://blog.csdn.net/qq_27740127/article/details/134725178</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/cold___play/article/details/132267259">https://blog.csdn.net/cold___play/article/details/132267259</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/ximenjianxue/article/details/132545093">https://blog.csdn.net/ximenjianxue/article/details/132545093</a></li>
@@ -441,7 +448,7 @@ sudo systemctl enable kafka.service
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年10月27日</div>
+          <div>2025年11月7日</div>
         </div>
       
       <div class="license-meta-item">

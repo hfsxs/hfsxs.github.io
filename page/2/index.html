@@ -240,6 +240,147 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/linux/PrometheusAuth/" target="_self">
+          Prometheus监控配置安全认证
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/PrometheusAuth/" target="_self">
+        <div>
+          Prometheus监控系统默认没有配置安全加密机制，这可能会导致监控信息遭到泄漏，特别是对安全性要求较高的业务场景，很容易在合规检查中被扫描到安全漏洞。有鉴于此，Prometheus于2.24版本引入Basic Auth加密机制，以保障监控信息的安全性与完整性 1.安装htpasswdsudo yum -y install httpd-tools sudo apt -y install apac
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-07-11 09:17" pubdate>
+              2025-07-11
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+            
+              <a href="/tags/Prometheus/">#Prometheus</a>
+            
+              <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/linux/geek/CodeServer/" target="_self">
+          Linux系统部署CodeServer搭建云端开发环境
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/geek/CodeServer/" target="_self">
+        <div>
+          code-server，开源的网页版VS Code编辑器，可部署于服务器以构建云端开发环境，使得开发者能够通过任何设备访问完整的开发环境 1.安装CodeServersudo docker run -it -d --name code-server -p 8080:8080 \ -v &#x2F;root&#x2F;.local:&#x2F;root&#x2F;.local -v &#x2F;root&#x2F;.config:&#x2F;root&#x2F;.config
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2025-07-06 10:17" pubdate>
+              2025-07-06
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/linux/geek/" class="category-chain-item">极客</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/linux/Hadoop/" target="_self">
           Hadoop集群部署
         </a>
@@ -787,146 +928,6 @@
               <a href="/tags/Prometheus/">#Prometheus</a>
             
               <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/linux/KubernetesCertExpiration/" target="_self">
-          Kubernetes集群证书过期解决方案
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/KubernetesCertExpiration/" target="_self">
-        <div>
-          Kubernetes集群所有组件之间的通信都需要通过SSL证书进行身份验证与安全传输，证书一旦过期则不能正常通信，导致应用程序无法使用。Kubernetes官方推荐的集群部署工具kubeadm所引导的集群的证书有效期都是1年，这其实是为了引导客户体验新版本，当然也可以避开集群的升级而只对证书进行续期，所设计的流程也是十分方便与快捷 1.备份原证书文件sudo cp -r &#x2F;etc&#x2F;kubernet
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-02-22 16:45" pubdate>
-              2025-02-22
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/Kubernetes/">#Kubernetes</a>
-            
-              <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
-            
-              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
-            
-              <a href="/tags/Etcd/">#Etcd</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/linux/RabbitMQ/" target="_self">
-          RabbitMQ配置高可用集群
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/RabbitMQ/" target="_self">
-        <div>
-          RabbitMQ，由Erlang语言开发的轻量级开源消息队列系统。RabbitMQ最初起源于金融系统，基于AMQP（高级消息队列协议，应用层协议的一个开放标准，为面向消息的中间件设计，基于此协议的客户端与消息中间件可传递消息，并不受产品、开发语言等条件的限制）传递消息，也可通过插件扩展的方式支持STOMP、MQTT、RabbitMQ Stream协议，广泛应用于分布式系统中存储、转发消息，在易用性
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2025-02-12 10:38" pubdate>
-              2025-02-12
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/MQ/">#MQ</a>
-            
-              <a href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/">#中间件</a>
-            
-              <a href="/tags/RabbitMQ/">#RabbitMQ</a>
             
           </div>
         
