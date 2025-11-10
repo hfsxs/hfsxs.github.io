@@ -4,39 +4,6 @@
   
   
   <entry>
-    <title>Kafka集群运维命令详解</title>
-    <link href="/linux/KafkaOps/"/>
-    <url>/linux/KafkaOps/</url>
-    
-    <content type="html"><![CDATA[<h1 id="1-查看topic"><a href="#1-查看topic" class="headerlink" title="1.查看topic"></a>1.查看topic</h1><pre><code class="hljs">/usr/local/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092</code></pre><h1 id="2-创建topic"><a href="#2-创建topic" class="headerlink" title="2.创建topic"></a>2.创建topic</h1><pre><code class="hljs">/usr/local/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic test --partitions 3 --replication-factor 3</code></pre><h1 id="3-查看topic元数据信息"><a href="#3-查看topic元数据信息" class="headerlink" title="3.查看topic元数据信息"></a>3.查看topic元数据信息</h1><pre><code class="hljs">/usr/local/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic test</code></pre><h1 id="4-topic写入消息"><a href="#4-topic写入消息" class="headerlink" title="4.topic写入消息"></a>4.topic写入消息</h1><pre><code class="hljs">/usr/local/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic test</code></pre><h1 id="5-查看topic消息数据"><a href="#5-查看topic消息数据" class="headerlink" title="5.查看topic消息数据"></a>5.查看topic消息数据</h1><pre><code class="hljs">/usr/local/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning --max-messages 50</code></pre><h1 id="6-删除topic"><a href="#6-删除topic" class="headerlink" title="6.删除topic"></a>6.删除topic</h1><pre><code class="hljs">/usr/local/kafka/bin/kafka-topics.sh --delete --topic test --bootstrap-server localhost:9092</code></pre>]]></content>
-    
-    
-    <categories>
-      
-      <category>工作</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>Linux</tag>
-      
-      <tag>云计算</tag>
-      
-      <tag>Kafka</tag>
-      
-      <tag>MQ</tag>
-      
-      <tag>中间件</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>Prometheus监控Kafka集群</title>
     <link href="/linux/Prometheus-Kafka/"/>
     <url>/linux/Prometheus-Kafka/</url>
@@ -66,6 +33,39 @@
       <tag>Prometheus</tag>
       
       <tag>监控告警</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Kafka集群运维命令详解</title>
+    <link href="/linux/KafkaOps/"/>
+    <url>/linux/KafkaOps/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1-查看topic"><a href="#1-查看topic" class="headerlink" title="1.查看topic"></a>1.查看topic</h1><pre><code class="hljs">/usr/local/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092</code></pre><h1 id="2-创建topic"><a href="#2-创建topic" class="headerlink" title="2.创建topic"></a>2.创建topic</h1><pre><code class="hljs">/usr/local/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic test --partitions 3 --replication-factor 3</code></pre><h1 id="3-查看topic元数据信息"><a href="#3-查看topic元数据信息" class="headerlink" title="3.查看topic元数据信息"></a>3.查看topic元数据信息</h1><pre><code class="hljs">/usr/local/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic test</code></pre><h1 id="4-topic写入消息"><a href="#4-topic写入消息" class="headerlink" title="4.topic写入消息"></a>4.topic写入消息</h1><pre><code class="hljs">/usr/local/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic test</code></pre><h1 id="5-查看topic消息数据"><a href="#5-查看topic消息数据" class="headerlink" title="5.查看topic消息数据"></a>5.查看topic消息数据</h1><pre><code class="hljs">/usr/local/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning --max-messages 50</code></pre><h1 id="6-删除topic"><a href="#6-删除topic" class="headerlink" title="6.删除topic"></a>6.删除topic</h1><pre><code class="hljs">/usr/local/kafka/bin/kafka-topics.sh --delete --topic test --bootstrap-server localhost:9092</code></pre>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>Kafka</tag>
+      
+      <tag>MQ</tag>
+      
+      <tag>中间件</tag>
       
     </tags>
     
