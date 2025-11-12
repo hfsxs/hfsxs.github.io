@@ -4,6 +4,39 @@
   
   
   <entry>
+    <title>Kafka集群部署可视化工具Kafbat</title>
+    <link href="/linux/Kafbat/"/>
+    <url>/linux/Kafbat/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1-配置Java环境"><a href="#1-配置Java环境" class="headerlink" title="1.配置Java环境"></a>1.配置Java环境</h1><pre><code class="hljs">cd /optwget https://download.oracle.com/java/21/latest/jdk-21_linux-x64_bin.tar.gztar -xzvf jdk-21_linux-x64_bin.tar.gz</code></pre><h1 id="2-下载Kafbat"><a href="#2-下载Kafbat" class="headerlink" title="2.下载Kafbat"></a>2.下载Kafbat</h1><pre><code class="hljs">mkdir /opt/kafbat &amp;&amp; cd /opt/kafbatwget https://github.com/kafbat/kafka-ui/releases/download/v1.2.0/api-v1.2.0.jarmv api-v1.2.0.jar kafbat.jar</code></pre><h1 id="3-配置Kafka"><a href="#3-配置Kafka" class="headerlink" title="3.配置Kafka"></a>3.配置Kafka</h1><h2 id="3-1-开启JMX监控"><a href="#3-1-开启JMX监控" class="headerlink" title="3.1 开启JMX监控"></a>3.1 开启JMX监控</h2><pre><code class="hljs">sudo vi /opt/kafka/bin/kafka-server-start.shif [ $# -lt 1 ];then        echo &quot;USAGE: $0 [-daemon] server.properties [--override property=value]*&quot;        exit 1fibase_dir=$(dirname $0)if [ &quot;x$KAFKA_LOG4J_OPTS&quot; = &quot;x&quot; ]; then    export KAFKA_LOG4J_OPTS=&quot;-Dlog4j.configuration=file:$base_dir/../config/log4j.properties&quot;fiif [ &quot;x$KAFKA_HEAP_OPTS&quot; = &quot;x&quot; ]; then    export KAFKA_HEAP_OPTS=&quot;-Xmx1G -Xms1G&quot;    # 设置JMX监控端口    export JMX_PORT=&quot;9999&quot;fiEXTRA_ARGS=$&#123;EXTRA_ARGS-&#39;-name kafkaServer -loggc&#39;&#125;COMMAND=$1case $COMMAND in  -daemon)    EXTRA_ARGS=&quot;-daemon &quot;$EXTRA_ARGS    shift    ;;  *)    ;;esacexec $base_dir/kafka-run-class.sh $EXTRA_ARGS kafka.Kafka &quot;$@&quot;</code></pre><h2 id="3-2-重启Kafka"><a href="#3-2-重启Kafka" class="headerlink" title="3.2 重启Kafka"></a>3.2 重启Kafka</h2><pre><code class="hljs">sudo systemctl restart kafka.service</code></pre><h1 id="4-创建配置文件"><a href="#4-创建配置文件" class="headerlink" title="4.创建配置文件"></a>4.创建配置文件</h1><pre><code class="hljs">vi /opt/kafbat/application.ymlserver:  port: 8080# 启用JMX监控spring:  jmx:    enabled: true  security:    # 设置认证密码    user:      name: admin      password: Kafka_uikafka:  clusters:    - name: kraft-cluster      bootstrapServers: 172.100.100.101:9092,172.100.100.102:9092,172.100.100.103:9092      metrics:        type: JMX        # 设置JMX端口，与Kafka设置一致        port: 9999        jmx:          extraMappings:            - pattern: &#39;kafka.controller:type=KafkaController,name=*&#39;               attribute: &#39;Value&#39;      properties:        security.protocol:  PLAINTEXT        sasl.mechanism:  PLAIN auth:  type: LOGIN_FORMlogging:  level:    root: INFO    io.kafbat.ui:  DEBUG    reactor.netty.http.server.AccessLog:  INFO</code></pre><h1 id="5-创建启动脚本"><a href="#5-创建启动脚本" class="headerlink" title="5.创建启动脚本"></a>5.创建启动脚本</h1><pre><code class="hljs">sudo vi /lib/systemd/system/kafbat.service[Unit]Description=KafbatDocumentation=https://github.com/kafbat/kafka-uiAfter=network.target[Service]Type=simpleUser=rootExecStart=/opt/jdk-21.0.9/bin/java -Dspring.config.additional-location=/opt/kafbat/application.yml --add-opens java.rmi/javax.rmi.ssl=ALL-UNNAMED -jar /opt/kafbat/kafbat.jarRestart=on-failure[Install]WantedBy=multi-user.target</code></pre><h1 id="6-启动Kafbat"><a href="#6-启动Kafbat" class="headerlink" title="6.启动Kafbat"></a>6.启动Kafbat</h1><pre><code class="hljs">sudo systemctl daemon-reloadsudo systemctl start kafbat.servicesudo systemctl enable kafbat.service</code></pre><h1 id="7-验证kafbat"><a href="#7-验证kafbat" class="headerlink" title="7.验证kafbat"></a>7.验证kafbat</h1><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://blog.csdn.net/Vector97/article/details/128539970">https://blog.csdn.net/Vector97/article/details/128539970</a></li><li><a href="https://blog.csdn.net/u011424614/article/details/151195306">https://blog.csdn.net/u011424614/article/details/151195306</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>Kafka</tag>
+      
+      <tag>MQ</tag>
+      
+      <tag>中间件</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Prometheus监控Kafka集群</title>
     <link href="/linux/Prometheus-Kafka/"/>
     <url>/linux/Prometheus-Kafka/</url>
@@ -45,7 +78,7 @@
     <link href="/linux/KafkaOps/"/>
     <url>/linux/KafkaOps/</url>
     
-    <content type="html"><![CDATA[<h1 id="1-查看topic"><a href="#1-查看topic" class="headerlink" title="1.查看topic"></a>1.查看topic</h1><pre><code class="hljs">/usr/local/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092</code></pre><h1 id="2-创建topic"><a href="#2-创建topic" class="headerlink" title="2.创建topic"></a>2.创建topic</h1><pre><code class="hljs">/usr/local/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic test --partitions 3 --replication-factor 3</code></pre><h1 id="3-查看topic元数据信息"><a href="#3-查看topic元数据信息" class="headerlink" title="3.查看topic元数据信息"></a>3.查看topic元数据信息</h1><pre><code class="hljs">/usr/local/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic test</code></pre><h1 id="4-topic写入消息"><a href="#4-topic写入消息" class="headerlink" title="4.topic写入消息"></a>4.topic写入消息</h1><pre><code class="hljs">/usr/local/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic test</code></pre><h1 id="5-查看topic消息数据"><a href="#5-查看topic消息数据" class="headerlink" title="5.查看topic消息数据"></a>5.查看topic消息数据</h1><pre><code class="hljs">/usr/local/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning --max-messages 50</code></pre><h1 id="6-删除topic"><a href="#6-删除topic" class="headerlink" title="6.删除topic"></a>6.删除topic</h1><pre><code class="hljs">/usr/local/kafka/bin/kafka-topics.sh --delete --topic test --bootstrap-server localhost:9092</code></pre>]]></content>
+    <content type="html"><![CDATA[<h1 id="1-查看topic"><a href="#1-查看topic" class="headerlink" title="1.查看topic"></a>1.查看topic</h1><pre><code class="hljs">/usr/local/kafka/bin/kafka-topics.sh --list --bootstrap-server localhost:9092</code></pre><h1 id="2-创建topic"><a href="#2-创建topic" class="headerlink" title="2.创建topic"></a>2.创建topic</h1><pre><code class="hljs">/usr/local/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic test --partitions 3 --replication-factor 3</code></pre><h1 id="3-查看topic元数据信息"><a href="#3-查看topic元数据信息" class="headerlink" title="3.查看topic元数据信息"></a>3.查看topic元数据信息</h1><pre><code class="hljs">/usr/local/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe --topic test</code></pre><h1 id="4-topic写入消息"><a href="#4-topic写入消息" class="headerlink" title="4.topic写入消息"></a>4.topic写入消息</h1><pre><code class="hljs">/usr/local/kafka/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic test</code></pre><h1 id="5-查看topic消息数据"><a href="#5-查看topic消息数据" class="headerlink" title="5.查看topic消息数据"></a>5.查看topic消息数据</h1><pre><code class="hljs">/usr/local/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning --max-messages 50</code></pre><h1 id="6-删除topic"><a href="#6-删除topic" class="headerlink" title="6.删除topic"></a>6.删除topic</h1><pre><code class="hljs">/usr/local/kafka/bin/kafka-topics.sh --delete --topic test --bootstrap-server localhost:9092</code></pre>]]></content>
     
     
     <categories>
