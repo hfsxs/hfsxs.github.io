@@ -24,7 +24,7 @@
 <meta property="og:description" content="CephFS，即Ceph文件系统，标准的POSIX文件系统，至少一个元数据服务器(Metadata Server，MDS)用于元数据的管理，以实现和数据的分离。MDS提供了一个包含智能缓存层的共享一致的文件系统，基于动态子树分区算法设计，具备高效的元数据组织和索引方式的功能，极大地降低了读写频率 Ceph MDS以守护进程方式运行，不直接向客户端提供任何数据，所有的数据都由OSD管理。MDS服务可">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-07-15T01:24:20.000Z">
-<meta property="article:modified_time" content="2025-07-30T02:13:01.031Z">
+<meta property="article:modified_time" content="2025-11-18T02:41:40.927Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -242,7 +242,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1k 字
+          1.4k 字
         
       </span>
     
@@ -253,7 +253,7 @@
         
         
         
-          9 分钟
+          12 分钟
         
       </span>
     
@@ -315,21 +315,28 @@ host = node01
 <h2 id="1-6-启动服务"><a href="#1-6-启动服务" class="headerlink" title="1.6 启动服务"></a>1.6 启动服务</h2><pre><code class="hljs">sudo systemctl start ceph-mds@node01
 sudo systemctl enable ceph-mds@node01
 </code></pre>
-<h1 id="2-配置存储池"><a href="#2-配置存储池" class="headerlink" title="2.配置存储池"></a>2.配置存储池</h1><pre><code class="hljs"># 
+<h1 id="2-配置存储池"><a href="#2-配置存储池" class="headerlink" title="2.配置存储池"></a>2.配置存储池</h1><pre><code class="hljs"># 创建数据存储池
 ceph osd pool create cephfs_data 128
+# 创建元数据存储池
 ceph osd pool create cephfs_metadata 128
 </code></pre>
-<h1 id="7"><a href="#7" class="headerlink" title="7."></a>7.</h1><pre><code class="hljs">ceph fs new cephfs cephfs_metadata cephfs_data
+<h1 id="7-创建CephFS文件系统"><a href="#7-创建CephFS文件系统" class="headerlink" title="7. 创建CephFS文件系统"></a>7. 创建CephFS文件系统</h1><pre><code class="hljs">ceph fs new cephfs cephfs_metadata cephfs_data
 </code></pre>
-<h1 id="8"><a href="#8" class="headerlink" title="8."></a>8.</h1><pre><code class="hljs">ceph fs ls
+<h1 id="8-验证CephFS"><a href="#8-验证CephFS" class="headerlink" title="8.验证CephFS"></a>8.验证CephFS</h1><pre><code class="hljs">ceph fs ls
 ceph mds stat
 ceph -s
+</code></pre>
+<h1 id="9-客户端挂载使用"><a href="#9-客户端挂载使用" class="headerlink" title="9.客户端挂载使用"></a>9.客户端挂载使用</h1><h2 id="9-1-Ceph集群创建CephFS用户"><a href="#9-1-Ceph集群创建CephFS用户" class="headerlink" title="9.1 Ceph集群创建CephFS用户"></a>9.1 Ceph集群创建CephFS用户</h2><pre><code class="hljs">ceph auth get-or-create client.cephfs mon &#39;allow r&#39; mds &#39;allow rw&#39; osd &#39;allow rw pool=cephfs_data, allow rw pool=cephfs_metadata&#39; -o /etc/ceph/ceph.client.cephfs.keyring
+</code></pre>
+<h2 id="9-2-挂载CephFS"><a href="#9-2-挂载CephFS" class="headerlink" title="9.2 挂载CephFS"></a>9.2 挂载CephFS</h2><pre><code class="hljs">mount -t ceph 192.168.100.201:6789,192.168.100.202:6789,192.168.100.203:6789:/ /home/works/ -o name=cephfs,secret=XXXXXXXXXXXXXXXXXXXX
+</code></pre>
+<h2 id="9-3-验证挂载"><a href="#9-3-验证挂载" class="headerlink" title="9.3 验证挂载"></a>9.3 验证挂载</h2><pre><code class="hljs">df -h
 </code></pre>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2015907">https://cloud.tencent.com/developer/article/2015907</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_63844528/article/details/130213273">https://blog.csdn.net/qq_63844528/article/details/130213273</a></li>
-<li><a target="_blank" rel="noopener" href="https://access.redhat.com/documentation/zh-cn/red_hat_ceph_storage">https://access.redhat.com/documentation/zh-cn/red_hat_ceph_storage</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/A1100886/article/details/131764704">https://blog.csdn.net/A1100886/article/details/131764704</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_42795092/article/details/151800440">https://blog.csdn.net/weixin_42795092/article/details/151800440</a></li>
 </ul>
 
                 
@@ -407,7 +414,7 @@ ceph -s
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年7月30日</div>
+          <div>2025年11月18日</div>
         </div>
       
       <div class="license-meta-item">

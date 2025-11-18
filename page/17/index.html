@@ -240,6 +240,142 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/linux/Crontab/" target="_self">
+          Linux系统配置Cron定时任务
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/Crontab/" target="_self">
+        <div>
+          Cron，Linux系统周期性执行程序的任务调度工具，守护进程为crond，默认安装且开机自启，管理命令为crontab。crond服务定期检查系统中是否有要执行的任务工作，默认每分钟检查一次，若检查到定时任务便会根据预先设定的规则自动执行该任务，类似于闹钟，从而实现计划任务的自动化执行，如日志轮询、数据备份、缓存清理、时钟同步及监控告警等 1.配置文件 &#x2F;etc&#x2F;cronta
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-04-06 10:54" pubdate>
+              2020-04-06
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/Crontab/">#Crontab</a>
+            
+              <a href="/tags/%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1/">#定时任务</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/linux/DockerRepository/" target="_self">
+          Docker镜像仓库管理
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/DockerRepository/" target="_self">
+        <div>
+          Repository，即镜像仓库，用于镜像的集中存放与管理。一般的，仓库和仓库注册服务器（Registry）不做区分。实际上，仓库注册服务器是管理仓库的具体服务器，其中往往存放着多个仓库，每个仓库中又包含了多个镜像，每个镜像有不同的标签（tag）仓库可以被认为是一个具体的项目或目录，如仓库地址hub.docker&#x2F;nginx，hub.docker是注册服务器地址，nginx是仓库名  仓
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-04-03 23:15" pubdate>
+              2020-04-03
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/Docker/">#Docker</a>
+            
+              <a href="/tags/%E5%AE%B9%E5%99%A8/">#容器</a>
+            
+              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/linux/DockerImage/" target="_self">
           Docker镜像管理
         </a>
@@ -789,152 +925,6 @@
               <a href="/tags/MySQL/">#MySQL</a>
             
               <a href="/tags/%E5%8D%9A%E5%AE%A2/">#博客</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/linux/ELK-Kafka/" target="_self">
-          ELK日志分析平台集成Kafka作为缓存服务
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/ELK-Kafka/" target="_self">
-        <div>
-          Redis的消息推送功能多用于实时性较高而持久性较低的场景，且redis本身并没有消息队列的容错机制。由于Redis的数据存储于内存，生产的消息只能一次性全部处消费掉，且没有留下任何痕迹，若消息在未到达消费者前因网络中断或其它缘由就发生丢失，而接受者并不知道有此消息，最终就会导致分布式事务的不一致，排查问题也无从着手 kafka的数据是consumer端的，所以对于消费而言consumer被赋予极
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-02-16 14:03" pubdate>
-              2020-02-16
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/ELK/">#ELK</a>
-            
-              <a href="/tags/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/">#日志分析</a>
-            
-              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/">#大数据</a>
-            
-              <a href="/tags/Kafka/">#Kafka</a>
-            
-              <a href="/tags/Filebeat/">#Filebeat</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/linux/ELK-Redis/" target="_self">
-          ELK集成Redis作为缓存服务器
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/ELK-Redis/" target="_self">
-        <div>
-          Filebeat、Logstash、Elasticsearch、Kibana构成了经典的ELK架构，适用于数据量较小的环境。大型生产环境中，业务流量的突发峰值将对Elasticsearch造成巨大的冲击，存在安全隐患。鉴于此，引入消息队列（Redis、Kafka或RabbitMQ）作为缓冲，用以削平峰值及异步容错，缓解了后端Elasticsearch集群的压力  工作流程 Filebeat收集应用
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-02-15 18:20" pubdate>
-              2020-02-15
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/ELK/">#ELK</a>
-            
-              <a href="/tags/%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90/">#日志分析</a>
-            
-              <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/">#大数据</a>
-            
-              <a href="/tags/Filebeat/">#Filebeat</a>
-            
-              <a href="/tags/Redis/">#Redis</a>
             
           </div>
         

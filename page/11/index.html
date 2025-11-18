@@ -240,6 +240,152 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/linux/KubernetesHelm/" target="_self">
+          Kubernetes集群Helm工具详解
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/KubernetesHelm/" target="_self">
+        <div>
+          Helm，意为舵轮，是Kubernetes集群的包管理器，用于yaml文件的统一管理及高效复用，实现了应用级别的版本管理，即是将部署应用的yaml文件像Linux的包管理器一样进行封装，从仓库里快速查找、下载和安装，快速的发布中间件、数据库、公共组件等应用，类似于RedHat的yum、Python的pip。helm大大简化了Kubernetes应用的部署方式，将yaml文件存入chart包一键执行
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-04-20 19:15" pubdate>
+              2023-04-20
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/Kubernetes/">#Kubernetes</a>
+            
+              <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+            
+              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+            
+              <a href="/tags/Helm/">#Helm</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/linux/JenkinsAgentOnKubernetes/" target="_self">
+          Jenkins基于Kubernetes集群配置动态agent节点
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/JenkinsAgentOnKubernetes/" target="_self">
+        <div>
+          1.配置代理节点持久化存储1.1 创建PV、PVCvi jenkins-slave-data.yaml   apiVersion: v1 kind: PersistentVolume metadata:   # 设置PV名称   name: jenkins-slave-data   # 设置PV标签，用于PVC的定向绑定   labels:     app: jenkins-slave-data
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-04-18 18:45" pubdate>
+              2023-04-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/CICD/">#CICD</a>
+            
+              <a href="/tags/DevOps/">#DevOps</a>
+            
+              <a href="/tags/Jenkins/">#Jenkins</a>
+            
+              <a href="/tags/Kubernetes/">#Kubernetes</a>
+            
+              <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+            
+              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/linux/JenkinsAgent/" target="_self">
           Jenkins配置agent节点
         </a>
@@ -775,144 +921,6 @@
               <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
             
               <a href="/tags/Python/">#Python</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/linux/Prometheus/" target="_self">
-          Prometheus监控系统部署
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/Prometheus/" target="_self">
-        <div>
-          Prometheus是基于Go语言构建的由SoundCloud开发的开源监控告警系统，基本原理是通过HTTP协议周期性拉取被监控组件的状态，任意组件只要提供对应的HTTP接口即可接入，而不再需要任何SDK或其他集成过程 系统架构1.PrometheusPrometheus Server，Prometheus监控系统的核心部分，负责实现监控数据的收集、存储及数据查询 2.ExportersExpor
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-02-01 09:42" pubdate>
-              2023-02-01
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
-            
-              <a href="/tags/Prometheus/">#Prometheus</a>
-            
-              <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/linux/KubernetesTroubleshooting/" target="_self">
-          Kubernetes集群故障处理
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/KubernetesTroubleshooting/" target="_self">
-        <div>
-          1.worker节点重启后一直notready状态故障背景某个worker节点服务器重启，重启后处于notready状态 故障现象集群master节点正常，docker运行正常，机器负载正常，kubelet反复启动 故障原因刚接触kubernets不太熟悉，排查半天不得要领，直到查看kubelet日志发现有报错：”Failed to run kubelet” err&#x3D;”failed to
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-01-30 12:25" pubdate>
-              2023-01-30
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/Kubernetes/">#Kubernetes</a>
-            
-              <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
-            
-              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
             
           </div>
         
