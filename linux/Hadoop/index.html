@@ -24,7 +24,7 @@
 <meta property="og:description" content="Hadoop，Apache基金会基于Java开发和维护的开源分布式计算与存储框架，核心功能是为庞大的计算机集群提供可靠的、统一且稳定的、可伸缩的存储和计算环境。Hadoop使用简单的编程模型跨计算机群集分布式处理大型数据集，其设计理念是将数据和计算任务分布到多个计算节点，通过分布式计算来提高处理效率，以解决单台机器处理大数据时的瓶颈问题 体系架构Hadoop核心由三部分构成，即分布式文件系统HDF">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-05-27T01:50:51.000Z">
-<meta property="article:modified_time" content="2025-06-27T02:34:52.000Z">
+<meta property="article:modified_time" content="2025-11-20T06:15:27.885Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -406,23 +406,23 @@ mkdir -p /opt/hadoop/data &amp;&amp; chown -R hadoop.hadoop /opt/hadoop
 </code></pre>
 <h2 id="4-4-验证集群"><a href="#4-4-验证集群" class="headerlink" title="4.4 验证集群"></a>4.4 验证集群</h2><h3 id="4-4-1-验证HDFS组件状态"><a href="#4-4-1-验证HDFS组件状态" class="headerlink" title="4.4.1 验证HDFS组件状态"></a>4.4.1 验证HDFS组件状态</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfsadmin -report&quot;
 </code></pre>
-<h3 id="4-4-2-访问NameNode监控页面"><a href="#4-4-2-访问NameNode监控页面" class="headerlink" title="4.4.2 访问NameNode监控页面"></a>4.4.2 访问NameNode监控页面</h3><h2 id="4-5-文件操作"><a href="#4-5-文件操作" class="headerlink" title="4.5 文件操作"></a>4.5 文件操作</h2><h3 id="4-5-1-查看文件"><a href="#4-5-1-查看文件" class="headerlink" title="4.5.1 查看文件"></a>4.5.1 查看文件</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfs -ls&quot;
+<h3 id="4-4-2-访问NameNode监控页面"><a href="#4-4-2-访问NameNode监控页面" class="headerlink" title="4.4.2 访问NameNode监控页面"></a>4.4.2 访问NameNode监控页面</h3><h2 id="4-5-文件操作"><a href="#4-5-文件操作" class="headerlink" title="4.5 文件操作"></a>4.5 文件操作</h2><h3 id="4-5-1-查看文件"><a href="#4-5-1-查看文件" class="headerlink" title="4.5.1 查看文件"></a>4.5.1 查看文件</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfs -ls /&quot;
 </code></pre>
-<h3 id="4-5-2-创建目录"><a href="#4-5-2-创建目录" class="headerlink" title="4.5.2 创建目录"></a>4.5.2 创建目录</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfs -mkdir test&quot;
+<h3 id="4-5-2-创建目录"><a href="#4-5-2-创建目录" class="headerlink" title="4.5.2 创建目录"></a>4.5.2 创建目录</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfs -mkdir /test&quot;
 </code></pre>
-<h3 id="4-5-3-上传文件"><a href="#4-5-3-上传文件" class="headerlink" title="4.5.3 上传文件"></a>4.5.3 上传文件</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfs -put /data/test.txt test&quot;
+<h3 id="4-5-3-上传文件"><a href="#4-5-3-上传文件" class="headerlink" title="4.5.3 上传文件"></a>4.5.3 上传文件</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfs -put /data/test.txt /test&quot;
 </code></pre>
-<h3 id="4-5-4-复制文件"><a href="#4-5-4-复制文件" class="headerlink" title="4.5.4 复制文件"></a>4.5.4 复制文件</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfs -cp test/test.txt test/test.txt.bak&quot;
+<h3 id="4-5-4-复制文件"><a href="#4-5-4-复制文件" class="headerlink" title="4.5.4 复制文件"></a>4.5.4 复制文件</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfs -cp /test/test.txt test/test.txt.bak&quot;
 </code></pre>
-<h3 id="4-5-5-移动文件"><a href="#4-5-5-移动文件" class="headerlink" title="4.5.5 移动文件"></a>4.5.5 移动文件</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfs -mv test/test.txt.bak test/test1.txt&quot;
+<h3 id="4-5-5-移动文件"><a href="#4-5-5-移动文件" class="headerlink" title="4.5.5 移动文件"></a>4.5.5 移动文件</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfs -mv /test/test.txt.bak /test/test1.txt&quot;
 </code></pre>
-<h3 id="4-5-6-下载文件"><a href="#4-5-6-下载文件" class="headerlink" title="4.5.6 下载文件"></a>4.5.6 下载文件</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfs -get /user/hadoop/test/test.txt /tmp&quot;
+<h3 id="4-5-6-下载文件"><a href="#4-5-6-下载文件" class="headerlink" title="4.5.6 下载文件"></a>4.5.6 下载文件</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfs -get /test/test.txt /tmp&quot;
 </code></pre>
-<h3 id="4-5-7-查看文件"><a href="#4-5-7-查看文件" class="headerlink" title="4.5.7 查看文件"></a>4.5.7 查看文件</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfs -cat /user/hadoop/test/test.txt&quot;
+<h3 id="4-5-7-查看文件"><a href="#4-5-7-查看文件" class="headerlink" title="4.5.7 查看文件"></a>4.5.7 查看文件</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfs -cat /test/test.txt&quot;
 </code></pre>
-<h3 id="4-5-8-删除文件"><a href="#4-5-8-删除文件" class="headerlink" title="4.5.8 删除文件"></a>4.5.8 删除文件</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfs -rm test/test1.txt&quot;
+<h3 id="4-5-8-删除文件"><a href="#4-5-8-删除文件" class="headerlink" title="4.5.8 删除文件"></a>4.5.8 删除文件</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfs -rm /test/test1.txt&quot;
 </code></pre>
-<h3 id="4-5-9-删除目录"><a href="#4-5-9-删除目录" class="headerlink" title="4.5.9 删除目录"></a>4.5.9 删除目录</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfs -rm -r test&quot;
+<h3 id="4-5-9-删除目录"><a href="#4-5-9-删除目录" class="headerlink" title="4.5.9 删除目录"></a>4.5.9 删除目录</h3><pre><code class="hljs">su hadoop -c &quot;hdfs dfs -rm -r /test&quot;
 </code></pre>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
@@ -501,7 +501,7 @@ mkdir -p /opt/hadoop/data &amp;&amp; chown -R hadoop.hadoop /opt/hadoop
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年6月27日</div>
+          <div>2025年11月20日</div>
         </div>
       
       <div class="license-meta-item">
