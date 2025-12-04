@@ -24,7 +24,7 @@
 <meta property="og:description" content="Zabbix，由C语言开发的开源分布式企业级监控系统，通过Agent方式采集服务器、应用程序、网络服务、数据库、网站及其他网络硬件的工作状态，最终将监控数据写入数据库。Zabbix具备分布式监控功能，支持复杂架构下的监控解决方案，还提供直观的web页面展现。Zabbix告警通知机制也比较灵活，如邮件、短信和其他报警方式，以便于快速定位、解决各种故障，从而保障业务统的安全与稳定 体系架构Zabbix">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-02-02T10:09:31.000Z">
-<meta property="article:modified_time" content="2025-03-15T02:04:45.148Z">
+<meta property="article:modified_time" content="2025-11-27T02:40:12.119Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -239,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.9k 字
+          5k 字
         
       </span>
     
@@ -388,8 +388,8 @@ server &#123;
 </code></pre>
 <h2 id="7-2-创建UI"><a href="#7-2-创建UI" class="headerlink" title="7.2 创建UI"></a>7.2 创建UI</h2><pre><code class="hljs">cp -r ui /web/zabbix
 </code></pre>
-<h1 id="8-启动Zabbix-server、Zabbix-agent、nginx、php"><a href="#8-启动Zabbix-server、Zabbix-agent、nginx、php" class="headerlink" title="8.启动Zabbix server、Zabbix agent、nginx、php"></a>8.启动Zabbix server、Zabbix agent、nginx、php</h1><h1 id="9-验证"><a href="#9-验证" class="headerlink" title="9.验证"></a>9.验证</h1><h1 id="2-部署Zabbix-agent"><a href="#2-部署Zabbix-agent" class="headerlink" title="2.部署Zabbix agent"></a>2.部署Zabbix agent</h1><h2 id="2-1-安装依赖包"><a href="#2-1-安装依赖包" class="headerlink" title="2.1 安装依赖包"></a>2.1 安装依赖包</h2><pre><code class="hljs">apt install -y gcc libsnmp-dev libevent-dev libxml2-dev libghc-curl-dev
-yum instal -y gcc make curl-devel net-snmp-devel libcurl libxml2-devel
+<h1 id="8-启动Zabbix-server、Zabbix-agent、nginx、php"><a href="#8-启动Zabbix-server、Zabbix-agent、nginx、php" class="headerlink" title="8.启动Zabbix server、Zabbix agent、nginx、php"></a>8.启动Zabbix server、Zabbix agent、nginx、php</h1><h1 id="9-验证"><a href="#9-验证" class="headerlink" title="9.验证"></a>9.验证</h1><h1 id="2-部署Zabbix-agent"><a href="#2-部署Zabbix-agent" class="headerlink" title="2.部署Zabbix agent"></a>2.部署Zabbix agent</h1><h2 id="2-1-安装依赖包"><a href="#2-1-安装依赖包" class="headerlink" title="2.1 安装依赖包"></a>2.1 安装依赖包</h2><pre><code class="hljs">apt install -y gcc mysql-dev libsnmp-dev libevent-dev libxml2-dev libghc-curl-dev
+yum instal -y gcc make curl-devel net-snmp-devel mysql-devel libcurl libxml2-devel libevent-devel
 </code></pre>
 <h2 id="2-2-创建zabbix用户与组"><a href="#2-2-创建zabbix用户与组" class="headerlink" title="2.2 创建zabbix用户与组"></a>2.2 创建zabbix用户与组</h2><pre><code class="hljs">groupadd zabbix &amp;&amp; useradd -g zabbix -s /sbin/nologin zabbix
 </code></pre>
@@ -482,7 +482,7 @@ Hostname=node02
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月15日</div>
+          <div>2025年11月27日</div>
         </div>
       
       <div class="license-meta-item">
