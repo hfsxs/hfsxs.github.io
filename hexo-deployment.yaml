@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: hexo
+  name: hexo
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hexo
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: hexo
+    spec:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - hexo
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - image: registry.cn-hangzhou.aliyuncs.com/geekers/hexo:v25
+        imagePullPolicy: IfNotPresent
+        name: hexo
+        ports:
+          - containerPort: 80
+            name: hexo
+            protocol: TCP
+        livenessProbe:
+          tcpSocket:
+            port: 80
+          failureThreshold: 3     # 探测连续失败3次，认为不健康
+          initialDelaySeconds: 30 # 容器启动后等待30秒再开始探测
+          periodSeconds: 60 # 每120秒探测一次
+          successThreshold: 1     # 探测1次成功即可认为健康
+          timeoutSeconds: 3       # 每次探测的最大超时时间为1秒
+        readinessProbe:
+          tcpSocket:
+            port: 80
+          failureThreshold: 3     # 探测连续失败3次，认为不健康
+          initialDelaySeconds: 30 # 容器启动后等待30秒再开始探测
+          periodSeconds: 60 # 每120秒探测一次
+          successThreshold: 1     # 探测1次成功即可认为健康
+          timeoutSeconds: 3       # 每次探测的最大超时时间为1秒
+        resources:
+          limits:
+            cpu: 500m
+            memory: 100Mi
+          requests:
+            cpu: 200m
+            memory: 100Mi
+      dnsPolicy: ClusterFirst
+      imagePullSecrets:
+      - name: regsecret
+      restartPolicy: Always
+      tolerations:
+      - operator: "Exists"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus_io_probe: "true"
+  labels:
+    app: hexo
+  name: hexo
+  namespace: default
+spec:
+  ports:
+  - name: hexo
+    port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 30080
+  selector:
+    app: hexo
+  sessionAffinity: None
+  type: NodePort
