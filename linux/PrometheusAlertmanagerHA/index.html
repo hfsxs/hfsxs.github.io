@@ -16,23 +16,37 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta property="og:type" content="website">
-<meta property="og:title" content="标签 - Linux">
-<meta property="og:url" content="https://hfsxs.github.io/tags/Linux/page/22/index.html">
+    <meta name="description" content="参考文档 https:&#x2F;&#x2F;www.cnblogs.com&#x2F;yinzhengjie&#x2F;p&#x2F;18547193">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Prometheus监控告警组件Alertmanager配置高可用集群">
+<meta property="og:url" content="https://hfsxs.github.io/linux/PrometheusAlertmanagerHA/index.html">
 <meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="参考文档 https:&#x2F;&#x2F;www.cnblogs.com&#x2F;yinzhengjie&#x2F;p&#x2F;18547193">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-12-24T07:35:04.000Z">
+<meta property="article:modified_time" content="2025-12-26T02:38:22.438Z">
 <meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Prometheus">
+<meta property="article:tag" content="监控告警">
 <meta name="twitter:card" content="summary_large_image">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>标签 - Linux - 扬帆</title>
+  <title>Prometheus监控告警组件Alertmanager配置高可用集群 - 扬帆</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
 
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
 
 
 
@@ -97,7 +111,7 @@
   <header>
     
 
-<div class="header-inner" style="height: 80vh;">
+<div class="header-inner" style="height: 70vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
@@ -202,17 +216,53 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">标签 - Linux</span>
+            <span id="subtitle">Prometheus监控告警组件Alertmanager配置高可用集群</span>
           
         </div>
 
         
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-12-24 15:35" pubdate>
+          2025年12月24日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          50 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          1 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
       </div>
 
-      
-        <div class="scroll-down-bar">
-          <i class="iconfont icon-arrowdown"></i>
-        </div>
       
     </div>
   </div>
@@ -224,100 +274,223 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">共计 232 篇文章</p>
-  <hr>
-  
-  
-    
       
-      <p class="h5">2020</p>
-    
-    <a href="/linux/MySQLReplication/" class="list-group-item list-group-item-action">
-      <time>02-02</time>
-      <div class="list-group-item-title">MySQL数据库配置主从复制集群</div>
-    </a>
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Prometheus监控告警组件Alertmanager配置高可用集群</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yinzhengjie/p/18547193">https://www.cnblogs.com/yinzhengjie/p/18547193</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
   
     
-    <a href="/linux/MySQLBackup/" class="list-group-item list-group-item-action">
-      <time>02-02</time>
-      <div class="list-group-item-title">MySQL数据库的备份与恢复</div>
-    </a>
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
   
-    
-    <a href="/linux/MySQL-SQL/" class="list-group-item list-group-item-action">
-      <time>02-02</time>
-      <div class="list-group-item-title">MySQL数据库SQL命令详解</div>
-    </a>
   
+
+      </span>
     
-    <a href="/linux/MySQL/" class="list-group-item list-group-item-action">
-      <time>02-02</time>
-      <div class="list-group-item-title">MySQL数据库服务器的安装与配置</div>
-    </a>
   
-    
-    <a href="/linux/NFS/" class="list-group-item list-group-item-action">
-      <time>02-02</time>
-      <div class="list-group-item-title">Linux系统部署NFS文件存储服务器</div>
-    </a>
+</span>
+
+    </div>
   
-    
-    <a href="/linux/PhpWorkingMode/" class="list-group-item list-group-item-action">
-      <time>02-02</time>
-      <div class="list-group-item-title">PHP工作模式详解</div>
-    </a>
   
-    
-    <a href="/linux/PhpFpm/" class="list-group-item list-group-item-action">
-      <time>02-02</time>
-      <div class="list-group-item-title">PHP-FPM编译安装</div>
-    </a>
-  
-    
-    <a href="/linux/PHP/" class="list-group-item list-group-item-action">
-      <time>02-02</time>
-      <div class="list-group-item-title">PHP编译安装</div>
-    </a>
-  
-    
-    <a href="/linux/NginxLogs/" class="list-group-item list-group-item-action">
-      <time>02-01</time>
-      <div class="list-group-item-title">Nginx日志详解</div>
-    </a>
-  
-    
-    <a href="/linux/NginxSSL/" class="list-group-item list-group-item-action">
-      <time>02-01</time>
-      <div class="list-group-item-title">Nginx基于自签名SSL证书实现https</div>
-    </a>
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/Prometheus/">#Prometheus</a>
+      
+        <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
+      
+    </div>
   
 </div>
 
 
-  <nav aria-label="navigation">
-    <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/tags/Linux/page/21/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/tags/Linux/">1</a><span class="space">&hellip;</span><a class="page-number" href="/tags/Linux/page/20/#board">20</a><a class="page-number" href="/tags/Linux/page/21/#board">21</a><span class="page-number current">22</span><a class="page-number" href="/tags/Linux/page/23/#board">23</a><a class="page-number" href="/tags/Linux/page/24/#board">24</a><a class="extend next" rel="next" href="/tags/Linux/page/23/#board"><i class="iconfont icon-arrowright"></i></a>
-    </span>
-  </nav>
+              
+  
 
-
-
-
-              </div>
-            </div>
-          </div>
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Prometheus监控告警组件Alertmanager配置高可用集群</div>
+      <div>https://hfsxs.github.io/linux/PrometheusAlertmanagerHA/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年12月24日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2025年12月26日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
         </div>
       </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/linux/PostgreSQLManageSQL/" title="PostgreSQL数据库管理命令详解">
+                        <span class="hidden-mobile">PostgreSQL数据库管理命令详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
     
 
     
@@ -453,6 +626,72 @@
 
 
 
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
 
   <script  src="/js/local-search.js" ></script>
 

@@ -5,12 +5,30 @@
   
   <entry>
     <title>Prometheus监控告警组件Alertmanager配置高可用集群</title>
-    <link href="/uncategorized/PrometheusAlertmanagerHA/"/>
-    <url>/uncategorized/PrometheusAlertmanagerHA/</url>
+    <link href="/linux/PrometheusAlertmanagerHA/"/>
+    <url>/linux/PrometheusAlertmanagerHA/</url>
     
     <content type="html"><![CDATA[<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://www.cnblogs.com/yinzhengjie/p/18547193">https://www.cnblogs.com/yinzhengjie/p/18547193</a></li></ul>]]></content>
     
     
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>Prometheus</tag>
+      
+      <tag>监控告警</tag>
+      
+    </tags>
     
   </entry>
   
@@ -18,12 +36,32 @@
   
   <entry>
     <title>PostgreSQL数据库管理命令详解</title>
-    <link href="/uncategorized/PostgreSQLManageSQL/"/>
-    <url>/uncategorized/PostgreSQLManageSQL/</url>
+    <link href="/linux/PostgreSQLManageSQL/"/>
+    <url>/linux/PostgreSQLManageSQL/</url>
     
     <content type="html"><![CDATA[<h1 id="1-登录数据库"><a href="#1-登录数据库" class="headerlink" title="1.登录数据库"></a>1.登录数据库</h1>]]></content>
     
     
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>SQL</tag>
+      
+      <tag>数据库</tag>
+      
+      <tag>PostgreSQL</tag>
+      
+    </tags>
     
   </entry>
   
