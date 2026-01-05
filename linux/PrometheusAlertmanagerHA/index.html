@@ -24,7 +24,7 @@
 <meta property="og:description" content="Alertmanager，Prometheus的告警管理组件，官方为防止单点故障，设计了基于Gossip（去中心化的信息传播机制，类似于流言扩散，即每个节点定期将自身的状态数据随机同步给集群内的其他节点，而收到数据的节点再继续转发给其他节点，最终在短时间内实现全集群数据一致）协议的集群构建模式 1.配置主节点sudo vi &#x2F;lib&#x2F;systemd&#x2F;system&#x2F;alertmanager.serv">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-24T07:35:06.000Z">
-<meta property="article:modified_time" content="2026-01-05T08:32:42.472Z">
+<meta property="article:modified_time" content="2026-01-05T08:36:48.092Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -239,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.5k 字
+          1.7k 字
         
       </span>
     
@@ -250,7 +250,7 @@
         
         
         
-          13 分钟
+          15 分钟
         
       </span>
     
@@ -336,7 +336,11 @@ Restart=on-failure
 [Install]
 WantedBy=multi-user.target
 </code></pre>
-<h1 id="3-配置Prometheus"><a href="#3-配置Prometheus" class="headerlink" title="3.配置Prometheus"></a>3.配置Prometheus</h1><pre><code class="hljs">global:
+<h1 id="3-启动Alertmanager"><a href="#3-启动Alertmanager" class="headerlink" title="3.启动Alertmanager"></a>3.启动Alertmanager</h1><pre><code class="hljs">sudo systemctl daemon-reload
+sudo systemctl start alertmanager.service
+sudo systemctl enable alertmanager.service
+</code></pre>
+<h1 id="4-配置Prometheus"><a href="#4-配置Prometheus" class="headerlink" title="4.配置Prometheus"></a>4.配置Prometheus</h1><pre><code class="hljs">global:
   scrape_interval: 15s 
   evaluation_interval: 15s 
   scrape_timeout: 10s
@@ -348,8 +352,11 @@ alerting:
             - 172.16.100.201:9093
             - 172.16.100.202:9093
 </code></pre>
-<h1 id="4-验证告警高可用性"><a href="#4-验证告警高可用性" class="headerlink" title="4.验证告警高可用性"></a>4.验证告警高可用性</h1><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<h1 id="5-重载Prometheus"><a href="#5-重载Prometheus" class="headerlink" title="5.重载Prometheus"></a>5.重载Prometheus</h1><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload
+</code></pre>
+<h1 id="6-验证告警高可用"><a href="#6-验证告警高可用" class="headerlink" title="6.验证告警高可用"></a>6.验证告警高可用</h1><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/yinzhengjie/p/18547193">https://www.cnblogs.com/yinzhengjie/p/18547193</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_50247813/article/details/151292374">https://blog.csdn.net/qq_50247813/article/details/151292374</a></li>
 </ul>
 
                 
