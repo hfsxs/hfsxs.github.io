@@ -24,7 +24,7 @@
 <meta property="og:description" content="1.安装ftpyum install -y vsftpd apt install -y vsftpd  2.创建配置文件mv &#x2F;etc&#x2F;vsftpd&#x2F;vsftpd.conf &#x2F;etc&#x2F;vsftpd&#x2F;vsftpd.conf.bak vi &#x2F;etc&#x2F;vsftpd&#x2F;vsftpd.conf   # 开启监听 listen&#x3D;YES # 验证文件的名字">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-02-06T09:45:19.000Z">
-<meta property="article:modified_time" content="2025-10-13T06:20:25.103Z">
+<meta property="article:modified_time" content="2026-01-13T01:21:03.397Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -238,7 +238,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.5k 字
+          2.4k 字
         
       </span>
     
@@ -405,14 +405,14 @@ dirmessage_enable=YES
 # 定义字符串式欢迎语，默认为空
 ftpd_banner=Welcome to FTP server
 </code></pre>
-<h1 id="3-创建ftp登陆用户"><a href="#3-创建ftp登陆用户" class="headerlink" title="3.创建ftp登陆用户"></a>3.创建ftp登陆用户</h1><pre><code class="hljs">useradd -d /home/vsftp/ -g ftp -s /sbin/nologin vsftp
-passwd vsftp
+<h1 id="3-创建登陆用户"><a href="#3-创建登陆用户" class="headerlink" title="3.创建登陆用户"></a>3.创建登陆用户</h1><pre><code class="hljs">useradd test
+passwd test
 </code></pre>
-<h1 id="4-创建ftp服务器上传目录，并授予权限"><a href="#4-创建ftp服务器上传目录，并授予权限" class="headerlink" title="4.创建ftp服务器上传目录，并授予权限"></a>4.创建ftp服务器上传目录，并授予权限</h1><pre><code class="hljs">mkdir -p /ftp &amp;&amp; chown -R vsftp.vsftp /ftp
+<h1 id="4-创建ftp数据目录"><a href="#4-创建ftp数据目录" class="headerlink" title="4.创建ftp数据目录"></a>4.创建ftp数据目录</h1><pre><code class="hljs">mkdir -p /opt/ftp
 </code></pre>
-<h1 id="5-启动vsftpd服务器"><a href="#5-启动vsftpd服务器" class="headerlink" title="5.启动vsftpd服务器"></a>5.启动vsftpd服务器</h1><pre><code class="hljs">service vsftpd start
+<h1 id="5-启动Vsftp"><a href="#5-启动Vsftp" class="headerlink" title="5.启动Vsftp"></a>5.启动Vsftp</h1><pre><code class="hljs">service vsftpd start
 </code></pre>
-<hr>
+<h1 id="6-验证Ftp服务"><a href="#6-验证Ftp服务" class="headerlink" title="6.验证Ftp服务"></a>6.验证Ftp服务</h1><hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="http://blog.51cto.com/yuanbin/108262">http://blog.51cto.com/yuanbin/108262</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.huochengrm.cn/pc/14580.html">https://blog.huochengrm.cn/pc/14580.html</a></li>
@@ -486,7 +486,7 @@ passwd vsftp
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年10月13日</div>
+          <div>2026年1月13日</div>
         </div>
       
       <div class="license-meta-item">
