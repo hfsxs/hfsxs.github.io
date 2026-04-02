@@ -240,6 +240,144 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/linux/TomcatSession/" target="_self">
+          Tomcat集群配置基于组播方式的会话保持
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/TomcatSession/" target="_self">
+        <div>
+          集群架构 172.16.100.100  node01  nginx tomcat 172.16.100.120  node02  tomcat 172.16.100.200  node03  tomcat   1.部署nginx、tomcat，配置负载均衡集群2.修改tomcat配置文件，启用session复制和Cluster功能vi  &#x2F;usr&#x2F;local&#x2F;tomcat&#x2F;conf&#x2F;server
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-02-04 10:12" pubdate>
+              2020-02-04
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">#负载均衡</a>
+            
+              <a href="/tags/Java/">#Java</a>
+            
+              <a href="/tags/Tomcat/">#Tomcat</a>
+            
+              <a href="/tags/%E4%BC%9A%E8%AF%9D%E4%BF%9D%E6%8C%81/">#会话保持</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/linux/Tomcat/" target="_self">
+          Tomcat的安装与配置
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/Tomcat/" target="_self">
+        <div>
+          Tomcat，用于运行JSP (Java Server Pages，Java服务器网页)和Servlet的基于Java的开源轻量级Web应用服务器。Tomcat是装载Java Web程序的Web容器，主要功能是按照J2EE中的Servlet规范编写好的Java程序解析为动态网页，并处理客户端的请求与响应，从而运行Java网站。Tomcat最初由Sun公司软件架构师詹姆斯·邓肯·戴维森开发，开源后由
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2020-02-04 09:58" pubdate>
+              2020-02-04
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/Java/">#Java</a>
+            
+              <a href="/tags/Tomcat/">#Tomcat</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/linux/Git/" target="_self">
           Git安装与配置
         </a>
@@ -771,144 +909,6 @@
               <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
             
               <a href="/tags/Zabbix/">#Zabbix</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/linux/MySQLSemiSyncReplication/" target="_self">
-          MySQL数据库配置半同步主从复制集群
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/MySQLSemiSyncReplication/" target="_self">
-        <div>
-          MySQL数据复制有两种方式，即异步复制、半同步复制、全同步复制，默认为异步方式 异步方式从节点通过IO线程拉取主节点的binlog，这个过程中主节点并不关注从节点是否已经接收、处理数据和数据处理的进度，而是继续处理客户端提出的事务已生成binlog文件工从节点拉取。若主节点此时发生故障，则已经提交的事务就存在并没被从节点拉取的数据，或者从节点拉取到的binlog日志文件不完整，就会造成主从节点的
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-02-02 15:54" pubdate>
-              2020-02-02
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/MySQL/">#MySQL</a>
-            
-              <a href="/tags/SQL/">#SQL</a>
-            
-              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">#数据库</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/linux/MySQL-GTID/" target="_self">
-          MySQL数据库配置基于GTID机制的主从复制集群
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/MySQL-GTID/" target="_self">
-        <div>
-          GTID，即全局事务标识，是MySQL 5.6新增功能，用于替代通过binlog文件偏移量定位复制位置的传统方式。GTID信息存储于binlog文件，且新增2个binlog事件：Previous_gtids_log_event，位于每个binlog文件的开头且记录了在该binlog文件之前已执行的GTID集合；Gtid_log_event，位于每个事务之前，标明下一事务的GTID MySQL服务器
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2020-02-02 15:45" pubdate>
-              2020-02-02
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/MySQL/">#MySQL</a>
-            
-              <a href="/tags/SQL/">#SQL</a>
-            
-              <a href="/tags/%E6%95%B0%E6%8D%AE%E5%BA%93/">#数据库</a>
             
           </div>
         
