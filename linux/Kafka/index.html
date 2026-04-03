@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/kafka/001%E9%9B%86%E7%BE%A4%E6%9E%B6%E6%9E%84.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/kafka/002%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B.jpg">
 <meta property="article:published_time" content="2024-08-01T06:15:30.000Z">
-<meta property="article:modified_time" content="2025-03-15T13:26:57.947Z">
+<meta property="article:modified_time" content="2026-04-03T02:38:53.343Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -418,6 +418,7 @@ zookeeper.connect = 172.100.100.101:2181,172.100.100.102:2181,172.100.100.103:21
 <h2 id="3-3-创建启动脚本"><a href="#3-3-创建启动脚本" class="headerlink" title="3.3 创建启动脚本"></a>3.3 创建启动脚本</h2><pre><code class="hljs">sudo vi /lib/systemd/system/kafka.service
 
 
+[Unit]
 Description = Apache Kafka
 Documentation = https://kafka.apache.org
 After = network.target zookeeper.service
@@ -515,7 +516,7 @@ sudo systemctl enable kafka.service
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月15日</div>
+          <div>2026年4月3日</div>
         </div>
       
       <div class="license-meta-item">
