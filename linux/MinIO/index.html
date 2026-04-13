@@ -24,7 +24,7 @@
 <meta property="og:description" content="MinIO，Go语言开发的高性能、分布式开源对象存储系统，兼容Amazon S3对象存储接口，并支持所有核心S3功能，非常适用于存储大容量非结构化的数据，如图片、视频、日志文件、备份数据和容器、虚拟机镜像文件等等，广泛应用于机器学习、大数据、私有云、混合云、数据分析、高性能应用负载、原生云等领域 集群架构 172.16.100.101 minio01 172.16.100.102 minio02">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-04-25T01:18:07.000Z">
-<meta property="article:modified_time" content="2025-05-09T06:06:28.619Z">
+<meta property="article:modified_time" content="2026-04-13T08:27:03.718Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -241,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.4k 字
+          2.7k 字
         
       </span>
     
@@ -252,7 +252,7 @@
         
         
         
-          21 分钟
+          23 分钟
         
       </span>
     
@@ -304,34 +304,38 @@
 <h1 id="1-下载MinIO"><a href="#1-下载MinIO" class="headerlink" title="1.下载MinIO"></a>1.下载MinIO</h1><pre><code class="hljs">wget https://dl.min.io/server/minio/release/linux-amd64/minio
 </code></pre>
 <h1 id="2-集群节点挂载磁盘"><a href="#2-集群节点挂载磁盘" class="headerlink" title="2.集群节点挂载磁盘"></a>2.集群节点挂载磁盘</h1><h1 id="3-部署MinIO"><a href="#3-部署MinIO" class="headerlink" title="3.部署MinIO"></a>3.部署MinIO</h1><pre><code class="hljs">sudo mkdir -p /opt/minio/data &amp;&amp; sudo mv minio /opt/minio
-sudo vi /opt/minio/run.sh
+sudo vi /etc/default/minio 
 
 
-#!/bin/bash
-
-
-export MINIO_ROOT_USER=admin
-export MINIO_ROOT_PASSWORD=MinIO@2025
-/opt/minio/minio server --address :9000 --console-address :9001 \
-http://minio01:9000/mnt/minio01 http://minio01:9000/mnt/minio02 \
+MINIO_ROOT_USER=admin
+MINIO_ROOT_PASSWORD=MinIO@2025
+MINIO_OPTS=&quot;--console-address :9001&quot;
+MINIO_LOG_DIR=/var/log/minio
+MINIO_VOLUMES=&quot;http://minio01:9000/mnt/minio01 http://minio01:9000/mnt/minio02 \
 http://minio02:9000/mnt/minio01 http://minio02:9000/mnt/minio02 \
-http://minio03:9000/mnt/minio01 http://minio03:9000/mnt/minio02
+http://minio03:9000/mnt/minio01 http://minio03:9000/mnt/minio02&quot;
 </code></pre>
 <h1 id="4-创建启动脚本"><a href="#4-创建启动脚本" class="headerlink" title="4.创建启动脚本"></a>4.创建启动脚本</h1><pre><code class="hljs">sudo vi /lib/systemd/system/minio.service
 
 
 [Unit]
-Description=Minio High Performance Object Storage service
-Documentation=https://docs.min.io
+Description=MinIO
+Documentation=https://minio.org.cn/docs/minio/linux/index.html
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 WorkingDirectory=/opt/minio
-ExecStart=/opt/minio/run.sh
-Restart=on-failure
-RestartSec=5
+EnvironmentFile=-/etc/default/minio
+ExecStartPre=/usr/bin/bash -c &quot;if [ -z \&quot;$&#123;MINIO_VOLUMES&#125;\&quot; ]; then echo \&quot;Variable MINIO_VOLUMES not set in /etc/default/minio\&quot;; exit 1; fi&quot;
+ExecStart=/opt/minio/minio server $MINIO_OPTS $MINIO_VOLUMES
+Restart=always
+LimitNOFILE=65536
+TimeoutStopSec=infinity
+SendSIGKILL=no
 
 [Install]
-WantedBy=muti-user.target
+WantedBy=multi-user.target
 </code></pre>
 <h1 id="5-启动MinIO"><a href="#5-启动MinIO" class="headerlink" title="5.启动MinIO"></a>5.启动MinIO</h1><pre><code class="hljs">systemctl daemon-reload
 systemctl start minio.service
@@ -492,7 +496,7 @@ server &#123;
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年5月9日</div>
+          <div>2026年4月13日</div>
         </div>
       
       <div class="license-meta-item">
