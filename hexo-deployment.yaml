@@ -43,7 +43,7 @@ spec:
             port: 80
           failureThreshold: 3     # 探测连续失败3次，认为不健康
           initialDelaySeconds: 30 # 容器启动后等待30秒再开始探测
-          periodSeconds: 60 # 每120秒探测一次
+          periodSeconds: 60 # 每60秒探测一次
           successThreshold: 1     # 探测1次成功即可认为健康
           timeoutSeconds: 3       # 每次探测的最大超时时间为1秒
         readinessProbe:
@@ -51,7 +51,7 @@ spec:
             port: 80
           failureThreshold: 3     # 探测连续失败3次，认为不健康
           initialDelaySeconds: 30 # 容器启动后等待30秒再开始探测
-          periodSeconds: 60 # 每120秒探测一次
+          periodSeconds: 60 # 每60秒探测一次
           successThreshold: 1     # 探测1次成功即可认为健康
           timeoutSeconds: 3       # 每次探测的最大超时时间为1秒
         resources:
