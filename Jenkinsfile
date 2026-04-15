@@ -55,6 +55,8 @@ def project = "hexo"
            securityContext:
              runAsGroup: 0
              runAsUser: 1000
+           imagePullSecrets:
+           - name: regsecret
            serviceAccountName: "jenkins"
        '''
      }
@@ -86,7 +88,7 @@ def project = "hexo"
           branches: [[name: '*/master']], 
           extensions: [],
           userRemoteConfigs: [
-            [credentialsId: 'gitea-cloud', url: 'http://192.168.100.200:3200/sword/hexo.git']
+            [credentialsId: 'gitee', url: 'https://gitee.com/sxs0618/hfsxs.github.io.git']
           ]
         )
       }
@@ -97,9 +99,9 @@ def project = "hexo"
       steps {
 
         sh """
-          docker build -t registry.cn-hangzhou.aliyuncs.com/geekers/hexo:{BUILD_NUMBER} .
-          docker push registry.cn-hangzhou.aliyuncs.com/geekers/hexo:{BUILD_NUMBER}
-          docker rmi registry.cn-hangzhou.aliyuncs.com/geekers/hexo:{BUILD_NUMBER}
+          docker build -t registry.cn-hangzhou.aliyuncs.com/geekers/hexo:${BUILD_NUMBER} .
+          docker push registry.cn-hangzhou.aliyuncs.com/geekers/hexo:${BUILD_NUMBER}
+          docker rmi registry.cn-hangzhou.aliyuncs.com/geekers/hexo:${BUILD_NUMBER}
           """
       }
     }
@@ -107,7 +109,7 @@ def project = "hexo"
     stage('Deploy') {
       steps {
         sh """
-          /home/jenkins/kubectl -n devops set image deployments/hexo *="registry.cn-hangzhou.aliyuncs.com/geekers/${project}:${BUILD_NUMBER}"
+          /home/jenkins/kubectl -n default set image deployments/hexo *="registry.cn-hangzhou.aliyuncs.com/geekers/${project}:${BUILD_NUMBER}"
         """
       }
     }
