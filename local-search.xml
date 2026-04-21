@@ -4,19 +4,6 @@
   
   
   <entry>
-    <title></title>
-    <link href="/uncategorized/cmo89sgcp0000u2yi2ryz1sk0/"/>
-    <url>/uncategorized/cmo89sgcp0000u2yi2ryz1sk0/</url>
-    
-    <content type="html"><![CDATA[<hr><p>id: Aria2<br>title: Linux离线下载工具Aria2的安装与配置<br>categories:</p><ul><li>极客<br>tags:</li><li>Linux</li><li>Aria2</li><li>极客</li><li>云计算<br>date: 2022-09-06 10:48:27</li></ul>]]></content>
-    
-    
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>Nginx访问日志分析平台NginxPulse的部署与配置</title>
     <link href="/linux/NginxPulse/"/>
     <url>/linux/NginxPulse/</url>
@@ -4462,6 +4449,37 @@
       <tag>虚拟化</tag>
       
       <tag>ProxmoxVE</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Linux系统离线下载工具Aria2的安装与配置</title>
+    <link href="/geek/Aria2/"/>
+    <url>/geek/Aria2/</url>
+    
+    <content type="html"><![CDATA[<hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>极客</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>极客</tag>
+      
+      <tag>Aria2</tag>
       
     </tags>
     
