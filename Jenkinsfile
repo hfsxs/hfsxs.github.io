@@ -5,7 +5,7 @@ def project = "hexo"
   agent {
      kubernetes {
        label "jenkins-slave"
-       cloud "Kubernetes01"
+       cloud "Kubernetes"
        customWorkspace '/home/jenkins/workspace/hexo'
        yaml '''
          apiVersion: v1
