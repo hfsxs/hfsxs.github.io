@@ -508,15 +508,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/linux/LVS/" target="_self">
-          LVS命令详解
+        <a href="/linux/LVS-Nginx/" target="_self">
+          LVS配置Nginx负载均衡集群
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/LVS/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/LVS-Nginx/" target="_self">
         <div>
-          
+          LVS，即Linux Virtual Server，Linux虚拟服务器，是由章文嵩博士发起的实现负载均衡集群的开源项目，目前已是Linux内核标准的一部分。LVS架构从逻辑上可分为调度层、Server集群层和共享存储层，LVS工作在TCP&#x2F;IP的第四层，即网络层，适用于1000-2000万PV或并发请求1万以上的Nginx不堪负载的大型网站 LVS架构 ipvs，即ip virtual
         </div>
       </a>
 
@@ -524,7 +524,7 @@
         
           <div class="post-meta mr-3">
             <i class="iconfont icon-date"></i>
-            <time datetime="2020-02-05 09:28" pubdate>
+            <time datetime="2020-02-05 09:18" pubdate>
               2020-02-05
             </time>
           </div>
@@ -561,6 +561,8 @@
             
               <a href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">#负载均衡</a>
             
+              <a href="/tags/Nginx/">#Nginx</a>
+            
               <a href="/tags/LVS/">#LVS</a>
             
           </div>
@@ -575,15 +577,15 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/linux/LVS-Nginx/" target="_self">
-          LVS配置Nginx负载均衡集群
+        <a href="/linux/LVS/" target="_self">
+          LVS命令详解
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/LVS-Nginx/" target="_self">
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/LVS/" target="_self">
         <div>
-          LVS，即Linux Virtual Server，Linux虚拟服务器，是由章文嵩博士发起的实现负载均衡集群的开源项目，目前已是Linux内核标准的一部分。LVS架构从逻辑上可分为调度层、Server集群层和共享存储层，LVS工作在TCP&#x2F;IP的第四层，即网络层，适用于1000-2000万PV或并发请求1万以上的Nginx不堪负载的大型网站 LVS架构 ipvs，即ip virtual
+          1.查看规则ipvsadm -Ln  2.创建虚拟服务器ipvsadm -A -t 172.16.100.100:80 -s rr  2.创建后端RealServeripvsadm -a -t 172.16.100.100:80 -r 172.16.100.101:8080 -g ipvsadm -a -t 172.16.100.100:80 -r 172.16.100.102:8080 -g
         </div>
       </a>
 
@@ -627,8 +629,6 @@
               <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
             
               <a href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">#负载均衡</a>
-            
-              <a href="/tags/Nginx/">#Nginx</a>
             
               <a href="/tags/LVS/">#LVS</a>
             

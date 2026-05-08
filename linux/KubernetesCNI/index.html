@@ -16,15 +16,15 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Kubernetes网络实现是集群的核心部分，宗旨就是在容器化的应用程序之间共享网络资源。集群中同一个节点上部署多个业务应用，而每个应用都需要自己的网络空间。为避免与其他业务网络冲突，需要Pod有自己独立的网络空间，而Pod中应用需要和其他应用进行通信，就需要Pod能够跟不同的应用互相访问。故此，网络系统的设计要解决如下几个问题：  同一节点上Pod之间的通信 不同节点上Pod之间的通信 外部网络">
+    <meta name="description" content="Kubernetes网络实现是集群的核心部分，核心就是在容器化的应用程序之间共享网络资源。集群中同一个节点上部署多个业务应用，而每个应用都需要自己的网络空间。为避免与其他业务网络冲突，需要Pod有自己独立的网络空间，而Pod中应用需要和其他应用进行通信，就需要Pod能够跟不同的应用互相访问。故此，集群网络的设计需要解决如下几个问题，即同一节点上Pod之间的通信、不同节点上Pod之间的通信以及外部网">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kubernetes集群网络模型详解">
 <meta property="og:url" content="https://hfsxs.github.io/linux/KubernetesCNI/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="Kubernetes网络实现是集群的核心部分，宗旨就是在容器化的应用程序之间共享网络资源。集群中同一个节点上部署多个业务应用，而每个应用都需要自己的网络空间。为避免与其他业务网络冲突，需要Pod有自己独立的网络空间，而Pod中应用需要和其他应用进行通信，就需要Pod能够跟不同的应用互相访问。故此，网络系统的设计要解决如下几个问题：  同一节点上Pod之间的通信 不同节点上Pod之间的通信 外部网络">
+<meta property="og:description" content="Kubernetes网络实现是集群的核心部分，核心就是在容器化的应用程序之间共享网络资源。集群中同一个节点上部署多个业务应用，而每个应用都需要自己的网络空间。为避免与其他业务网络冲突，需要Pod有自己独立的网络空间，而Pod中应用需要和其他应用进行通信，就需要Pod能够跟不同的应用互相访问。故此，集群网络的设计需要解决如下几个问题，即同一节点上Pod之间的通信、不同节点上Pod之间的通信以及外部网">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-11-25T15:06:43.000Z">
-<meta property="article:modified_time" content="2026-04-13T08:41:36.707Z">
+<meta property="article:modified_time" content="2026-05-08T02:39:45.810Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -295,15 +295,9 @@
             
               <div class="markdown-body">
                 
-                <p>Kubernetes网络实现是集群的核心部分，宗旨就是在容器化的应用程序之间共享网络资源。集群中同一个节点上部署多个业务应用，而每个应用都需要自己的网络空间。为避免与其他业务网络冲突，需要Pod有自己独立的网络空间，而Pod中应用需要和其他应用进行通信，就需要Pod能够跟不同的应用互相访问。故此，网络系统的设计要解决如下几个问题：</p>
-<ul>
-<li>同一节点上Pod之间的通信</li>
-<li>不同节点上Pod之间的通信</li>
-<li>外部网络和集群内Pod之间的通信</li>
-</ul>
+                <p>Kubernetes网络实现是集群的核心部分，核心就是在容器化的应用程序之间共享网络资源。集群中同一个节点上部署多个业务应用，而每个应用都需要自己的网络空间。为避免与其他业务网络冲突，需要Pod有自己独立的网络空间，而Pod中应用需要和其他应用进行通信，就需要Pod能够跟不同的应用互相访问。故此，集群网络的设计需要解决如下几个问题，即同一节点上Pod之间的通信、不同节点上Pod之间的通信以及外部网络和集群内Pod之间的通信</p>
 <hr>
-<p>容器常见的网络标准有两种，即Docker公司提出的CNM（Container Network Model）及CoreOS公司提出的CNI（Container Network Interface）。CNM和CNI并不是网络实现，而只是网络规范和网络体系，也即是一种网络设计模型，从研发的角度来看其实就是一组接口，底层还是由具体的网络插件来实现。CNI由于兼容其他容器技术（如rkt）及上层编排系统，受到了大力推广，目前已经成为Kubernetes所采用的主流网络标准</p>
-<p>CNI网络插件目前主要有两种，即Flannel与Calico</p>
+<p>容器常见的网络标准有两种，即Docker公司提出的CNM（Container Network Model）及CoreOS公司提出的CNI（Container Network Interface）。CNM和CNI并不是网络实现，而只是网络规范和网络体系，也即是一种网络设计模型，从研发的角度来看其实就是一组接口，底层还是由具体的网络插件来实现。CNI由于兼容其他容器技术（如rkt）及上层编排系统，因此得到大力推广，目前已经成为Kubernetes所采用的主流网络标准。CNI网络插件目前主要有两种，即Flannel与Calico</p>
 <hr>
 <h1 id="1-flannel"><a href="#1-flannel" class="headerlink" title="1.flannel"></a>1.flannel</h1><h2 id="1-1-工作原理"><a href="#1-1-工作原理" class="headerlink" title="1.1 工作原理"></a>1.1 工作原理</h2><p>flannel实质上是一种覆盖网络(overlaynetwork)，工作原理就是为集群中的所有node分配一个subnet（子网），容器从该subnet中分配到一个同属一个内网全集群唯一的虚拟IP，这些IP可以在主机间路由，容器间无需NAT和端口映射就可以跨主机通信。在此基础上将TCP数据包封装在另一种网络包里进行路由转发和通信。目前flannel已支持udp、vxlan、host-gw、aws-vpc、gce和alloc路由等数据转发方式，默认的节点间数据通信方式是UDP</p>
 <h2 id="1-2-网络架构"><a href="#1-2-网络架构" class="headerlink" title="1.2 网络架构"></a>1.2 网络架构</h2><h2 id="1-2-1-flanneld"><a href="#1-2-1-flanneld" class="headerlink" title="1.2.1 flanneld"></a>1.2.1 flanneld</h2><p>flanneld进程连接etcd，负责维护集群可分配IP地址的资源池，同时监控etcd中每个Pod的实际地址，并在内存中建立一个Pod路由表</p>
@@ -413,7 +407,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2026年4月13日</div>
+          <div>2026年5月8日</div>
         </div>
       
       <div class="license-meta-item">
