@@ -585,7 +585,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/linux/LVS/" target="_self">
         <div>
-          1.查看规则ipvsadm -Ln  2.创建虚拟服务器ipvsadm -A -t 172.16.100.100:80 -s rr  2.创建后端RealServeripvsadm -a -t 172.16.100.100:80 -r 172.16.100.101:8080 -g ipvsadm -a -t 172.16.100.100:80 -r 172.16.100.102:8080 -g
+          1.查看规则ipvsadm -Ln  2.创建虚拟服务器# -A，新增虚拟服务器；-t，设置虚拟服务器为TCP协议；-s，设置负载均衡算法 ipvsadm -A -t 172.16.100.100:80 -s rr  2.创建后端RealServer# -a，新增真实服务器；-t，设置真实服务器为TCP协议；-r，设置真实服务器地址；-m，设置工作模式为NAT ipvsadm -a -t 172.
         </div>
       </a>
 

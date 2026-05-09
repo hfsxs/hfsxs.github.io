@@ -16,15 +16,15 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Cloudreve，由go语言开发的开源免费的网盘系统，用于快速搭建公私兼备的网盘，支持本地服务器、远程服务器、OneDrive、七牛云存储、阿里云OSS、又拍云、Amazon S3等作为存储后端，所存储的图片、视频、音频、Office文档支持在线预览，对于文本文件、Markdown文件支持在线编辑。Cloudreve可作为NAS方案的替代，本地服务器接上机械盘可用作家庭私有云存储，搭配aria2">
+    <meta name="description" content="Cloudreve，GO开发的开源免费的网盘系统，用于快速搭建公私兼备的网盘，支持本地服务器、远程服务器、OneDrive、七牛云存储、阿里云OSS、又拍云、Amazon S3等作为存储后端，所存储的图片、视频、音频、Office文档支持在线预览，对于文本文件、Markdown文件还支持在线编辑。Cloudreve可作为NAS方案的替代，本地服务器接上机械盘可用作家庭私有云存储，搭配aria2离线">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Cloudreve搭建私有云盘">
 <meta property="og:url" content="https://hfsxs.github.io/geek/Cloudreve/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="Cloudreve，由go语言开发的开源免费的网盘系统，用于快速搭建公私兼备的网盘，支持本地服务器、远程服务器、OneDrive、七牛云存储、阿里云OSS、又拍云、Amazon S3等作为存储后端，所存储的图片、视频、音频、Office文档支持在线预览，对于文本文件、Markdown文件支持在线编辑。Cloudreve可作为NAS方案的替代，本地服务器接上机械盘可用作家庭私有云存储，搭配aria2">
+<meta property="og:description" content="Cloudreve，GO开发的开源免费的网盘系统，用于快速搭建公私兼备的网盘，支持本地服务器、远程服务器、OneDrive、七牛云存储、阿里云OSS、又拍云、Amazon S3等作为存储后端，所存储的图片、视频、音频、Office文档支持在线预览，对于文本文件、Markdown文件还支持在线编辑。Cloudreve可作为NAS方案的替代，本地服务器接上机械盘可用作家庭私有云存储，搭配aria2离线">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-02-20T07:10:29.000Z">
-<meta property="article:modified_time" content="2026-05-08T06:41:30.457Z">
+<meta property="article:modified_time" content="2026-05-08T08:17:35.747Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云存储">
@@ -293,7 +293,7 @@
             
               <div class="markdown-body">
                 
-                <p>Cloudreve，由go语言开发的开源免费的网盘系统，用于快速搭建公私兼备的网盘，支持本地服务器、远程服务器、OneDrive、七牛云存储、阿里云OSS、又拍云、Amazon S3等作为存储后端，所存储的图片、视频、音频、Office文档支持在线预览，对于文本文件、Markdown文件支持在线编辑。Cloudreve可作为NAS方案的替代，本地服务器接上机械盘可用作家庭私有云存储，搭配aria2离线下载服务器直接可转换为在线视频网站。相比于Nextcloud，Cloudreve速度更快，较为轻量，不那么臃肿，但缺点是没有APP，没有文件自动同步的功能，上传大量文件不是很友好，因为设备锁屏后网络断掉会导致上传失败</p>
+                <p>Cloudreve，GO开发的开源免费的网盘系统，用于快速搭建公私兼备的网盘，支持本地服务器、远程服务器、OneDrive、七牛云存储、阿里云OSS、又拍云、Amazon S3等作为存储后端，所存储的图片、视频、音频、Office文档支持在线预览，对于文本文件、Markdown文件还支持在线编辑。Cloudreve可作为NAS方案的替代，本地服务器接上机械盘可用作家庭私有云存储，搭配aria2离线下载服务器直接可转换为在线视频网站。相比于Nextcloud，Cloudreve速度更快，较为轻量，不那么臃肿，但缺点是没有APP，没有文件自动同步的功能，上传大量文件不是很友好，因为设备锁屏后网络断掉会导致上传失败</p>
 <hr>
 <h1 id="1-下载安装包"><a href="#1-下载安装包" class="headerlink" title="1.下载安装包"></a>1.下载安装包</h1><pre><code class="hljs">mkdir /web/cloudreve &amp;&amp; cd /web/cloudreve
 wget https://github.com/cloudreve/Cloudreve/releases/download/3.2.1/cloudreve_3.2.1_linux_amd64.tar.gz .
@@ -330,7 +330,7 @@ Query OK, 0 rows affected (0.023 sec)
 MariaDB [(none)]&gt; flush privileges;
 Query OK, 0 rows affected (0.010 sec)
 </code></pre>
-<h1 id="4-安装redis"><a href="#4-安装redis" class="headerlink" title="4.安装redis"></a>4.安装redis</h1><h1 id="5-启动cloudreve"><a href="#5-启动cloudreve" class="headerlink" title="5.启动cloudreve"></a>5.启动cloudreve</h1><pre><code class="hljs">tar -xzvf cloudreve_3.2.1_linux_amd64.tar.gz
+<h1 id="4-安装Redis"><a href="#4-安装Redis" class="headerlink" title="4.安装Redis"></a>4.安装Redis</h1><h1 id="5-启动Cloudreve"><a href="#5-启动Cloudreve" class="headerlink" title="5.启动Cloudreve"></a>5.启动Cloudreve</h1><pre><code class="hljs">tar -xzvf cloudreve_3.2.1_linux_amd64.tar.gz
 chmod +x cloudreve
 /web/cloudreve/cloudreve -c /web/cloudreve/conf.ini
 
