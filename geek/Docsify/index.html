@@ -16,15 +16,15 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Docsify，动态生成文档网站的工具，可将.md文件以Wiki的形式展示，用于制作技术文档、用户手册、wiki等，部署于主机、VPS、Github、静态云存储，特别适于快速搭建小型的文档网站  1.配置nodejs环境wget https:&#x2F;&#x2F;nodejs.org&#x2F;dist&#x2F;latest&#x2F;node-v18.8.0-linux-x64.tar.gz tar -xzvf node-v18.8.0-l">
+    <meta name="description" content="Docsify，动态生成文档网站的工具，可将.md文件以Wiki的形式展示，用于制作技术文档、用户手册、wiki等，部署于主机、VPS、Github、静态云存储，特别适于快速搭建小型的文档网站  1.配置Nodejs环境wget https:&#x2F;&#x2F;nodejs.org&#x2F;dist&#x2F;latest&#x2F;node-v18.8.0-linux-x64.tar.gz tar -xzvf node-v18.8.0-l">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Docsify搭建个人Wiki知识库">
 <meta property="og:url" content="https://hfsxs.github.io/geek/Docsify/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="Docsify，动态生成文档网站的工具，可将.md文件以Wiki的形式展示，用于制作技术文档、用户手册、wiki等，部署于主机、VPS、Github、静态云存储，特别适于快速搭建小型的文档网站  1.配置nodejs环境wget https:&#x2F;&#x2F;nodejs.org&#x2F;dist&#x2F;latest&#x2F;node-v18.8.0-linux-x64.tar.gz tar -xzvf node-v18.8.0-l">
+<meta property="og:description" content="Docsify，动态生成文档网站的工具，可将.md文件以Wiki的形式展示，用于制作技术文档、用户手册、wiki等，部署于主机、VPS、Github、静态云存储，特别适于快速搭建小型的文档网站  1.配置Nodejs环境wget https:&#x2F;&#x2F;nodejs.org&#x2F;dist&#x2F;latest&#x2F;node-v18.8.0-linux-x64.tar.gz tar -xzvf node-v18.8.0-l">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-02-15T12:32:16.000Z">
-<meta property="article:modified_time" content="2025-03-15T13:38:37.445Z">
+<meta property="article:modified_time" content="2026-05-14T01:51:19.884Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="极客">
@@ -240,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          980 字
+          1k 字
         
       </span>
     
@@ -296,18 +296,18 @@
                 
                 <p>Docsify，动态生成文档网站的工具，可将.md文件以Wiki的形式展示，用于制作技术文档、用户手册、wiki等，部署于主机、VPS、Github、静态云存储，特别适于快速搭建小型的文档网站</p>
 <hr>
-<h1 id="1-配置nodejs环境"><a href="#1-配置nodejs环境" class="headerlink" title="1.配置nodejs环境"></a>1.配置nodejs环境</h1><pre><code class="hljs">wget https://nodejs.org/dist/latest/node-v18.8.0-linux-x64.tar.gz
+<h1 id="1-配置Nodejs环境"><a href="#1-配置Nodejs环境" class="headerlink" title="1.配置Nodejs环境"></a>1.配置Nodejs环境</h1><pre><code class="hljs">wget https://nodejs.org/dist/latest/node-v18.8.0-linux-x64.tar.gz
 tar -xzvf node-v18.8.0-linux-x64.tar.gz &amp;&amp; mv node-v18.8.0 /usr/local/nodejs
 sudo ln -s /usr/local/nodejs/bin/node /usr/bin/node
 sudo ln -s /usr/local/nodejs/bin/npm /usr/bin/npm
 </code></pre>
 <h1 id="2-设置npm网络代理"><a href="#2-设置npm网络代理" class="headerlink" title="2.设置npm网络代理"></a>2.设置npm网络代理</h1><pre><code class="hljs">sudo npm config set registry https://registry.npmmirror.com
 </code></pre>
-<h1 id="3-安装docsify"><a href="#3-安装docsify" class="headerlink" title="3.安装docsify"></a>3.安装docsify</h1><pre><code class="hljs">sudo npm install -g docsify-cli
+<h1 id="3-安装Docsify"><a href="#3-安装Docsify" class="headerlink" title="3.安装Docsify"></a>3.安装Docsify</h1><pre><code class="hljs">sudo npm install -g docsify-cli
 </code></pre>
 <h1 id="4-初始化项目"><a href="#4-初始化项目" class="headerlink" title="4.初始化项目"></a>4.初始化项目</h1><pre><code class="hljs">sudo /usr/local/nodejs/bin/docsify init /web/wiki
 </code></pre>
-<h1 id="5-配置nginx代理"><a href="#5-配置nginx代理" class="headerlink" title="5.配置nginx代理"></a>5.配置nginx代理</h1><pre><code class="hljs">sudo vi /etc/nginx/nginx.d/wiki.conf
+<h1 id="5-配置Nginx代理"><a href="#5-配置Nginx代理" class="headerlink" title="5.配置Nginx代理"></a>5.配置Nginx代理</h1><h2 id="5-1-创建配置文件"><a href="#5-1-创建配置文件" class="headerlink" title="5.1 创建配置文件"></a>5.1 创建配置文件</h2><pre><code class="hljs">sudo vi /etc/nginx/nginx.d/wiki.conf
     
     
 server &#123;
@@ -332,8 +332,10 @@ server &#123;
     &#125;
 &#125;
 </code></pre>
-<h1 id="6-访问wiki"><a href="#6-访问wiki" class="headerlink" title="6.访问wiki"></a>6.访问wiki</h1><p><a target="_blank" rel="noopener" href="http://ip/">http://ip</a></p>
-<hr>
+<h2 id="5-2-重载Nginx"><a href="#5-2-重载Nginx" class="headerlink" title="5.2 重载Nginx"></a>5.2 重载Nginx</h2><pre><code class="hljs">sudo nginx -t
+sudo nginx -s reload
+</code></pre>
+<h1 id="6-验证Wiki"><a href="#6-验证Wiki" class="headerlink" title="6.验证Wiki"></a>6.验证Wiki</h1><hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://docsify.js.org/#/zh-cn">https://docsify.js.org/#/zh-cn</a></li>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_62982856/article/details/129940209">https://blog.csdn.net/qq_62982856/article/details/129940209</a></li>
@@ -410,7 +412,7 @@ server &#123;
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月15日</div>
+          <div>2026年5月14日</div>
         </div>
       
       <div class="license-meta-item">
