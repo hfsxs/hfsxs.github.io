@@ -110,6 +110,7 @@ def project = "hexo"
       steps {
         sh """
           /home/jenkins/kubectl -n default set image deployments/hexo *="registry.cn-hangzhou.aliyuncs.com/geekers/${project}:${BUILD_NUMBER}"
+          /home/jenkins/kubectl -n default rollout status deployment nginx-deployment -w --timeout 5m
         """
       }
     }
