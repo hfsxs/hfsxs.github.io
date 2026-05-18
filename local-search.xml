@@ -102,8 +102,8 @@
   
   <entry>
     <title>Openstack命令详解</title>
-    <link href="/linux/Openstack/"/>
-    <url>/linux/Openstack/</url>
+    <link href="/linux/OpenstackCommand/"/>
+    <url>/linux/OpenstackCommand/</url>
     
     <content type="html"><![CDATA[<h1 id="1-查看用户"><a href="#1-查看用户" class="headerlink" title="1.查看用户"></a>1.查看用户</h1><pre><code class="hljs">openstack user list</code></pre><h1 id="2-查看项目"><a href="#2-查看项目" class="headerlink" title="2.查看项目"></a>2.查看项目</h1><pre><code class="hljs">openstack project list</code></pre><h1 id="3-查看镜像"><a href="#3-查看镜像" class="headerlink" title="3.查看镜像"></a>3.查看镜像</h1><pre><code class="hljs">openstack image list</code></pre><h1 id="4-上传镜像"><a href="#4-上传镜像" class="headerlink" title="4.上传镜像"></a>4.上传镜像</h1><pre><code class="hljs">openstack image create &quot;centos7&quot; \  --file centos7.qcow2 \  --disk-format qcow2 --container-format bare \  --public</code></pre><h1 id="5-查看虚拟机"><a href="#5-查看虚拟机" class="headerlink" title="5.查看虚拟机"></a>5.查看虚拟机</h1><pre><code class="hljs">openstack server list</code></pre><h1 id="6-启动虚拟机"><a href="#6-启动虚拟机" class="headerlink" title="6.启动虚拟机"></a>6.启动虚拟机</h1><pre><code class="hljs">openstack server start node01</code></pre><h1 id="7-关闭虚拟机"><a href="#7-关闭虚拟机" class="headerlink" title="7.关闭虚拟机"></a>7.关闭虚拟机</h1><pre><code class="hljs">openstack server stop node01</code></pre><h1 id="8-删除虚拟机"><a href="#8-删除虚拟机" class="headerlink" title="8.删除虚拟机"></a>8.删除虚拟机</h1><pre><code class="hljs">openstack server delete node01</code></pre><h1 id="9-查看卷"><a href="#9-查看卷" class="headerlink" title="9.查看卷"></a>9.查看卷</h1><pre><code class="hljs">openstack volume list</code></pre>]]></content>
     
