@@ -24,7 +24,7 @@
 <meta property="og:description" content="Zabbix，由C语言开发的开源分布式企业级监控系统，通过Agent方式采集服务器、应用程序、网络服务、数据库、网站及其他网络硬件的工作状态，最终将监控数据写入数据库。Zabbix具备分布式监控功能，支持复杂架构下的监控解决方案，还提供直观的web页面展现。Zabbix告警通知机制也比较灵活，如邮件、短信和其他报警方式，以便于快速定位、解决各种故障，从而保障业务统的安全与稳定 体系架构Zabbix">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-02-02T10:09:31.000Z">
-<meta property="article:modified_time" content="2025-11-27T02:40:12.119Z">
+<meta property="article:modified_time" content="2026-05-15T06:29:59.934Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -314,11 +314,11 @@
 <h2 id="2-主机组"><a href="#2-主机组" class="headerlink" title="2.主机组"></a>2.主机组</h2><p>host group，主机组，逻辑概念，包含主机和模板，一个主机组的主机和模板之间并没有任何直接的关联。通常在给不同用户组的主机分配权限时候使用主机组</p>
 <h2 id="3-监控项"><a href="#3-监控项" class="headerlink" title="3.监控项"></a>3.监控项</h2><p>item，监控项，即监控指标，通常是度量数据</p>
 <h2 id="4-触发器"><a href="#4-触发器" class="headerlink" title="4.触发器"></a>4.触发器</h2><p>trigger，触发器，用于定义监控指标阈值和评估监控项接收到的数据的逻辑表达式 当接收到的数据高于阈值时，触发器从“OK”变成“Problem”状态。当接收到的数据低于阈值时，触发器保留&#x2F;返回一个“OK”的状态。</p>
-<p>5、动作 (action)<br>一个对事件做出反应的预定义的操作。 一个动作由操作(例如发出通知)和条件(当时操作正在发生)组成</p>
-<p>6、媒介 (media)<br>发送告警通知的手段；告警通知的途径</p>
-<p>7、远程命令 (remote command)<br>一个预定义好的，满足一些条件的情况下，可以在被监控主机上自动执行的命令</p>
-<p>8、模版 (template)<br>一组可以被应用到一个或多个主机上的实体（监控项，触发器，图形，应用，Web场景等）的集合 模版的任务就是加快对主机监控任务的实施；也可以使监控任务的批量修改更简单。模版是直接关联到每台单独的主机上。</p>
-<p>9、web 场景 (web scenario)<br>利用一个或多个HTTP请求来检查网站的可用性</p>
+<h2 id="5-动作"><a href="#5-动作" class="headerlink" title="5.动作"></a>5.动作</h2><p>action，一个对事件做出反应的预定义的操作。 一个动作由操作(例如发出通知)和条件(当时操作正在发生)组成</p>
+<h2 id="6-媒介"><a href="#6-媒介" class="headerlink" title="6.媒介"></a>6.媒介</h2><p>media，发送告警通知的手段；告警通知的途径</p>
+<h2 id="7-远程命令"><a href="#7-远程命令" class="headerlink" title="7.远程命令"></a>7.远程命令</h2><p>remote command，一个预定义好的，满足一些条件的情况下，可以在被监控主机上自动执行的命令</p>
+<h1 id="8-模版"><a href="#8-模版" class="headerlink" title="8.模版"></a>8.模版</h1><p>template，一组可以被应用到一个或多个主机上的实体（监控项，触发器，图形，应用，Web场景等）的集合 模版的任务就是加快对主机监控任务的实施；也可以使监控任务的批量修改更简单。模版是直接关联到每台单独的主机上。</p>
+<h1 id="9-Web场景"><a href="#9-Web场景" class="headerlink" title="9.Web场景"></a>9.Web场景</h1><p>web scenario，利用一个或多个HTTP请求来检查网站的可用性</p>
 <hr>
 <h1 id="1-安装依赖包"><a href="#1-安装依赖包" class="headerlink" title="1.安装依赖包"></a>1.安装依赖包</h1><pre><code class="hljs">apt install -y gcc libsnmp-dev libevent-dev libxml2-dev libghc-curl-dev
 yum instal -y gcc make curl-devel net-snmp-devel libcurl libxml2-devel
@@ -482,7 +482,7 @@ Hostname=node02
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年11月27日</div>
+          <div>2026年5月15日</div>
         </div>
       
       <div class="license-meta-item">
