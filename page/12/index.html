@@ -240,6 +240,231 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/linux/JenkinsRunningHexo/" target="_self">
+          Jenkins基于Kubernetes搭建Hexo博客CICD平台
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/JenkinsRunningHexo/" target="_self">
+        <div>
+          发布流程 1.本地VSCode编写hexo博客 2.运行hexo -g -d发布博客，将静态博客文件提交到Kubernetes集群的Git私有仓库 3.Gitweb钩子触发Kubernetes集群部署的Jenkins的构建触发器，拉取托管在Git私有仓库的Jenkinsfile作为构建依据 4.Jenkins开始任务构建，连接kubernetes集群拉起代理Pod，执行任务构建 5.Jenkins
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-05-18 09:26" pubdate>
+              2023-05-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/Git/">#Git</a>
+            
+              <a href="/tags/CICD/">#CICD</a>
+            
+              <a href="/tags/DevOps/">#DevOps</a>
+            
+              <a href="/tags/Hexo/">#Hexo</a>
+            
+              <a href="/tags/Jenkins/">#Jenkins</a>
+            
+              <a href="/tags/Kubernetes/">#Kubernetes</a>
+            
+              <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+            
+              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/linux/KubernetesHelm/" target="_self">
+          Kubernetes集群Helm工具详解
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/KubernetesHelm/" target="_self">
+        <div>
+          Helm，意为舵轮，是Kubernetes集群的包管理器，用于yaml文件的统一管理及高效复用，实现了应用级别的版本管理，即是将部署应用的yaml文件像Linux的包管理器一样进行封装，从仓库里快速查找、下载和安装，快速的发布中间件、数据库、公共组件等应用，类似于RedHat的yum、Python的pip。helm大大简化了Kubernetes应用的部署方式，将yaml文件存入chart包一键执行
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-04-20 19:15" pubdate>
+              2023-04-20
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/Kubernetes/">#Kubernetes</a>
+            
+              <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+            
+              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+            
+              <a href="/tags/Helm/">#Helm</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/linux/JenkinsAgentOnKubernetes/" target="_self">
+          Jenkins基于Kubernetes集群配置动态agent节点
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/JenkinsAgentOnKubernetes/" target="_self">
+        <div>
+          1.配置代理节点持久化存储1.1 创建PV、PVCvi jenkins-slave-data.yaml   apiVersion: v1 kind: PersistentVolume metadata:   # 设置PV名称   name: jenkins-slave-data   # 设置PV标签，用于PVC的定向绑定   labels:     app: jenkins-slave-data
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-04-18 18:45" pubdate>
+              2023-04-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/CICD/">#CICD</a>
+            
+              <a href="/tags/DevOps/">#DevOps</a>
+            
+              <a href="/tags/Jenkins/">#Jenkins</a>
+            
+              <a href="/tags/Kubernetes/">#Kubernetes</a>
+            
+              <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+            
+              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/linux/JenkinsAgent/" target="_self">
           Jenkins配置agent节点
         </a>
@@ -371,6 +596,75 @@
               <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
             
               <a href="/tags/MQ/">#MQ</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/linux/cmpce58uk0001jnyi85ndfwo9/" target="_self">
+          Kafka集群基于Kubernetes的部署
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/cmpce58uk0001jnyi85ndfwo9/" target="_self">
+        <div>
+          1.部署nfs2.部署StorageClass3.部署zookeeper集群vi zookeeper.yaml   apiVersion: v1 kind: Service metadata:   name: zookeeper   namespace: logging   labels:     app: zookeeper spec:   ports:     - port: 2181
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-03-31 15:45" pubdate>
+              2023-03-31
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/Kafka/">#Kafka</a>
+            
+              <a href="/tags/Kubernetes/">#Kubernetes</a>
+            
+              <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
             
           </div>
         
@@ -648,283 +942,11 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/linux/KubernetesProbe/" target="_self">
-          Kubernetes集群监控探针详解
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/KubernetesProbe/" target="_self">
-        <div>
-          Probe，即探针，Kubernetes集群监控容器运行状态的机制，是由kubelet组件对容器执行的定期检查，以监测容器是否正常运行、是否能够正常响应请求以及容器内部的应用程序是否正常运行，并根据探测到的状态做出相应的动作。默认情况下，集群只能检查容器主进程运行状况，而无法判断应用是否能正常提供服务，无法反映真实的健康状态。探针弥补了这一不足，实现了应用的健康检查，完善了集群自我修复能力，从而保
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-02-10 08:51" pubdate>
-              2023-02-10
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/Kubernetes/">#Kubernetes</a>
-            
-              <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
-            
-              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/linux/PythonCondition/" target="_self">
-          Python流程控制
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/PythonCondition/" target="_self">
-        <div>
-          流程控制，即代码执行方式与顺序的控制，使得程序按照一定的结构进行执行，一般分为三种结构，即顺序结构、条件判断结构和循环控制结构。初学者建议以伪代码或流程图的方式将程序拆解，以培养编程语言的逻辑思维，厘清程序的控制逻辑 1.顺序结构顺序结构，Python默认结构，即是按照代码的位置自上而下的执行，每行代码只执行一次 &gt;&gt;&gt; print(&#39;&lt;- 欢迎使用幂运算器 -&amp;g
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-02-04 10:05" pubdate>
-              2023-02-04
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/Python/">#Python</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/linux/Prometheus/" target="_self">
-          Prometheus监控系统部署
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/Prometheus/" target="_self">
-        <div>
-          Prometheus是基于Go语言构建的由SoundCloud开发的开源监控告警系统，基本原理是通过HTTP协议周期性拉取被监控组件的状态，任意组件只要提供对应的HTTP接口即可接入，而不再需要任何SDK或其他集成过程 系统架构1.PrometheusPrometheus Server，Prometheus监控系统的核心部分，负责实现监控数据的收集、存储及数据查询 2.ExportersExpor
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-02-01 09:42" pubdate>
-              2023-02-01
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
-            
-              <a href="/tags/Prometheus/">#Prometheus</a>
-            
-              <a href="/tags/%E7%9B%91%E6%8E%A7%E5%91%8A%E8%AD%A6/">#监控告警</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/linux/KubernetesTroubleshooting/" target="_self">
-          Kubernetes集群故障处理
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/KubernetesTroubleshooting/" target="_self">
-        <div>
-          1.worker节点重启后一直notready状态故障背景某个worker节点服务器重启，重启后处于notready状态 故障现象集群master节点正常，docker运行正常，机器负载正常，kubelet反复启动 故障原因刚接触kubernets不太熟悉，排查半天不得要领，直到查看kubelet日志发现有报错：”Failed to run kubelet” err&#x3D;”failed to
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-01-30 12:25" pubdate>
-              2023-01-30
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/Kubernetes/">#Kubernetes</a>
-            
-              <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
-            
-              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/page/11/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/#board">10</a><a class="page-number" href="/page/11/#board">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/#board">13</a><a class="page-number" href="/page/14/#board">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/#board">24</a><a class="extend next" rel="next" href="/page/13/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/page/11/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/10/#board">10</a><a class="page-number" href="/page/11/#board">11</a><span class="page-number current">12</span><a class="page-number" href="/page/13/#board">13</a><a class="page-number" href="/page/14/#board">14</a><span class="space">&hellip;</span><a class="page-number" href="/page/25/#board">25</a><a class="extend next" rel="next" href="/page/13/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 
