@@ -201,10 +201,10 @@
   
   <entry>
     <title>PostgreSQL数据库管理命令详解</title>
-    <link href="/linux/PostgreSQLManageSQL/"/>
-    <url>/linux/PostgreSQLManageSQL/</url>
+    <link href="/linux/PostgreSQLManage/"/>
+    <url>/linux/PostgreSQLManage/</url>
     
-    <content type="html"><![CDATA[<h1 id="1-登录数据库"><a href="#1-登录数据库" class="headerlink" title="1.登录数据库"></a>1.登录数据库</h1>]]></content>
+    <content type="html"><![CDATA[<h1 id="1-登录数据库"><a href="#1-登录数据库" class="headerlink" title="1.登录数据库"></a>1.登录数据库</h1><pre><code class="hljs">su - postgres# h，数据库服务器地址；p，数据库端口号；U，数据库账户psql -h 10.1.11.242 -p 5432 -U postgres</code></pre><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://blog.csdn.net/mingongge/article/details/131496336">https://blog.csdn.net/mingongge/article/details/131496336</a></li></ul>]]></content>
     
     
     <categories>
