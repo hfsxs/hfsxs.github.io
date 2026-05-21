@@ -101,6 +101,7 @@ def project = "hexo"
       steps {
 
         sh """
+          set +x
           docker build -t registry.cn-hangzhou.aliyuncs.com/geekers/hexo:${BUILD_NUMBER} .
           docker push registry.cn-hangzhou.aliyuncs.com/geekers/hexo:${BUILD_NUMBER}
           docker rmi registry.cn-hangzhou.aliyuncs.com/geekers/hexo:${BUILD_NUMBER}
@@ -130,6 +131,16 @@ def project = "hexo"
     }        
  
     failure {
+
+      sh """
+        set +x
+        echo "========= 本次更新失败，执行回滚! ========="
+        kubectl -n default rollout undo deployment nginx-deployment
+        kubectl -n default rollout status deployment nginx-deployment -w --timeout 5m
+        echo "========= 已回滚到上一版本，请检查线上业务! ========="
+        echo "========= 应用当前状态为 ========="
+        kubectl -n default get pod|grep nginx
+      """
 
       dingtalk (
         robot: 'dingtalk-jenkins',
