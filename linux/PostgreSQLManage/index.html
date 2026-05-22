@@ -24,7 +24,7 @@
 <meta property="og:description" content="1.登录数据库su - postgres # h，数据库服务器地址；p，数据库端口号；U，数据库账户；d，数据库名 psql -h 127.0.0.1 -U postgres -d postgres  2.数据库管理2.1 查看所有数据库postgres&#x3D;# \l  2.2 切换数据库postgres&#x3D;# \c test; You are now connected to database &amp;qu">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-19T06:01:10.000Z">
-<meta property="article:modified_time" content="2026-05-21T02:26:31.376Z">
+<meta property="article:modified_time" content="2026-05-21T07:09:33.322Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -240,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          399 字
+          407 字
         
       </span>
     
@@ -304,7 +304,7 @@ psql -h 127.0.0.1 -U postgres -d postgres
 You are now connected to database &quot;test&quot; as user &quot;postgres&quot;.
 test=#
 </code></pre>
-<h1 id="3-用户管理"><a href="#3-用户管理" class="headerlink" title="3.用户管理"></a>3.用户管理</h1><h2 id="3-1-查看所有用户"><a href="#3-1-查看所有用户" class="headerlink" title="3.1 查看所有用户"></a>3.1 查看所有用户</h2><pre><code class="hljs">postgres=# \du
+<h2 id="2-3-创建数据库"><a href="#2-3-创建数据库" class="headerlink" title="2.3 创建数据库"></a>2.3 创建数据库</h2><h1 id="3-用户管理"><a href="#3-用户管理" class="headerlink" title="3.用户管理"></a>3.用户管理</h1><h2 id="3-1-查看所有用户"><a href="#3-1-查看所有用户" class="headerlink" title="3.1 查看所有用户"></a>3.1 查看所有用户</h2><pre><code class="hljs">postgres=# \du
 </code></pre>
 <h2 id="3-2-创建用户"><a href="#3-2-创建用户" class="headerlink" title="3.2 创建用户"></a>3.2 创建用户</h2><pre><code class="hljs">CREATE ROLE user01 PASSWORD &#39;User_01&#39;;
 </code></pre>
