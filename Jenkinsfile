@@ -153,7 +153,7 @@ def project = "hexo"
                "- 构建人: ${env.BUILD_USER}",
                "- 项目地址: ${JOB_URL}",
                "- 工作目录: ${BUILD_URL}ws",
-               "-任务地址: ${BUILD_URL}",
+               "- 任务地址: ${BUILD_URL}",
                "- 构建日志: ${BUILD_URL}console",
                "- 持续时间: ${currentBuild.durationString}"
               ]

@@ -240,150 +240,6 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/linux/KubernetesEtcd/" target="_self">
-          Kubernetes集群Etcd数据库详解
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/linux/KubernetesEtcd/" target="_self">
-        <div>
-          Etcd，由CoreOS团队于2013年用Go言编写的分布式、高可用的开源一致性key-value存储系统，现由Cloud Native Computing Foundation负责管理，用于提供可靠的分布式键值存储、配置共享和服务发现、一致性保障等功能，如数据库选主、分布式锁等。Etcd提供的数据TTL失效、数据改变监视、多值、目录监听、分布式锁原子操作等功能可以方便的跟踪并管理集群节点的状态，
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-11-10 23:20" pubdate>
-              2022-11-10
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/Kubernetes/">#Kubernetes</a>
-            
-              <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
-            
-              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
-            
-              <a href="/tags/Etcd/">#Etcd</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/geek/CoreDNS/" target="_self">
-          CoreDNS搭建DNS服务器
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/geek/CoreDNS/" target="_self">
-        <div>
-          1.下载coredns二进制安装包wget https:&#x2F;&#x2F;github.com&#x2F;coredns&#x2F;coredns&#x2F;releases&#x2F;download&#x2F;v1.10.1&#x2F;coredns_1.10.1_linux_amd64.tgz  2.安装corednstar -xzvf coredns_1.10.1_linux_amd64.tgz sudo mv coredns &#x2F;usr&#x2F;local&#x2F;bin su
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-11-06 19:19" pubdate>
-              2022-11-06
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/linux/" class="category-chain-item">工作</a>
-  
-  
-
-      </span>
-    
-  
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Linux/">#Linux</a>
-            
-              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
-            
-              <a href="/tags/DNS/">#DNS</a>
-            
-              <a href="/tags/%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90/">#域名解析</a>
-            
-              <a href="/tags/%E6%9E%81%E5%AE%A2/">#极客</a>
-            
-              <a href="/tags/CoreDNS/">#CoreDNS</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
         <a href="/geek/Jellyfin/" target="_self">
           Jellyfin搭建私人家庭影音娱乐中心
         </a>
@@ -922,11 +778,147 @@
     </article>
   </div>
 
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/linux/KubernetesRBAC/" target="_self">
+          Kubernetes集群访问控制机制详解
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/KubernetesRBAC/" target="_self">
+        <div>
+          Kubernetes集群一切皆API对象，所有操作和组件之间的通信及外部用户命令都是通过调用API Server进行处理。因此，API Server对集群的访问请求进行身份认证与鉴权即可实现整个集群的权限管理，也即是Kubernetes API访问控制  访问控制流程 Authentication，即认证，客户端与API Server建立TLS后，API Server身份认证组件将判断该请求的用户
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-03-31 22:51" pubdate>
+              2022-03-31
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/Kubernetes/">#Kubernetes</a>
+            
+              <a href="/tags/%E5%AE%B9%E5%99%A8%E4%BA%91/">#容器云</a>
+            
+              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/">#云原生</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/linux/KVM-VirtualDisk/" target="_self">
+          KVM磁盘管理
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/linux/KVM-VirtualDisk/" target="_self">
+        <div>
+          KVM虚拟机由两部分组成，即配置文件和磁盘文件，配置文件描述了虚拟机的详细参数，路径默认为&#x2F;etc&#x2F;libvirt&#x2F;qemu；磁盘文件即为虚拟机的镜像，支持多种格式，raw和qcow2这两种格式最为常见  raw，意为未被加工的，又被称为原始镜像或裸设备镜像，KVM默认格式，指定多大就创建多大，直接占用指定大小的空间，镜像文件由宿主机的文件系统来管理，可直接挂载，性能
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-03-16 22:45" pubdate>
+              2022-03-16
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Linux/">#Linux</a>
+            
+              <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+            
+              <a href="/tags/KVM/">#KVM</a>
+            
+              <a href="/tags/%E8%99%9A%E6%8B%9F%E5%8C%96/">#虚拟化</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
 
 
   <nav aria-label="navigation">
     <span class="pagination" id="pagination">
-      <a class="extend prev" rel="prev" href="/page/13/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/#board">12</a><a class="page-number" href="/page/13/#board">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/#board">15</a><a class="page-number" href="/page/16/#board">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/25/#board">25</a><a class="extend next" rel="next" href="/page/15/#board"><i class="iconfont icon-arrowright"></i></a>
+      <a class="extend prev" rel="prev" href="/page/13/#board"><i class="iconfont icon-arrowleft"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/12/#board">12</a><a class="page-number" href="/page/13/#board">13</a><span class="page-number current">14</span><a class="page-number" href="/page/15/#board">15</a><a class="page-number" href="/page/16/#board">16</a><span class="space">&hellip;</span><a class="page-number" href="/page/24/#board">24</a><a class="extend next" rel="next" href="/page/15/#board"><i class="iconfont icon-arrowright"></i></a>
     </span>
   </nav>
 
