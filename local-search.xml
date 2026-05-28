@@ -4,6 +4,41 @@
   
   
   <entry>
+    <title>Prometheus监控Zookeeper集群</title>
+    <link href="/linux/Prometheus-Zookeeper/"/>
+    <url>/linux/Prometheus-Zookeeper/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1-配置Zookeeper集群"><a href="#1-配置Zookeeper集群" class="headerlink" title="1.配置Zookeeper集群"></a>1.配置Zookeeper集群</h1><h2 id="1-1-开启内置监控插件"><a href="#1-1-开启内置监控插件" class="headerlink" title="1.1 开启内置监控插件"></a>1.1 开启内置监控插件</h2><pre><code class="hljs">sudo vi /usr/local/zookeeper/conf/zoo.cfgmetricsProvider.className=org.apache.zookeeper.metrics.prometheus.PrometheusMetricsProvidermetricsProvider.httpHost=0.0.0.0metricsProvider.httpPort=7000metricsProvider.exportJvmInfo=true</code></pre><h2 id="1-2-重启Zookeeper集群"><a href="#1-2-重启Zookeeper集群" class="headerlink" title="1.2 重启Zookeeper集群"></a>1.2 重启Zookeeper集群</h2><h1 id="2-配置Prometheus"><a href="#2-配置Prometheus" class="headerlink" title="2.配置Prometheus"></a>2.配置Prometheus</h1><h2 id="2-1-配置监控实例"><a href="#2-1-配置监控实例" class="headerlink" title="2.1 配置监控实例"></a>2.1 配置监控实例</h2><pre><code class="hljs">sudo vi /usr/local/prometheus/prometheus.ymlglobal:  scrape_interval: 15s   evaluation_interval: 15s   scrape_timeout: 10s scrape_configs:  - job_name: &quot;prometheus&quot;    static_configs:      - targets: [&quot;localhost:9090&quot;]  - job_name: zookeeper    static_configs:      - targets:         - 172.16.100.101:7000        - 172.16.100.102:7000        - 172.16.100.103:7000        labels:          clusters: zookeeper</code></pre><h2 id="2-2-创建告警规则"><a href="#2-2-创建告警规则" class="headerlink" title="2.2 创建告警规则"></a>2.2 创建告警规则</h2><h2 id="2-3-重载Prometheus"><a href="#2-3-重载Prometheus" class="headerlink" title="2.3 重载Prometheus"></a>2.3 重载Prometheus</h2><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload</code></pre><h1 id="3-Grafana导入监控模版"><a href="#3-Grafana导入监控模版" class="headerlink" title="3.Grafana导入监控模版"></a>3.Grafana导入监控模版</h1><p>Dashboards —&gt; Manage —&gt; Import —&gt; 模版ID：10465</p><p><img src="/img/wiki/prometheus/zookeeper.jpg" alt="zookeeper"></p><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://blog.csdn.net/qq_34556414/article/details/155844980">https://blog.csdn.net/qq_34556414/article/details/155844980</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>云原生</tag>
+      
+      <tag>Prometheus</tag>
+      
+      <tag>监控告警</tag>
+      
+      <tag>Zookeeper</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Nginx访问日志分析平台NginxPulse的部署与配置</title>
     <link href="/linux/NginxPulse/"/>
     <url>/linux/NginxPulse/</url>
@@ -394,8 +429,6 @@
       <tag>云计算</tag>
       
       <tag>Kafka</tag>
-      
-      <tag>Kubernetes</tag>
       
       <tag>云原生</tag>
       
@@ -1488,9 +1521,9 @@
       
       <tag>Kafka</tag>
       
-      <tag>MQ</tag>
-      
       <tag>中间件</tag>
+      
+      <tag>Zookeeper</tag>
       
     </tags>
     
