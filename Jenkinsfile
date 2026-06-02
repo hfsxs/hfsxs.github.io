@@ -16,7 +16,7 @@ def project = "hexo"
          spec:
            containers:
              - name: jnlp
-               image: registry.cn-hangzhou.aliyuncs.com/swords/jenkins-inbound-agent:latest-jdk17
+               image: registry.cn-hangzhou.aliyuncs.com/swords/jenkins-inbound-agent:alpine-jdk21
                imagePullPolicy: IfNotPresent
                env:
                  - name: "workDir"
