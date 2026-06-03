@@ -16,15 +16,15 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1.设置root账户密码&#x2F;usr&#x2F;local&#x2F;mysql&#x2F;bin&#x2F;mysqladmin -u root password &#39;123456&#39;  2.登陆数据库# 格式为：mysql -h 主机地址 -P 端口号 -u 用户名 -p用户密码 mysql -u root -p 123456 mysql -h127.0.0.1 -P3301 -uroot -p123456  3.查看所有数">
+    <meta name="description" content="1.设置root账户密码&#x2F;usr&#x2F;local&#x2F;mysql&#x2F;bin&#x2F;mysqladmin -u root password &#39;123456&#39;  2.登陆数据库# h，数据库服务器地址；p，数据库端口；u，数据库账户；p，账户密码 mysql -u root -p 123456 mysql -h127.0.0.1 -P3301 -uroot -p123456  3.查看所有数据库Mar">
 <meta property="og:type" content="article">
-<meta property="og:title" content="MySQL数据库SQL命令详解">
-<meta property="og:url" content="https://hfsxs.github.io/linux/MySQL-SQL/index.html">
+<meta property="og:title" content="MySQL数据库管理命令详解">
+<meta property="og:url" content="https://hfsxs.github.io/linux/MySQLManage/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="1.设置root账户密码&#x2F;usr&#x2F;local&#x2F;mysql&#x2F;bin&#x2F;mysqladmin -u root password &#39;123456&#39;  2.登陆数据库# 格式为：mysql -h 主机地址 -P 端口号 -u 用户名 -p用户密码 mysql -u root -p 123456 mysql -h127.0.0.1 -P3301 -uroot -p123456  3.查看所有数">
+<meta property="og:description" content="1.设置root账户密码&#x2F;usr&#x2F;local&#x2F;mysql&#x2F;bin&#x2F;mysqladmin -u root password &#39;123456&#39;  2.登陆数据库# h，数据库服务器地址；p，数据库端口；u，数据库账户；p，账户密码 mysql -u root -p 123456 mysql -h127.0.0.1 -P3301 -uroot -p123456  3.查看所有数据库Mar">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-02-02T07:22:29.000Z">
-<meta property="article:modified_time" content="2025-03-15T08:49:57.543Z">
+<meta property="article:modified_time" content="2026-06-03T01:13:36.329Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -37,7 +37,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>MySQL数据库SQL命令详解 - 扬帆</title>
+  <title>MySQL数据库管理命令详解 - 扬帆</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -217,7 +217,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">MySQL数据库SQL命令详解</span>
+            <span id="subtitle">MySQL数据库管理命令详解</span>
           
         </div>
 
@@ -240,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.6k 字
+          2.5k 字
         
       </span>
     
@@ -289,26 +289,26 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">MySQL数据库SQL命令详解</h1>
+            <h1 style="display: none">MySQL数据库管理命令详解</h1>
             
             
               <div class="markdown-body">
                 
                 <h1 id="1-设置root账户密码"><a href="#1-设置root账户密码" class="headerlink" title="1.设置root账户密码"></a>1.设置root账户密码</h1><pre><code class="hljs">/usr/local/mysql/bin/mysqladmin -u root password &#39;123456&#39;
 </code></pre>
-<h1 id="2-登陆数据库"><a href="#2-登陆数据库" class="headerlink" title="2.登陆数据库"></a>2.登陆数据库</h1><pre><code class="hljs"># 格式为：mysql -h 主机地址 -P 端口号 -u 用户名 -p用户密码
+<h1 id="2-登陆数据库"><a href="#2-登陆数据库" class="headerlink" title="2.登陆数据库"></a>2.登陆数据库</h1><pre><code class="hljs"># h，数据库服务器地址；p，数据库端口；u，数据库账户；p，账户密码
 mysql -u root -p 123456
 mysql -h127.0.0.1 -P3301 -uroot -p123456
 </code></pre>
-<h1 id="3-查看所有数据库"><a href="#3-查看所有数据库" class="headerlink" title="3.查看所有数据库"></a>3.查看所有数据库</h1><pre><code class="hljs">MariaDB [(none)]&gt;  show databases;
+<h1 id="3-查看所有数据库"><a href="#3-查看所有数据库" class="headerlink" title="3.查看所有数据库"></a>3.查看所有数据库</h1><pre><code class="hljs">MariaDB [(none)]&gt;  SHOW DATABASES;
 </code></pre>
-<h1 id="4-创建数据库"><a href="#4-创建数据库" class="headerlink" title="4.创建数据库"></a>4.创建数据库</h1><pre><code class="hljs">MariaDB [(none)]&gt;  create database testdb character set utf8mb4 collate utf8mb4_unicode_ci;
+<h1 id="4-创建数据库"><a href="#4-创建数据库" class="headerlink" title="4.创建数据库"></a>4.创建数据库</h1><pre><code class="hljs">MariaDB [(none)]&gt;  CREATE DATABASE testdb CHARACTER SET UTF8MB4;
 </code></pre>
-<h1 id="5-切换数据库"><a href="#5-切换数据库" class="headerlink" title="5.切换数据库"></a>5.切换数据库</h1><pre><code class="hljs">MariaDB [(none)]&gt;  use mysql;
+<h1 id="5-切换数据库"><a href="#5-切换数据库" class="headerlink" title="5.切换数据库"></a>5.切换数据库</h1><pre><code class="hljs">MariaDB [(none)]&gt;  USE mysql;
 </code></pre>
-<h1 id="6-创建数据库用户并授予权限"><a href="#6-创建数据库用户并授予权限" class="headerlink" title="6.创建数据库用户并授予权限"></a>6.创建数据库用户并授予权限</h1><pre><code class="hljs"># 格式为：grant 权限 on 数据库.* to 用户名@登录主机 identified by &quot;密码&quot;;
-MariaDB [(none)]&gt;  GRANT ALL PRIVILEGES ON user01.* TO &#39;testdb&#39;@&#39;172.16.100.200&#39; IDENTIFIED BY &#39;sword&#39;;
-MariaDB [(none)]&gt;  grant SELECT privileges on user01.* to &#39;testdb&#39;@&#39;172.16.100.200&#39; identified by &#39;123456&#39;;
+<h1 id="6-创建数据库用户并授予权限"><a href="#6-创建数据库用户并授予权限" class="headerlink" title="6.创建数据库用户并授予权限"></a>6.创建数据库用户并授予权限</h1><pre><code class="hljs"># 格式为：GRANT 权限 ON 数据库.* TO 用户名@登录主机 IDENTIFIED BY &quot;账户密码&quot;;
+MariaDB [(none)]&gt;  GRANT ALL PRIVILEGES ON user01.* TO &#39;testdb&#39;@&#39;172.16.100.200&#39; IDENTIFIED BY &#39;123456&#39;;
+MariaDB [(none)]&gt;  GRANT SELECT PRIVILEGES on user01.* TO &#39;testdb&#39;@&#39;172.16.100.200&#39; IDENTIFIED BY &#39;123456&#39;;
 </code></pre>
 <hr>
 <p>权限可取值：</p>
@@ -328,22 +328,22 @@ MariaDB [(none)]&gt;  grant SELECT privileges on user01.* to &#39;testdb&#39;@&#
 <li>ALL，所有权限，同义词ALL PRIVILEGES</li>
 </ul>
 <hr>
-<h1 id="7-刷新权限表"><a href="#7-刷新权限表" class="headerlink" title="7.刷新权限表"></a>7.刷新权限表</h1><pre><code class="hljs">MariaDB [(none)]&gt;  flush privileges;
+<h1 id="7-刷新权限表"><a href="#7-刷新权限表" class="headerlink" title="7.刷新权限表"></a>7.刷新权限表</h1><pre><code class="hljs">MariaDB [(none)]&gt;  FLUSH PRIVILEGES;
 </code></pre>
-<h1 id="8-创建数据表"><a href="#8-创建数据表" class="headerlink" title="8.创建数据表"></a>8.创建数据表</h1><pre><code class="hljs">MariaDB [(none)]&gt;  use testdb;
-# MariaDB [(none)]&gt;  select DATE_FORMAT(current_timestamp(3),&#39;%Y%m%d%H%i%s%f&#39;);
-MariaDB [(none)]&gt;  create table test (id varchar(50) not null primary key,name varchar(50),create_time timestamp(3));
+<h1 id="8-创建数据表"><a href="#8-创建数据表" class="headerlink" title="8.创建数据表"></a>8.创建数据表</h1><pre><code class="hljs">MariaDB [(none)]&gt;  USE testdb;
+# MariaDB [(none)]&gt;  SELECT DATE_FORMAT(current_timestamp(3),&#39;%Y%m%d%H%i%s%f&#39;);
+MariaDB [(none)]&gt;  CREATE TABLE test (id VARCHAR(50) NOT NULL PRIMARY KEY,name VARCHAR(50),create_time timestamp(3));
 </code></pre>
-<h1 id="9-显示当前数据库所有数据表"><a href="#9-显示当前数据库所有数据表" class="headerlink" title="9.显示当前数据库所有数据表"></a>9.显示当前数据库所有数据表</h1><pre><code class="hljs">MariaDB [(none)]&gt;  show tables;
+<h1 id="9-显示当前数据库所有数据表"><a href="#9-显示当前数据库所有数据表" class="headerlink" title="9.显示当前数据库所有数据表"></a>9.显示当前数据库所有数据表</h1><pre><code class="hljs">MariaDB [(none)]&gt;  SHOW TABLES;
 </code></pre>
-<h1 id="10-显示表结构"><a href="#10-显示表结构" class="headerlink" title="10.显示表结构"></a>10.显示表结构</h1><pre><code class="hljs">MariaDB [(none)]&gt;  desc test;
+<h1 id="10-显示表结构"><a href="#10-显示表结构" class="headerlink" title="10.显示表结构"></a>10.显示表结构</h1><pre><code class="hljs">MariaDB [(none)]&gt;  DESC test;
 </code></pre>
-<h1 id="11-数据表插入数据"><a href="#11-数据表插入数据" class="headerlink" title="11.数据表插入数据"></a>11.数据表插入数据</h1><pre><code class="hljs">MariaDB [(none)]&gt;  insert into test values (&#39;001&#39;,&#39;test001&#39;);
+<h1 id="11-数据表插入数据"><a href="#11-数据表插入数据" class="headerlink" title="11.数据表插入数据"></a>11.数据表插入数据</h1><pre><code class="hljs">MariaDB [(none)]&gt;  INSERT INTO test VAULES (&#39;001&#39;,&#39;test001&#39;);
 </code></pre>
 <h1 id="12-修改账户密码"><a href="#12-修改账户密码" class="headerlink" title="12.修改账户密码"></a>12.修改账户密码</h1><pre><code class="hljs">MariaDB [(none)]&gt;  use mysql;
-MariaDB [(none)]&gt;  update mysql.user set password=password(&#39;111111&#39;) where User=&quot;root&quot; and Host=&quot;localhost&quot;;
-# MariaDB [(none)]&gt;  update user set password=password(&quot;111111&quot;) where user=&quot;root&quot; flush privileges;
-# MariaDB [(none)]&gt;  alter  user &#39;root&#39;@&#39;localhost&#39; identified by &#39;111111&#39;;
+MariaDB [(none)]&gt;  UPDATE mysql.user SET password=password(&#39;111111&#39;) WHERE User=&quot;root&quot; and Host=&quot;localhost&quot;;
+# MariaDB [(none)]&gt;  UPDATE user SET password=password(&quot;111111&quot;) WHERE user=&quot;root&quot; FLUSH PRIVILEGES;
+# MariaDB [(none)]&gt;  ALTER  user &#39;root&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;111111&#39;;
 </code></pre>
 <h1 id="13-数据库热备份"><a href="#13-数据库热备份" class="headerlink" title="13.数据库热备份"></a>13.数据库热备份</h1><pre><code class="hljs">/usr/local/mysql/bin/mysqldump -uroot -p111111 testdb &gt;/opt/buckups/data/testdb $(date +%Y%m%d_%H%M%S).sql
 /usr/local/mysql/bin/mysqldump -uroot -p111111--events --all-databases | gzip &gt; /opt/buckups/data/mysql.$(date +%Y%m%d).sql
@@ -351,8 +351,8 @@ MariaDB [(none)]&gt;  update mysql.user set password=password(&#39;111111&#39;) 
 </code></pre>
 <h1 id="14-数据库导入"><a href="#14-数据库导入" class="headerlink" title="14.数据库导入"></a>14.数据库导入</h1><pre><code class="hljs">/usr/local/mysql/bin/mysql -uroot -p111111 testdb &lt; /opt/buckups/data/mysql.sql
 </code></pre>
-<h1 id="15-查询数据库中数据量最大的前10个表"><a href="#15-查询数据库中数据量最大的前10个表" class="headerlink" title="15.查询数据库中数据量最大的前10个表"></a>15.查询数据库中数据量最大的前10个表</h1><pre><code class="hljs"> MariaDB [(none)]&gt;  use information_schema;
- MariaDB [(none)]&gt;  select table_name,table_rows from  tables order by table_rows desc limit 10;
+<h1 id="15-查询数据库中数据量最大的前10个表"><a href="#15-查询数据库中数据量最大的前10个表" class="headerlink" title="15.查询数据库中数据量最大的前10个表"></a>15.查询数据库中数据量最大的前10个表</h1><pre><code class="hljs"> MariaDB [(none)]&gt;  USE information_schema;
+ MariaDB [(none)]&gt;  SELECT table_name,table_rows FROM  tales ORDER BYby table_rows DESC LIMIT 10;
 </code></pre>
 <h1 id="16-批量插入10000条数据脚本"><a href="#16-批量插入10000条数据脚本" class="headerlink" title="16.批量插入10000条数据脚本"></a>16.批量插入10000条数据脚本</h1><pre><code class="hljs">#!/bin/bash
 
@@ -360,7 +360,7 @@ MariaDB [(none)]&gt;  update mysql.user set password=password(&#39;111111&#39;) 
 i=1;
 while [ $i -le 10000 ]
   do
-mysql -usword -p111111 testdb -e &quot;insert into test (id,name) values (DATE_FORMAT(current_timestamp(3),&#39;%Y%m%d%H%i%s%f&#39;),substring(MD5(RAND()),1,20));&quot;
+mysql -usword -p111111 testdb -e &quot;INSERT INTO test (id,name) VAULES (DATE_FORMAT(current_timestamp(3),&#39;%Y%m%d%H%i%s%f&#39;),substring(MD5(RAND()),1,20));&quot;
   let    i=i+1
   sleep 0.01
 done
@@ -419,8 +419,8 @@ exit 0
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>MySQL数据库SQL命令详解</div>
-      <div>https://hfsxs.github.io/linux/MySQL-SQL/</div>
+      <div>MySQL数据库管理命令详解</div>
+      <div>https://hfsxs.github.io/linux/MySQLManage/</div>
     </div>
     <div class="license-meta">
       
@@ -438,7 +438,7 @@ exit 0
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月15日</div>
+          <div>2026年6月3日</div>
         </div>
       
       <div class="license-meta-item">
