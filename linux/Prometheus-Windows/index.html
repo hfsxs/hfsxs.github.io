@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/Windows.jpg">
 <meta property="article:published_time" content="2026-06-03T02:00:13.000Z">
-<meta property="article:modified_time" content="2026-06-04T06:34:26.209Z">
+<meta property="article:modified_time" content="2026-06-04T07:01:45.627Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -335,37 +335,37 @@ groups:
     for: 1m
     labels:
       severity: Critical
-      cluster: WindowsServer
+      cluster: WindowsServers
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; Windows服务器实例监控采集器异常，请尽快处理！&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; Windows服务器实例监控采集器异常，请及时处理！&quot;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125; Windows服务器实例监控采集器异常，异常采集器为&#123;&#123; $labels.collector &#125;&#125;&quot;
   - alert: WindowsServerCPUUsage
     expr: 100 - (avg by (instance) (rate(windows_cpu_time_total&#123;mode=&quot;idle&quot;&#125;[5m])) * 100) &gt; 80
     for: 5m
     labels:
       severity: Warning
-      cluster: WindowsServer
+      cluster: WindowsServers
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; Windows服务器实例CPU使用率过高，请尽快处理！&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; Windows服务器实例CPU使用率过高，请及时处理！&quot;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125; Windows服务器实例CPU使用率超过80%，当前使用率为&#123;&#123; $value &#125;&#125;&quot;
   - alert: WindowsServerMemoryUsage
     expr: 100 - ((windows_os_physical_memory_free_bytes / windows_cs_physical_memory_bytes) * 100) &gt; 90
     for: 5m
     labels:
       severity: Warning
-      cluster: WindowsServer
+      cluster: WindowsServers
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; Windows服务器实例内存使用率过高，请尽快处理！&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; Windows服务器实例内存使用率过高，请及时处理！&quot;
       description: &quot;&#123;&#123; $labels.instance &#125;&#125; Windows服务器实例内存使用率超过90%，当前使用率为&#123;&#123; $value &#125;&#125;&quot;
   - alert: WindowsServerDiskSpaceUsage
     expr: 100 - 100 * (windows_logical_disk_free_bytes / windows_logical_disk_size_bytes) &gt; 80 and windows_logical_disk_size_bytes &gt; 0
     for: 5m
     labels:
       severity: Critical
-      cluster: WindowsServer
+      cluster: WindowsServers
     annotations:
-      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; Windows服务器实例磁盘分区容量不足，请尽快处理！&quot;
-      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Windows服务器实例 &#123;&#123; $volume &#125;&#125;磁盘分区 &#123;&#123; $labels &#125;&#125;使用率超过80%，当前使用率为&#123;&#123; $value &#125;&#125;&quot;
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; Windows服务器实例磁盘分区容量不足，请及时处理！&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Windows服务器实例 &#123;&#123; $labels.volume &#125;&#125; 磁盘分区使用率超过80%，当前使用率为&#123;&#123; $value &#125;&#125;&quot;
 </code></pre>
 <h2 id="3-3-重载Prometheus"><a href="#3-3-重载Prometheus" class="headerlink" title="3.3 重载Prometheus"></a>3.3 重载Prometheus</h2><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload
 </code></pre>
