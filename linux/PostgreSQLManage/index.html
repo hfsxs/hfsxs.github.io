@@ -16,15 +16,15 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="1.登录数据库su - postgres # h，数据库服务器地址；p，数据库端口号；U，数据库账户；d，数据库名 psql -h 127.0.0.1 -U postgres -d postgres  2.数据库管理2.1 查看所有数据库postgres&#x3D;# \l  postgres&#x3D;# select datname from pg_database; datname   -----------">
+    <meta name="description" content="1.登录数据库su - postgres # h，数据库服务器地址；p，数据库端口号；U，数据库账户；d，数据库名 psql -h 127.0.0.1 -U postgres -d postgres  2.用户管理2.1 查看所有用户postgres&#x3D;# \du  2.2 创建用户CREATE USER user01 PASSWORD &#39;User_01&#39;;  2.3 删除用户DRO">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PostgreSQL数据库管理命令详解">
 <meta property="og:url" content="https://hfsxs.github.io/linux/PostgreSQLManage/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="1.登录数据库su - postgres # h，数据库服务器地址；p，数据库端口号；U，数据库账户；d，数据库名 psql -h 127.0.0.1 -U postgres -d postgres  2.数据库管理2.1 查看所有数据库postgres&#x3D;# \l  postgres&#x3D;# select datname from pg_database; datname   -----------">
+<meta property="og:description" content="1.登录数据库su - postgres # h，数据库服务器地址；p，数据库端口号；U，数据库账户；d，数据库名 psql -h 127.0.0.1 -U postgres -d postgres  2.用户管理2.1 查看所有用户postgres&#x3D;# \du  2.2 创建用户CREATE USER user01 PASSWORD &#39;User_01&#39;;  2.3 删除用户DRO">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-19T06:01:10.000Z">
-<meta property="article:modified_time" content="2026-06-05T07:14:27.836Z">
+<meta property="article:modified_time" content="2026-06-12T08:02:05.956Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -240,7 +240,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          507 字
+          584 字
         
       </span>
     
@@ -298,9 +298,15 @@
 # h，数据库服务器地址；p，数据库端口号；U，数据库账户；d，数据库名
 psql -h 127.0.0.1 -U postgres -d postgres
 </code></pre>
-<h1 id="2-数据库管理"><a href="#2-数据库管理" class="headerlink" title="2.数据库管理"></a>2.数据库管理</h1><h2 id="2-1-查看所有数据库"><a href="#2-1-查看所有数据库" class="headerlink" title="2.1 查看所有数据库"></a>2.1 查看所有数据库</h2><pre><code class="hljs">postgres=# \l
+<h1 id="2-用户管理"><a href="#2-用户管理" class="headerlink" title="2.用户管理"></a>2.用户管理</h1><h2 id="2-1-查看所有用户"><a href="#2-1-查看所有用户" class="headerlink" title="2.1 查看所有用户"></a>2.1 查看所有用户</h2><pre><code class="hljs">postgres=# \du
+</code></pre>
+<h2 id="2-2-创建用户"><a href="#2-2-创建用户" class="headerlink" title="2.2 创建用户"></a>2.2 创建用户</h2><pre><code class="hljs">CREATE USER user01 PASSWORD &#39;User_01&#39;;
+</code></pre>
+<h2 id="2-3-删除用户"><a href="#2-3-删除用户" class="headerlink" title="2.3 删除用户"></a>2.3 删除用户</h2><pre><code class="hljs">DROP USER user01;
+</code></pre>
+<h1 id="3-数据库管理"><a href="#3-数据库管理" class="headerlink" title="3.数据库管理"></a>3.数据库管理</h1><h2 id="3-1-查看所有数据库"><a href="#3-1-查看所有数据库" class="headerlink" title="3.1 查看所有数据库"></a>3.1 查看所有数据库</h2><pre><code class="hljs">postgres=# \l
 
-postgres=# select datname from pg_database;
+postgres=# SELECT datname FROM pg_database;
 datname  
 -----------
 postgres
@@ -308,17 +314,15 @@ template1
 template0
 
 (3 rows)
-postgres=#
 </code></pre>
-<h2 id="2-2-创建数据库"><a href="#2-2-创建数据库" class="headerlink" title="2.2 创建数据库"></a>2.2 创建数据库</h2><h1 id="2-3-切换数据库"><a href="#2-3-切换数据库" class="headerlink" title="2.3 切换数据库"></a>2.3 切换数据库</h1><pre><code class="hljs">postgres=# \c test;
+<h2 id="3-2-创建数据库"><a href="#3-2-创建数据库" class="headerlink" title="3.2 创建数据库"></a>3.2 创建数据库</h2><pre><code class="hljs">postgres=# CREATE DATABASE test OWNER user01 ENCODING UTF8;
+CREATE DATABASE
+</code></pre>
+<h1 id="3-3-切换数据库"><a href="#3-3-切换数据库" class="headerlink" title="3.3 切换数据库"></a>3.3 切换数据库</h1><pre><code class="hljs">postgres=# \c test;
 You are now connected to database &quot;test&quot; as user &quot;postgres&quot;.
-test=#
 </code></pre>
-<h1 id="3-用户管理"><a href="#3-用户管理" class="headerlink" title="3.用户管理"></a>3.用户管理</h1><h2 id="3-1-查看所有用户"><a href="#3-1-查看所有用户" class="headerlink" title="3.1 查看所有用户"></a>3.1 查看所有用户</h2><pre><code class="hljs">postgres=# \du
-</code></pre>
-<h2 id="3-2-创建用户"><a href="#3-2-创建用户" class="headerlink" title="3.2 创建用户"></a>3.2 创建用户</h2><pre><code class="hljs">CREATE ROLE user01 PASSWORD &#39;User_01&#39;;
-</code></pre>
-<h2 id="3-3-用户赋权"><a href="#3-3-用户赋权" class="headerlink" title="3.3 用户赋权"></a>3.3 用户赋权</h2><pre><code class="hljs">GRANT ALL ON DATABASE testdb01 TO user01;
+<h1 id="3-4-删除数据库"><a href="#3-4-删除数据库" class="headerlink" title="3.4 删除数据库"></a>3.4 删除数据库</h1><pre><code class="hljs">postgres=# DROP DATABASE test;
+DROP DATABASE
 </code></pre>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
@@ -396,7 +400,7 @@ test=#
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2026年6月5日</div>
+          <div>2026年6月12日</div>
         </div>
       
       <div class="license-meta-item">
