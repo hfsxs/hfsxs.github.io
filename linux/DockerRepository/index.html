@@ -24,7 +24,7 @@
 <meta property="og:description" content="Repository，即镜像仓库，用于镜像的集中存储与管理。镜像仓库服务器存储多个仓库，每个仓库又包含了多个镜像，每个镜像有不同的标签。镜像仓库可理解为具体的项目或目录，如仓库地址hub.docker&#x2F;nginx:v20.0，hub.docker是镜像仓库服务器地址，nginx是仓库名，v20.0是镜像版本号 Docker镜像仓库分为两类，即公共仓库和私有仓库。公共仓库，Public R">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-04-03T15:15:31.000Z">
-<meta property="article:modified_time" content="2026-06-10T08:34:54.098Z">
+<meta property="article:modified_time" content="2026-06-12T02:14:27.255Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -406,7 +406,7 @@ data_volume: /data
 # 设置仓库日志目录
 location: /var/log/harbor
 </code></pre>
-<h2 id="2-6-安装Harbor"><a href="#2-6-安装Harbor" class="headerlink" title="2.6 安装Harbor"></a>2.6 安装Harbor</h2><pre><code class="hljs">./install.sh
+<h2 id="2-6-安装Harbor"><a href="#2-6-安装Harbor" class="headerlink" title="2.6 安装Harbor"></a>2.6 安装Harbor</h2><pre><code class="hljs">./install.sh --with-trivy
 </code></pre>
 <h2 id="2-7-验证仓库"><a href="#2-7-验证仓库" class="headerlink" title="2.7 验证仓库"></a>2.7 验证仓库</h2><pre><code class="hljs"># 登录仓库
 docker login reg.sword.com
@@ -499,7 +499,7 @@ docker-compose down
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2026年6月10日</div>
+          <div>2026年6月12日</div>
         </div>
       
       <div class="license-meta-item">
