@@ -4,6 +4,41 @@
   
   
   <entry>
+    <title>MinIO集群数据备份恢复策略</title>
+    <link href="/linux/MinIO-Buckup/"/>
+    <url>/linux/MinIO-Buckup/</url>
+    
+    <content type="html"><![CDATA[<hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://zhaosongbin.blog.csdn.net/article/details/136174810">https://zhaosongbin.blog.csdn.net/article/details/136174810</a></li><li><a href="https://blog.csdn.net/weixin_42184538/article/details/159472334">https://blog.csdn.net/weixin_42184538/article/details/159472334</a></li><li><a href="https://blog.csdn.net/weixin_42046149/article/details/136847990">https://blog.csdn.net/weixin_42046149/article/details/136847990</a></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>存储</tag>
+      
+      <tag>分布式存储</tag>
+      
+      <tag>对象存储</tag>
+      
+      <tag>MinIO</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Prometheus监控Windows系统</title>
     <link href="/linux/Prometheus-Windows/"/>
     <url>/linux/Prometheus-Windows/</url>
