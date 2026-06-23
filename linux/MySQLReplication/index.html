@@ -24,7 +24,7 @@
 <meta property="og:description" content="MySQL的复制功能是构建大规模、高性能数据库应用的基础，就是将一台数据库服务器的数据和其它服务器保持同步，主库可同步到多台备库，备库也可作为其他服务器的主库，主备之间可以有多种不同的组合方式。复制的基本原理即主库记录DDL和DML操作写入二进制日志，从库连接主库并将获取到的二进制日志重新执行，从而保持主备数据的一致性 工作流程1.主库记录binlog主节点启动binlog dump线程，事务处理">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-02-02T07:27:27.000Z">
-<meta property="article:modified_time" content="2025-03-15T14:57:55.434Z">
+<meta property="article:modified_time" content="2026-06-23T14:56:14.144Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -327,7 +327,7 @@ sync_binlog=100
 # 设置二进制日志文件保存时长，默认为0，即永久保存
 # expire_logs_days=30
 </code></pre>
-<h2 id="2-2-创建复制账户并授予权限"><a href="#2-2-创建复制账户并授予权限" class="headerlink" title="2.2 创建复制账户并授予权限"></a>2.2 创建复制账户并授予权限</h2><pre><code class="hljs">mysql&gt;  GRANT REPLICATION SLAVE ON *.* to &#39;syncer&#39;@&#39;172.16.100.100&#39; identified by &#39;syncer&#39;;
+<h2 id="2-2-创建复制账户并授予权限"><a href="#2-2-创建复制账户并授予权限" class="headerlink" title="2.2 创建复制账户并授予权限"></a>2.2 创建复制账户并授予权限</h2><pre><code class="hljs">mysql&gt;  GRANT REPLICATION SLAVE ON *.* to &#39;syncer&#39;@&#39;172.16.100.100&#39; IDENTIFIED BY &#39;syncer&#39;;
 mysql&gt;  FLUSH PRIVILEGES;
 </code></pre>
 <h2 id="2-3-查看主节点二进制位置"><a href="#2-3-查看主节点二进制位置" class="headerlink" title="2.3 查看主节点二进制位置"></a>2.3 查看主节点二进制位置</h2><pre><code class="hljs">mysql&gt; show master status;
@@ -556,7 +556,7 @@ Replicate_Ignore_Server_Ids:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月15日</div>
+          <div>2026年6月23日</div>
         </div>
       
       <div class="license-meta-item">

@@ -24,7 +24,7 @@
 <meta property="og:description" content="1.设置root账户密码&#x2F;usr&#x2F;local&#x2F;mysql&#x2F;bin&#x2F;mysqladmin -u root password &#39;123456&#39;  2.登陆数据库# h，数据库服务器地址；p，数据库端口；u，数据库账户；p，账户密码 mysql -u root -p 123456 mysql -h127.0.0.1 -P3301 -uroot -p123456  3.查看所有数据库Mar">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-02-02T07:22:29.000Z">
-<meta property="article:modified_time" content="2026-06-03T01:13:36.329Z">
+<meta property="article:modified_time" content="2026-06-18T08:30:38.668Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -338,7 +338,7 @@ MariaDB [(none)]&gt;  CREATE TABLE test (id VARCHAR(50) NOT NULL PRIMARY KEY,nam
 </code></pre>
 <h1 id="10-显示表结构"><a href="#10-显示表结构" class="headerlink" title="10.显示表结构"></a>10.显示表结构</h1><pre><code class="hljs">MariaDB [(none)]&gt;  DESC test;
 </code></pre>
-<h1 id="11-数据表插入数据"><a href="#11-数据表插入数据" class="headerlink" title="11.数据表插入数据"></a>11.数据表插入数据</h1><pre><code class="hljs">MariaDB [(none)]&gt;  INSERT INTO test VAULES (&#39;001&#39;,&#39;test001&#39;);
+<h1 id="11-数据表插入数据"><a href="#11-数据表插入数据" class="headerlink" title="11.数据表插入数据"></a>11.数据表插入数据</h1><pre><code class="hljs">MariaDB [(none)]&gt;  INSERT INTO test VALUES (&#39;001&#39;,&#39;test001&#39;);
 </code></pre>
 <h1 id="12-修改账户密码"><a href="#12-修改账户密码" class="headerlink" title="12.修改账户密码"></a>12.修改账户密码</h1><pre><code class="hljs">MariaDB [(none)]&gt;  use mysql;
 MariaDB [(none)]&gt;  UPDATE mysql.user SET password=password(&#39;111111&#39;) WHERE User=&quot;root&quot; and Host=&quot;localhost&quot;;
@@ -438,7 +438,7 @@ exit 0
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2026年6月3日</div>
+          <div>2026年6月18日</div>
         </div>
       
       <div class="license-meta-item">
