@@ -102,6 +102,7 @@ def project = "hexo"
 
         sh """
           set +x
+          rm -rf .git
           docker build -t registry.cn-hangzhou.aliyuncs.com/geekers/hexo:${BUILD_NUMBER} .
           docker push registry.cn-hangzhou.aliyuncs.com/geekers/hexo:${BUILD_NUMBER}
           docker rmi registry.cn-hangzhou.aliyuncs.com/geekers/hexo:${BUILD_NUMBER}
