@@ -8,7 +8,7 @@
     <link href="/linux/PostgreSQL-WAL/"/>
     <url>/linux/PostgreSQL-WAL/</url>
     
-    <content type="html"><![CDATA[<hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://blog.csdn.net/weixin_44965990/article/details/158465525">https://blog.csdn.net/weixin_44965990/article/details/158465525</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<p>WAL，Write-Ahead Logging，预写日志系统，即在将数据修改写入数据库文件之前，先将这些修改记录到日志文件中。这是一种确保数据完整性的标准方法，在数据库崩溃时，可以通过重放这些日志恢复数据库</p><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://blog.csdn.net/weixin_44965990/article/details/158465525">https://blog.csdn.net/weixin_44965990/article/details/158465525</a></li></ul>]]></content>
     
     
     <categories>
