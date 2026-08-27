@@ -8,7 +8,7 @@
     <link href="/linux/Loki/"/>
     <url>/linux/Loki/</url>
     
-    <content type="html"><![CDATA[<hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://yangyongli.blog.csdn.net/article/details/141991492">https://yangyongli.blog.csdn.net/article/details/141991492</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<h1 id="1-下载Loki"><a href="#1-下载Loki" class="headerlink" title="1.下载Loki"></a>1.下载Loki</h1><pre><code class="hljs">wget https://github.com/grafana/loki/releases/download/v3.6.15/loki-3.6.15-1.x86_64.rpm    </code></pre><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://yangyongli.blog.csdn.net/article/details/141991492">https://yangyongli.blog.csdn.net/article/details/141991492</a></li></ul>]]></content>
     
     
     <categories>
