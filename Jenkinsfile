@@ -138,11 +138,7 @@ def project = "hexo"
 
       sh """
         set +x
-        echo "========= 本次更新失败，执行回滚! ========="
-        kubectl -n default rollout undo deployment hexo
-        kubectl -n default rollout status deployment hexo -w --timeout 5m
-        echo "========= 已回滚到上一版本，请检查线上业务! ========="
-        echo "========= 应用当前状态为 ========="
+        echo "========= 本次更新失败，应用当前状态为，请检查线上业务! ========="
         kubectl -n default get pod|grep hexo
       """
 
