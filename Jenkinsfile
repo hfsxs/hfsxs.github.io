@@ -117,7 +117,7 @@ def project = "hexo"
           /home/jenkins/kubectl -n default set image deployments/hexo *="registry.cn-hangzhou.aliyuncs.com/geekers/${project}:${BUILD_NUMBER}"
           /home/jenkins/kubectl -n default rollout status deployment hexo -w --timeout 5m
 
-          echo "========= 应用当前状态为 ========="
+          echo "========= 本次更新成功，当前应用状态如下 ========="
           kubectl -n default get pod|grep hexo
         """
       }
@@ -138,7 +138,7 @@ def project = "hexo"
 
       sh """
         set +x
-        echo "========= 本次更新失败，应用当前状态为，请检查线上业务! ========="
+        echo "========= 本次更新失败，当前应用状态如下，请检查线上业务! ========="
         kubectl -n default get pod|grep hexo
       """
 
