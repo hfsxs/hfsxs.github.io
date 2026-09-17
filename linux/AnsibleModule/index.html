@@ -24,7 +24,7 @@
 <meta property="og:description" content="1.commandAnsible默认模块，远程主机执行命令时不经过其Shell处理，不支持管道符、重定向和变量   ansible hosts -m command -a &#39;uptime&#39; # chdir，执行命令前先切换到指定目录 ansible hosts -m command -a &#39;chdir&#x3D;&#x2F;root ls -l&#39;   2.shellAnsible基础模">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-09-14T08:02:54.000Z">
-<meta property="article:modified_time" content="2026-09-11T10:00:21.027Z">
+<meta property="article:modified_time" content="2026-09-17T03:13:46.964Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="Ansible">
@@ -239,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.5k 字
+          3.4k 字
         
       </span>
     
@@ -250,7 +250,7 @@
         
         
         
-          21 分钟
+          29 分钟
         
       </span>
     
@@ -336,7 +336,7 @@ ansible hosts -m copy -a &#39;src=/root/docker/ dest=/usr/bin&#39;
 <h1 id="5-unarchive"><a href="#5-unarchive" class="headerlink" title="5.unarchive"></a>5.unarchive</h1><p>Ansible解压归档压缩包的模块，用于将控制主机的压缩文件分发到受控主机的指定目录，并解压</p>
 <h2 id="参数详解-2"><a href="#参数详解-2" class="headerlink" title="参数详解"></a>参数详解</h2><ul>
 <li>src，必选项，控制主机的压缩包文件路径</li>
-<li>dest，必选项，远程主机压缩包解压的路径</li>
+<li>dest，必选项，目标主机压缩包解压的路径</li>
 <li>copy，是否拷贝压缩包文件到远程主机，默认为yes，no则表示在远程主机搜索压缩包文件  </li>
 <li>owner&#x2F;group&#x2F;mode，设置目标端文件的属主、属组和权限，默认与控制主机一致</li>
 </ul>
@@ -353,8 +353,26 @@ ansible hosts -m unarchive -a &#39;src=/root/apache-tomcat-10.0.20.tar.gz dest=/
 <hr>
 <pre><code class="hljs">ansible hosts -m service -a &#39;name=docker state=started enabled=yes&#39;
 </code></pre>
-<h1 id="7-lineinfile"><a href="#7-lineinfile" class="headerlink" title="7.lineinfile"></a>7.lineinfile</h1><p>Ansible按行管理文件的模块，用于精确修改文件单行内容，可替换、插入、删除行，且天然幂等，多次执行结果一致，功能类似于sed</p>
+<h1 id="7-file"><a href="#7-file" class="headerlink" title="7.file"></a>7.file</h1><p>Ansible文件管理模块，用于管理目标主机的文件、目录及其权限，如文件或目录的创建、删除、权限修改及链接，不传输文件内容</p>
 <h2 id="参数详解-4"><a href="#参数详解-4" class="headerlink" title="参数详解"></a>参数详解</h2><ul>
+<li>path，别名src（link）或dest，必选项，目标主机上所要管理文件或目录的绝对路径</li>
+<li>state‌，对文件或目录的操作，默认为file，表示文件操作；directory，创建目录；touch，创建空文件或更新时间戳；link&#x2F;hard，创建软&#x2F;硬链接；absent，删除文件或目录，等价于rm -rf</li>
+<li>mode‌，权限配置，如644、600或755等<br>‌- owner‌&#x2F;‌group‌，设置所有者及所属组，需用户在目标主机存在<br>‌- recurse‌，设为yes表示递归修改目录下所有文件的属性，默认为no，只修改文件权限<br>‌- force‌，state&#x3D;link时，若目标存在或源文件不存在，则强制创建或覆盖链接</li>
+</ul>
+<hr>
+<pre><code class="hljs"># 创建目录，并指定权限
+ansible ops -m file -a &#39;path=/tmp/test state=directory mode=755 owner=ops group=ops&#39;
+# 创建空文件，并指定权限
+ansible ops -m file -a &#39;path=/tmp/test/test.txt state=touch mode=600 owner=nginx group=nginx&#39;
+# 递归修改目录权限
+ansible ops -m file -a &#39;path=/tmp/test state=directory mode=755 owner=nginx group=nginx recurse=yes&#39;
+# 创建软连接
+ansible ops -m file -a &#39;src=/tmp/test/test.txt state=link dest=/tmp/test.txt&#39;
+# 删除文件或目录
+ansible ops -m file -a &#39;dest=/tmp/test state=absent&#39;
+</code></pre>
+<h1 id="8-lineinfile"><a href="#8-lineinfile" class="headerlink" title="8.lineinfile"></a>8.lineinfile</h1><p>Ansible按行管理文件的模块，用于精确修改文件单行内容，可替换、插入、删除行，且天然幂等，多次执行结果一致，功能类似于sed</p>
+<h2 id="参数详解-5"><a href="#参数详解-5" class="headerlink" title="参数详解"></a>参数详解</h2><ul>
 <li>path，必选项，所操作的文件路径</li>
 <li>line，必选项，所要写入的整行内容，为空则表示为空行</li>
 <li>regexp‌，正则匹配所要操作的行，替换或删除，不指定则将line的内容追加到文件末尾</li>
@@ -363,7 +381,8 @@ ansible hosts -m unarchive -a &#39;src=/root/apache-tomcat-10.0.20.tar.gz dest=/
 <li>backup‌，默认为no，表示不备份直接修改文件，生产环境建议设为yes<br>‌- create‌，默认为no，表示文件不存在时不进行创建<br>‌- backrefs‌，开启正则后向引用，且匹配不到时不追加行<br>‌- validate‌，修改前执行校验文件语法，如nginx -t</li>
 </ul>
 <hr>
-<pre><code class="hljs"># 将000这一行替换为111，匹配不到则将追加在文件末尾
+<pre><code class="hljs">ansible ops -m lineinfile -a &#39;path=/etc/selinux/config regexp=SELINUX=enforcing line=SELINUX=disabled&#39;
+# 将000这一行替换为111，匹配不到则将追加在文件末尾
 ansible ops -m lineinfile -a &#39;path=/root/t.txt regexp=000 line=111&#39;
 </code></pre>
 <hr>
@@ -440,7 +459,7 @@ ansible ops -m lineinfile -a &#39;path=/root/t.txt regexp=000 line=111&#39;
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2026年9月11日</div>
+          <div>2026年9月17日</div>
         </div>
       
       <div class="license-meta-item">
