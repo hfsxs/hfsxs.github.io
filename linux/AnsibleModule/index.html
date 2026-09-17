@@ -24,7 +24,7 @@
 <meta property="og:description" content="1.commandAnsible默认模块，远程主机执行命令时不经过其Shell处理，不支持管道符、重定向和变量   ansible hosts -m command -a &#39;uptime&#39; # chdir，执行命令前先切换到指定目录 ansible hosts -m command -a &#39;chdir&#x3D;&#x2F;root ls -l&#39;   2.shellAnsible基础模">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-09-14T08:02:54.000Z">
-<meta property="article:modified_time" content="2026-09-17T03:13:46.964Z">
+<meta property="article:modified_time" content="2026-09-17T06:05:19.943Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="Ansible">
@@ -239,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.4k 字
+          3.7k 字
         
       </span>
     
@@ -250,7 +250,7 @@
         
         
         
-          29 分钟
+          31 分钟
         
       </span>
     
@@ -357,7 +357,10 @@ ansible hosts -m unarchive -a &#39;src=/root/apache-tomcat-10.0.20.tar.gz dest=/
 <h2 id="参数详解-4"><a href="#参数详解-4" class="headerlink" title="参数详解"></a>参数详解</h2><ul>
 <li>path，别名src（link）或dest，必选项，目标主机上所要管理文件或目录的绝对路径</li>
 <li>state‌，对文件或目录的操作，默认为file，表示文件操作；directory，创建目录；touch，创建空文件或更新时间戳；link&#x2F;hard，创建软&#x2F;硬链接；absent，删除文件或目录，等价于rm -rf</li>
-<li>mode‌，权限配置，如644、600或755等<br>‌- owner‌&#x2F;‌group‌，设置所有者及所属组，需用户在目标主机存在<br>‌- recurse‌，设为yes表示递归修改目录下所有文件的属性，默认为no，只修改文件权限<br>‌- force‌，state&#x3D;link时，若目标存在或源文件不存在，则强制创建或覆盖链接</li>
+<li>mode‌，权限配置，如644、600或755等</li>
+<li>owner‌&#x2F;‌group‌，设置所有者及所属组，需用户在目标主机存在</li>
+<li>recurse‌，设为yes表示递归修改目录下所有文件的属性，默认为no，只修改文件权限</li>
+<li>force‌，state&#x3D;link时，若目标存在或源文件不存在，则强制创建或覆盖链接</li>
 </ul>
 <hr>
 <pre><code class="hljs"># 创建目录，并指定权限
@@ -378,12 +381,20 @@ ansible ops -m file -a &#39;dest=/tmp/test state=absent&#39;
 <li>regexp‌，正则匹配所要操作的行，替换或删除，不指定则将line的内容追加到文件末尾</li>
 <li>‌state‌，默认为present，表示替换操作，absent则表示删除操作</li>
 <li>insertbefore&#x2F;insertafter‌，插入操作，在匹配行之前&#x2F;之后插入新行，支持正则或BOF&#x2F;EOF</li>
-<li>backup‌，默认为no，表示不备份直接修改文件，生产环境建议设为yes<br>‌- create‌，默认为no，表示文件不存在时不进行创建<br>‌- backrefs‌，开启正则后向引用，且匹配不到时不追加行<br>‌- validate‌，修改前执行校验文件语法，如nginx -t</li>
+<li>backup‌，默认为no，表示不备份直接修改文件，生产环境建议设为yes</li>
+<li>create‌，默认为no，表示文件不存在时不进行创建</li>
+<li>backrefs‌，开启正则后向引用，且匹配不到时不追加行</li>
+<li>validate‌，修改前执行校验文件语法，如nginx -t</li>
 </ul>
 <hr>
-<pre><code class="hljs">ansible ops -m lineinfile -a &#39;path=/etc/selinux/config regexp=SELINUX=enforcing line=SELINUX=disabled&#39;
-# 将000这一行替换为111，匹配不到则将追加在文件末尾
-ansible ops -m lineinfile -a &#39;path=/root/t.txt regexp=000 line=111&#39;
+<pre><code class="hljs"># 创建文件，并将不指定正则的行追加到文件末尾
+ansible ops -m lineinfile -a &#39;dest=/root/test.txt line=000 create=yes&#39;
+# 替换匹配行，匹配不到则将追加到文件末尾
+ansible ops -m lineinfile -a &#39;path=/root/t.txt regexp=111 line=222&#39;
+# 匹配行前插入新行，匹配不到则不做修改
+ansible ops -m lineinfile -a &#39;path=/root/test.txt insertbefore=999 line=000&#39;
+# 替换匹配行并备份源文件，且在修改前验证语法
+ansible ops -m lineinfile -a &quot;path=&#39;/etc/nginx/nginx.conf&#39; regexp=&#39;user nginx&#39; line=&#39;user www&#39; backup=yes validate‌=&#39;nginx -t&#39;&quot;
 </code></pre>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
