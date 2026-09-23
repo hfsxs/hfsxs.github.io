@@ -1,0 +1,933 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="扬帆">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="RGW，RADOS Gateway，Ceph分布式存储系统提供对象存储服务的网关组件‌，即将底层RADOS集群的存储能力转换成标准的S3和Swift兼容接口，以HTTP请求的方式直接读写对象数据即可。简单地说，RGW就是对象存储的入口，本质上是类似于Nginx的HTTP服务，负责接收和处理客户端的RESTful API请求 1.部署rgw1.1 安装CephRgwsudo apt install">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ceph集群对象存储的配置与管理.md">
+<meta property="og:url" content="https://hfsxs.github.io/linux/CephRgw/index.html">
+<meta property="og:site_name" content="扬帆">
+<meta property="og:description" content="RGW，RADOS Gateway，Ceph分布式存储系统提供对象存储服务的网关组件‌，即将底层RADOS集群的存储能力转换成标准的S3和Swift兼容接口，以HTTP请求的方式直接读写对象数据即可。简单地说，RGW就是对象存储的入口，本质上是类似于Nginx的HTTP服务，负责接收和处理客户端的RESTful API请求 1.部署rgw1.1 安装CephRgwsudo apt install">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-18T01:20:07.000Z">
+<meta property="article:modified_time" content="2026-09-22T01:24:52.553Z">
+<meta property="article:author" content="扬帆">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="云计算">
+<meta property="article:tag" content="Ceph">
+<meta property="article:tag" content="存储">
+<meta property="article:tag" content="分布式存储">
+<meta property="article:tag" content="云存储">
+<meta property="article:tag" content="对象存储">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Ceph集群对象存储的配置与管理.md - 扬帆</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"hfsxs.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":100,"cursorChar":"","loop":false,"scope":["home"]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"COPY"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>扬帆</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle">Ceph集群对象存储的配置与管理.md</span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-09-18 09:20" pubdate>
+          2026年9月18日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          48 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Ceph集群对象存储的配置与管理.md</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>RGW，RADOS Gateway，Ceph分布式存储系统提供对象存储服务的网关组件‌，即将底层RADOS集群的存储能力转换成标准的S3和Swift兼容接口，以HTTP请求的方式直接读写对象数据即可。简单地说，RGW就是对象存储的入口，本质上是类似于Nginx的HTTP服务，负责接收和处理客户端的RESTful API请求</p>
+<h1 id="1-部署rgw"><a href="#1-部署rgw" class="headerlink" title="1.部署rgw"></a>1.部署rgw</h1><h2 id="1-1-安装CephRgw"><a href="#1-1-安装CephRgw" class="headerlink" title="1.1 安装CephRgw"></a>1.1 安装CephRgw</h2><pre><code class="hljs">sudo apt install -y radosgw
+sudo yum install -y ceph-radosgw
+</code></pre>
+<h2 id="1-2-创建节点目录"><a href="#1-2-创建节点目录" class="headerlink" title="1.2 创建节点目录"></a>1.2 创建节点目录</h2><pre><code class="hljs">sudo -u ceph mkdir -p /var/lib/ceph/rgw/ceph-node01
+</code></pre>
+<h2 id="1-3-创建rgw密钥环"><a href="#1-3-创建rgw密钥环" class="headerlink" title="1.3 创建rgw密钥环"></a>1.3 创建rgw密钥环</h2><pre><code class="hljs">ceph auth get-or-create rgw.ceph01 osd &#39;allow rwx&#39; mon &#39;allow rw&#39; -o /var/lib/ceph/rgw/ceph-node01/keyring
+</code></pre>
+<h2 id="1-4-导出rgw密钥环"><a href="#1-4-导出rgw密钥环" class="headerlink" title="1.4 导出rgw密钥环"></a>1.4 导出rgw密钥环</h2><pre><code class="hljs">sudo ceph auth get rgw.ceph01 -o /var/lib/ceph/rgw/ceph-node01/keyring
+sudo chown -R ceph.ceph /var/lib/ceph/rgw
+</code></pre>
+<h2 id="1-5-集群配置文件添加rgw"><a href="#1-5-集群配置文件添加rgw" class="headerlink" title="1.5 集群配置文件添加rgw"></a>1.5 集群配置文件添加rgw</h2><pre><code class="hljs">sudo vi /etc/ceph/ceph.conf
+
+
+[client.rgw.ceph01]
+rgw_frontends = &quot;civetweb port=8088&quot;
+</code></pre>
+<h2 id="1-6-启动rgw"><a href="#1-6-启动rgw" class="headerlink" title="1.6 启动rgw"></a>1.6 启动rgw</h2><pre><code class="hljs">systemctl status ceph-rgw@node01.service
+systemctl enable ceph-rgw@node01.service
+</code></pre>
+<h2 id="1-7-验证rgw"><a href="#1-7-验证rgw" class="headerlink" title="1.7 验证rgw"></a>1.7 验证rgw</h2><pre><code class="hljs">ceph -s
+</code></pre>
+<h2 id="1-8-创建对象存储访问账户"><a href="#1-8-创建对象存储访问账户" class="headerlink" title="1.8 创建对象存储访问账户"></a>1.8 创建对象存储访问账户</h2><pre><code class="hljs"> radosgw-admin user create --uid &quot;ops&quot; --display-name &quot;Ops&quot;
+
+&#123;
+&quot;user_id&quot;: &quot;ops&quot;,
+&quot;display_name&quot;: &quot;Ops&quot;,
+&quot;email&quot;: &quot;&quot;,
+&quot;suspended&quot;: 0,
+&quot;max_buckets&quot;: 1000,
+&quot;subusers&quot;: [],
+&quot;keys&quot;: [
+    &#123;
+        &quot;user&quot;: &quot;ops&quot;,
+        &quot;access_key&quot;: &quot;P0LRHWEWVKBYRQ666W18&quot;,
+        &quot;secret_key&quot;: &quot;p1mQRhoSzbrfpWjANRZoJc9tFViZDGaA9nDhFDTd&quot;
+    &#125;
+],
+&quot;swift_keys&quot;: [],
+&quot;caps&quot;: [],
+&quot;op_mask&quot;: &quot;read, write, delete&quot;,
+&quot;default_placement&quot;: &quot;&quot;,
+&quot;default_storage_class&quot;: &quot;&quot;,
+&quot;placement_tags&quot;: [],
+&quot;bucket_quota&quot;: &#123;
+    &quot;enabled&quot;: false,
+    &quot;check_on_raw&quot;: false,
+    &quot;max_size&quot;: -1,
+    &quot;max_size_kb&quot;: 0,
+    &quot;max_objects&quot;: -1
+&#125;,
+&quot;user_quota&quot;: &#123;
+    &quot;enabled&quot;: false,
+    &quot;check_on_raw&quot;: false,
+    &quot;max_size&quot;: -1,
+    &quot;max_size_kb&quot;: 0,
+    &quot;max_objects&quot;: -1
+&#125;,
+&quot;temp_url_keys&quot;: [],
+&quot;type&quot;: &quot;rgw&quot;,
+&quot;mfa_ids&quot;: []
+&#125;
+</code></pre>
+<h1 id="2-配置rgw代理"><a href="#2-配置rgw代理" class="headerlink" title="2.配置rgw代理"></a>2.配置rgw代理</h1><h2 id="2-1-创建配置文件"><a href="#2-1-创建配置文件" class="headerlink" title="2.1 创建配置文件"></a>2.1 创建配置文件</h2><pre><code class="hljs">sudo vi /etc/nginx/cephrgw.conf
+
+
+upstream rgw &#123;
+  server 172.16.100.201:8088;
+  server 172.16.100.202:8080;
+  server 172.16.100.203:8080;
+&#125;
+
+server &#123;
+  listen       80;
+  server_name  rgw.ops.org;
+  charset utf-8;
+
+  location / &#123;
+    proxy_pass  http://rgw;
+    proxy_set_header    Host   $host;
+    access_log /var/log/nginx/rgw.log;
+  &#125;
+&#125;
+</code></pre>
+<h2 id="2-2-重载Nginx"><a href="#2-2-重载Nginx" class="headerlink" title="2.2 重载Nginx"></a>2.2 重载Nginx</h2><pre><code class="hljs">sudo nginx -t
+sudo nginx -s reload
+</code></pre>
+<h1 id="3-客户端测试对象存储"><a href="#3-客户端测试对象存储" class="headerlink" title="3.客户端测试对象存储"></a>3.客户端测试对象存储</h1><h2 id="3-1-安装S3工具"><a href="#3-1-安装S3工具" class="headerlink" title="3.1 安装S3工具"></a>3.1 安装S3工具</h2><pre><code class="hljs">sudo yum install -y s3cmd
+</code></pre>
+<h2 id="3-1-配置S3运行环境"><a href="#3-1-配置S3运行环境" class="headerlink" title="3.1 配置S3运行环境"></a>3.1 配置S3运行环境</h2><pre><code class="hljs">s3cmd --configure
+
+
+Enter new values or accept defaults in brackets with Enter.
+Refer to user manual for detailed description of all options.
+
+Access key and Secret key are your identifiers for Amazon S3. Leave them empty for using the env variables.
+Access Key: P0LRHWEWVKBYRQ666W18
+Secret Key: p1mQRhoSzbrfpWjANRZoJc9tFViZDGaA9nDhFDTd
+Default Region [US]: 
+
+Use &quot;s3.amazonaws.com&quot; for S3 Endpoint and not modify it to the target Amazon S3.
+S3 Endpoint [s3.amazonaws.com]: rgw.ops.org
+
+Use &quot;%(bucket)s.s3.amazonaws.com&quot; to the target Amazon S3. &quot;%(bucket)s&quot; and &quot;%(location)s&quot; vars can be used
+if the target S3 system supports dns based buckets.
+DNS-style bucket+hostname:port template for accessing a bucket [%(bucket)s.s3.amazonaws.com]: %(bucket).rgw.ops.org
+
+Encryption password is used to protect your files from reading
+by unauthorized persons while in transfer to S3
+Encryption password: 
+Path to GPG program [/bin/gpg]: 
+
+When using secure HTTPS protocol all communication with Amazon S3
+servers is protected from 3rd party eavesdropping. This method is
+slower than plain HTTP, and can only be proxied with Python 2.7 or newer
+Use HTTPS protocol [Yes]: No
+
+On some networks all internet access must go through a HTTP proxy.
+Try setting it here if you can&#39;t connect to S3 directly
+HTTP Proxy server name: 
+
+New settings:
+  Access Key: P0LRHWEWVKBYRQ666W18
+  Secret Key: p1mQRhoSzbrfpWjANRZoJc9tFViZDGaA9nDhFDTd
+  Default Region: US
+  S3 Endpoint: rgw.ops.org
+  DNS-style bucket+hostname:port template for accessing a bucket: %(bucket).rgw.ops.org
+  Encryption password: 
+  Path to GPG program: /bin/gpg
+  Use HTTPS protocol: False
+  HTTP Proxy server name: 
+  HTTP Proxy server port: 0
+
+Test access with supplied credentials? [Y/n] Y
+Please wait, attempting to list all buckets...
+Success. Your access key and secret key worked fine :-)
+
+Now verifying that encryption works...
+Not configured. Never mind.
+
+Save settings? [y/N] y
+Configuration saved to &#39;/home/ops/.s3cfg&#39;
+</code></pre>
+<h1 id="3-2-测试对象存储"><a href="#3-2-测试对象存储" class="headerlink" title="3.2 测试对象存储"></a>3.2 测试对象存储</h1><pre><code class="hljs"># 创建存储桶
+s3cmd mb s3://test-bucket
+# 查看存储桶
+s3cmd ls
+# 上传文件
+s3cmd put /etc/hosts s3://test-bucket
+# 查看文件
+s3cmd ls s3://test-bucket
+# 删除文件
+s3cmd del s3://test-bucket/hosts
+</code></pre>
+<h1 id="4-配置Ceph-Dashboard"><a href="#4-配置Ceph-Dashboard" class="headerlink" title="4.配置Ceph Dashboard"></a>4.配置Ceph Dashboard</h1><h2 id="4-1-创建系统级用户‌"><a href="#4-1-创建系统级用户‌" class="headerlink" title="4.1 创建系统级用户‌"></a>4.1 创建系统级用户‌</h2><pre><code class="hljs">radosgw-admin user create --uid=rgw --display-name=CephRgw --system
+
+
+&#123;
+&quot;user_id&quot;: &quot;rgw&quot;,
+&quot;display_name&quot;: &quot;CephRgw&quot;,
+&quot;email&quot;: &quot;&quot;,
+&quot;suspended&quot;: 0,
+&quot;max_buckets&quot;: 1000,
+&quot;subusers&quot;: [],
+&quot;keys&quot;: [
+    &#123;
+        &quot;user&quot;: &quot;rgw&quot;,
+        &quot;access_key&quot;: &quot;2JOXM2BW2QXZKWK086YP&quot;,
+        &quot;secret_key&quot;: &quot;G7Qse18Tnm7QfVTl5Eso2VPS1t5ldq39QLP63tCl&quot;
+    &#125;
+],
+&quot;swift_keys&quot;: [],
+&quot;caps&quot;: [],
+&quot;op_mask&quot;: &quot;read, write, delete&quot;,
+&quot;system&quot;: &quot;true&quot;,
+&quot;default_placement&quot;: &quot;&quot;,
+&quot;default_storage_class&quot;: &quot;&quot;,
+&quot;placement_tags&quot;: [],
+&quot;bucket_quota&quot;: &#123;
+    &quot;enabled&quot;: false,
+    &quot;check_on_raw&quot;: false,
+    &quot;max_size&quot;: -1,
+    &quot;max_size_kb&quot;: 0,
+    &quot;max_objects&quot;: -1
+&#125;,
+&quot;user_quota&quot;: &#123;
+    &quot;enabled&quot;: false,
+    &quot;check_on_raw&quot;: false,
+    &quot;max_size&quot;: -1,
+    &quot;max_size_kb&quot;: 0,
+    &quot;max_objects&quot;: -1
+&#125;,
+&quot;temp_url_keys&quot;: [],
+&quot;type&quot;: &quot;rgw&quot;,
+&quot;mfa_ids&quot;: []
+&#125;
+</code></pre>
+<h2 id="4-2-导入访问凭证"><a href="#4-2-导入访问凭证" class="headerlink" title="4.2 导入访问凭证"></a>4.2 导入访问凭证</h2><pre><code class="hljs">echo &#39;2JOXM2BW2QXZKWK086YP&#39; &gt; ak
+ceph dashboard set-rgw-api-access-key -i ak
+
+echo &#39;G7Qse18Tnm7QfVTl5Eso2VPS1t5ldq39QLP63tCl&#39; &gt; sk
+ceph dashboard set-rgw-api-secret-key -i sk
+</code></pre>
+<h2 id="4-3-重启mgr服务"><a href="#4-3-重启mgr服务" class="headerlink" title="4.3 重启mgr服务"></a>4.3 重启mgr服务</h2><pre><code class="hljs">systemctl restart ceph-mgr@ceph01.service 
+systemctl restart ceph-mgr@ceph02.service
+</code></pre>
+<hr>
+<h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/cyleon/p/12299192.html">https://www.cnblogs.com/cyleon/p/12299192.html</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/i12344/article/details/161422848">https://blog.csdn.net/i12344/article/details/161422848</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_73797346/article/details/144479295">https://blog.csdn.net/qq_73797346/article/details/144479295</a></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/linux/" class="category-chain-item">工作</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Linux/">#Linux</a>
+      
+        <a href="/tags/%E4%BA%91%E8%AE%A1%E7%AE%97/">#云计算</a>
+      
+        <a href="/tags/Ceph/">#Ceph</a>
+      
+        <a href="/tags/%E5%AD%98%E5%82%A8/">#存储</a>
+      
+        <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/">#分布式存储</a>
+      
+        <a href="/tags/%E4%BA%91%E5%AD%98%E5%82%A8/">#云存储</a>
+      
+        <a href="/tags/%E5%AF%B9%E8%B1%A1%E5%AD%98%E5%82%A8/">#对象存储</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Ceph集群对象存储的配置与管理.md</div>
+      <div>https://hfsxs.github.io/linux/CephRgw/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>扬帆</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年9月18日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2026年9月22日</div>
+        </div>
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/linux/MultibranchPipeline/" title="Jenkins多分支流水线详解">
+                        <span class="hidden-mobile">Jenkins多分支流水线详解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  <article id="comments" lazyload>
+    
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      var light = 'github-light';
+      var dark = 'github-dark';
+      var schema = document.documentElement.getAttribute('data-user-color-scheme');
+      if (schema === 'dark') {
+        schema = dark;
+      } else {
+        schema = light;
+      }
+      window.UtterancesThemeLight = light;
+      window.UtterancesThemeDark = dark;
+      var s = document.createElement('script');
+      s.setAttribute('src', 'https://utteranc.es/client.js');
+      s.setAttribute('repo', 'hfsxs/hexo-comments');
+      s.setAttribute('issue-term', 'pathname');
+      
+      s.setAttribute('theme', schema);
+      s.setAttribute('crossorigin', 'anonymous');
+      document.getElementById('comments').appendChild(s);
+    })
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+  </article>
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+  
+</div>
+
+  
+  
+  
+
+<div>
+<span id="timeDate"> 正在载入天数...</span>
+<span id="times"> 载入时分秒...</span>
+<script>
+    var now = new Date();
+    function createtime(){
+        var grt= new Date("1/12/2025 01:15:00");
+        now.setTime(now.getTime()+250);
+        days = (now - grt) / 1000 / 60 / 60 / 24;
+        dnum = Math.floor(days);
+        hours = (now - grt) / 1000 / 60 / 60 - (24 * dnum);
+        hnum = Math.floor(hours);
+        if(String(hnum).length ==1 ){
+            hnum = "0" + hnum;
+        }
+        minutes = (now - grt) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+        mnum = Math.floor(minutes);
+        if(String(mnum).length ==1 ){
+                mnum = "0" + mnum;
+        }
+        seconds = (now - grt) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+        snum = Math.round(seconds);
+        if(String(snum).length ==1 ){
+                snum = "0" + snum;
+        }
+        document.getElementById("timeDate").innerHTML = "🚀本站已运行 "+dnum+"&nbsp 天";
+        document.getElementById("times").innerHTML = hnum + "&nbsp 时 " + mnum + " 分 " + snum + " 秒";
+    }
+    setInterval("createtime()",250);
+</script>
+</div>
+
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
