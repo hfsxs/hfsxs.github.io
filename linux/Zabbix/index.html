@@ -24,7 +24,7 @@
 <meta property="og:description" content="Zabbix，由C语言开发的开源分布式企业级监控系统，通过Agent方式采集服务器、应用程序、网络服务、数据库、网站及其他网络硬件的工作状态，最终将监控数据写入数据库。Zabbix具备分布式监控功能，支持复杂架构下的监控解决方案，还提供直观的web页面展现。Zabbix告警通知机制也比较灵活，如邮件、短信和其他报警方式，以便于快速定位、解决各种故障，从而保障业务统的安全与稳定 体系架构Zabbix">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-02-02T10:09:31.000Z">
-<meta property="article:modified_time" content="2026-05-15T06:29:59.934Z">
+<meta property="article:modified_time" content="2026-09-30T06:17:47.878Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -306,60 +306,74 @@
 <h2 id="4-zabbix-get"><a href="#4-zabbix-get" class="headerlink" title="4.zabbix_get"></a>4.zabbix_get</h2><p>Zabbix数据接收工具，单独使用的命令，通常在server或proxy端执行获取远程客户端信息的命令</p>
 <h2 id="5-zabbix-sender"><a href="#5-zabbix-sender" class="headerlink" title="5.zabbix_sender"></a>5.zabbix_sender</h2><p>Zabbix数据发送工具，发送数据给server或proxy端，通常用于耗时比较长的检查</p>
 <h2 id="6-zabbix-java-gataway"><a href="#6-zabbix-java-gataway" class="headerlink" title="6.zabbix_java_gataway"></a>6.zabbix_java_gataway</h2><p>java网关，专用于java的agentd，只能主动取获取数据，而不能被动获取</p>
-<h1 id="监控指标"><a href="#监控指标" class="headerlink" title="监控指标"></a>监控指标</h1><h2 id="1-操作系统状态"><a href="#1-操作系统状态" class="headerlink" title="1.操作系统状态"></a>1.操作系统状态</h2><p>例如CPU使用率、内存使用率、磁盘空间等。Zabbix agent还可以执行命令并返回结果，用于更复杂的监控需求。使用Zabbix agent进行监控的好处是它可以提供更详细和精确的数据，并且对于网络环境有更好的适应性</p>
-<h2 id="2-服务器硬件状态"><a href="#2-服务器硬件状态" class="headerlink" title="2.服务器硬件状态"></a>2.服务器硬件状态</h2><p>IPMI:智能平台管理接口（Intelligent Platform Management Interface）IPMI 能够横跨不同的操作系统、固件和硬件平台，用于监控服务器硬件的状态和性能。Zabbix可以通过IPMI协议直接与服务器进行通信，获取硬件相关的信息，例如温度、风扇转速、电源状态等</p>
-<h2 id="3-应用程序状态"><a href="#3-应用程序状态" class="headerlink" title="3.应用程序状态"></a>3.应用程序状态</h2><h2 id="4-Web网站状态"><a href="#4-Web网站状态" class="headerlink" title="4.Web网站状态"></a>4.Web网站状态</h2><h2 id="5-网络硬件设备状态"><a href="#5-网络硬件设备状态" class="headerlink" title="5.网络硬件设备状态"></a>5.网络硬件设备状态</h2><p>SNMP：网络管理协议（Simple Network Management Protocol）是专门设计用于在 IP 网络管理网络节点（服务器、工作站、路由器、交换机等）的一种标准协议，它是一种应用层协议。通过SNMP协议，Zabbix可以获取网络设备的各种信息，例如接口流量、端口状态等</p>
-<h2 id="6-Java程序状态"><a href="#6-Java程序状态" class="headerlink" title="6.Java程序状态"></a>6.Java程序状态</h2><p>JMX（Java Management Extensions）：JMX是一种Java平台的管理和监控标准。Zabbix可以通过JMX协议与Java应用程序进行通信，获取应用程序运行状态的信息，例如堆内存使用情况、线程数、GC时间等。JMX适用于监控Java应用程序的性能和健康状态，对于Java开发人员和运维人员非常有用</p>
-<h1 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h1><h2 id="1-主机"><a href="#1-主机" class="headerlink" title="1.主机"></a>1.主机</h2><p>host，主机，被监控的网络设备，以IP或域名表示</p>
-<h2 id="2-主机组"><a href="#2-主机组" class="headerlink" title="2.主机组"></a>2.主机组</h2><p>host group，主机组，逻辑概念，包含主机和模板，一个主机组的主机和模板之间并没有任何直接的关联。通常在给不同用户组的主机分配权限时候使用主机组</p>
-<h2 id="3-监控项"><a href="#3-监控项" class="headerlink" title="3.监控项"></a>3.监控项</h2><p>item，监控项，即监控指标，通常是度量数据</p>
-<h2 id="4-触发器"><a href="#4-触发器" class="headerlink" title="4.触发器"></a>4.触发器</h2><p>trigger，触发器，用于定义监控指标阈值和评估监控项接收到的数据的逻辑表达式 当接收到的数据高于阈值时，触发器从“OK”变成“Problem”状态。当接收到的数据低于阈值时，触发器保留&#x2F;返回一个“OK”的状态。</p>
-<h2 id="5-动作"><a href="#5-动作" class="headerlink" title="5.动作"></a>5.动作</h2><p>action，一个对事件做出反应的预定义的操作。 一个动作由操作(例如发出通知)和条件(当时操作正在发生)组成</p>
-<h2 id="6-媒介"><a href="#6-媒介" class="headerlink" title="6.媒介"></a>6.媒介</h2><p>media，发送告警通知的手段；告警通知的途径</p>
-<h2 id="7-远程命令"><a href="#7-远程命令" class="headerlink" title="7.远程命令"></a>7.远程命令</h2><p>remote command，一个预定义好的，满足一些条件的情况下，可以在被监控主机上自动执行的命令</p>
-<h1 id="8-模版"><a href="#8-模版" class="headerlink" title="8.模版"></a>8.模版</h1><p>template，一组可以被应用到一个或多个主机上的实体（监控项，触发器，图形，应用，Web场景等）的集合 模版的任务就是加快对主机监控任务的实施；也可以使监控任务的批量修改更简单。模版是直接关联到每台单独的主机上。</p>
-<h1 id="9-Web场景"><a href="#9-Web场景" class="headerlink" title="9.Web场景"></a>9.Web场景</h1><p>web scenario，利用一个或多个HTTP请求来检查网站的可用性</p>
+<h1 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h1><h2 id="1-操作系统"><a href="#1-操作系统" class="headerlink" title="1.操作系统"></a>1.操作系统</h2><p>CPU负载与使用率、内存使用率、磁盘空间与IO、系统进程、系统日志、网卡状态及流量等</p>
+<h2 id="2-服务器硬件"><a href="#2-服务器硬件" class="headerlink" title="2.服务器硬件"></a>2.服务器硬件</h2><p>Zabbix通过IPMI（Intelligent Platform Management Interface，智能平台管理接口）协议跨越不同的操作系统、固件和硬件平台直接与服务器进行通信，并获取硬件相关的状态与性能，如温度、风扇转速、电源状态等</p>
+<h2 id="3-网络设备"><a href="#3-网络设备" class="headerlink" title="3.网络设备"></a>3.网络设备</h2><p>Zabbix通过SNMP（网络管理协议，Simple Network Management Protocol，用于监控和管理网络节点与设备的应用层协议，如服务器、工作站、路由器、交换机）协议监控路由器、交换机、防火墙、UPS、温度传感器、传真机和负载均衡等硬件设备的状态，如流量、错误包率、端口状态、防火墙规则、连接数、负载均衡状态等，还能解析 Cisco、华为等厂商的MIB库</p>
+<h2 id="4-应用程序"><a href="#4-应用程序" class="headerlink" title="4.应用程序"></a>4.应用程序</h2><p>Zabbix可用于监控Web服务器和应用服务器的HTTP请求、响应时间、连接数等指标，对DNS、DHCP、SMTP等网络服务，可监控其可用性、响应时间、错误率等指标，对于数据库服务器可监控数据库的查询性能、连接数、缓存利用率等指标。此外，对于Java程序，通过JMX协议（Java Management Extensions）进行通信，以获取其运行状态，如堆内存使用情况、线程数、GC时间等，并通过这些指标判断其性能和健康状态</p>
+<h2 id="5-容器"><a href="#5-容器" class="headerlink" title="5.容器"></a>5.容器</h2><p>Zabbix可用于监控容器化应用程序的状态、性能和资源利用率，如Docker、Kubernetes等</p>
+<h2 id="6-自定义监控"><a href="#6-自定义监控" class="headerlink" title="6.自定义监控"></a>6.自定义监控</h2><p>Zabbix agent支持执行自定义命令返回监控结果，以实现更复杂监控需求，如使用Shell脚本监控某些业务场景</p>
+<h1 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h1><h2 id="1-主机"><a href="#1-主机" class="headerlink" title="1.主机"></a>1.主机</h2><p>host，主机，被监控的设备，以IP或域名表示</p>
+<h2 id="2-主机组"><a href="#2-主机组" class="headerlink" title="2.主机组"></a>2.主机组</h2><p>host group，主机组，逻辑概念，包含主机和模板，通常用于给不同用户组的主机分配权限</p>
+<h2 id="3-监控项"><a href="#3-监控项" class="headerlink" title="3.监控项"></a>3.监控项</h2><p>item，监控项，即监控指标，通常是度量数据，由key标识，如vm.memory.size[pavailable]，表示内存使用率</p>
+<h2 id="4-触发器"><a href="#4-触发器" class="headerlink" title="4.触发器"></a>4.触发器</h2><p>trigger，触发器，用于定义监控的监控值是否在正常阈值的逻辑表达式，超过阈值责备认为是故障，触发器从“OK”变成“Problem”状态，直到恢复，触发器再返回一个“OK”的状态，表示故障恢复</p>
+<h2 id="5-事件"><a href="#5-事件" class="headerlink" title="5.事件"></a>5.事件</h2><p>event，事件，触发器触发的特定事件，或zabbix定义的一个自动上线注册主机的事件</p>
+<h2 id="6-动作"><a href="#6-动作" class="headerlink" title="6.动作"></a>6.动作</h2><p>action，动作，Zabbix触发器触发时预定义的特定事件处理的具体措施，如执行脚本，或向管理员邮箱发送告警邮件等</p>
+<h2 id="7-媒介"><a href="#7-媒介" class="headerlink" title="7.媒介"></a>7.媒介</h2><p>media，媒介，发送告警通知的手段和途径，如邮件、钉钉等</p>
+<h1 id="8-Web场景"><a href="#8-Web场景" class="headerlink" title="8.Web场景"></a>8.Web场景</h1><p>web scenario，Web场景，用于检测web站点可用性的一个或多个HTTP请求</p>
+<h1 id="9-模版"><a href="#9-模版" class="headerlink" title="9.模版"></a>9.模版</h1><p>template，一组可被应用到被监控主机的预设条目集合（如监控项、触发器、Web场景等），用于主机的快速监控与监控任务的批量修改，将这些设置好的规则直接关联到主机</p>
+<h1 id="配置流程"><a href="#配置流程" class="headerlink" title="配置流程"></a>配置流程</h1><h2 id="1-安装Zabbix-Agent"><a href="#1-安装Zabbix-Agent" class="headerlink" title="1.安装Zabbix Agent"></a>1.安装Zabbix Agent</h2><h2 id="2-创建主机"><a href="#2-创建主机" class="headerlink" title="2.创建主机"></a>2.创建主机</h2><p>Zabbix UI登录，创建一个host，即要监控的设备或应用程序，并为主机指定一个唯一的名称，设置主机的IP地址或DNS名称，再选择适当的监控方式（如Agent、SNMP等）</p>
+<h2 id="3-创建监控项"><a href="#3-创建监控项" class="headerlink" title="3.创建监控项"></a>3.创建监控项</h2><p>为主机创建用于采集数据监控项（也可以关联监控模板），监控项定义了要监控的指标，如CPU使用率、内存使用率、磁盘空间等，并选择适当的监控方式（例如通过Zabbix agent、SNMP、JMX等）和相应的键值，以及采集数据的间隔时间</p>
+<h2 id="4-创建触发器"><a href="#4-创建触发器" class="headerlink" title="4.创建触发器"></a>4.创建触发器</h2><p>监控项被定义后，需要创建触发器，用于触发告警动作。触发器定义了异常情况的条件，如CPU负载过高、网络连接超时等。设置合适的条件表达式，以及设置触发器的优先级和严重性级别</p>
+<h2 id="5-配置告警动作"><a href="#5-配置告警动作" class="headerlink" title="5.配置告警动作"></a>5.配置告警动作</h2><p>触发器定义后，需要配置告警动作（action），即在触发器被触发后所采取的操作。Zabbix支持电子邮件、短信、钉钉、企业微信、执行脚本等等多种方式进行告警。最后为每个动作指定相应的操作，如发送给管理员、发送给特定用户组等</p>
 <hr>
-<h1 id="1-安装依赖包"><a href="#1-安装依赖包" class="headerlink" title="1.安装依赖包"></a>1.安装依赖包</h1><pre><code class="hljs">apt install -y gcc libsnmp-dev libevent-dev libxml2-dev libghc-curl-dev
-yum instal -y gcc make curl-devel net-snmp-devel libcurl libxml2-devel
+<h1 id="1-安装依赖包"><a href="#1-安装依赖包" class="headerlink" title="1.安装依赖包"></a>1.安装依赖包</h1><pre><code class="hljs">apt install -y gcc mysql-dev libsnmp-dev libevent-dev libxml2-dev libghc-curl-dev
+yum instal -y gcc make curl-devel mysql-devel net-snmp-devel libcurl libxml2-devel
 </code></pre>
-<h1 id="2-安装Nginx、PHP、MySQL"><a href="#2-安装Nginx、PHP、MySQL" class="headerlink" title="2.安装Nginx、PHP、MySQL"></a>2.安装Nginx、PHP、MySQL</h1><h2 id="2-1-配置数据库"><a href="#2-1-配置数据库" class="headerlink" title="2.1 配置数据库"></a>2.1 配置数据库</h2><h3 id="2-1-1-创建zabbix数据库，并授予权限"><a href="#2-1-1-创建zabbix数据库，并授予权限" class="headerlink" title="2.1.1 创建zabbix数据库，并授予权限"></a>2.1.1 创建zabbix数据库，并授予权限</h3><pre><code class="hljs">MariaDB [(none)]&gt; create database zabbix charset utf8 collate utf8_bin;&quot;
-MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON zabbix.* TO &#39;zabbix&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;zabbix&#39;;
-MariaDB [(none)]&gt; flush privileges;&quot;
-</code></pre>
-<h3 id="2-1-2-导入zabbix表结构"><a href="#2-1-2-导入zabbix表结构" class="headerlink" title="2.1.2 导入zabbix表结构"></a>2.1.2 导入zabbix表结构</h3><pre><code class="hljs">MariaDB [(none)]&gt; source database/mysql/schema.sql;
-MariaDB [(none)]&gt; source database/mysql/images.sql;
-MariaDB [(none)]&gt; source database/mysql/data.sql;
-</code></pre>
-<h1 id="3-创建zabbix用户与组"><a href="#3-创建zabbix用户与组" class="headerlink" title="3.创建zabbix用户与组"></a>3.创建zabbix用户与组</h1><pre><code class="hljs">groupadd zabbix &amp;&amp; useradd -g zabbix -s /sbin/nologin zabbix
+<h1 id="2-安装Nginx、PHP、MySQL"><a href="#2-安装Nginx、PHP、MySQL" class="headerlink" title="2.安装Nginx、PHP、MySQL"></a>2.安装Nginx、PHP、MySQL</h1><h1 id="3-创建Zabbix用户与组"><a href="#3-创建Zabbix用户与组" class="headerlink" title="3.创建Zabbix用户与组"></a>3.创建Zabbix用户与组</h1><pre><code class="hljs">groupadd zabbix &amp;&amp; useradd -g zabbix -s /sbin/nologin zabbix
 mkdir -p /var/log/zabbix &amp;&amp; chown -R zabbix:zabbix /var/log/zabbix
 </code></pre>
-<h1 id="4-编译安装zabbix-server"><a href="#4-编译安装zabbix-server" class="headerlink" title="4.编译安装zabbix server"></a>4.编译安装zabbix server</h1><pre><code class="hljs">tar -zxvf zabbix-6.0.18.tar.gz &amp;&amp; cd zabbix-6.0.18
+<h1 id="4-编译安装Zabbix-Server"><a href="#4-编译安装Zabbix-Server" class="headerlink" title="4.编译安装Zabbix Server"></a>4.编译安装Zabbix Server</h1><pre><code class="hljs">tar -zxvf zabbix-6.0.18.tar.gz &amp;&amp; cd zabbix-6.0.18
 ./configure --prefix=/usr/local/zabbix --sysconfdir=/etc/zabbix \
 --enable-server --enable-agent --enable-proxy --with-net-snmp --enable-ipv6 \
 --with-libcurl --with-libxml2 --with-mysql=/usr/local/mysql/bin/mysql_config
 make &amp;&amp; make install
 </code></pre>
-<h1 id="5-创建配置文件"><a href="#5-创建配置文件" class="headerlink" title="5.创建配置文件"></a>5.创建配置文件</h1><pre><code class="hljs">vi /etc/zabbix/zabbix_server.conf
+<h1 id="5-配置数据库"><a href="#5-配置数据库" class="headerlink" title="5.配置数据库"></a>5.配置数据库</h1><h2 id="5-1-创建Zabbix数据库"><a href="#5-1-创建Zabbix数据库" class="headerlink" title="5.1 创建Zabbix数据库"></a>5.1 创建Zabbix数据库</h2><pre><code class="hljs">MariaDB [(none)]&gt; create database zabbix charset utf8 collate utf8_bin;&quot;
+MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON zabbix.* TO &#39;zabbix&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;zabbix&#39;;
+MariaDB [(none)]&gt; flush privileges;&quot;
+</code></pre>
+<h2 id="5-2-导入zabbix表结构"><a href="#5-2-导入zabbix表结构" class="headerlink" title="5.2 导入zabbix表结构"></a>5.2 导入zabbix表结构</h2><pre><code class="hljs">MariaDB [(none)]&gt; source database/mysql/schema.sql;
+MariaDB [(none)]&gt; source database/mysql/images.sql;
+MariaDB [(none)]&gt; source database/mysql/data.sql;
+</code></pre>
+<h1 id="6-配置Zabbix-Server"><a href="#6-配置Zabbix-Server" class="headerlink" title="6.配置Zabbix Server"></a>6.配置Zabbix Server</h1><h2 id="6-1-创建配置文件"><a href="#6-1-创建配置文件" class="headerlink" title="6.1 创建配置文件"></a>6.1 创建配置文件</h2><pre><code class="hljs">vi /etc/zabbix/zabbix_server.conf
 
 
-LogFile=/var/log/zabbix/zabbix_server.log
-PidFile=/var/log/zabbix/zabbix_server.pid
+# 设置数据库IP
 DBHost=127.0.0.1
+# 设置数据库名称
 DBName=zabbix
+# 设置数据库账户
 DBUser=zabbix
+# 设置数据库账户密码
 DBPassword=zabbix
+# 设置日志存储路径
+LogFile=/var/log/zabbix/zabbix_server.log
 </code></pre>
-<h3 id="1-5-2-创建zabbix-agent配置文件"><a href="#1-5-2-创建zabbix-agent配置文件" class="headerlink" title="1.5.2 创建zabbix agent配置文件"></a>1.5.2 创建zabbix agent配置文件</h3><pre><code class="hljs">vi /etc/zabbix/zabbix_agentd.conf
+<h2 id="6-2-创建启动脚本"><a href="#6-2-创建启动脚本" class="headerlink" title="6.2 创建启动脚本"></a>6.2 创建启动脚本</h2><pre><code class="hljs">cp misc/init.d/fedora/core/* /etc/init.d/
+chmod +x /etc/init.d/zabbix_server
+
+vi /etc/init.d/zabbix_server
 
 
-PidFile=/var/log/zabbix/zabbix_agentd.pid
-LogFile=/var/log/zabbix/zabbix_agentd.log
-Server=127.0.0.1
-ServerActive=127.0.0.1
-Hostname=Zabbix server
+# 设置Zabbix工作目录
+BASEDIR=/usr/local/zabbix 
 </code></pre>
-<h1 id="6-创建启动脚本"><a href="#6-创建启动脚本" class="headerlink" title="6.创建启动脚本"></a>6.创建启动脚本</h1><h1 id="7-配置监控web可视化"><a href="#7-配置监控web可视化" class="headerlink" title="7.配置监控web可视化"></a>7.配置监控web可视化</h1><h2 id="7-1-创建nginx配置文件"><a href="#7-1-创建nginx配置文件" class="headerlink" title="7.1 创建nginx配置文件"></a>7.1 创建nginx配置文件</h2><pre><code class="hljs">vi /etc/nginx/conf.d/zabbix.conf
+<h1 id="7-启动Zabbix-Server"><a href="#7-启动Zabbix-Server" class="headerlink" title="7.启动Zabbix Server"></a>7.启动Zabbix Server</h1><pre><code class="hljs">systemctl daemon-reload 
+systemctl status zabbix_server.service
+systemctl enable zabbix_server.service 
+</code></pre>
+<h1 id="8-配置UI"><a href="#8-配置UI" class="headerlink" title="8.配置UI"></a>8.配置UI</h1><h2 id="8-1-创建Nginx配置文件"><a href="#8-1-创建Nginx配置文件" class="headerlink" title="8.1 创建Nginx配置文件"></a>8.1 创建Nginx配置文件</h2><pre><code class="hljs">vi /etc/nginx/conf.d/zabbix.conf
 
 
 server &#123;
@@ -368,7 +382,7 @@ server &#123;
     server_name  localhost;    
     location /zabbix &#123;
 
-        root   /web;
+        root   /usr/share/nginx/html;
         index  index.html index.htm index.php;
         charset utf-8;
 
@@ -377,7 +391,7 @@ server &#123;
 
         location ~* \.php$ &#123;
 
-        root           /web;
+        root           /usr/share/nginx/html;
         fastcgi_pass   127.0.0.1:9000;
         fastcgi_index  index.php;
         fastcgi_param  SCRIPT_FILENAME $document_root$fastcgi_script_name;
@@ -386,29 +400,13 @@ server &#123;
     &#125;
 &#125;
 </code></pre>
-<h2 id="7-2-创建UI"><a href="#7-2-创建UI" class="headerlink" title="7.2 创建UI"></a>7.2 创建UI</h2><pre><code class="hljs">cp -r ui /web/zabbix
+<h2 id="8-2-创建UI文件"><a href="#8-2-创建UI文件" class="headerlink" title="8.2 创建UI文件"></a>8.2 创建UI文件</h2><pre><code class="hljs">cp -r ui /usr/share/nginx/html/zabbix
+chown -R zabbix:zabbix /usr/share/nginx/html/zabbix
 </code></pre>
-<h1 id="8-启动Zabbix-server、Zabbix-agent、nginx、php"><a href="#8-启动Zabbix-server、Zabbix-agent、nginx、php" class="headerlink" title="8.启动Zabbix server、Zabbix agent、nginx、php"></a>8.启动Zabbix server、Zabbix agent、nginx、php</h1><h1 id="9-验证"><a href="#9-验证" class="headerlink" title="9.验证"></a>9.验证</h1><h1 id="2-部署Zabbix-agent"><a href="#2-部署Zabbix-agent" class="headerlink" title="2.部署Zabbix agent"></a>2.部署Zabbix agent</h1><h2 id="2-1-安装依赖包"><a href="#2-1-安装依赖包" class="headerlink" title="2.1 安装依赖包"></a>2.1 安装依赖包</h2><pre><code class="hljs">apt install -y gcc mysql-dev libsnmp-dev libevent-dev libxml2-dev libghc-curl-dev
-yum instal -y gcc make curl-devel net-snmp-devel mysql-devel libcurl libxml2-devel libevent-devel
+<h2 id="8-3-重载Nginx"><a href="#8-3-重载Nginx" class="headerlink" title="8.3 重载Nginx"></a>8.3 重载Nginx</h2><pre><code class="hljs">nginx -t
+nginx -s reload
 </code></pre>
-<h2 id="2-2-创建zabbix用户与组"><a href="#2-2-创建zabbix用户与组" class="headerlink" title="2.2 创建zabbix用户与组"></a>2.2 创建zabbix用户与组</h2><pre><code class="hljs">groupadd zabbix &amp;&amp; useradd -g zabbix -s /sbin/nologin zabbix
-</code></pre>
-<h2 id="2-3-编译安装zabbix-server"><a href="#2-3-编译安装zabbix-server" class="headerlink" title="2.3 编译安装zabbix server"></a>2.3 编译安装zabbix server</h2><pre><code class="hljs">tar -zxvf zabbix-6.0.18.tar.gz &amp;&amp; cd zabbix-6.0.18
-./configure --prefix=/usr/local/zabbix --sysconfdir=/etc/zabbix \
---enable-agent --with-net-snmp --enable-ipv6 \
---with-libcurl --with-libxml2
-make &amp;&amp; make install
-</code></pre>
-<h2 id="2-4-修改zabbix-server配置文件"><a href="#2-4-修改zabbix-server配置文件" class="headerlink" title="2.4 修改zabbix_server配置文件"></a>2.4 修改zabbix_server配置文件</h2><pre><code class="hljs">vi /etc/zabbix/zabbix_agentd.conf
-
-
-PidFile=/var/log/zabbix/zabbix_agentd.pid
-LogFile=/var/log/zabbix/zabbix_agentd.log
-Server=172.16.100.100
-ServerActive=172.16.100.100
-Hostname=node02
-</code></pre>
-<hr>
+<h1 id="9-UI初始化"><a href="#9-UI初始化" class="headerlink" title="9.UI初始化"></a>9.UI初始化</h1><hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_54563444/article/details/141207533">https://blog.csdn.net/m0_54563444/article/details/141207533</a></li>
 </ul>
@@ -482,7 +480,7 @@ Hostname=node02
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2026年5月15日</div>
+          <div>2026年9月30日</div>
         </div>
       
       <div class="license-meta-item">

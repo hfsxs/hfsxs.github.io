@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/Loki/Loki01.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/Loki/Loki02.jpg">
 <meta property="article:published_time" content="2026-08-03T01:58:53.000Z">
-<meta property="article:modified_time" content="2026-09-05T13:32:51.561Z">
+<meta property="article:modified_time" content="2026-09-30T01:23:05.419Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -242,7 +242,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.9k 字
+          2k 字
         
       </span>
     
@@ -253,7 +253,7 @@
         
         
         
-          16 分钟
+          17 分钟
         
       </span>
     
@@ -299,12 +299,19 @@
                 <p>Loki，开源的水平可扩展、高可用、多租户轻量级日志收集、分析与聚合系统，由Grafana Labs团队受Prometheus启发而来，官方slogan即为Like Prometheus, but for logs</p>
 <p>Loki通过存储压缩非结构化日志流数据，并使用Prometheus的标签机制作为元数据进行索引与分组，而非不像ELK那样为日志进行全文倒排索引。所以，Loki在日志的扩展和操作方面更为高效，而在全文检索方面弱于ELK。Loki天然支持云原生，特别适合储存Kubernetes Pod日志，如Pod标签之类的元数据会被自动删除和编入索引，查询方式为“服务名+时间+关键词”，ELK则是“全量日志检索任意词</p>
 <p>Loki的基本工作机是由Promtail或Alloy采集原始日志数据，然后投送到Loki进行存储（支持zure、gcs、s3、swift、local）、索引与计算，最后在Grafana进行展示与查询</p>
-<h1 id="1-安装Loki"><a href="#1-安装Loki" class="headerlink" title="1.安装Loki"></a>1.安装Loki</h1><pre><code class="hljs">wget https://github.com/grafana/loki/releases/download/v3.6.15/loki-3.6.15-1.x86_64.rpm
-sudo rpm -ivh loki-3.6.15-1.x86_64.rpm
+<h1 id="1-安装Loki"><a href="#1-安装Loki" class="headerlink" title="1.安装Loki"></a>1.安装Loki</h1><pre><code class="hljs">wget https://github.com/grafana/loki/releases/download/v3.6.10/loki-3.6.10.x86_64.rpm
+sudo rpm -ivh loki-3.6.10.x86_64.rpm
 </code></pre>
 <h1 id="2-配置Loki"><a href="#2-配置Loki" class="headerlink" title="2.配置Loki"></a>2.配置Loki</h1><pre><code class="hljs">sudo cp /etc/loki/config.yml /etc/loki/config.yml.default
 sudo vi /etc/loki/config.yml
 
+
+server:
+  http_listen_port: 3100
+  grpc_listen_port: 9096
+  # 设置日志级别
+  log_level: warn
+  grpc_server_max_concurrent_streams: 1000
 
 common:
   instance_addr: 127.0.0.1
@@ -319,9 +326,9 @@ common:
 <h1 id="3-启动Loki"><a href="#3-启动Loki" class="headerlink" title="3.启动Loki"></a>3.启动Loki</h1><pre><code class="hljs">sudo systemctl start loki.service
 sudo systemctl enable loki.service
 </code></pre>
-<h1 id="4-安装日志采集器Promtail"><a href="#4-安装日志采集器Promtail" class="headerlink" title="4.安装日志采集器Promtail"></a>4.安装日志采集器Promtail</h1><h2 id="4-1-下载安装包"><a href="#4-1-下载安装包" class="headerlink" title="4.1 下载安装包"></a>4.1 下载安装包</h2><pre><code class="hljs">wget wget https://github.com/grafana/loki/releases/download/v2.9.8/promtail-2.9.8.x86_64.rpm
+<h1 id="4-安装日志采集器Promtail"><a href="#4-安装日志采集器Promtail" class="headerlink" title="4.安装日志采集器Promtail"></a>4.安装日志采集器Promtail</h1><h2 id="4-1-下载安装包"><a href="#4-1-下载安装包" class="headerlink" title="4.1 下载安装包"></a>4.1 下载安装包</h2><pre><code class="hljs">wget https://github.com/grafana/loki/releases/download/v3.6.10/promtail-3.6.10.x86_64.rpm
 </code></pre>
-<h2 id="4-2-安装Promtail"><a href="#4-2-安装Promtail" class="headerlink" title="4.2 安装Promtail"></a>4.2 安装Promtail</h2><pre><code class="hljs">sudo rpm -ivh promtail-2.9.8.x86_64.rpm
+<h2 id="4-2-安装Promtail"><a href="#4-2-安装Promtail" class="headerlink" title="4.2 安装Promtail"></a>4.2 安装Promtail</h2><pre><code class="hljs">sudo rpm -ivh promtail-3.6.10.x86_64.rpm
 </code></pre>
 <h2 id="4-3-配置日志采集"><a href="#4-3-配置日志采集" class="headerlink" title="4.3 配置日志采集"></a>4.3 配置日志采集</h2><pre><code class="hljs">sudo cp /etc/promtail/config.yml /etc/promtail/config.yml.default
 sudo vi /etc/promtail/config.yml
@@ -439,7 +446,7 @@ sudo systemctl enable promtail.service
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2026年9月5日</div>
+          <div>2026年9月30日</div>
         </div>
       
       <div class="license-meta-item">

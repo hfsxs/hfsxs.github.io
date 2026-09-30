@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/minio.jpg">
 <meta property="article:published_time" content="2025-11-18T07:01:08.000Z">
-<meta property="article:modified_time" content="2026-04-23T02:50:06.121Z">
+<meta property="article:modified_time" content="2026-09-23T09:37:35.579Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -246,7 +246,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.2k 字
+          2.3k 字
         
       </span>
     
@@ -257,7 +257,7 @@
         
         
         
-          10 分钟
+          20 分钟
         
       </span>
     
@@ -334,7 +334,41 @@ scrape_configs:
       - 172.16.100.102:9000
       - 172.16.100.103:9000
 </code></pre>
-<h2 id="2-2-重载Prometheus"><a href="#2-2-重载Prometheus" class="headerlink" title="2.2 重载Prometheus"></a>2.2 重载Prometheus</h2><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload
+<h2 id="2-2-创建告警规则"><a href="#2-2-创建告警规则" class="headerlink" title="2.2 创建告警规则"></a>2.2 创建告警规则</h2><pre><code class="hljs">sudo vi /usr/local/prometheus/rules/minio.yml
+
+
+groups:
+- name: MinIO
+  rules:
+  - alert: MinioClusterDiskOffline
+    expr: minio_cluster_drive_offline_total &gt; 0
+    for: 1m
+    labels:
+      severity: Critical
+      cluster: CloudServer
+    annotations:
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; Minio对象存储集群实例宕机，请尽快处理!&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Minio对象存储集群实例宕机超过1分钟，当前状态为&#123;&#123; $value &#125;&#125;&quot;
+  - alert: MinioNodeDiskOffline
+    expr: minio_cluster_nodes_offline_total &gt; 0
+    for: 1m
+    labels:
+      severity: Critical
+      cluster: CloudServer
+    annotations:
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; Minio对象存储集群实例磁盘状态异常，请尽快处理!&quot; 
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Minio对象存储集群实例磁盘状态异常，当前状态为&#123;&#123; $value &#125;&#125;&quot;
+  - alert: MinioDiskSpaceUsage
+    expr: disk_storage_available / disk_storage_total * 100 &lt; 20
+    for: 1m
+    labels:
+      severity: Critical
+      cluster: CloudServer
+    annotations:
+      summary: &quot;&#123;&#123; $labels.instance &#125;&#125; Minio对象存储集群实例磁盘空间不足，请尽快处理!&quot;
+      description: &quot;&#123;&#123; $labels.instance &#125;&#125; Minio对象存储集群实例磁盘空间不足20%，当前可用空间为&#123;&#123; $labels &#125;&#125;&quot;
+</code></pre>
+<h2 id="2-3-重载Prometheus"><a href="#2-3-重载Prometheus" class="headerlink" title="2.3 重载Prometheus"></a>2.3 重载Prometheus</h2><pre><code class="hljs">curl -XPOST http://127.0.0.1:9090/-/reload
 </code></pre>
 <h1 id="3-Grafana导入监控模版"><a href="#3-Grafana导入监控模版" class="headerlink" title="3.Grafana导入监控模版"></a>3.Grafana导入监控模版</h1><p>Dashboards —&gt; New —&gt; Import —&gt; 模版ID：13502</p>
 <p><img src="/img/wiki/prometheus/minio.jpg" srcset="/img/loading.gif" lazyload alt="MinIO"></p>
@@ -421,7 +455,7 @@ scrape_configs:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2026年4月23日</div>
+          <div>2026年9月23日</div>
         </div>
       
       <div class="license-meta-item">
