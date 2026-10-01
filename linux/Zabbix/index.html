@@ -24,7 +24,7 @@
 <meta property="og:description" content="Zabbix，由C语言开发的开源分布式企业级监控系统，通过Agent方式采集服务器、应用程序、网络服务、数据库、网站及其他网络硬件的工作状态，最终将监控数据写入数据库。Zabbix具备分布式监控功能，支持复杂架构下的监控解决方案，还提供直观的web页面展现。Zabbix告警通知机制也比较灵活，如邮件、短信和其他报警方式，以便于快速定位、解决各种故障，从而保障业务统的安全与稳定 体系架构Zabbix">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-02-02T10:09:31.000Z">
-<meta property="article:modified_time" content="2026-09-30T06:17:47.878Z">
+<meta property="article:modified_time" content="2026-10-01T00:51:47.468Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -319,8 +319,8 @@
 <h2 id="5-事件"><a href="#5-事件" class="headerlink" title="5.事件"></a>5.事件</h2><p>event，事件，触发器触发的特定事件，或zabbix定义的一个自动上线注册主机的事件</p>
 <h2 id="6-动作"><a href="#6-动作" class="headerlink" title="6.动作"></a>6.动作</h2><p>action，动作，Zabbix触发器触发时预定义的特定事件处理的具体措施，如执行脚本，或向管理员邮箱发送告警邮件等</p>
 <h2 id="7-媒介"><a href="#7-媒介" class="headerlink" title="7.媒介"></a>7.媒介</h2><p>media，媒介，发送告警通知的手段和途径，如邮件、钉钉等</p>
-<h1 id="8-Web场景"><a href="#8-Web场景" class="headerlink" title="8.Web场景"></a>8.Web场景</h1><p>web scenario，Web场景，用于检测web站点可用性的一个或多个HTTP请求</p>
-<h1 id="9-模版"><a href="#9-模版" class="headerlink" title="9.模版"></a>9.模版</h1><p>template，一组可被应用到被监控主机的预设条目集合（如监控项、触发器、Web场景等），用于主机的快速监控与监控任务的批量修改，将这些设置好的规则直接关联到主机</p>
+<h2 id="8-Web场景"><a href="#8-Web场景" class="headerlink" title="8.Web场景"></a>8.Web场景</h2><p>web scenario，Web场景，用于检测web站点可用性的一个或多个HTTP请求</p>
+<h2 id="9-模版"><a href="#9-模版" class="headerlink" title="9.模版"></a>9.模版</h2><p>template，一组可被应用到被监控主机的预设条目集合（如监控项、触发器、Web场景等），用于主机的快速监控与监控任务的批量修改，将这些设置好的规则直接关联到主机</p>
 <h1 id="配置流程"><a href="#配置流程" class="headerlink" title="配置流程"></a>配置流程</h1><h2 id="1-安装Zabbix-Agent"><a href="#1-安装Zabbix-Agent" class="headerlink" title="1.安装Zabbix Agent"></a>1.安装Zabbix Agent</h2><h2 id="2-创建主机"><a href="#2-创建主机" class="headerlink" title="2.创建主机"></a>2.创建主机</h2><p>Zabbix UI登录，创建一个host，即要监控的设备或应用程序，并为主机指定一个唯一的名称，设置主机的IP地址或DNS名称，再选择适当的监控方式（如Agent、SNMP等）</p>
 <h2 id="3-创建监控项"><a href="#3-创建监控项" class="headerlink" title="3.创建监控项"></a>3.创建监控项</h2><p>为主机创建用于采集数据监控项（也可以关联监控模板），监控项定义了要监控的指标，如CPU使用率、内存使用率、磁盘空间等，并选择适当的监控方式（例如通过Zabbix agent、SNMP、JMX等）和相应的键值，以及采集数据的间隔时间</p>
 <h2 id="4-创建触发器"><a href="#4-创建触发器" class="headerlink" title="4.创建触发器"></a>4.创建触发器</h2><p>监控项被定义后，需要创建触发器，用于触发告警动作。触发器定义了异常情况的条件，如CPU负载过高、网络连接超时等。设置合适的条件表达式，以及设置触发器的优先级和严重性级别</p>
@@ -480,7 +480,7 @@ nginx -s reload
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2026年9月30日</div>
+          <div>2026年10月1日</div>
         </div>
       
       <div class="license-meta-item">
