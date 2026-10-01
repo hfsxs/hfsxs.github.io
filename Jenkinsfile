@@ -57,6 +57,7 @@ def project = "hexo"
              runAsUser: 1000
            imagePullSecrets:
            - name: regsecret
+           nodeName: master01
            serviceAccountName: "jenkins"
        '''
      }
@@ -118,7 +119,7 @@ def project = "hexo"
           /home/jenkins/kubectl -n default rollout status deployment hexo -w --timeout 5m
 
           echo "========= 本次更新成功，当前应用状态如下 ========="
-          kubectl -n default get pod|grep hexo
+          /home/jenkins/kubectl -n default get pod|grep hexo
         """
       }
     }
@@ -139,7 +140,7 @@ def project = "hexo"
       sh """
         set +x
         echo "========= 本次更新失败，当前应用状态如下，请检查线上业务! ========="
-        kubectl -n default get pod|grep hexo
+        /home/jenkins/kubectl -n default get pod|grep hexo
       """
 
       dingtalk (
