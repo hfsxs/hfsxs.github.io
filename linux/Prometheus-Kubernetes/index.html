@@ -26,7 +26,7 @@
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/kubernetes.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/prometheus/kubernetes-alerts.jpg">
 <meta property="article:published_time" content="2024-05-10T06:59:01.000Z">
-<meta property="article:modified_time" content="2026-01-13T02:56:34.608Z">
+<meta property="article:modified_time" content="2026-10-10T02:02:41.000Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -255,7 +255,7 @@
         
         
         
-          407 分钟
+          408 分钟
         
       </span>
     
@@ -300,8 +300,9 @@
                 
                 <p>Prometheus部署于Kubernetes集群内部将会增加集群的资源开销，也不利于监控系统的维护，因此建议独立部署于集群之外。Prometheus对Kubernetes集群的监控涉及到的指标分为三类，即Node节点性能指标、集群组件及资源状态指标和容器资源指标</p>
 <h1 id="1-Node节点性能指标"><a href="#1-Node节点性能指标" class="headerlink" title="1.Node节点性能指标"></a>1.Node节点性能指标</h1><p>节点CPU、内存、磁盘空间及IO、TCP连接数和网络流量等，由节点上部署的node_exporter进行暴露。此外，也可使用textfile采集器自定义监控指标</p>
-<h1 id="2-集群组件及资源状态指标"><a href="#2-集群组件及资源状态指标" class="headerlink" title="2.集群组件及资源状态指标"></a>2.集群组件及资源状态指标</h1><p>集群组件api-serverr、controller-manager、kube-scheduler、kube-proxy，以及集群资源对象Deployment&#x2F;Pod&#x2F;Daemonset&#x2F;Statefulset&#x2F;PV等状态指标，由kube-state-metrics组件进行暴露，该组件通过监听Kubernetes集群ApiServer生成不同资源的状态的Metrics数据，其中8080端口用于暴露Kubernetes集群指标数据，8081端口用于暴露kube-state-metrics服务的指标数据</p>
-<h1 id="3-容器资源指标"><a href="#3-容器资源指标" class="headerlink" title="3.容器资源指标"></a>3.容器资源指标</h1><p>Node节点上运行的容器CPU、内存、文件系统和网络资源指标，由集群组件kubelet内置的cAdvisor进行暴露，通过kubelet&#x2F;metrics&#x2F;cadvisor接口进行采集</p>
+<h1 id="2-集群组件状态指标"><a href="#2-集群组件状态指标" class="headerlink" title="2.集群组件状态指标"></a>2.集群组件状态指标</h1><p>集群组件，如api-serverr、controller-manager、kube-scheduler、kube-proxy，通过各自集成的HTTP形式的Metrics端点暴露供Prometheus抓取的指标</p>
+<h1 id="3-集群资源对象状态指标"><a href="#3-集群资源对象状态指标" class="headerlink" title="3.集群资源对象状态指标"></a>3.集群资源对象状态指标</h1><p>kube-state-metrics组件通过监听Kubernetes集群ApiServer，生成集群资源对象的Metrics数据，如Deployment&#x2F;Pod&#x2F;Daemonset&#x2F;Statefulset&#x2F;PV&#x2F;PVC，其中8080端口用于暴露Kubernetes集群指标数据，8081端口用于暴露kube-state-metrics服务的指标数据</p>
+<h1 id="4-容器资源指标"><a href="#4-容器资源指标" class="headerlink" title="4.容器资源指标"></a>4.容器资源指标</h1><p>Node节点上运行的容器CPU、内存、文件系统和网络资源指标，以及PV&#x2F;PVC容量指标，由集群组件kubelet内置的cAdvisor进行暴露，通过kubelet&#x2F;metrics&#x2F;cadvisor接口进行采集</p>
 <h1 id="1-创建集群外部访问凭证"><a href="#1-创建集群外部访问凭证" class="headerlink" title="1.创建集群外部访问凭证"></a>1.创建集群外部访问凭证</h1><h2 id="1-1-创建RBAC资源文件"><a href="#1-1-创建RBAC资源文件" class="headerlink" title="1.1 创建RBAC资源文件"></a>1.1 创建RBAC资源文件</h2><pre><code class="hljs">vi promethues-rbac.yaml
 
 
@@ -1612,7 +1613,7 @@ groups:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2026年1月13日</div>
+          <div>2026年10月10日</div>
         </div>
       
       <div class="license-meta-item">
