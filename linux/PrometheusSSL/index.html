@@ -24,7 +24,7 @@
 <meta property="og:description" content="Prometheus配置Basic Auth安全认证虽然是通过bcrypt哈希存储对相关指标进行加密，但还是通过Http协议进行明文传输，并没有加密。理论上说，此时在内网进行网络抓包，配置的认证凭证完全可以拿到。在对安全性要求较高的环境，这些风险点仍然不可能通过合规管控 1.创建CA证书mkdir -p &#x2F;usr&#x2F;local&#x2F;prometheus&#x2F;ssl cd &#x2F;usr&#x2F;local&#x2F;prometh">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-12T01:16:10.000Z">
-<meta property="article:modified_time" content="2026-10-12T02:25:51.142Z">
+<meta property="article:modified_time" content="2026-10-12T06:03:28.995Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -241,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.8k 字
+          2.9k 字
         
       </span>
     
@@ -252,7 +252,7 @@
         
         
         
-          24 分钟
+          25 分钟
         
       </span>
     
@@ -318,9 +318,11 @@ subjectAltName=DNS:prometheus.internal,DNS:prometheus,IP:172.16.100.200
 </code></pre>
 <h3 id="2-1-4-签发证书"><a href="#2-1-4-签发证书" class="headerlink" title="2.1.4 签发证书"></a>2.1.4 签发证书</h3><pre><code class="hljs">openssl x509 -req -in prometheus.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out prometheus.crt -days 3650 -sha256 -extfile prometheus.ext
 </code></pre>
-<h2 id="2-3-创建证书配置文件"><a href="#2-3-创建证书配置文件" class="headerlink" title="2.3 创建证书配置文件"></a>2.3 创建证书配置文件</h2><pre><code class="hljs">vi ssl.yml
+<h2 id="2-3-配置证书"><a href="#2-3-配置证书" class="headerlink" title="2.3 配置证书"></a>2.3 配置证书</h2><pre><code class="hljs">vi /usr/local/node_exporter/auth.yml
 
 
+basic_auth_users:
+  prometheus: $2y$10$d70aiv0cdRPRSe8XYJt4fekhAnsNYtKfHyJKB8yy3gg2YzG80oNHW
 tls_server_config:
   cert_file: /usr/local/prometheus/ssl/prometheus.crt
   key_file: /usr/local/prometheus/ssl/prometheus.key
@@ -329,7 +331,7 @@ tls_server_config:
 <h2 id="2-4-配置启动脚本"><a href="#2-4-配置启动脚本" class="headerlink" title="2.4 配置启动脚本"></a>2.4 配置启动脚本</h2><pre><code class="hljs">sudo vi /lib/systemd/system/prometheus.service 
 
 
-ExecStart=/usr/local/prometheus/prometheus --config.file=/opt/prometheus/prometheus.yml --web.config.file=/usr/local/prometheus/prometheus/ssl/ssl.yml --web.config.file=/usr/local/node_exporter/auth.yml --web.enable-lifecycle 
+ExecStart=/usr/local/prometheus/prometheus --config.file=/usr/local/prometheus/prometheus.yml --web.config.file=/usr/local/node_exporter/auth.yml --web.enable-lifecycle 
 </code></pre>
 <h2 id="2-5-重启Prometheus"><a href="#2-5-重启Prometheus" class="headerlink" title="2.5 重启Prometheus"></a>2.5 重启Prometheus</h2><pre><code class="hljs">systemctl daemon-reload 
 systemctl restart prometheus.service
@@ -353,9 +355,11 @@ extendedKeyUsage=serverAuth
 subjectAltName=IP:172.16.100.100
 </code></pre>
 <h3 id="3-1-4-签发证书"><a href="#3-1-4-签发证书" class="headerlink" title="3.1.4 签发证书"></a>3.1.4 签发证书</h3><p>openssl x509 -req -in server.csr <br>  -CA ca.crt -CAkey ca.key -CAcreateserial <br>  -out server.crt -days 3650 -sha256 <br>  -extfile server.ext</p>
-<h2 id="3-2-创建证书配置文件"><a href="#3-2-创建证书配置文件" class="headerlink" title="3.2 创建证书配置文件"></a>3.2 创建证书配置文件</h2><pre><code class="hljs">sudo vi /usr/local/node_exporter/ssl.yml
+<h2 id="3-2-配置证书"><a href="#3-2-配置证书" class="headerlink" title="3.2 配置证书"></a>3.2 配置证书</h2><pre><code class="hljs">sudo vi /usr/local/node_exporter/auth.yml
 
 
+basic_auth_users:
+  prometheus: $2y$10$d70aiv0cdRPRSe8XYJt4fekhAnsNYtKfHyJKB8yy3gg2YzG80oNHW
 tls_server_config:
   cert_file: /usr/local/node_exporter/ssl/server.crt
   key_file: /usr/local/node_exporter/ssl/server.key
@@ -364,7 +368,7 @@ tls_server_config:
 <h2 id="3-3-配置启动脚本"><a href="#3-3-配置启动脚本" class="headerlink" title="3.3 配置启动脚本"></a>3.3 配置启动脚本</h2><pre><code class="hljs">sudo vi /lib/systemd/system/node_exporter.service
 
 
-ExecStart=/usr/local/node_exporter/node_exporter --web.config.file=/usr/local/node_exporter/auth.yml --web.config.file=/usr/local/node_exporter/ssl.yaml
+ExecStart=/usr/local/node_exporter/node_exporter --web.config.file=/usr/local/node_exporter/auth.yml
 </code></pre>
 <h2 id="3-4-重启node-exporter"><a href="#3-4-重启node-exporter" class="headerlink" title="3.4 重启node_exporter"></a>3.4 重启node_exporter</h2><pre><code class="hljs">systemctl daemon-reload 
 systemctl restart node_exporter.service
@@ -372,7 +376,7 @@ systemctl restart node_exporter.service
 <h2 id="3-5-配置Prometheus"><a href="#3-5-配置Prometheus" class="headerlink" title="3.5 配置Prometheus"></a>3.5 配置Prometheus</h2><h3 id="3-5-1-配置信任CA证书"><a href="#3-5-1-配置信任CA证书" class="headerlink" title="3.5.1 配置信任CA证书"></a>3.5.1 配置信任CA证书</h3><pre><code class="hljs">- job_name: node
   basic_auth:
     username: prometheus
-    password: Prometheus@2026
+    password: Prometheus@2025
   scheme: https
   tls_config:
     ca_file: /usr/local/prometheus/ssl/ca.crt
@@ -380,7 +384,7 @@ systemctl restart node_exporter.service
   - targets:
     - 172.16.100.100:9100
 </code></pre>
-<h3 id="3-5-2-重载Prometheus"><a href="#3-5-2-重载Prometheus" class="headerlink" title="3.5.2 重载Prometheus"></a>3.5.2 重载Prometheus</h3><pre><code class="hljs">curl -u prometheus:Prometheus@2026 -XPOST --cacert /opt/prometheus/ssl/ca.crt https://172.16.100.200:9090/-/reload
+<h3 id="3-5-2-重载Prometheus"><a href="#3-5-2-重载Prometheus" class="headerlink" title="3.5.2 重载Prometheus"></a>3.5.2 重载Prometheus</h3><pre><code class="hljs">curl -u prometheus:Prometheus@2025 -XPOST --cacert /opt/prometheus/ssl/ca.crt https://172.16.100.200:9090/-/reload
 </code></pre>
 <h3 id="3-6-验证Https访问"><a href="#3-6-验证Https访问" class="headerlink" title="3.6 验证Https访问"></a>3.6 验证Https访问</h3><hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
