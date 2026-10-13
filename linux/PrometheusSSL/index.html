@@ -24,7 +24,7 @@
 <meta property="og:description" content="Prometheus配置Basic Auth安全认证虽然是通过bcrypt哈希存储对相关指标进行加密，但还是通过Http协议进行明文传输，并没有加密。理论上说，此时在内网进行网络抓包，配置的认证凭证完全可以拿到。在对安全性要求较高的环境，这些风险点仍然不可能通过合规管控 1.创建CA证书mkdir -p &#x2F;usr&#x2F;local&#x2F;prometheus&#x2F;ssl cd &#x2F;usr&#x2F;local&#x2F;prometh">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-10-12T01:16:10.000Z">
-<meta property="article:modified_time" content="2026-10-13T02:05:16.517Z">
+<meta property="article:modified_time" content="2026-10-13T02:16:17.734Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -241,7 +241,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.4k 字
+          3.3k 字
         
       </span>
     
@@ -252,7 +252,7 @@
         
         
         
-          29 分钟
+          28 分钟
         
       </span>
     
@@ -392,10 +392,7 @@ systemctl restart node_exporter.service
 </code></pre>
 <h3 id="3-6-验证Https访问"><a href="#3-6-验证Https访问" class="headerlink" title="3.6 验证Https访问"></a>3.6 验证Https访问</h3><hr>
 <p>mysqld_exporter、postgres_exporter、elasticsearch_exporter、kafka_exporter和blackbox_exporter配置SSL证书的方式均与此一致，可共用证书。Redis监控组件redis_exporter也可共用node_exporter证书，但启动脚本的配置不同</p>
-<pre><code class="hljs">sudo vi /lib/systemd/system/redis_exporter.service 
-
-
-ExecStart=/usr/local/redis/bin/redis_exporter -redis.password Redis@2020 -exclude-latency-histogram-metrics -tls-server-cert-file=/usr/local/node_exporter/ssl/server.crt -tls-server-key-file=/usr/local/node_exporter/ssl/server.key --tls-server-min-version=TLS1.2
+<pre><code class="hljs">ExecStart=/usr/local/redis/bin/redis_exporter -redis.password Redis@2020 -exclude-latency-histogram-metrics -tls-server-cert-file=/usr/local/node_exporter/ssl/server.crt -tls-server-key-file=/usr/local/node_exporter/ssl/server.key --tls-server-min-version=TLS1.2
 </code></pre>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
