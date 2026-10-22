@@ -16,15 +16,15 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="ClamAV，即Clam AntiVirus，轻量级开源跨平台防病毒引擎，专注于检测病毒、木马、恶意软件及其他安全威胁，提供实时防护、按需扫描与病毒定义库自动更新，广泛用于服务器及终端设备的病毒扫描，属于企业级威胁检测解决方案 1.下载ClamAVsudo yum -y install clamav clamav-server clamav-data clamav-update clamav-fi">
+    <meta name="description" content="ClamAV，即Clam AntiVirus，轻量级开源跨平台防病毒引擎，专注于检测病毒、木马、恶意软件及其他安全威胁，提供实时防护、按需扫描与病毒定义库自动更新，广泛用于服务器及终端设备的病毒扫描，属于企业级威胁检测解决方案 1.下载ClamAVwget https:&#x2F;&#x2F;www.clamav.net&#x2F;downloads&#x2F;production&#x2F;clamav-1.5.4.linux.x86_64.r">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux系统部署病毒防护平台ClamAV">
 <meta property="og:url" content="https://hfsxs.github.io/linux/ClamAV/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="ClamAV，即Clam AntiVirus，轻量级开源跨平台防病毒引擎，专注于检测病毒、木马、恶意软件及其他安全威胁，提供实时防护、按需扫描与病毒定义库自动更新，广泛用于服务器及终端设备的病毒扫描，属于企业级威胁检测解决方案 1.下载ClamAVsudo yum -y install clamav clamav-server clamav-data clamav-update clamav-fi">
+<meta property="og:description" content="ClamAV，即Clam AntiVirus，轻量级开源跨平台防病毒引擎，专注于检测病毒、木马、恶意软件及其他安全威胁，提供实时防护、按需扫描与病毒定义库自动更新，广泛用于服务器及终端设备的病毒扫描，属于企业级威胁检测解决方案 1.下载ClamAVwget https:&#x2F;&#x2F;www.clamav.net&#x2F;downloads&#x2F;production&#x2F;clamav-1.5.4.linux.x86_64.r">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-03-16T01:08:41.000Z">
-<meta property="article:modified_time" content="2026-03-23T03:05:32.121Z">
+<meta property="article:modified_time" content="2026-10-22T06:40:13.720Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -239,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          849 字
+          1.6k 字
         
       </span>
     
@@ -250,7 +250,7 @@
         
         
         
-          8 分钟
+          14 分钟
         
       </span>
     
@@ -294,26 +294,63 @@
               <div class="markdown-body">
                 
                 <p>ClamAV，即Clam AntiVirus，轻量级开源跨平台防病毒引擎，专注于检测病毒、木马、恶意软件及其他安全威胁，提供实时防护、按需扫描与病毒定义库自动更新，广泛用于服务器及终端设备的病毒扫描，属于企业级威胁检测解决方案</p>
-<h1 id="1-下载ClamAV"><a href="#1-下载ClamAV" class="headerlink" title="1.下载ClamAV"></a>1.下载ClamAV</h1><pre><code class="hljs">sudo yum -y install clamav clamav-server clamav-data clamav-update clamav-filesystem clamav-scanner-systemd clamav-devel clamav-lib clamav-server-systemd
+<h1 id="1-下载ClamAV"><a href="#1-下载ClamAV" class="headerlink" title="1.下载ClamAV"></a>1.下载ClamAV</h1><pre><code class="hljs">wget https://www.clamav.net/downloads/production/clamav-1.5.4.linux.x86_64.rpm
+sudo rpm -ivh clamav-1.5.4.linux.x86_64.rpm
 </code></pre>
-<h1 id="2-部署私有病毒库"><a href="#2-部署私有病毒库" class="headerlink" title="2.部署私有病毒库"></a>2.部署私有病毒库</h1><h2 id="2-1-下载病毒库更新工具"><a href="#2-1-下载病毒库更新工具" class="headerlink" title="2.1 下载病毒库更新工具"></a>2.1 下载病毒库更新工具</h2><pre><code class="hljs">pip3 install cvdupdate
+<h1 id="2-配置私有镜像库"><a href="#2-配置私有镜像库" class="headerlink" title="2.配置私有镜像库"></a>2.配置私有镜像库</h1><h2 id="2-1-创建配置文件"><a href="#2-1-创建配置文件" class="headerlink" title="2.1 创建配置文件"></a>2.1 创建配置文件</h2><pre><code class="hljs">sudo cp /usr/local/etc/freshclam.conf.sample /usr/local/etc/freshclam.conf
 </code></pre>
-<h2 id="2-2-更新病毒库"><a href="#2-2-更新病毒库" class="headerlink" title="2.2 更新病毒库"></a>2.2 更新病毒库</h2><pre><code class="hljs">cvdupdate update
+<h2 id="2-2-创建clamav用户"><a href="#2-2-创建clamav用户" class="headerlink" title="2.2 创建clamav用户"></a>2.2 创建clamav用户</h2><pre><code class="hljs">sudo groupadd clamav &amp;&amp; sudo useradd -g clamav -s /sbin/nologin clamav -M
 </code></pre>
-<h2 id="2-3-配置病毒库定时更新"><a href="#2-3-配置病毒库定时更新" class="headerlink" title="2.3 配置病毒库定时更新"></a>2.3 配置病毒库定时更新</h2><pre><code class="hljs">crontab -l
+<h2 id="2-3-配置病毒库拉取策略"><a href="#2-3-配置病毒库拉取策略" class="headerlink" title="2.3 配置病毒库拉取策略"></a>2.3 配置病毒库拉取策略</h2><pre><code class="hljs">sudo sed -i -e &quot;s/^Example/#Example/&quot; /usr/local/etc/freshclam.conf
+</code></pre>
+<h2 id="2-4-验证病毒库更新"><a href="#2-4-验证病毒库更新" class="headerlink" title="2.4 验证病毒库更新"></a>2.4 验证病毒库更新</h2><pre><code class="hljs">sudo /usr/local/bin/freshclam
+</code></pre>
+<h2 id="2-5-配置病毒库定时更新"><a href="#2-5-配置病毒库定时更新" class="headerlink" title="2.5 配置病毒库定时更新"></a>2.5 配置病毒库定时更新</h2><pre><code class="hljs">crontab -l
 
-30 03 * * * /usr/local/bin/cvd update
+
+45 00 * * * /usr/local/bin/freshclam &gt; /var/log/freshclam.log
 </code></pre>
-<h2 id="2-4-启动私有病毒库"><a href="#2-4-启动私有病毒库" class="headerlink" title="2.4 启动私有病毒库"></a>2.4 启动私有病毒库</h2><pre><code class="hljs">nohup cvdupdate serve &amp;
+<h2 id="2-5-Nginx代理私有病毒库"><a href="#2-5-Nginx代理私有病毒库" class="headerlink" title="2.5 Nginx代理私有病毒库"></a>2.5 Nginx代理私有病毒库</h2><h3 id="2-5-1-创建配置文件"><a href="#2-5-1-创建配置文件" class="headerlink" title="2.5.1 创建配置文件"></a>2.5.1 创建配置文件</h3><pre><code class="hljs">sudo vi /etc/nginx/conf.d/clamav.conf
+
+
+server &#123;
+  listen 8000;
+  server_name localhost;
+
+  location / &#123;
+  
+    root  /usr/local/share/clamav;
+    autoindex on;
+    charset utf-8;
+    autoindex_exact_size off;
+    autoindex_localtime on;
+
+  &#125;
+&#125;
 </code></pre>
-<h1 id="3-配置私有病毒库"><a href="#3-配置私有病毒库" class="headerlink" title="3.配置私有病毒库"></a>3.配置私有病毒库</h1><pre><code class="hljs">sed -i -e &quot;s/^Example/#Example/&quot; /etc/freshclam.conf
-sed -i -e &quot;s/^Example/#Example/&quot; /etc/clamd.d/scan.conf
-echo &quot;PrivateMirror 私有库ip:8000&quot; &gt;&gt; /etc/freshclam.conf 
+<h3 id="2-5-2-重载Nginx"><a href="#2-5-2-重载Nginx" class="headerlink" title="2.5.2 重载Nginx"></a>2.5.2 重载Nginx</h3><pre><code class="hljs">sudo nginx -t
+sudo nginx -s reload
 </code></pre>
-<h1 id="4-验证病毒库"><a href="#4-验证病毒库" class="headerlink" title="4.验证病毒库"></a>4.验证病毒库</h1><pre><code class="hljs">freshclam
+<h1 id="3-配置内网其余机器"><a href="#3-配置内网其余机器" class="headerlink" title="3.配置内网其余机器"></a>3.配置内网其余机器</h1><h2 id="3-1-创建配置文件"><a href="#3-1-创建配置文件" class="headerlink" title="3.1 创建配置文件"></a>3.1 创建配置文件</h2><pre><code class="hljs">sudo cp /usr/local/etc/freshclam.conf.sample /usr/local/etc/freshclam.conf
 </code></pre>
-<h1 id="5-启动扫描器"><a href="#5-启动扫描器" class="headerlink" title="5.启动扫描器"></a>5.启动扫描器</h1><pre><code class="hljs">sudo systemctl start clamav-freshclam.service
-sudo systemctl enable clamav-freshclam.service
+<h2 id="3-2-配置病毒库拉取策略"><a href="#3-2-配置病毒库拉取策略" class="headerlink" title="3.2 配置病毒库拉取策略"></a>3.2 配置病毒库拉取策略</h2><pre><code class="hljs">sudo sed -i -e &quot;s/^Example/#Example/&quot; /usr/local/etc/freshclam.conf
+sudo sed -i &#39;$aPrivateMirror 私有库ip:8000&#39; /usr/local/etc/freshclam.conf
+</code></pre>
+<h2 id="3-3-拉取病毒库"><a href="#3-3-拉取病毒库" class="headerlink" title="3.3 拉取病毒库"></a>3.3 拉取病毒库</h2><pre><code class="hljs">sudo /usr/local/bin/freshclam
+</code></pre>
+<h2 id="3-4-启动扫描器"><a href="#3-4-启动扫描器" class="headerlink" title="3.4 启动扫描器"></a>3.4 启动扫描器</h2><h2 id="3-5-配置病毒库定时更新"><a href="#3-5-配置病毒库定时更新" class="headerlink" title="3.5 配置病毒库定时更新"></a>3.5 配置病毒库定时更新</h2><pre><code class="hljs">crontab -l
+
+
+15 01 * * * /usr/local/bin/freshclam &gt; /var/log/freshclam.log
+</code></pre>
+<h2 id="3-6-手动扫描"><a href="#3-6-手动扫描" class="headerlink" title="3.6 手动扫描"></a>3.6 手动扫描</h2><pre><code class="hljs">sudo clamscan -r -i / \
+--exclude-dir=&#39;^/proc&#39; \
+--exclude-dir=&#39;^/sys&#39; \
+--exclude-dir=&#39;^/dev&#39; \
+--exclude-dir=&#39;^/run&#39; \
+--exclude-dir=&#39;^/mnt&#39; \
+--exclude-dir=&#39;^/media&#39; \
+--log=/var/log/clamscan.log
 </code></pre>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
@@ -391,7 +428,7 @@ sudo systemctl enable clamav-freshclam.service
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2026年3月23日</div>
+          <div>2026年10月22日</div>
         </div>
       
       <div class="license-meta-item">
