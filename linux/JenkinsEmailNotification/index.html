@@ -16,12 +16,12 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="DevOps聚合了开发、测试、运维这些前后端部门，其中任一环节出现问题，都将导致整个流程的失败。所以，将Jenkins任务的构建结果通知到相关责任人，收到信息后自行判断是否己相关，以便快速介入处理。这样，就将这些部门所有的相关责任人串联起来，也使得整个项目的各个环节的联结更加紧密 1.发送邮箱开启SMTP服务，获取认证码2.jenkins安装邮箱插件Email Extension3.jenkins">
+    <meta name="description" content="DevOps聚合了开发、测试、运维这些前后端部门，其中任一环节出现问题，都将导致整个流程的失败。所以，将Jenkins任务的构建结果通知到相关责任人，收到信息后自行判断是否己相关，以便快速介入处理。这样，就将这些部门所有的相关责任人串联起来，也使得整个项目的各个环节的联结更加紧密 1.发送邮箱开启SMTP服务，获取认证码2.Jenkins安装邮箱插件Email Extension3.Jenkins">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Jenkins配置任务构建邮件通知">
 <meta property="og:url" content="https://hfsxs.github.io/linux/JenkinsEmailNotification/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="DevOps聚合了开发、测试、运维这些前后端部门，其中任一环节出现问题，都将导致整个流程的失败。所以，将Jenkins任务的构建结果通知到相关责任人，收到信息后自行判断是否己相关，以便快速介入处理。这样，就将这些部门所有的相关责任人串联起来，也使得整个项目的各个环节的联结更加紧密 1.发送邮箱开启SMTP服务，获取认证码2.jenkins安装邮箱插件Email Extension3.jenkins">
+<meta property="og:description" content="DevOps聚合了开发、测试、运维这些前后端部门，其中任一环节出现问题，都将导致整个流程的失败。所以，将Jenkins任务的构建结果通知到相关责任人，收到信息后自行判断是否己相关，以便快速介入处理。这样，就将这些部门所有的相关责任人串联起来，也使得整个项目的各个环节的联结更加紧密 1.发送邮箱开启SMTP服务，获取认证码2.Jenkins安装邮箱插件Email Extension3.Jenkins">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/jenkins/jenkins-005-001.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/jenkins/jenkins-005-002.jpg">
@@ -32,7 +32,7 @@
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/jenkins/jenkins-005-007.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/jenkins/jenkins-005-008.jpg">
 <meta property="article:published_time" content="2023-05-24T02:51:11.000Z">
-<meta property="article:modified_time" content="2025-03-15T13:29:21.200Z">
+<meta property="article:modified_time" content="2026-10-29T06:19:15.033Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -307,11 +307,11 @@
               <div class="markdown-body">
                 
                 <p>DevOps聚合了开发、测试、运维这些前后端部门，其中任一环节出现问题，都将导致整个流程的失败。所以，将Jenkins任务的构建结果通知到相关责任人，收到信息后自行判断是否己相关，以便快速介入处理。这样，就将这些部门所有的相关责任人串联起来，也使得整个项目的各个环节的联结更加紧密</p>
-<h1 id="1-发送邮箱开启SMTP服务，获取认证码"><a href="#1-发送邮箱开启SMTP服务，获取认证码" class="headerlink" title="1.发送邮箱开启SMTP服务，获取认证码"></a>1.发送邮箱开启SMTP服务，获取认证码</h1><h1 id="2-jenkins安装邮箱插件Email-Extension"><a href="#2-jenkins安装邮箱插件Email-Extension" class="headerlink" title="2.jenkins安装邮箱插件Email Extension"></a>2.jenkins安装邮箱插件Email Extension</h1><h1 id="3-jenkins配置邮件通知及系统管理员邮箱"><a href="#3-jenkins配置邮件通知及系统管理员邮箱" class="headerlink" title="3.jenkins配置邮件通知及系统管理员邮箱"></a>3.jenkins配置邮件通知及系统管理员邮箱</h1><p><img src="/img/wiki/jenkins/jenkins-005-001.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-005-001"></p>
+<h1 id="1-发送邮箱开启SMTP服务，获取认证码"><a href="#1-发送邮箱开启SMTP服务，获取认证码" class="headerlink" title="1.发送邮箱开启SMTP服务，获取认证码"></a>1.发送邮箱开启SMTP服务，获取认证码</h1><h1 id="2-Jenkins安装邮箱插件Email-Extension"><a href="#2-Jenkins安装邮箱插件Email-Extension" class="headerlink" title="2.Jenkins安装邮箱插件Email Extension"></a>2.Jenkins安装邮箱插件Email Extension</h1><h1 id="3-Jenkins配置邮件通知及系统管理员邮箱"><a href="#3-Jenkins配置邮件通知及系统管理员邮箱" class="headerlink" title="3.Jenkins配置邮件通知及系统管理员邮箱"></a>3.Jenkins配置邮件通知及系统管理员邮箱</h1><p><img src="/img/wiki/jenkins/jenkins-005-001.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-005-001"></p>
 <p><img src="/img/wiki/jenkins/jenkins-005-002.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-005-002"></p>
 <p><img src="/img/wiki/jenkins/jenkins-005-003.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-005-003"></p>
-<h1 id="4-jenkins配置邮件扩展"><a href="#4-jenkins配置邮件扩展" class="headerlink" title="4.jenkins配置邮件扩展"></a>4.jenkins配置邮件扩展</h1><p><img src="/img/wiki/jenkins/jenkins-005-004.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-005-004"></p>
-<h1 id="5-jenkins项目配置邮件通知"><a href="#5-jenkins项目配置邮件通知" class="headerlink" title="5.jenkins项目配置邮件通知"></a>5.jenkins项目配置邮件通知</h1><h2 id="5-1-freestyle项目"><a href="#5-1-freestyle项目" class="headerlink" title="5.1 freestyle项目"></a>5.1 freestyle项目</h2><p><img src="/img/wiki/jenkins/jenkins-005-005.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-005-005"></p>
+<h1 id="4-Jenkins配置邮件扩展"><a href="#4-Jenkins配置邮件扩展" class="headerlink" title="4.Jenkins配置邮件扩展"></a>4.Jenkins配置邮件扩展</h1><p><img src="/img/wiki/jenkins/jenkins-005-004.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-005-004"></p>
+<h1 id="5-Jenkins项目配置邮件通知"><a href="#5-Jenkins项目配置邮件通知" class="headerlink" title="5.Jenkins项目配置邮件通知"></a>5.Jenkins项目配置邮件通知</h1><h2 id="5-1-Freestyle项目"><a href="#5-1-Freestyle项目" class="headerlink" title="5.1 Freestyle项目"></a>5.1 Freestyle项目</h2><p><img src="/img/wiki/jenkins/jenkins-005-005.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-005-005"></p>
 <p><img src="/img/wiki/jenkins/jenkins-005-006.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-005-006"></p>
 <p><img src="/img/wiki/jenkins/jenkins-005-007.jpg" srcset="/img/loading.gif" lazyload alt="jenkins-005-007"></p>
 <h3 id="5-1-1-邮件主题"><a href="#5-1-1-邮件主题" class="headerlink" title="5.1.1 邮件主题"></a>5.1.1 邮件主题</h3><pre><code class="hljs">【Jenkins项目自动化构建通知】：$PROJECT_NAME - Build - $BUILD_NUMBER - $BUILD_STATUS!
@@ -361,7 +361,7 @@ offset=&quot;0&quot;&gt;
 &lt;/body&gt;    
 &lt;/html&gt;
 </code></pre>
-<h2 id="5-2-pipeline项目"><a href="#5-2-pipeline项目" class="headerlink" title="5.2 pipeline项目"></a>5.2 pipeline项目</h2><h3 id="5-2-1-创建邮件通知模版文件"><a href="#5-2-1-创建邮件通知模版文件" class="headerlink" title="5.2.1 创建邮件通知模版文件"></a>5.2.1 创建邮件通知模版文件</h3><pre><code class="hljs">vi email.html
+<h2 id="5-2-Pipeline项目"><a href="#5-2-Pipeline项目" class="headerlink" title="5.2 Pipeline项目"></a>5.2 Pipeline项目</h2><h3 id="5-2-1-创建邮件通知模版文件"><a href="#5-2-1-创建邮件通知模版文件" class="headerlink" title="5.2.1 创建邮件通知模版文件"></a>5.2.1 创建邮件通知模版文件</h3><pre><code class="hljs">vi email.html
 
 
 &lt;!DOCTYPE html&gt;    
@@ -409,7 +409,7 @@ offset=&quot;0&quot;&gt;
 &lt;/body&gt;    
 &lt;/html&gt;  
 </code></pre>
-<h3 id="5-2-2-创建pipeline文件"><a href="#5-2-2-创建pipeline文件" class="headerlink" title="5.2.2 创建pipeline文件"></a>5.2.2 创建pipeline文件</h3><pre><code class="hljs">def project = &quot;hexo&quot;
+<h3 id="5-2-2-创建Pipeline文件"><a href="#5-2-2-创建Pipeline文件" class="headerlink" title="5.2.2 创建Pipeline文件"></a>5.2.2 创建Pipeline文件</h3><pre><code class="hljs">def project = &quot;hexo&quot;
 def app_name = &quot;poetry&quot;
 def git_auth_id = &quot;sword-cloud&quot;
 def registry = &quot;registry.sword.org&quot;
@@ -582,7 +582,7 @@ spec:
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月15日</div>
+          <div>2026年10月29日</div>
         </div>
       
       <div class="license-meta-item">
