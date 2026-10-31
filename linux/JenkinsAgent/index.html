@@ -16,12 +16,12 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Jenkins主节点负责任务调度，也具备运行构建任务的功能，但为保障构整个建流程的可用性一般不进行任务构建，而是配置以专用于任务执行的代理节点。代理节点分为静态节点和动态节点，静态节点是固定的虚机或容器，动态节点则是随着任务的构建自动创建以及任务的完成自动销毁的节点  1.配置代理节点服务器1.1 安装jdk，配置java环境1.2 创建jenkins用户并设置密码sudo adduser  1.">
+    <meta name="description" content="Jenkins核心设计为主从分布式架构‌，即主节点负责调度和管理，从节点负责实际执行构建任务。主节点虽然也具备运行构建任务的功能，但为保障构整个构建流程的可用性与流畅性，一般不建议进行任务构建，而是配置以专用于任务执行的Agent节点。Agent节点分为静态节点和动态节点，静态节点是固定的虚机或容器，动态节点则是随着任务的构建自动创建以及任务的完成自动销毁的节点  1.配置代理节点服务器1.1 安">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Jenkins配置agent节点">
+<meta property="og:title" content="Jenkins配置Agent节点">
 <meta property="og:url" content="https://hfsxs.github.io/linux/JenkinsAgent/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="Jenkins主节点负责任务调度，也具备运行构建任务的功能，但为保障构整个建流程的可用性一般不进行任务构建，而是配置以专用于任务执行的代理节点。代理节点分为静态节点和动态节点，静态节点是固定的虚机或容器，动态节点则是随着任务的构建自动创建以及任务的完成自动销毁的节点  1.配置代理节点服务器1.1 安装jdk，配置java环境1.2 创建jenkins用户并设置密码sudo adduser  1.">
+<meta property="og:description" content="Jenkins核心设计为主从分布式架构‌，即主节点负责调度和管理，从节点负责实际执行构建任务。主节点虽然也具备运行构建任务的功能，但为保障构整个构建流程的可用性与流畅性，一般不建议进行任务构建，而是配置以专用于任务执行的Agent节点。Agent节点分为静态节点和动态节点，静态节点是固定的虚机或容器，动态节点则是随着任务的构建自动创建以及任务的完成自动销毁的节点  1.配置代理节点服务器1.1 安">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/jenkins/jenkins-002-001.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/jenkins/jenkins-002-002.jpg">
@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/jenkins/jenkins-002-008.jpg">
 <meta property="og:image" content="https://hfsxs.github.io/img/wiki/jenkins/jenkins-002-009.jpg">
 <meta property="article:published_time" content="2023-04-16T01:06:09.000Z">
-<meta property="article:modified_time" content="2025-03-15T13:27:59.809Z">
+<meta property="article:modified_time" content="2026-10-30T14:11:11.749Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -49,7 +49,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Jenkins配置agent节点 - 扬帆</title>
+  <title>Jenkins配置Agent节点 - 扬帆</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -229,7 +229,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle">Jenkins配置agent节点</span>
+            <span id="subtitle">Jenkins配置Agent节点</span>
           
         </div>
 
@@ -252,7 +252,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          412 字
+          461 字
         
       </span>
     
@@ -301,12 +301,12 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Jenkins配置agent节点</h1>
+            <h1 style="display: none">Jenkins配置Agent节点</h1>
             
             
               <div class="markdown-body">
                 
-                <p>Jenkins主节点负责任务调度，也具备运行构建任务的功能，但为保障构整个建流程的可用性一般不进行任务构建，而是配置以专用于任务执行的代理节点。代理节点分为静态节点和动态节点，静态节点是固定的虚机或容器，动态节点则是随着任务的构建自动创建以及任务的完成自动销毁的节点</p>
+                <p>Jenkins核心设计为主从分布式架构‌，即主节点负责调度和管理，从节点负责实际执行构建任务。主节点虽然也具备运行构建任务的功能，但为保障构整个构建流程的可用性与流畅性，一般不建议进行任务构建，而是配置以专用于任务执行的Agent节点。Agent节点分为静态节点和动态节点，静态节点是固定的虚机或容器，动态节点则是随着任务的构建自动创建以及任务的完成自动销毁的节点</p>
 <hr>
 <h1 id="1-配置代理节点服务器"><a href="#1-配置代理节点服务器" class="headerlink" title="1.配置代理节点服务器"></a>1.配置代理节点服务器</h1><h1 id="1-1-安装jdk，配置java环境"><a href="#1-1-安装jdk，配置java环境" class="headerlink" title="1.1 安装jdk，配置java环境"></a>1.1 安装jdk，配置java环境</h1><h1 id="1-2-创建jenkins用户并设置密码"><a href="#1-2-创建jenkins用户并设置密码" class="headerlink" title="1.2 创建jenkins用户并设置密码"></a>1.2 创建jenkins用户并设置密码</h1><pre><code class="hljs">sudo adduser
 </code></pre>
@@ -382,7 +382,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Jenkins配置agent节点</div>
+      <div>Jenkins配置Agent节点</div>
       <div>https://hfsxs.github.io/linux/JenkinsAgent/</div>
     </div>
     <div class="license-meta">
@@ -401,7 +401,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年3月15日</div>
+          <div>2026年10月30日</div>
         </div>
       
       <div class="license-meta-item">
