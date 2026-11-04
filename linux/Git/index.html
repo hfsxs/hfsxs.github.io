@@ -16,15 +16,16 @@
   <meta name="author" content="扬帆">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Git，由林纳斯于2005年以C语言开发的开源分布式版本控制系统，起初是管理Linux内核源代码，目前可用于敏捷高效地托管各种项目的源代码，简单快速且强大 核心概念工作区工作区，即本地开发环境，管理着本地代码目录，通过更改提交(commit)到本地仓库，之后再推送(push)到远程仓库 暂存区暂存区，即stage或index，一般存储于.git目录下的index文件，也被称之为索引（index），">
+    <meta name="description" content="Git，林纳斯于2005年以C语言开发的开源分布式版本控制系统，起初用于管理Linux内核源代码，现在绝大多数的项目源代码均都将其作为托管工具，敏捷高效，简单强大。Git版本库的设计基于分布式，不同于常用的版本控制工具，如CVS、Subversion，不必服务器端软件支持。此外，Git还是个内容管理系统(CMS)、工作管理系统，支持团队协作 核心概念工作区工作区，即本地开发环境，管理着本地代码目录">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Git安装与配置">
 <meta property="og:url" content="https://hfsxs.github.io/linux/Git/index.html">
 <meta property="og:site_name" content="扬帆">
-<meta property="og:description" content="Git，由林纳斯于2005年以C语言开发的开源分布式版本控制系统，起初是管理Linux内核源代码，目前可用于敏捷高效地托管各种项目的源代码，简单快速且强大 核心概念工作区工作区，即本地开发环境，管理着本地代码目录，通过更改提交(commit)到本地仓库，之后再推送(push)到远程仓库 暂存区暂存区，即stage或index，一般存储于.git目录下的index文件，也被称之为索引（index），">
+<meta property="og:description" content="Git，林纳斯于2005年以C语言开发的开源分布式版本控制系统，起初用于管理Linux内核源代码，现在绝大多数的项目源代码均都将其作为托管工具，敏捷高效，简单强大。Git版本库的设计基于分布式，不同于常用的版本控制工具，如CVS、Subversion，不必服务器端软件支持。此外，Git还是个内容管理系统(CMS)、工作管理系统，支持团队协作 核心概念工作区工作区，即本地开发环境，管理着本地代码目录">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/geek/Git.jpg">
 <meta property="article:published_time" content="2020-02-03T06:30:06.000Z">
-<meta property="article:modified_time" content="2025-05-06T02:31:53.320Z">
+<meta property="article:modified_time" content="2026-10-31T09:03:14.240Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -32,6 +33,7 @@
 <meta property="article:tag" content="CICD">
 <meta property="article:tag" content="DevOps">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hfsxs.github.io/img/wiki/geek/Git.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -240,7 +242,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.2k 字
+          1.3k 字
         
       </span>
     
@@ -251,7 +253,7 @@
         
         
         
-          10 分钟
+          11 分钟
         
       </span>
     
@@ -294,12 +296,13 @@
             
               <div class="markdown-body">
                 
-                <p>Git，由林纳斯于2005年以C语言开发的开源分布式版本控制系统，起初是管理Linux内核源代码，目前可用于敏捷高效地托管各种项目的源代码，简单快速且强大</p>
+                <p>Git，林纳斯于2005年以C语言开发的开源分布式版本控制系统，起初用于管理Linux内核源代码，现在绝大多数的项目源代码均都将其作为托管工具，敏捷高效，简单强大。Git版本库的设计基于分布式，不同于常用的版本控制工具，如CVS、Subversion，不必服务器端软件支持。此外，Git还是个内容管理系统(CMS)、工作管理系统，支持团队协作</p>
 <h1 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h1><h2 id="工作区"><a href="#工作区" class="headerlink" title="工作区"></a>工作区</h2><p>工作区，即本地开发环境，管理着本地代码目录，通过更改提交(commit)到本地仓库，之后再推送(push)到远程仓库</p>
 <h2 id="暂存区"><a href="#暂存区" class="headerlink" title="暂存区"></a>暂存区</h2><p>暂存区，即stage或index，一般存储于.git目录下的index文件，也被称之为索引（index），是位于仓库和工作区之间的中间区域</p>
 <h2 id="仓库"><a href="#仓库" class="headerlink" title="仓库"></a>仓库</h2><p>仓库，repository，又称版本库，一般位于工作区下的隐藏目录.git，其中的所有文件都由Git管理，每个文件的修改、删除都被Git跟踪，以便于任何时刻都可以追踪历史或还原</p>
 <h2 id="远程仓库"><a href="#远程仓库" class="headerlink" title="远程仓库"></a>远程仓库</h2><p>远程仓库，Remote Repository，存储在服务器上的Git仓库，用于多人协作和备份。本地的个人开发者可以克隆远程仓库到本地，拉取（pull）远程后本地更改，最后再推送（push）本地更改到远程仓库。远程仓库分为公共仓库和私有仓库两种，如github属于公共仓库，也可用gitlab、gitea搭建私有仓库</p>
-<h1 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h1><ul>
+<h1 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h1><p><img src="/img/wiki/geek/Git.jpg" srcset="/img/loading.gif" lazyload alt="Git"></p>
+<ul>
 <li>1.克隆Git资源作为工作目录</li>
 <li>2.在克隆的资源上添加或修改文件，或更新资源其他人修改后的资源</li>
 <li>3.查看修改内容，确认后提交修改</li>
@@ -409,7 +412,7 @@ git diff
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2025年5月6日</div>
+          <div>2026年10月31日</div>
         </div>
       
       <div class="license-meta-item">
