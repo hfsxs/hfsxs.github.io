@@ -4,6 +4,19 @@
   
   
   <entry>
+    <title>Jenkins基于Docker容器配置动态Agent节点</title>
+    <link href="/uncategorized/cmwn89bag0000uayiedfdd0he/"/>
+    <url>/uncategorized/cmwn89bag0000uayiedfdd0he/</url>
+    
+    <content type="html"><![CDATA[]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Jenkins配置参数化构建任务</title>
     <link href="/linux/JenkinsParameter/"/>
     <url>/linux/JenkinsParameter/</url>
@@ -5143,7 +5156,7 @@
     <link href="/geek/Docsify/"/>
     <url>/geek/Docsify/</url>
     
-    <content type="html"><![CDATA[<p>Docsify，动态生成文档网站的工具，可将.md文件以Wiki的形式展示，用于制作技术文档、用户手册、wiki等，部署于主机、VPS、Github、静态云存储，特别适于快速搭建小型的文档网站</p><hr><h1 id="1-配置Nodejs环境"><a href="#1-配置Nodejs环境" class="headerlink" title="1.配置Nodejs环境"></a>1.配置Nodejs环境</h1><pre><code class="hljs">wget https://nodejs.org/dist/v16.20.2/node-v16.20.2-linux-x64.tar.gztar -xzvf node-v16.20.2-linux-x64.tar.gz &amp;&amp; mv node-v16.20.2 /usr/local/nodejssudo ln -s /usr/local/nodejs/bin/node /usr/bin/nodesudo ln -s /usr/local/nodejs/bin/npm /usr/bin/npm</code></pre><h1 id="2-设置npm网络代理"><a href="#2-设置npm网络代理" class="headerlink" title="2.设置npm网络代理"></a>2.设置npm网络代理</h1><pre><code class="hljs">sudo npm config set registry https://registry.npmmirror.com</code></pre><h1 id="3-安装Docsify"><a href="#3-安装Docsify" class="headerlink" title="3.安装Docsify"></a>3.安装Docsify</h1><pre><code class="hljs">sudo npm install -g docsify-cli</code></pre><h1 id="4-初始化Docsify"><a href="#4-初始化Docsify" class="headerlink" title="4.初始化Docsify"></a>4.初始化Docsify</h1><pre><code class="hljs">sudo /usr/local/nodejs/bin/docsify init /web/wiki</code></pre><h1 id="5-配置Nginx代理"><a href="#5-配置Nginx代理" class="headerlink" title="5.配置Nginx代理"></a>5.配置Nginx代理</h1><h2 id="5-1-创建配置文件"><a href="#5-1-创建配置文件" class="headerlink" title="5.1 创建配置文件"></a>5.1 创建配置文件</h2><pre><code class="hljs">sudo vi /etc/nginx/nginx.d/wiki.conf        server &#123;  listen       80;  server_name  localhost;  charsetutf-8;  location /wiki &#123;    root  /web;    autoindex on;    index index.html index.htm;    try_files $uri $uri/ /index.html;    # 设置资源不缓存，整个资源库完整后再缓存防止新配置不生效    add_header Cache-Control &quot;no-cache, no-store&quot;;    access_log  /var/log/nginx/wiki_access.log  main;    error_log  /var/log/nginx/wiki_error.log;    &#125;&#125;</code></pre><h2 id="5-2-重载Nginx"><a href="#5-2-重载Nginx" class="headerlink" title="5.2 重载Nginx"></a>5.2 重载Nginx</h2><pre><code class="hljs">sudo nginx -tsudo nginx -s reload</code></pre><h1 id="6-验证Wiki"><a href="#6-验证Wiki" class="headerlink" title="6.验证Wiki"></a>6.验证Wiki</h1><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://docsify.js.org/#/zh-cn">https://docsify.js.org/#/zh-cn</a></li><li><a href="https://blog.csdn.net/qq_62982856/article/details/129940209">https://blog.csdn.net/qq_62982856/article/details/129940209</a></li></ul>]]></content>
+    <content type="html"><![CDATA[<p>Docsify，动态生成文档网站的工具，可将.md文件以Wiki的形式展示，用于制作技术文档、用户手册、wiki等，部署于主机、VPS、Github、静态云存储，特别适于快速搭建小型的文档网站</p><hr><h1 id="1-配置Nodejs环境"><a href="#1-配置Nodejs环境" class="headerlink" title="1.配置Nodejs环境"></a>1.配置Nodejs环境</h1><pre><code class="hljs">wget https://nodejs.org/dist/v16.20.2/node-v16.20.2-linux-x64.tar.gztar -xzvf node-v16.20.2-linux-x64.tar.gz &amp;&amp; mv node-v16.20.2 /usr/local/nodejssudo ln -s /usr/local/nodejs/bin/node /usr/bin/nodesudo ln -s /usr/local/nodejs/bin/npm /usr/bin/npm</code></pre><h1 id="2-设置npm网络代理"><a href="#2-设置npm网络代理" class="headerlink" title="2.设置npm网络代理"></a>2.设置npm网络代理</h1><pre><code class="hljs">sudo npm config set registry https://registry.npmmirror.com</code></pre><h1 id="3-安装Docsify"><a href="#3-安装Docsify" class="headerlink" title="3.安装Docsify"></a>3.安装Docsify</h1><pre><code class="hljs">sudo npm install -g docsify-cli</code></pre><h1 id="4-初始化Docsify"><a href="#4-初始化Docsify" class="headerlink" title="4.初始化Docsify"></a>4.初始化Docsify</h1><pre><code class="hljs">sudo /usr/local/nodejs/bin/docsify init /web/wiki</code></pre><h1 id="5-配置Nginx"><a href="#5-配置Nginx" class="headerlink" title="5.配置Nginx"></a>5.配置Nginx</h1><h2 id="5-1-创建配置文件"><a href="#5-1-创建配置文件" class="headerlink" title="5.1 创建配置文件"></a>5.1 创建配置文件</h2><pre><code class="hljs">sudo vi /etc/nginx/nginx.d/wiki.conf        server &#123;  listen       80;  server_name  localhost;  charsetutf-8;  location /wiki &#123;    root  /web;    autoindex on;    index index.html index.htm;    try_files $uri $uri/ /index.html;    # 设置资源不缓存，整个资源库完整后再缓存防止新配置不生效    add_header Cache-Control &quot;no-cache, no-store&quot;;    access_log  /var/log/nginx/wiki_access.log  main;    error_log  /var/log/nginx/wiki_error.log;  &#125;&#125;</code></pre><h2 id="5-2-重载Nginx"><a href="#5-2-重载Nginx" class="headerlink" title="5.2 重载Nginx"></a>5.2 重载Nginx</h2><pre><code class="hljs">sudo nginx -tsudo nginx -s reload</code></pre><h1 id="6-验证Wiki"><a href="#6-验证Wiki" class="headerlink" title="6.验证Wiki"></a>6.验证Wiki</h1><hr><h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul><li><a href="https://docsify.js.org/#/zh-cn">https://docsify.js.org/#/zh-cn</a></li><li><a href="https://blog.csdn.net/qq_62982856/article/details/129940209">https://blog.csdn.net/qq_62982856/article/details/129940209</a></li></ul>]]></content>
     
     
     <categories>
@@ -7344,6 +7357,37 @@
       <tag>DNS</tag>
       
       <tag>域名解析</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Zabbix监控代理部署与配置</title>
+    <link href="/linux/ZabbixProxy/"/>
+    <url>/linux/ZabbixProxy/</url>
+    
+    <content type="html"><![CDATA[<p>Zabbix监控系统被设计为分布式模式，Agent负责收集监控数据，并上报给Server进行汇总、处理与存储。但当业务扩展到上千台设备时，单台Server将会非常吃力，用 Proxy 分散采集负载，里的“中间代理”‌，它能代替 Server 去采集设备数据，再统一发回给 Server，核心作用是帮 Server 分担压力、跨网段收集数据、网络中断时缓存数据不丢失</p><h1 id="1-安装依赖包"><a href="#1-安装依赖包" class="headerlink" title="1.安装依赖包"></a>1.安装依赖包</h1><pre><code class="hljs">apt install -y gcc mysql-dev libsnmp-dev libevent-dev libxml2-dev libghc-curl-devyum instal -y gcc make curl-devel mysql-devel net-snmp-devel libcurl libxml2-devel libevent-devel</code></pre><h1 id="2-创建Zabbix用户与组"><a href="#2-创建Zabbix用户与组" class="headerlink" title="2.创建Zabbix用户与组"></a>2.创建Zabbix用户与组</h1><pre><code class="hljs">groupadd zabbix &amp;&amp; useradd -g zabbix -s /sbin/nologin zabbixmkdir -p /var/log/zabbix &amp;&amp; chown -R zabbix:zabbix /var/log/zabbix</code></pre><h1 id="3-编译安装Zabbix-Proxy"><a href="#3-编译安装Zabbix-Proxy" class="headerlink" title="3.编译安装Zabbix Proxy"></a>3.编译安装Zabbix Proxy</h1><pre><code class="hljs">tar -zxvf zabbix-6.0.18.tar.gz &amp;&amp; cd zabbix-6.0.18./configure --prefix=/usr/local/zabbix --sysconfdir=/etc/zabbix --enable-proxy --enable-agent --with-mysql --with-net-snmp --with-libcurl --with-libxml2 --enable-ipv6 make &amp;&amp; make install</code></pre><h1 id="4-创建配置文件"><a href="#4-创建配置文件" class="headerlink" title="4.创建配置文件"></a>4.创建配置文件</h1><pre><code class="hljs">vi /etc/zabbix/zabbix_proxy.conf# 设置Zabbix Server地址Server=172.16.100.200# 设置Zabbix Proxy主机名，与Web界面注册名称一致Hostname=Zabbix proxy# 设置数据库名称DBName=zabbix_proxy# 设置数据库账户DBUser=zabbix# 设置数据库账户密码DBPassword=zabbix# 设置日志路径LogFile=/var/log/zabbix/zabbix_proxy.log</code></pre><h1 id="5-创建启动脚本"><a href="#5-创建启动脚本" class="headerlink" title="5.创建启动脚本"></a>5.创建启动脚本</h1><pre><code class="hljs">cp misc/init.d/fedora/core/zabbix_agent /etc/init.d/zabbix_proxychmod +x /etc/init.d/zabbix_proxyvi /etc/init.d/zabbix_proxy# 设置程序名称BINARY_NAME=zabbix_proxy# 设置Zabbix工作目录BASEDIR=/usr/local/zabbix </code></pre><h1 id="6-配置数据库"><a href="#6-配置数据库" class="headerlink" title="6.配置数据库"></a>6.配置数据库</h1><h2 id="6-1-创建数据库"><a href="#6-1-创建数据库" class="headerlink" title="6.1 创建数据库"></a>6.1 创建数据库</h2><p>MariaDB [(none)]&gt; create database zabbix_proxy charset utf8 collate utf8_bin;”<br>MariaDB [(none)]&gt; GRANT ALL PRIVILEGES ON zabbix_proxy.* TO ‘zabbix‘@’localhost’ IDENTIFIED BY ‘zabbix’;<br>MariaDB [(none)]&gt; flush privileges;”</p><h1 id="6-2-导入表结构"><a href="#6-2-导入表结构" class="headerlink" title="6.2 导入表结构"></a>6.2 导入表结构</h1><p>MariaDB [(none)]&gt; use zabbix_proxy;<br>MariaDB [(none)]&gt; source database&#x2F;mysql&#x2F;schema.sql;</p><h1 id="7-启动Zabbix-Proxy服务"><a href="#7-启动Zabbix-Proxy服务" class="headerlink" title="7.启动Zabbix Proxy服务"></a>7.启动Zabbix Proxy服务</h1><pre><code class="hljs">systemctl daemon-reload systemctl status zabbix_server.servicesystemctl enable zabbix_server.service</code></pre><h1 id="8-页面注册Zabbix-Proxy"><a href="#8-页面注册Zabbix-Proxy" class="headerlink" title="8.页面注册Zabbix Proxy"></a>8.页面注册Zabbix Proxy</h1><h1 id="9-监控主机配置Zabbix-Proxy"><a href="#9-监控主机配置Zabbix-Proxy" class="headerlink" title="9.监控主机配置Zabbix Proxy"></a>9.监控主机配置Zabbix Proxy</h1>]]></content>
+    
+    
+    <categories>
+      
+      <category>工作</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Linux</tag>
+      
+      <tag>云计算</tag>
+      
+      <tag>监控告警</tag>
+      
+      <tag>Zabbix</tag>
       
     </tags>
     
