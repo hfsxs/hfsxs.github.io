@@ -19,20 +19,20 @@
     <meta name="description" content="Items，监控项，Zabbix系统采集监控数据的基本单位，用于采集监控数据。Zabbix添加主机时，即可通过链接内置监控模板的方式继承大量的通用监控项，而对于某些特定场景的监控需求也可通过创建自定义监控项进行监控。Zabbix监控项的核心机制为键值（Item key），是其唯一标识，可理解为获取监控数据的命令，格式为：键值名称[参数]，如system.cpu.util[,idle]用于获取CPU">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Zabbix监控项配置与管理">
-<meta property="og:url" content="https://hfsxs.github.io/linux/ZabbixItem/index.html">
+<meta property="og:url" content="https://hfsxs.github.io/linux/ZabbixItems/index.html">
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="Items，监控项，Zabbix系统采集监控数据的基本单位，用于采集监控数据。Zabbix添加主机时，即可通过链接内置监控模板的方式继承大量的通用监控项，而对于某些特定场景的监控需求也可通过创建自定义监控项进行监控。Zabbix监控项的核心机制为键值（Item key），是其唯一标识，可理解为获取监控数据的命令，格式为：键值名称[参数]，如system.cpu.util[,idle]用于获取CPU">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://hfsxs.github.io/img/wiki/Zabbix/Item.jpg">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/Zabbix/Items.jpg">
 <meta property="article:published_time" content="2026-11-02T07:16:04.000Z">
-<meta property="article:modified_time" content="2026-11-25T08:19:45.201Z">
+<meta property="article:modified_time" content="2026-11-26T02:15:35.070Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
 <meta property="article:tag" content="监控告警">
 <meta property="article:tag" content="Zabbix">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://hfsxs.github.io/img/wiki/Zabbix/Item.jpg">
+<meta name="twitter:image" content="https://hfsxs.github.io/img/wiki/Zabbix/Items.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -296,9 +296,7 @@
               <div class="markdown-body">
                 
                 <p>Items，监控项，Zabbix系统采集监控数据的基本单位，用于采集监控数据。Zabbix添加主机时，即可通过链接内置监控模板的方式继承大量的通用监控项，而对于某些特定场景的监控需求也可通过创建自定义监控项进行监控。Zabbix监控项的核心机制为键值（Item key），是其唯一标识，可理解为获取监控数据的命令，格式为：键值名称[参数]，如system.cpu.util[,idle]用于获取CPU空闲率、vfs.fs.size[&#x2F;,pfree]用于获取根分区剩余空间百分比等，参数也可为空</p>
-<h1 id="1-创建监控项"><a href="#1-创建监控项" class="headerlink" title="1.创建监控项"></a>1.创建监控项</h1><p>配置 —&gt; 主机 —&gt; 主机监控项 —&gt; 创建监控项</p>
-<p><img src="/img/wiki/Zabbix/Item.jpg" srcset="/img/loading.gif" lazyload alt="Item"></p>
-<h1 id="2-创建获取监控数据的脚本"><a href="#2-创建获取监控数据的脚本" class="headerlink" title="2.创建获取监控数据的脚本"></a>2.创建获取监控数据的脚本</h1><h2 id="2-1-创建监控脚本"><a href="#2-1-创建监控脚本" class="headerlink" title="2.1 创建监控脚本"></a>2.1 创建监控脚本</h2><pre><code class="hljs">sudo mkdir -p /etc/zabbix/scripts
+<h1 id="1-配置获取监控数据的脚本"><a href="#1-配置获取监控数据的脚本" class="headerlink" title="1.配置获取监控数据的脚本"></a>1.配置获取监控数据的脚本</h1><h2 id="1-1-创建监控脚本"><a href="#1-1-创建监控脚本" class="headerlink" title="1.1 创建监控脚本"></a>1.1 创建监控脚本</h2><pre><code class="hljs">sudo mkdir -p /etc/zabbix/scripts
 sudo vi /etc/zabbix/scripts/chk_keepalived.sh
 
 
@@ -309,22 +307,24 @@ ips=`ip a|grep eth0|grep 172.16.100|wc -l`
 
 echo $ips
 </code></pre>
-<h2 id="2-2-监控脚本赋权"><a href="#2-2-监控脚本赋权" class="headerlink" title="2.2 监控脚本赋权"></a>2.2 监控脚本赋权</h2><pre><code class="hljs">sudo chmod +x /etc/zabbix/scripts/chk_keepalived.sh
+<h2 id="1-2-脚本赋权"><a href="#1-2-脚本赋权" class="headerlink" title="1.2 脚本赋权"></a>1.2 脚本赋权</h2><pre><code class="hljs">sudo chmod +x /etc/zabbix/scripts/chk_keepalived.sh
 </code></pre>
+<h1 id="2-创建监控项"><a href="#2-创建监控项" class="headerlink" title="2.创建监控项"></a>2.创建监控项</h1><p>配置 —&gt; 主机 —&gt; 监控项 —&gt; 创建监控项</p>
+<p><img src="/img/wiki/Zabbix/Items.jpg" srcset="/img/loading.gif" lazyload alt="Items"></p>
 <h1 id="3-创建自定义监控参数‌配置文件"><a href="#3-创建自定义监控参数‌配置文件" class="headerlink" title="3.创建自定义监控参数‌配置文件"></a>3.创建自定义监控参数‌配置文件</h1><pre><code class="hljs">sudo vi /etc/zabbix/zabbix_agentd.d/chk_keepalived.conf
 
 
 # 设置自定义监控脚本支持管道、重定向
 UnsafeUserParameters=1
-# 创建监控项，语法为：UserParameter=Key,命令，Key必须与页面上创建的监控项的键值一致
+# 设置自定义监控参数，语法为：UserParameter=Key,命令，Key即为监控项键值，必须与页面上一致
 UserParameter=keepalived.vip,/bin/bash /etc/zabbix/scripts/chk_keepalived.sh
 </code></pre>
 <h1 id="4-重启Zabbix-Agent"><a href="#4-重启Zabbix-Agent" class="headerlink" title="4.重启Zabbix Agent"></a>4.重启Zabbix Agent</h1><pre><code class="hljs">sudo systemctl restart zabbix-agent.service
 </code></pre>
-<h1 id="5-验证监控项"><a href="#5-验证监控项" class="headerlink" title="5.验证监控项"></a>5.验证监控项</h1><pre><code class="hljs"># zabbix_get是Zabbix服务器端用于主动获取客户端监控数据的命令，可测试Agent连通性和排查监控项故障
+<h1 id="5-验证监控项"><a href="#5-验证监控项" class="headerlink" title="5.验证监控项"></a>5.验证监控项</h1><pre><code class="hljs"># zabbix_get，Zabbix服务端主动获取客户端监控数据的命令，用于Agent连通性测试和监控项故障排查
 /usr/local/zabbix/bin/zabbix_get -s 172.16.100.200 -k &quot;keepalived.vip&quot;
 </code></pre>
-<h1 id="6-数据可视化"><a href="#6-数据可视化" class="headerlink" title="6.数据可视化"></a>6.数据可视化</h1><p>监测 —&gt; 最新数据 —&gt; 主机监控项 —&gt; 图形</p>
+<h1 id="6-数据可视化"><a href="#6-数据可视化" class="headerlink" title="6.数据可视化"></a>6.数据可视化</h1><p>监测 —&gt; 最新数据 —&gt; 监控项 —&gt; 图形</p>
 <hr>
 <h1 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://www.zabbix.com/documentation/current/zh/manual/config/items">https://www.zabbix.com/documentation/current/zh/manual/config/items</a></li>
@@ -381,7 +381,7 @@ UserParameter=keepalived.vip,/bin/bash /etc/zabbix/scripts/chk_keepalived.sh
   <div class="license-box my-3">
     <div class="license-title">
       <div>Zabbix监控项配置与管理</div>
-      <div>https://hfsxs.github.io/linux/ZabbixItem/</div>
+      <div>https://hfsxs.github.io/linux/ZabbixItems/</div>
     </div>
     <div class="license-meta">
       
@@ -399,7 +399,7 @@ UserParameter=keepalived.vip,/bin/bash /etc/zabbix/scripts/chk_keepalived.sh
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2026年11月25日</div>
+          <div>2026年11月26日</div>
         </div>
       
       <div class="license-meta-item">
