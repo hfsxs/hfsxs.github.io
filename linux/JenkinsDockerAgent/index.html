@@ -23,8 +23,11 @@
 <meta property="og:site_name" content="扬帆">
 <meta property="og:description" content="1.Docker配置1.1 开启远程API端口sudo vi &#x2F;lib&#x2F;systemd&#x2F;system&#x2F;docker.service   [Service]   ExecStart&#x3D;&#x2F;usr&#x2F;bin&#x2F;dockerd -H tcp:&#x2F;&#x2F;0.0.0.0:2375 -H unix:&#x2F;&#x2F;&#x2F;var&#x2F;run&#x2F;docker.sock  1.2 重启Dcoekrsudo systemctl daemon-reloa">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/Zabbix/DockerAgent01.jpg">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/Zabbix/DockerAgent02.jpg">
+<meta property="og:image" content="https://hfsxs.github.io/img/wiki/Zabbix/DockerAgent03.jpg">
 <meta property="article:published_time" content="2026-11-16T02:37:52.000Z">
-<meta property="article:modified_time" content="2026-11-19T09:27:44.106Z">
+<meta property="article:modified_time" content="2026-11-26T07:12:35.972Z">
 <meta property="article:author" content="扬帆">
 <meta property="article:tag" content="Linux">
 <meta property="article:tag" content="云计算">
@@ -35,6 +38,7 @@
 <meta property="article:tag" content="容器云">
 <meta property="article:tag" content="云原生">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://hfsxs.github.io/img/wiki/Zabbix/DockerAgent01.jpg">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -243,7 +247,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          355 字
+          378 字
         
       </span>
     
@@ -254,7 +258,7 @@
         
         
         
-          3 分钟
+          4 分钟
         
       </span>
     
@@ -308,7 +312,11 @@ sudo systemctl restart docker.service
 </code></pre>
 <h2 id="1-3-拉取官方Agent镜像"><a href="#1-3-拉取官方Agent镜像" class="headerlink" title="1.3 拉取官方Agent镜像"></a>1.3 拉取官方Agent镜像</h2><pre><code class="hljs">sudo docker pull jenkins/inbound-agent:jdk21
 </code></pre>
-<h1 id="2-Jenkins创建云节点"><a href="#2-Jenkins创建云节点" class="headerlink" title="2.Jenkins创建云节点"></a>2.Jenkins创建云节点</h1><h1 id="3-创建流水线文件"><a href="#3-创建流水线文件" class="headerlink" title="3.创建流水线文件"></a>3.创建流水线文件</h1><pre><code class="hljs">vi Jenkinsfile
+<h1 id="2-Jenkins创建云节点"><a href="#2-Jenkins创建云节点" class="headerlink" title="2.Jenkins创建云节点"></a>2.Jenkins创建云节点</h1><p>系统管理 —&gt; Clouds —&gt; 新建云</p>
+<p><img src="/img/wiki/Zabbix/DockerAgent01.jpg" srcset="/img/loading.gif" lazyload alt="DockerAgent01"></p>
+<p><img src="/img/wiki/Zabbix/DockerAgent02.jpg" srcset="/img/loading.gif" lazyload alt="DockerAgent02"></p>
+<p><img src="/img/wiki/Zabbix/DockerAgent03.jpg" srcset="/img/loading.gif" lazyload alt="DockerAgent03"></p>
+<h1 id="3-创建流水线文件"><a href="#3-创建流水线文件" class="headerlink" title="3.创建流水线文件"></a>3.创建流水线文件</h1><pre><code class="hljs">vi Jenkinsfile
 
 
 agent &#123;
@@ -393,7 +401,7 @@ agent &#123;
       
         <div class="license-meta-item license-meta-date">
           <div>更新于</div>
-          <div>2026年11月19日</div>
+          <div>2026年11月26日</div>
         </div>
       
       <div class="license-meta-item">
